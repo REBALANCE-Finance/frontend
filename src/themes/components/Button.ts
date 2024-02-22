@@ -4,7 +4,16 @@ export const Button = defineStyleConfig({
   baseStyle: {
     borderRadius: "4px"
   },
-  sizes: {},
+  sizes: {
+    sm: {
+      fontSize: "sm",
+      fontWeight: "500"
+    },
+    md: {
+      fontSize: "md",
+      fontWeight: "500"
+    }
+  },
   variants: {
     primaryFilled: {
       bg: "black.40",
@@ -24,8 +33,9 @@ export const Button = defineStyleConfig({
     primaryWhite: {
       border: "none",
       bg: "gray",
+      color: "black.100",
       _hover: {
-        bg: "rgba(255, 255, 255, 0.2)"
+        opacity: "0.8"
       },
       _disabled: {
         bg: "black.80"

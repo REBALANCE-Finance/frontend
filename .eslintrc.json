@@ -29,6 +29,8 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-unused-vars": ["error", { "ignoreRestSiblings": true }],
     "func-style": ["error", "expression"],
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
     "prettier/prettier": [
       "warn",
       {
@@ -43,6 +45,14 @@
         "bracketSpacing": true,
         "bracketSameLine": false,
         "arrowParens": "avoid"
+      }
+    ],
+    "no-multiple-empty-lines": [
+      2,
+      {
+        "max": 1,
+        "maxEOF": 0,
+        "maxBOF": 0
       }
     ]
   },

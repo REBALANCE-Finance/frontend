@@ -1,11 +1,10 @@
-import { Box } from "@chakra-ui/react";
-import { Icon } from "../../components/common/icon";
-import { ICON_NAMES } from "../../consts";
+import { Flex } from "@chakra-ui/react";
+import { RebalancePerformance } from "../../feature/RebalancePerformance";
 
 export const Lending = () => {
   return (
-    <Box w="24px" h="24px">
-      <Icon name={ICON_NAMES.notification} />
-    </Box>
+    <Flex direction="column" w="100%" px={{ base: "16px", xxl: "0" }}>
+      <RebalancePerformance />
+    </Flex>
   );
 };
