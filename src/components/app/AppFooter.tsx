@@ -2,16 +2,18 @@ import { Flex, Image, Link } from "@chakra-ui/react";
 import React from "react";
 
 import Logo from "../../assets/logo/logo-short.svg";
+import { Icon } from "../common/icon";
 import { FooterLink, FooterMedia } from "./utils";
 
 export const AppFooter = () => {
   return (
     <Flex
       justify="space-between"
-      maxW={"1360px"}
+      maxW={"1300px"}
       w="100%"
       alignItems="center"
       p={{ base: "6px 16px", md: "24px 16px", xxl: "24px 0" }}
+      mt="40px"
     >
       <Image src={Logo} w="30px" h="30px" />
 
@@ -26,7 +28,7 @@ export const AppFooter = () => {
       <Flex gap={{ md: "24px" }}>
         {FooterMedia.map(media => (
           <Link key={media.name} href={media.path} target="_blank">
-            {media.name}
+            <Icon name={media.name} />
           </Link>
         ))}
       </Flex>

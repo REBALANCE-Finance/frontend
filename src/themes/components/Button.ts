@@ -46,12 +46,7 @@ export const Button = defineStyleConfig({
       borderColor: "black.40",
       bg: "none",
       _hover: {
-        bgGradient:
-          "linear(to-t, rgba(0, 135, 54, 1), rgba(26, 157, 78, 1), rgba(91, 225, 145, 1))",
-        _disabled: {
-          bgGradient:
-            "linear(to-t, rgba(0, 135, 54, 1), rgba(26, 157, 78, 1), rgba(91, 225, 145, 1))"
-        }
+        opacity: "0.8"
       },
       _disabled: {
         bg: "black.80"

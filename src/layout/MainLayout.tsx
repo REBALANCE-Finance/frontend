@@ -1,16 +1,17 @@
 import { Flex } from "@chakra-ui/react";
-import { AppHeader } from "../components/app/AppHeader";
-import { FC, PropsWithChildren } from "react";
-import { AppFooter } from "../components/app/AppFooter";
-import { AppBanner } from "../components/app/AppBanner";
+import { Outlet } from "react-router-dom";
 
-export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
+import { AppBanner } from "../components/app/AppBanner";
+import { AppFooter } from "../components/app/AppFooter";
+import { AppHeader } from "../components/app/AppHeader";
+
+export const MainLayout = () => {
   return (
     <Flex direction="column" h="100vh" alignItems="center" w="100%">
       <AppHeader />
       <AppBanner />
-      <Flex flex="1 0" maxW="1360px" w="100%">
-        {children}
+      <Flex flex="1 0" maxW="1300px" w="100%">
+        <Outlet />
       </Flex>
       <AppFooter />
     </Flex>

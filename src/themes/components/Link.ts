@@ -1,7 +1,12 @@
 import { defineStyleConfig } from "@chakra-ui/react";
 
 export const Link = defineStyleConfig({
-  baseStyle: {},
+  baseStyle: {
+    textDecoration: "none",
+    _hover: {
+      textDecoration: "none"
+    }
+  },
   sizes: {},
   variants: {
     link: {
@@ -25,7 +30,5 @@ export const Link = defineStyleConfig({
       }
     }
   },
-  defaultProps: {
-    variant: "nav"
-  }
+  defaultProps: {}
 });

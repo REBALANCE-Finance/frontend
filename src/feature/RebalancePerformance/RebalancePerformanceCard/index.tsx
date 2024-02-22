@@ -6,7 +6,6 @@ interface RebalncePerformanceCardProps {
   title: string;
   subtitle: string;
   info: Record<string, string>[];
-  onClick: () => void;
   isActive: boolean;
 }
 
@@ -15,13 +14,10 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
   title,
   subtitle,
   info,
-  onClick,
   isActive
 }) => {
   return (
     <Flex
-      cursor="pointer"
-      onClick={onClick}
       bg={isActive ? "black.80" : undefined}
       w="631px"
       borderRadius="4px"

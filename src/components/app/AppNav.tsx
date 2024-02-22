@@ -8,7 +8,7 @@ export const AppNav = () => {
   return (
     <Flex gap="24px">
       {routesList.map(route => (
-        <Link key={route.name} as={NavLink} to={route.path}>
+        <Link variant="nav" key={route.name} as={NavLink} to={route.path}>
           {route.name}
         </Link>
       ))}

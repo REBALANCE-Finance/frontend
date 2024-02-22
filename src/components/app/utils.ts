@@ -5,8 +5,8 @@ export const FooterLink = [
 ];
 
 export const FooterMedia = [
-  { name: "Descord", path: "", icon: "" },
-  { name: "Twitter", path: "", icon: "" },
-  { name: "Telegram", path: "", icon: "" },
-  { name: "LinkedIn", path: "", icon: "" }
+  { name: "descord", path: "", icon: "" },
+  { name: "twitter", path: "", icon: "" },
+  { name: "telegram", path: "", icon: "" },
+  { name: "linkedin", path: "", icon: "" }
 ];

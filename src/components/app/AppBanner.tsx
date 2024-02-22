@@ -6,7 +6,7 @@ import BannerImage from "../../assets/image/Banner.svg";
 export const AppBanner = () => {
   return (
     <Flex h="240px" w="100%" bg="black.70" mb="44px" justify="center">
-      <Flex gap="44px" maxW={"1360px"} w="100%" px={{ base: "16px", xxl: "0" }}>
+      <Flex gap="44px" maxW={"1300px"} w="100%" px={{ base: "16px", xxl: "0" }}>
         <Image src={BannerImage} />
         <Flex direction="column" gap="24px" justify="center" alignItems="start">
           <Flex direction="column" gap="16px">

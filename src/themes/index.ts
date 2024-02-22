@@ -1,6 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 
 import { Button } from "./components/Button";
+import { cardTheme } from "./components/Card";
 import { Link } from "./components/Link";
 import { colors } from "./styles/colors";
 import { fontSizes } from "./styles/fontSize";
@@ -27,7 +28,8 @@ export const themes = extendTheme({
   fontSizes: { ...fontSizes },
   components: {
     Button,
-    Link
+    Link,
+    Card: cardTheme
   },
   breakpoints: {
     sm: "400px",
