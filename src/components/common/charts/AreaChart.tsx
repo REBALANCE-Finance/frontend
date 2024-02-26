@@ -3,10 +3,12 @@ import {
   AreaChart as AreaChartDefault,
   CartesianGrid,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis
 } from "recharts";
 
+import { CustomTooltip } from "./components/CustomTooltip";
 import { IAreaChartProps } from "./types";
 
 export const AreaChart: FC<IAreaChartProps> = ({
@@ -30,6 +32,7 @@ export const AreaChart: FC<IAreaChartProps> = ({
         {gradient}
         <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.2} />
         {legend}
+        <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltip />} />
         <XAxis
           dataKey="date"
           tickLine={false}

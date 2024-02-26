@@ -6,7 +6,9 @@ const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpe
 );
 
 const baseStyle = definePartsStyle({
-  container: {}
+  container: {
+    color: "white"
+  }
 });
 
 const sizes = {
@@ -27,7 +29,7 @@ const sizes = {
 const variants = {
   poolCard: definePartsStyle({
     container: {
-      w: "302px",
+      w: { base: "100%", md: "302px" },
       minH: "302px",
       padding: "16px",
       gap: "20px",

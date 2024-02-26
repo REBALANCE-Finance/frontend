@@ -11,7 +11,11 @@ export const colors = {
     20: "rgba(255, 255, 255, 0.2)",
     10: "rgba(255, 255, 255, 0.1)"
   },
-  gray: "rgba(222, 222, 222, 1)",
+  green: {
+    100: "rgba(76, 255, 148, 1)"
+  },
+  lightGray: "rgba(222, 222, 222, 1)",
+  darkGray: "#A5A5A5",
   black: {
     100: "#09090B",
     80: "#151619",
@@ -20,7 +24,7 @@ export const colors = {
     40: "#272A30",
     20: "#2E3238",
     5: "#9FA2A8",
-    1: "#DEDEDE"
+    0: "#DEDEDE"
   },
   greenAlpha: {
     100: "rgba(76, 255, 148, 1)",

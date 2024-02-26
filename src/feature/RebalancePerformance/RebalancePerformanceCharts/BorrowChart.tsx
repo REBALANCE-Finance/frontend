@@ -1,9 +1,8 @@
 import { Flex, Switch, Text } from "@chakra-ui/react";
 import React from "react";
-import { Area } from "recharts";
 
-import { AreaChart } from "../../../components/common/charts/AreaChart";
 import { BarChart } from "../../../components/common/charts/BarChart";
+import { bar, barGradient } from "../../../components/common/charts/utils";
 import { DateSwitcher } from "../../../components/data-switcher";
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES } from "../../../components/data-switcher/utils";
@@ -11,10 +10,14 @@ import { themes } from "../../../themes";
 import { tickFormatter } from "./utils";
 
 const colors = {
-  area: themes.colors.greenAlpha["100"]
+  borrowingFee: {
+    top: "#EC5A65",
+    bottom: "#E63946"
+  },
+  healthFactor: themes.colors.greenAlpha["80"]
 };
 
-const dataArea = [
+const dataBarReverse = [
   {
     date: "12.01.2024",
     lending: 4000
@@ -108,38 +111,23 @@ export const BorrowChart = () => {
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
 
   return (
-    <Flex w="100%" gap={{ base: "24px" }}>
-      <Flex direction="column" w="100%">
+    <Flex direction={{ base: "column", md: "row" }} w="100%" gap={{ base: "24px" }}>
+      <Flex direction="column" w="100%" h={{ base: "317px", md: "auto" }}>
         <Flex alignItems={{ base: "center" }} justifyContent={{ base: "space-between" }} mb="10px">
-          <Text color="gray">My borrow positions</Text>
+          <Text color="lightGray">Borrowing fees</Text>
           <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
         </Flex>
-        <AreaChart
-          data={dataArea}
-          lines={[
-            <Area
-              key={1}
-              type="monotone"
-              dataKey="lending"
-              stroke={colors.area}
-              fill="url(#colorLending)"
-            />
-          ]}
-          gradient={
-            <defs>
-              <linearGradient id="colorLending" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={colors.area} stopOpacity={0.8} />
-                <stop offset="95%" stopColor={colors.area} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-          }
+        <BarChart
+          data={dataBarReverse}
+          bar={barGradient({ data: dataBarReverse, color: colors.borrowingFee })}
+          reversed
           tickFormatter={tickFormatter}
         />
       </Flex>
 
-      <Flex w="100%" direction="column">
+      <Flex w="100%" direction="column" h={{ base: "317px", md: "auto" }}>
         <Flex alignItems={{ base: "center" }} justifyContent={{ base: "space-between" }} mb="10px">
-          <Text color="gray">My borrow positions</Text>
+          <Text color="lightGray">Health Factor</Text>
           <Flex
             alignItems="center"
             justifyContent="center"
@@ -153,10 +141,10 @@ export const BorrowChart = () => {
           </Flex>
         </Flex>
 
-        <BarChart data={dataBar} />
+        <BarChart data={dataBar} bar={bar({ data: dataBar, color: colors.healthFactor })} hideX />
 
         <Flex alignItems={{ base: "center" }} justifyContent={{ base: "space-between" }} mt="10px">
-          <Text color="gray">Extra-Collateral</Text>
+          <Text color="lightGray">Extra-Collateral</Text>
           <Switch />
         </Flex>
       </Flex>

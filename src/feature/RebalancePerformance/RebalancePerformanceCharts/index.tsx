@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { PERFORMANCE_TYPE } from "../utils";
+import { PERFORMANCE_TYPE } from "../../../consts/performance-type";
 import { BorrowChart } from "./BorrowChart";
 import { LendChart } from "./LendChart";
 import { IRebalancePerformanceProps } from "./types";

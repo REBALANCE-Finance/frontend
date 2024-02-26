@@ -1,23 +1,33 @@
-import { Flex, Image, Link } from "@chakra-ui/react";
+import { Flex, Image, Link, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 
-import Logo from "../../assets/logo/logo-short.svg";
+import LogoDesc from "../../assets/logo/logo-long.svg";
+import LogoMob from "../../assets/logo/logo-short.svg";
+import { MEDIA_QUERY_MAX } from "../../consts";
 import { Icon } from "../common/icon";
 import { FooterLink, FooterMedia } from "./utils";
 
 export const AppFooter = () => {
+  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   return (
     <Flex
+      direction={{ base: "column", md: "row" }}
       justify="space-between"
       maxW={"1300px"}
       w="100%"
       alignItems="center"
       p={{ base: "6px 16px", md: "24px 16px", xxl: "24px 0" }}
       mt="40px"
+      gap={{ base: "24px", md: "0" }}
     >
-      <Image src={Logo} w="30px" h="30px" />
+      <Image
+        src={media ? LogoDesc : LogoMob}
+        w={{ base: "auto", md: "30px" }}
+        h="30px"
+        order={{ base: 2, md: 0 }}
+      />
 
-      <Flex gap={{ md: "40px" }}>
+      <Flex gap={{ base: "24px", md: "40px" }} order={{ base: 0, md: 1 }}>
         {FooterLink.map(link => (
           <Link variant="link" key={link.name} href={link.path}>
             {link.name}
@@ -25,7 +35,7 @@ export const AppFooter = () => {
         ))}
       </Flex>
 
-      <Flex gap={{ md: "24px" }}>
+      <Flex gap={{ base: "24px" }} order={{ base: 1, md: 2 }}>
         {FooterMedia.map(media => (
           <Link key={media.name} href={media.path} target="_blank">
             <Icon name={media.name} />

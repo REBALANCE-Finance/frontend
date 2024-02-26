@@ -5,7 +5,7 @@ import { IDateSwitcher } from "./types";
 
 export const DateSwitcher: FC<IDateSwitcher> = ({ date, selectDate, selectedDate }) => {
   return (
-    <HStack border="1px solid" borderColor="black.40" borderRadius="2px" p="2px">
+    <HStack border="1px solid" borderColor="black.40" borderRadius="2px" bg="black.100" p="2px">
       {date.map((elem, i) => (
         <Flex
           key={i}
@@ -19,7 +19,7 @@ export const DateSwitcher: FC<IDateSwitcher> = ({ date, selectDate, selectedDate
           bg={elem.value === selectedDate.value ? "black.40" : undefined}
           w="41px"
         >
-          <Text fontSize="sm" color="gray">
+          <Text fontSize="sm" color="lightGray">
             {elem.name}
           </Text>
         </Flex>

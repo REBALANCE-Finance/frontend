@@ -61,8 +61,8 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
 
         <Flex gap="12px">
           {info.map(el => (
-            <Flex key={el.lable} alignItems="center" fontSize="xs" color="black.20">
-              <Text fontWeight="400">{el.lable}:</Text>
+            <Flex key={el.label} alignItems="center" fontSize="xs" color="black.20">
+              <Text fontWeight="400">{el.label}:</Text>
               <Text fontWeight="500">{el.value}</Text>
             </Flex>
           ))}

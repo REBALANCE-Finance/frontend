@@ -1,5 +1,8 @@
 import {
   Button,
+  Drawer,
+  DrawerCloseButton,
+  DrawerContent,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -7,12 +10,33 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure
+  useDisclosure,
+  useMediaQuery
 } from "@chakra-ui/react";
 import React from "react";
 
+import { MEDIA_QUERY_MAX } from "../../consts";
+
 export const ConnectWallet = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
+
+  if (media) {
+    return (
+      <>
+        <Button p="0" onClick={onOpen}>
+          Connect wallet
+        </Button>
+
+        <Drawer isOpen={isOpen} placement="right" size="full" onClose={onClose}>
+          <DrawerContent>
+            <DrawerCloseButton />
+          </DrawerContent>
+        </Drawer>
+      </>
+    );
+  }
+
   return (
     <>
       <Button p="0" onClick={onOpen}>

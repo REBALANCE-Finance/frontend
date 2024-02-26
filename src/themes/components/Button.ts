@@ -2,7 +2,8 @@ import { defineStyleConfig } from "@chakra-ui/react";
 
 export const Button = defineStyleConfig({
   baseStyle: {
-    borderRadius: "4px"
+    borderRadius: "4px",
+    color: "black.0"
   },
   sizes: {
     sm: {
@@ -17,12 +18,12 @@ export const Button = defineStyleConfig({
   variants: {
     primaryFilled: {
       bg: "black.40",
-      color: "gray",
+      color: "lightGray",
       _hover: {
-        bg: "gray",
+        bg: "lightGray",
         color: "black",
         _disabled: {
-          color: "gray",
+          color: "lightGray",
           bg: "black.80"
         }
       },
@@ -32,16 +33,17 @@ export const Button = defineStyleConfig({
     },
     primaryWhite: {
       border: "none",
-      bg: "gray",
+      bg: "lightGray",
       color: "black.100",
-      _hover: {
-        opacity: "0.8"
-      },
+      // _hover: {
+      //   opacity: "0.8"
+      // },
       _disabled: {
         bg: "black.80"
       }
     },
     outline: {
+      color: "black.0",
       border: "1px solid",
       borderColor: "black.40",
       bg: "none",
@@ -51,7 +53,12 @@ export const Button = defineStyleConfig({
       _disabled: {
         bg: "black.80"
       }
+    },
+    without: {
+      bg: "transparent"
     }
   },
-  defaultProps: {}
+  defaultProps: {
+    variant: "without"
+  }
 });

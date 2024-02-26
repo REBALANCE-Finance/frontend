@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 import { Area } from "recharts";
 
@@ -6,46 +6,39 @@ import { AreaChart } from "../../../components/common/charts/AreaChart";
 import { DateSwitcher } from "../../../components/data-switcher";
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES } from "../../../components/data-switcher/utils";
-import { themes } from "../../../themes";
+import { MEDIA_QUERY_MAX } from "../../../consts";
 import { LegendAreaChart } from "./components/LegendAreaChart";
-import { tickFormatter } from "./utils";
-
-const colorsArea = {
-  lending: themes.colors.greenAlpha["100"],
-  borrowing: themes.colors.violetAlpha["100"]
-};
-
-const areaLines = [
-  <Area
-    key={1}
-    name="Earned from lending"
-    type="monotone"
-    dataKey="lending"
-    stroke={colorsArea.lending}
-    fill="url(#colorlending)"
-  />,
-  <Area
-    key={2}
-    name="Spent on borrowing"
-    type="monotone"
-    dataKey="borrowing"
-    stroke={colorsArea.borrowing}
-    fill="url(#colorBorrowing)"
-  />
-];
+import { IAreaLineProps } from "./types";
+import { areaLines, colorsArea, tickFormatter } from "./utils";
 
 const areaGradient = (
   <defs>
-    <linearGradient id="colorlending" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="color-lending" x1="0" y1="0" x2="0" y2="1">
       <stop offset="5%" stopColor={colorsArea.lending} stopOpacity={0.8} />
       <stop offset="95%" stopColor={colorsArea.lending} stopOpacity={0} />
     </linearGradient>
-    <linearGradient id="colorBorrowing" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="color-borrowing" x1="0" y1="0" x2="0" y2="1">
       <stop offset="5%" stopColor={colorsArea.borrowing} stopOpacity={0.8} />
       <stop offset="95%" stopColor={colorsArea.borrowing} stopOpacity={0} />
     </linearGradient>
   </defs>
 );
+
+const getAreaLines = (areas: IAreaLineProps[]) => {
+  const arr = areas.map((area, i) => (
+    <Area
+      key={i}
+      name={area.name}
+      type="monotone"
+      dataKey={area.type}
+      stroke={colorsArea.borrowing}
+      activeDot={{ r: 3, stroke: colorsArea.borrowing }}
+      fill={`url(#color-${area.type})`}
+    />
+  ));
+
+  return [...arr, areaGradient];
+};
 
 const data = [
   {
@@ -86,24 +79,42 @@ const data = [
 ];
 
 export const LendChart = () => {
+  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
   return (
-    <Flex w="100%" direction="column">
-      <Flex w="100%" alignItems="center" justify="space-between" mb="10px">
-        <Flex alignItems="center" gap="12px">
-          <LegendAreaChart text="Earned from lending" color={colorsArea.lending} />
-          <LegendAreaChart text="Spent on borrowing" color={colorsArea.borrowing} />
-        </Flex>
+    <Flex w="100%" direction="column" position="relative">
+      <Flex w="100%" alignItems="center" justify="space-between" mb={{ base: "0", md: "10px" }}>
+        {!media && (
+          <Flex alignItems="center" gap="12px">
+            {areaLines.map(elem => (
+              <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
+            ))}
+          </Flex>
+        )}
 
-        <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
+        <Flex
+          zIndex={{ base: 1, md: 0 }}
+          position={{ base: "absolute", md: "relative" }}
+          right={{ base: "0" }}
+        >
+          <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
+        </Flex>
       </Flex>
 
       <AreaChart
         data={data}
-        lines={areaLines}
+        lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}
       />
+
+      {media && (
+        <Flex alignItems="center" gap="12px">
+          {areaLines.map(elem => (
+            <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
+          ))}
+        </Flex>
+      )}
     </Flex>
   );
 };

@@ -1,58 +1,68 @@
 import {
   Box,
-  Button,
   Card as ChakraCard,
   CardBody,
   CardFooter,
   CardHeader,
-  Circle,
-  Divider,
   Flex,
+  // Image,
   Text
 } from "@chakra-ui/react";
-import React from "react";
+import React, { FC } from "react";
 
-export const Card = () => {
+import { IRowCard, RowCardProccessType } from "../../feature/Pools/types";
+import { DefaultDataType } from "../../types";
+import { Icon } from "../common/icon";
+
+interface ICardProps {
+  rowCard: IRowCard[];
+  itemCard: DefaultDataType;
+}
+
+export const Card: FC<ICardProps> = ({ rowCard, itemCard }) => {
   return (
     <ChakraCard variant="poolCard">
-      <CardHeader as={Flex} justifyContent="space-between" alignItems="center">
-        <Flex alignItems="center" gap="12px">
-          <Circle size="64px" bg="red">
-            T
-          </Circle>
-          <Text textStyle="h2">Token Name</Text>
-        </Flex>
+      {rowCard.map(elem => {
+        switch (elem.name) {
+          case "header":
+            return (
+              <CardHeader
+                key={elem.name}
+                as={Flex}
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Flex alignItems="center" gap="12px">
+                  {/* <Image boxSize="64px" src={itemCard?.icon} borderRadius="full" /> */}
+                  <Box boxSize="64px" borderRadius="full">
+                    <Icon name={itemCard.icon} size="100%" />
+                  </Box>
+                  <Text textStyle="h2">{itemCard?.token}</Text>
+                </Flex>
+                {elem.proccess && elem.proccess({ item: itemCard })}
+              </CardHeader>
+            );
+          case "body":
+            return (
+              <CardBody as={Flex} direction="column" gap="20px">
+                <Flex flex="1 1 0" direction="column" gap="10px">
+                  {elem.proccess &&
+                    elem.proccess({ item: itemCard, type: RowCardProccessType.metrics })}
+                </Flex>
 
-        <Flex direction="column" alignItems="center">
-          <Text fontFamily="Roboto mono" fontSize="xs" color="#5C6470">
-            RISK
-          </Text>
-          <Flex gap="4px">
-            <Box w="4px" h="24px" bg="black.60"></Box>
-            <Box w="4px" h="24px" bg="black.60"></Box>
-            <Box w="4px" h="24px" bg="black.60"></Box>
-            <Box w="4px" h="24px" bg="black.60"></Box>
-            <Box w="4px" h="24px" bg="black.60"></Box>
-          </Flex>
-        </Flex>
-      </CardHeader>
+                {elem.proccess &&
+                  elem.proccess({ item: itemCard, type: RowCardProccessType.assets })}
+              </CardBody>
+            );
 
-      <CardBody as={Flex} direction="column" gap="20px">
-        <Flex flex="1 1 0">Metrics</Flex>
-
-        <Divider color="black.60" />
-        <Flex>My total</Flex>
-      </CardBody>
-
-      <CardFooter gap="8px">
-        <Button variant="primaryFilled" flex="1 1 0">
-          Deposit
-        </Button>
-
-        <Button variant="outline" flex="1 1 0">
-          Withdraw
-        </Button>
-      </CardFooter>
+          case "footer":
+            return (
+              <CardFooter gap="8px">
+                {elem.proccess && elem.proccess({ item: itemCard })}
+              </CardFooter>
+            );
+        }
+      })}
     </ChakraCard>
   );
 };

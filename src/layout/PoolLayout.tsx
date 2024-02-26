@@ -9,7 +9,7 @@ export const PoolLayout = () => {
   return (
     <Flex direction="column" w="100%" px={{ base: "16px", xxl: "0" }} gap="44px">
       <RebalancePerformance />
-      <Flex direction="column" gap="24px">
+      <Flex direction="column" justify="center" gap="24px">
         <PoolsHeader />
         <Outlet />
       </Flex>

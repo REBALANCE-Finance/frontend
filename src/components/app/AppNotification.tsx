@@ -1,12 +1,14 @@
-import { Box } from "@chakra-ui/react";
+import { Box, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 
-import { ICON_NAMES } from "../../consts";
+import { ICON_NAMES, MEDIA_QUERY_MAX } from "../../consts";
 import { Icon } from "../common/icon";
 
 export const AppNotification = () => {
+  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   return (
     <Box
+      order={media ? 2 : 0}
       position="relative"
       _after={{
         content: '""',

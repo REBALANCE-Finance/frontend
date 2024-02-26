@@ -2,11 +2,12 @@ import { HTMLAttributes } from "react";
 
 export enum EnumSizes {
   sm = "16px",
-  md = "24px",
-  auto = "100%"
+  md = "24px"
 }
+
+export type Sizes = keyof typeof EnumSizes
 
 export interface TIconProps extends HTMLAttributes<HTMLOrSVGElement> {
   name: string;
-  size?: keyof typeof EnumSizes;
+  size?: Sizes | string;
 }

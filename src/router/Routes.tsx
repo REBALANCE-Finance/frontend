@@ -6,11 +6,13 @@ import { PoolsLending } from "../feature/Pools/PoolsLending";
 import { MainLayout } from "../layout/MainLayout";
 import { PoolLayout } from "../layout/PoolLayout";
 import { NotFound } from "../pages/NotFound";
+import { Swap } from "../pages/Swap";
 // import { Swap } from "../pages/Swap";
 
 export const routesList = [
   { name: "Lending", path: "/lending" },
-  { name: "Borrowing", path: "/borrowing" }
+  { name: "Borrowing", path: "/borrowing" },
+  { name: "Swap", path: "/swap" }
 ];
 
 const routes = createBrowserRouter([
@@ -34,26 +36,17 @@ const routes = createBrowserRouter([
           {
             path: "/lending",
             element: <PoolsLending />
-          }
-        ]
-      },
-      {
-        element: <PoolLayout />,
-        children: [
+          },
           {
             path: "/borrowing",
             element: <PoolsBorrow />
           }
         ]
+      },
+      {
+        path: "/swap",
+        element: <Swap />
       }
-      // {
-      //   path: "/borrowing",
-      //   element: <Borrow />
-      // },
-      // {
-      //   path: "/swap",
-      //   element: <Swap />
-      // }
     ]
   }
 ]);

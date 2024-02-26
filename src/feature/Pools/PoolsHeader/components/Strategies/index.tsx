@@ -8,7 +8,7 @@ export const Strategies = () => {
   return (
     <Menu>
       <MenuButton>
-        <Flex alignItems="center" gap="12px" color="gray">
+        <Flex alignItems="center" gap="12px" color="lightGray">
           <Icon name={ICON_NAMES.arbitrum} />
           <Text fontSize="xl">Arbitrum Yield Strategies</Text>
           <Icon name={ICON_NAMES.arrowDown} />

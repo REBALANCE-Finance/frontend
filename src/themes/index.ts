@@ -3,6 +3,7 @@ import { extendTheme } from "@chakra-ui/react";
 import { Button } from "./components/Button";
 import { cardTheme } from "./components/Card";
 import { Link } from "./components/Link";
+import { switchTheme } from "./components/Switch";
 import { colors } from "./styles/colors";
 import { fontSizes } from "./styles/fontSize";
 import { global } from "./styles/global";
@@ -29,7 +30,8 @@ export const themes = extendTheme({
   components: {
     Button,
     Link,
-    Card: cardTheme
+    Card: cardTheme,
+    Switch: switchTheme
   },
   breakpoints: {
     sm: "400px",

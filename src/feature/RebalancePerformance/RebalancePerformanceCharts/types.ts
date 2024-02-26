@@ -1,10 +1,15 @@
-import { PERFORMANCE_TYPE } from "../utils";
+import { PERFORMANCE_TYPE } from "../../../consts/performance-type";
 
 export interface IRebalancePerformanceProps {
-  activeType: keyof typeof PERFORMANCE_TYPE | string;
+  activeType: PERFORMANCE_TYPE | string;
 }
 
 export interface ILegendAreaChart {
   text: string;
   color: string;
+}
+
+export interface IAreaLineProps {
+  name: string;
+  type: PERFORMANCE_TYPE;
 }
