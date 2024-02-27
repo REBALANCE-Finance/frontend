@@ -2,8 +2,8 @@ import { Flex } from "@chakra-ui/react";
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-import { PoolsHeader } from "../feature/Pools/PoolsHeader";
-import { RebalancePerformance } from "../feature/RebalancePerformance";
+import { RebalancePerformance } from "../features/RebalancePerformance";
+import { PoolsHeader } from "../pages/Pools/PoolsHeader";
 
 export const PoolLayout = () => {
   return (

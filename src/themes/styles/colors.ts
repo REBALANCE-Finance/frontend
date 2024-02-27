@@ -16,6 +16,10 @@ export const colors = {
   },
   lightGray: "rgba(222, 222, 222, 1)",
   darkGray: "#A5A5A5",
+  gray: {
+    100: "#5C6470",
+    80: "rgba(234, 234, 234, 0.8)"
+  },
   black: {
     100: "#09090B",
     80: "#151619",

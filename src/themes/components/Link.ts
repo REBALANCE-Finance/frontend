@@ -19,7 +19,7 @@ export const Link = defineStyleConfig({
     nav: {
       display: "flex",
       alignItems: "center",
-      color: "black.40",
+      color: "black.5",
       fontWeight: "500",
 
       _hover: {

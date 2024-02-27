@@ -1,11 +1,11 @@
 import { Flex, useMediaQuery } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
-import { AppBanner } from "../components/app/AppBanner";
-import { AppFooter } from "../components/app/AppFooter";
-import { AppHeader } from "../components/app/AppHeader";
 import { MEDIA_QUERY_MAX } from "../consts";
-import { RebalancePerformanceMob } from "../feature/RebalancePerformance";
+import { RebalancePerformanceMob } from "../features/RebalancePerformance";
+import { AppBanner } from "../widgets/AppBanner";
+import { AppFooter } from "../widgets/AppFooter";
+import { AppHeader } from "../widgets/AppHeader";
 
 export const MainLayout = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);

@@ -54,7 +54,15 @@ export const Button = defineStyleConfig({
         bg: "black.80"
       }
     },
+    secondaryOutline: {
+      padding: "4px 12px",
+      border: "1px solid",
+      borderColor: "black.40",
+      color: "black.0"
+    },
     without: {
+      p: "0",
+      w: "fit-content",
       bg: "transparent"
     }
   },

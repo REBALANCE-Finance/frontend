@@ -1,0 +1,75 @@
+import {
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  Flex,
+  IconButton,
+  Link,
+  useDisclosure,
+  useMediaQuery
+} from "@chakra-ui/react";
+import React from "react";
+import { NavLink } from "react-router-dom";
+
+import { Icon } from "../components/icon";
+import { MEDIA_QUERY_MAX } from "../consts";
+import { routesList } from "../app/router/Routes";
+
+export const AppNav = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
+  const btnRef = React.useRef(null);
+
+  const handleOpen = () => {
+    if (isOpen) {
+      onClose();
+    } else {
+      onOpen();
+    }
+  };
+
+  if (media) {
+    return (
+      <>
+        <IconButton
+          order={3}
+          ref={btnRef}
+          aria-label="Icon"
+          icon={<Icon name={isOpen ? "close" : "menu"} />}
+          onClick={handleOpen}
+        />
+
+        <Drawer isOpen={isOpen} onClose={onClose}>
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerBody as={Flex} direction="column" gap="16px">
+              {routesList.map(route => (
+                <Link
+                  variant="nav"
+                  key={route.name}
+                  as={NavLink}
+                  to={route.path}
+                  onClick={onClose}
+                  fontSize="lg"
+                >
+                  {route.name}
+                </Link>
+              ))}
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </>
+    );
+  }
+
+  return (
+    <Flex gap="24px">
+      {routesList.map(route => (
+        <Link variant="nav" key={route.name} as={NavLink} to={route.path}>
+          {route.name}
+        </Link>
+      ))}
+    </Flex>
+  );
+};

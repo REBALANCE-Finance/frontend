@@ -10,9 +10,9 @@ import {
 } from "@chakra-ui/react";
 import React, { FC } from "react";
 
-import { IRowCard, RowCardProccessType } from "../../feature/Pools/types";
+import { IRowCard, RowCardProccessType } from "../../pages/Pools/types";
 import { DefaultDataType } from "../../types";
-import { Icon } from "../common/icon";
+import { Icon } from "../icon";
 
 interface ICardProps {
   rowCard: IRowCard[];
