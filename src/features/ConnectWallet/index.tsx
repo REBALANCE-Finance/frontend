@@ -99,6 +99,7 @@ export const ConnectWallet = () => {
                   key={title}
                   alignItems="center"
                   justify="space-between"
+                  w="100%"
                   p="0"
                   onClick={() => activateProvider(method)}
                 >
@@ -153,6 +154,7 @@ export const ConnectWallet = () => {
                 key={title}
                 alignItems="center"
                 justify="space-between"
+                w="100%"
                 p="0"
                 onClick={() => activateProvider(method)}
               >
