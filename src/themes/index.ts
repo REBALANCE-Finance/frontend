@@ -1,8 +1,15 @@
-import { Button } from "./components/Buttons";
-import { fontSize } from "./styles/fontSize";
-import { colors } from "./styles/colors";
 import { extendTheme } from "@chakra-ui/react";
+
+import { Button } from "./components/Button";
+import { cardTheme } from "./components/Card";
+import { drawerTheme } from "./components/Drawer";
+import { inputTheme } from "./components/Input";
+import { Link } from "./components/Link";
+import { switchTheme } from "./components/Switch";
+import { colors } from "./styles/colors";
+import { fontSizes } from "./styles/fontSize";
 import { global } from "./styles/global";
+import { textStyles } from "./styles/textStyles";
 
 const config = {
   initialColorMode: "dark",
@@ -18,8 +25,23 @@ export const themes = extendTheme({
   },
   styles: { global: { ...global } },
   colors: { ...colors },
-  fontSize: { ...fontSize },
+  textStyles: {
+    ...textStyles
+  },
+  fontSizes: { ...fontSizes },
   components: {
-    Button
+    Button,
+    Link,
+    Card: cardTheme,
+    Switch: switchTheme,
+    Drawer: drawerTheme,
+    Input: inputTheme
+  },
+  breakpoints: {
+    sm: "400px",
+    md: "700px",
+    lg: "960px",
+    xl: "1300px",
+    xxl: "1400px"
   }
 });
