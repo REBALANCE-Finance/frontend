@@ -2,7 +2,6 @@ import {
   Circle,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
@@ -36,8 +35,19 @@ export const WalletProfile = () => {
       <Drawer isOpen={isOpen} onClose={onClose} placement="right">
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton color="black.0" />
-          <DrawerHeader>My Profile</DrawerHeader>
+          <DrawerHeader as={Flex} align="center" justify="start">
+            <Flex align="inherit" gap="4px">
+              <IconButton
+                cursor="pointer"
+                aria-label="back"
+                as={Icon}
+                name={ICON_NAMES.close}
+                size="36px"
+                onClick={onClose}
+              />
+              <Text>My Profile</Text>
+            </Flex>
+          </DrawerHeader>
 
           <DrawerBody as={Flex} gap="24px" direction="column">
             <Flex w="100%" justify="space-between" align="center" h="fit-content">

@@ -48,6 +48,7 @@ export const Notification: FC<INotificationProps> = ({ isOpen, onClose }) => {
         <DrawerHeader as={Flex} align="center" justify="space-between">
           <Flex align="inherit" gap="4px">
             <IconButton
+              cursor="pointer"
               aria-label="back"
               as={Icon}
               name={ICON_NAMES.close}

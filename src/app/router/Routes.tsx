@@ -1,18 +1,15 @@
 import { Suspense } from "react";
 import { createBrowserRouter, Navigate, RouterProvider, ScrollRestoration } from "react-router-dom";
 
-import { PoolsBorrow } from "../../pages/Pools/PoolsBorrow";
-import { PoolsLending } from "../../pages/Pools/PoolsLending";
 import { MainLayout } from "../../layout/MainLayout";
 import { PoolLayout } from "../../layout/PoolLayout";
 import { NotFound } from "../../pages/NotFound";
-// import { Swap } from "../pages/Swap";
-// import { Swap } from "../pages/Swap";
+import { PoolsBorrow } from "../../pages/Pools/PoolsBorrow";
+import { PoolsLending } from "../../pages/Pools/PoolsLending";
 
 export const routesList = [
   { name: "Lending", path: "/lending" },
   { name: "Borrowing", path: "/borrowing" }
-  // { name: "Swap", path: "/swap" }
 ];
 
 const routes = createBrowserRouter([
@@ -43,10 +40,6 @@ const routes = createBrowserRouter([
           }
         ]
       }
-      // {
-      //   path: "/swap",
-      //   element: <Swap />
-      // }
     ]
   }
 ]);

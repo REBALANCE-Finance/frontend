@@ -60,7 +60,13 @@ export const RebalancePerformanceMob = () => {
   const pathName = getCurrentPath(location.pathname);
 
   return (
-    <VStack direction="column" divider={<StackDivider borderColor="#1F1F1F" />} mb="22px" w="100%">
+    <VStack
+      direction="column"
+      divider={<StackDivider borderColor="#1F1F1F" />}
+      mb="22px"
+      w="100%"
+      order={{ base: 0, md: 1 }}
+    >
       <StackDivider />
 
       <Flex justify="space-between" w="100%" gap="10px" color="black.5" p="16px">

@@ -12,6 +12,7 @@ export const AppBanner = () => {
       mb="44px"
       justify="center"
       p="16px"
+      order={{ base: 1, md: 0 }}
     >
       <Flex
         direction={{ base: "column", md: "row" }}

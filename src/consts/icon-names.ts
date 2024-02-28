@@ -4,6 +4,7 @@ export const ICON_NAMES = {
   alert: "alert",
   arbitrum: "arbitrum",
   arrowRight: "arrow-right",
+  attention: "attention",
   chevronDown: "chevron-down",
   chevronLeft: "chevron-left",
   chevronUp: "chevron-up",
@@ -16,6 +17,7 @@ export const ICON_NAMES = {
   descord: "descord",
   errorWarning: "error-warning",
   function: "function",
+  info: "info",
   link: "link",
   linkedin: "linkedin",
   logoutCircle: "logout-circle",
@@ -34,7 +36,9 @@ export const ICON_NAMES = {
   settings: "settings",
   sun: "sun",
   switch: "switch",
+  success: "success",
   telegram: "telegram",
   twitter: "twitter",
-  walletConnect: "wallet-connect"
+  walletConnect: "wallet-connect",
+  worning: "worning"
 };

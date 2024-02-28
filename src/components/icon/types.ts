@@ -5,9 +5,11 @@ export enum EnumSizes {
   md = "24px"
 }
 
-export type Sizes = keyof typeof EnumSizes
+export type Sizes = keyof typeof EnumSizes;
 
 export interface TIconProps extends HTMLAttributes<HTMLOrSVGElement> {
   name: string;
   size?: Sizes | string;
+  width?: string;
+  height?: string;
 }

@@ -31,8 +31,8 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
       name={area.name}
       type="monotone"
       dataKey={area.type}
-      stroke={colorsArea.borrowing}
-      activeDot={{ r: 3, stroke: colorsArea.borrowing }}
+      stroke={colorsArea[area.type]}
+      activeDot={{ r: 3, stroke: colorsArea[area.type] }}
       fill={`url(#color-${area.type})`}
     />
   ));

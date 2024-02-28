@@ -1,7 +1,9 @@
-import { Button, Divider, Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import { Divider, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import React from "react";
 
 import { Card } from "../../../components/card";
+import { BorrowButton } from "../../../features/actions/borrow-or-repay-button/BorrowButton";
+import { RepayButton } from "../../../features/actions/borrow-or-repay-button/RepayButton";
 import { IRowCard, RowCardNames, RowCardProccessType } from "../types";
 
 interface IMockData {
@@ -100,15 +102,15 @@ export const PoolsBorrow = () => {
           case RowCardProccessType.metrics:
             return (
               <>
-                <Flex justify="space-between" align="center">
+                <HStack justify="space-between">
                   <Text color="black.0">Borrowing rate</Text>
                   <Text textStyle="textMono16">12.6 %</Text>
-                </Flex>
+                </HStack>
 
-                <Flex justify="space-between" align="center">
+                <HStack justify="space-between">
                   <Text color="black.0">Total borrowed</Text>
-                  <Text>22.56M</Text>
-                </Flex>
+                  <Text textStyle="textMono16">22.56M</Text>
+                </HStack>
               </>
             );
           case RowCardProccessType.assets:
@@ -117,7 +119,7 @@ export const PoolsBorrow = () => {
                 <Divider borderColor="black.60" />
                 <Flex alignItems="center" justifyContent="space-between">
                   <Text>My Borrow</Text>
-                  <Text>1.000</Text>
+                  <Text textStyle="textMono16">1.000</Text>
                 </Flex>
               </>
             );
@@ -128,15 +130,11 @@ export const PoolsBorrow = () => {
     },
     {
       name: RowCardNames.footer,
-      proccess() {
+      proccess({ item }) {
         return (
           <>
-            <Button variant="primaryFilled" flex="1 1 0">
-              Deposit
-            </Button>
-            <Button variant="secondaryOutline" flex="1 1 0">
-              Withdraw
-            </Button>
+            <BorrowButton pool={item} />
+            <RepayButton pool={item} />
           </>
         );
       }

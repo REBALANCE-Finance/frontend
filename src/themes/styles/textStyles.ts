@@ -9,7 +9,17 @@ export const textStyles = {
   },
   textMono16: {
     fontFamily: "Roboto mono",
-    fontSize: "md",
+    fontSize: "16px",
+    fontWeight: "500"
+  },
+  textMono14: {
+    fontFamily: "Roboto mono",
+    fontSize: "14px",
+    fontWeight: "500"
+  },
+  textMono12: {
+    fontFamily: "Roboto mono",
+    fontSize: "12px",
     fontWeight: "500"
   }
 };

@@ -1,8 +1,10 @@
-import { Button, Divider, Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import { Divider, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import React from "react";
 
 import { Card } from "../../../components/card";
 import { Risk } from "../../../components/risk";
+import { DepositLendingButton } from "../../../features/actions/deposit-or-withdraw-button/DepositLendingButton";
+import { WithdrawLendingButton } from "../../../features/actions/deposit-or-withdraw-button/WithdrawLendingButton";
 import { IRowCard, RowCardNames, RowCardProccessType } from "../types";
 
 interface IMockData {
@@ -85,7 +87,7 @@ const mockData: IMockData[] = [
     earned30Days: 1,
     decimals: 1,
     deposit: 1,
-    risk: 4
+    risk: 5
   }
 ];
 
@@ -111,25 +113,27 @@ export const PoolsLending = () => {
           case RowCardProccessType.metrics:
             return (
               <>
-                <Flex justify="space-between" align="center">
+                <HStack justify="space-between">
                   <Text color="black.0">Funds in pool</Text>
                   <Text textStyle="textMono16">22.56M</Text>
-                </Flex>
+                </HStack>
 
-                <Flex justify="space-between" align="center">
+                <HStack justify="space-between">
                   <Text color="black.0">Profit Earned</Text>
-                  <Text>22.56M</Text>
-                </Flex>
+                  <Text textStyle="textMono16">22.56M</Text>
+                </HStack>
 
-                <Flex justify="space-between" align="center">
+                <HStack justify="space-between">
                   <Text color="darkGray">30D avg. APR</Text>
-                  <Text>22.56M</Text>
-                </Flex>
+                  <Text textStyle="textMono16">22.56M</Text>
+                </HStack>
 
-                <Flex justify="space-between" align="center">
+                <HStack justify="space-between">
                   <Text color="black.0">GLIA APR {">"} market avg.</Text>
-                  <Text color={true ? "green.100" : "red"}>1.5%</Text>
-                </Flex>
+                  <Text color={item.apy > 0 ? "green.100" : "red"} textStyle="textMono16">
+                    1.5%
+                  </Text>
+                </HStack>
               </>
             );
           case RowCardProccessType.assets:
@@ -140,7 +144,7 @@ export const PoolsLending = () => {
                     <Divider borderColor="black.60" />
                     <Flex alignItems="center" justifyContent="space-between">
                       <Text>My Deposit</Text>
-                      <Text>1.000</Text>
+                      <Text textStyle="textMono16">1.000</Text>
                     </Flex>
                   </>
                 )}
@@ -156,14 +160,8 @@ export const PoolsLending = () => {
       proccess({ item }) {
         return (
           <>
-            <Button variant="primaryFilled" flex="1 1 0">
-              Deposit
-            </Button>
-            {!!item.deposit && (
-              <Button variant="secondaryOutline" flex="1 1 0">
-                Withdraw
-              </Button>
-            )}
+            <DepositLendingButton pool={item} />
+            {!!item.deposit && <WithdrawLendingButton pool={item} />}
           </>
         );
       }

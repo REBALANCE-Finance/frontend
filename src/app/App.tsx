@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import { WagmiProvider } from "wagmi";
 
+import { ModalController } from "../features/modals/ModalController";
 import { themes } from "../themes";
 import { wagmiConfig } from "../utils/w3";
 import AppRoutes from "./router/Routes";
@@ -21,6 +22,7 @@ const App = () => {
           <AppRoutes />
         </QueryClientProvider>
       </WagmiProvider>
+      <ModalController />
       <ToastContainer
         position="top-right"
         autoClose={false}
