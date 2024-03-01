@@ -11,12 +11,18 @@ interface IBorrowButtonProps {
 export const BorrowButton: FC<IBorrowButtonProps> = ({ pool }) => {
   const { openModal } = useStore("modalStore");
 
-  const handleOpenModal = e => {
-    e.stopPropagation();
+  const handleOpenModal = () => {
     openModal({ type: ModalEnum.Borrow, props: { pool, type: ModalEnum.Borrow } });
   };
   return (
-    <Button variant="primaryFilled" flex="1 1 0" onClick={handleOpenModal}>
+    <Button
+      variant="primaryFilled"
+      flex="1 1 0"
+      onClick={e => {
+        e.stopPropagation();
+        handleOpenModal();
+      }}
+    >
       Borrow
     </Button>
   );

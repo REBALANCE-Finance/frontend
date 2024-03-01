@@ -11,12 +11,18 @@ interface IDepositProps {
 export const DepositLendingButton: FC<IDepositProps> = ({ pool }) => {
   const { openModal } = useStore("modalStore");
 
-  const handleOpenModal = e => {
-    e.stopPropagation();
+  const handleOpenModal = () => {
     openModal({ type: ModalEnum.Deposit, props: { pool, type: ModalEnum.Deposit } });
   };
   return (
-    <Button variant="primaryFilled" flex="1 1 0" onClick={handleOpenModal}>
+    <Button
+      variant="primaryFilled"
+      flex="1 1 0"
+      onClick={e => {
+        e.stopPropagation();
+        handleOpenModal();
+      }}
+    >
       Deposit
     </Button>
   );
