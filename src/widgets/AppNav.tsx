@@ -12,9 +12,9 @@ import {
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+import { routesList } from "../app/router/Routes";
 import { Icon } from "../components/icon";
 import { MEDIA_QUERY_MAX } from "../consts";
-import { routesList } from "../app/router/Routes";
 
 export const AppNav = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

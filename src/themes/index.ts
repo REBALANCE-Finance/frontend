@@ -6,6 +6,7 @@ import { drawerTheme } from "./components/Drawer";
 import { inputTheme } from "./components/Input";
 import { Link } from "./components/Link";
 import { switchTheme } from "./components/Switch";
+import { Text } from "./components/Text";
 import { colors } from "./styles/colors";
 import { fontSizes } from "./styles/fontSize";
 import { global } from "./styles/global";
@@ -30,6 +31,7 @@ export const themes = extendTheme({
   },
   fontSizes: { ...fontSizes },
   components: {
+    Text,
     Button,
     Link,
     Card: cardTheme,

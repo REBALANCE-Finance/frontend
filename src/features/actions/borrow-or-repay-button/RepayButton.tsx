@@ -15,7 +15,14 @@ export const RepayButton: FC<IRepayButtonProps> = ({ pool }) => {
     openModal({ type: ModalEnum.Repay, props: { pool, type: ModalEnum.Repay } });
   };
   return (
-    <Button variant="secondaryOutline" flex="1 1 0" onClick={handleOpenModal}>
+    <Button
+      variant="secondaryOutline"
+      flex="1 1 0"
+      onClick={e => {
+        e.stopPropagation();
+        handleOpenModal();
+      }}
+    >
       Repay
     </Button>
   );

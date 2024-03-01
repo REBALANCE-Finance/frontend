@@ -7,6 +7,18 @@ export const textStyles = {
     fontSize: { base: "16px", md: "20px" },
     fontWeight: "400"
   },
+  text16: {
+    fontSize: "16px",
+    fontWeight: "400"
+  },
+  text14: {
+    fontSize: "14px",
+    fontWeight: "400"
+  },
+  text12: {
+    fontSize: "12px",
+    fontWeight: "400"
+  },
   textMono16: {
     fontFamily: "Roboto mono",
     fontSize: "16px",

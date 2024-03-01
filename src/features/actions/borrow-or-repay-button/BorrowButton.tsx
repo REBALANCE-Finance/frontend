@@ -15,7 +15,14 @@ export const BorrowButton: FC<IBorrowButtonProps> = ({ pool }) => {
     openModal({ type: ModalEnum.Borrow, props: { pool, type: ModalEnum.Borrow } });
   };
   return (
-    <Button variant="primaryFilled" flex="1 1 0" onClick={handleOpenModal}>
+    <Button
+      variant="primaryFilled"
+      flex="1 1 0"
+      onClick={e => {
+        e.stopPropagation();
+        handleOpenModal();
+      }}
+    >
       Borrow
     </Button>
   );

@@ -1,4 +1,5 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import numeral from "numeral";
 import React, { FC } from "react";
 
 interface RebalncePerformanceCardProps {
@@ -61,9 +62,13 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
 
         <Flex gap="12px">
           {info.map(el => (
-            <Flex key={el.label} alignItems="center" fontSize="xs" color="black.20">
-              <Text fontWeight="400">{el.label}:</Text>
-              <Text fontWeight="500">{el.value}</Text>
+            <Flex key={el.label} alignItems="center" fontSize="xs" color="black.20" gap="7px">
+              <Text fontWeight="400" color="darkGray">
+                {el.label}:
+              </Text>
+              <Text fontWeight="500" color="darkGray">
+                ${numeral(el.value).format("0,0")}
+              </Text>
             </Flex>
           ))}
         </Flex>

@@ -15,7 +15,14 @@ export const DepositLendingButton: FC<IDepositProps> = ({ pool }) => {
     openModal({ type: ModalEnum.Deposit, props: { pool, type: ModalEnum.Deposit } });
   };
   return (
-    <Button variant="primaryFilled" flex="1 1 0" onClick={handleOpenModal}>
+    <Button
+      variant="primaryFilled"
+      flex="1 1 0"
+      onClick={e => {
+        e.stopPropagation();
+        handleOpenModal();
+      }}
+    >
       Deposit
     </Button>
   );

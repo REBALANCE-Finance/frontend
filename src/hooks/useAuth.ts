@@ -2,7 +2,7 @@ import { useConnect } from "wagmi";
 
 import { ConnectorNames } from "../consts/connectors";
 
-const defChainIdSepolia = 11155111;
+const defChainIdSepolia = 42161;
 
 export const useAuth = () => {
   const { connectAsync, connectors, ...rest } = useConnect();

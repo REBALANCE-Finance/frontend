@@ -42,10 +42,10 @@ export const BorrowOrRepayModal: FC<IDefaultModalProps> = ({ isOpen, onClose, ty
 
         <ModalBody p="0">
           <TabPanels>
-            <TabPanel>
+            <TabPanel p="0">
               <BorrowTab />
             </TabPanel>
-            <TabPanel>
+            <TabPanel p="0">
               <RepayTab />
             </TabPanel>
           </TabPanels>

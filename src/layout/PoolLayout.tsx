@@ -15,10 +15,12 @@ export const PoolLayout = () => {
       <AppBanner />
       {media && <RebalancePerformanceMob />}
 
-      <Flex direction="column" justify="center" gap="24px" maxW="1300px" order={{ base: 3 }}>
+      <Flex direction="column" justify="center" gap="44px" maxW="1300px" order={{ base: 3 }}>
         <RebalancePerformance />
-        <PoolsHeader />
-        <Outlet />
+        <Flex direction="column" gap="24px">
+          <PoolsHeader />
+          <Outlet />
+        </Flex>
       </Flex>
     </Flex>
   );

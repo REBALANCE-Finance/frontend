@@ -22,8 +22,9 @@ import {
 import React, { useCallback } from "react";
 
 import { Icon } from "../../components/icon";
-import { ICON_NAMES, MEDIA_QUERY_MAX } from "../../consts";
+import { MEDIA_QUERY_MAX } from "../../consts";
 import { ConnectorNames } from "../../consts/connectors";
+import { ICON_NAMES } from "../../consts/iconNames";
 import { useAuth } from "../../hooks/useAuth";
 
 const CONNECT_METHODS = [

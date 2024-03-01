@@ -9,7 +9,9 @@ export const CustomTooltip = ({ active, payload }: TooltipProps<ValueType, NameT
         {payload?.map((e, i) => (
           <Flex flexDirection="column" key={i}>
             <Flex alignItems="center" justifyContent="space-between">
-              <Text variant="regular14">{e.name}</Text>
+              <Text variant="regular14">
+                {e.name} {e.value}
+              </Text>
             </Flex>
           </Flex>
         ))}

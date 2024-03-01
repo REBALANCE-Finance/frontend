@@ -15,7 +15,14 @@ export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool }) => {
     openModal({ type: ModalEnum.Withdraw, props: { pool, type: ModalEnum.Withdraw } });
   };
   return (
-    <Button variant="secondaryOutline" flex="1 1 0" onClick={handleOpenModal}>
+    <Button
+      variant="secondaryOutline"
+      flex="1 1 0"
+      onClick={e => {
+        e.stopPropagation();
+        handleOpenModal();
+      }}
+    >
       Withdraw
     </Button>
   );

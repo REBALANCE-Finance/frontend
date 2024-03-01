@@ -1,14 +1,15 @@
 import { Box, Flex } from "@chakra-ui/react";
 import React, { FC } from "react";
 
+import { themes } from "../../themes";
 import { IRiskProps } from "./types";
 
 const riskColor = {
-  1: "green",
-  2: "green",
-  3: "orange",
-  4: "orange",
-  5: "red"
+  1: themes.colors.greenAlpha["100"],
+  2: themes.colors.greenAlpha["100"],
+  3: themes.colors.orangeAlpha["100"],
+  4: themes.colors.orangeAlpha["100"],
+  5: themes.colors.redAlpha["100"]
 };
 
 export const Risk: FC<IRiskProps> = ({ risk }) => {
