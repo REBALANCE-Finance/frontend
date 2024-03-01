@@ -8,6 +8,7 @@ import {
   YAxis
 } from "recharts";
 
+import { themes } from "../../themes";
 import { CustomTooltip } from "./components/CustomTooltip";
 import { IAreaChartProps } from "./types";
 
@@ -40,8 +41,16 @@ export const AreaChart: FC<IAreaChartProps> = ({
           interval="preserveStartEnd"
           tickFormatter={tickFormatter}
           axisLine={false}
+          stroke={themes.colors.darkGray}
+          fontSize={themes.fontSizes.sm}
         />
-        <YAxis axisLine={false} tickSize={5} tickLine={false} />
+        <YAxis
+          axisLine={false}
+          tickSize={5}
+          tickLine={false}
+          fontSize={themes.fontSizes.sm}
+          stroke={themes.colors.darkGray}
+        />
         {lines}
       </AreaChartDefault>
     </ResponsiveContainer>

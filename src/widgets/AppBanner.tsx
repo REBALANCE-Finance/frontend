@@ -2,14 +2,17 @@ import { Button, Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
 
 import BannerImage from "../assets/image/Banner.svg";
+import { useStore } from "../hooks/useStoreContext";
+import { ModalContextEnum } from "../store/modal/types";
 
 export const AppBanner = () => {
+  const { openModal } = useStore("modalContextStore");
+
   return (
     <Flex
       h={{ base: "100%", md: "240px" }}
       w="100%"
       bg="black.70"
-      mb="44px"
       justify="center"
       p="16px"
       order={{ base: 1, md: 0 }}
@@ -39,7 +42,11 @@ export const AppBanner = () => {
               NFTs minted: 126 / 256
             </Text>
           </Flex>
-          <Button variant="primaryWhite" w={{ base: "100%", md: "auto" }}>
+          <Button
+            variant="primaryWhite"
+            w={{ base: "100%", md: "auto" }}
+            onClick={() => openModal({ type: ModalContextEnum.Reject })}
+          >
             Join & Mint NFT
           </Button>
         </Flex>

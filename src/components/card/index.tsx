@@ -1,15 +1,15 @@
 import {
-  Box,
   Card as ChakraCard,
   CardBody,
   CardFooter,
   CardHeader,
+  Circle,
   Flex,
-  // Image,
   Text
 } from "@chakra-ui/react";
 import React, { FC } from "react";
 
+import { TOKEN_ICONS } from "../../consts";
 import { IRowCard, RowCardProccessType } from "../../pages/Pools/types";
 import { DefaultDataType } from "../../types";
 import { Icon } from "../icon";
@@ -17,11 +17,12 @@ import { Icon } from "../icon";
 interface ICardProps {
   rowCard: IRowCard[];
   itemCard: DefaultDataType;
+  onClick: () => void;
 }
 
-export const Card: FC<ICardProps> = ({ rowCard, itemCard }) => {
+export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
   return (
-    <ChakraCard variant="poolCard">
+    <ChakraCard variant="poolCard" onClick={onClick}>
       {rowCard.map(elem => {
         switch (elem.name) {
           case "header":
@@ -33,10 +34,9 @@ export const Card: FC<ICardProps> = ({ rowCard, itemCard }) => {
                 alignItems="center"
               >
                 <Flex alignItems="center" gap="12px">
-                  {/* <Image boxSize="64px" src={itemCard?.icon} borderRadius="full" /> */}
-                  <Box boxSize="64px" borderRadius="full">
-                    <Icon name={itemCard.icon} size="100%" />
-                  </Box>
+                  <Circle border="1px solid" borderColor="darkGray" borderRadius="full" size="64px">
+                    <Icon name={TOKEN_ICONS[itemCard.token]} size="35px" />
+                  </Circle>
                   <Text textStyle="h2">{itemCard?.token}</Text>
                 </Flex>
                 {elem.proccess && elem.proccess({ item: itemCard })}
@@ -44,7 +44,7 @@ export const Card: FC<ICardProps> = ({ rowCard, itemCard }) => {
             );
           case "body":
             return (
-              <CardBody as={Flex} direction="column" gap="20px">
+              <CardBody as={Flex} direction="column" gap="20px" textStyle="text14">
                 <Flex flex="1 1 0" direction="column" gap="10px">
                   {elem.proccess &&
                     elem.proccess({ item: itemCard, type: RowCardProccessType.metrics })}

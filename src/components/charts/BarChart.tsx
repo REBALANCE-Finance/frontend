@@ -8,6 +8,7 @@ import {
   YAxis
 } from "recharts";
 
+import { themes } from "../../themes";
 import { CustomTooltip } from "./components/CustomTooltip";
 import { IBarChart } from "./types";
 
@@ -34,23 +35,12 @@ export const BarChart: FC<IBarChart> = ({
           axisLine={false}
           tickLine={false}
           minTickGap={1}
-          fontSize="6px"
+          fontSize={themes.fontSizes.sm}
+          color={themes.colors.darkGray}
           tickFormatter={tickFormatter}
         />
         <YAxis hide axisLine={false} tickSize={5} tickLine={false} reversed={reversed} />
         <Tooltip cursor={false} offset={30} content={<CustomTooltip />} />
-        {/* <Bar
-          key={1}
-          maxBarSize={20}
-          minPointSize={5}
-          dataKey="lending"
-          fill="rgba(76, 255, 148, 0.8)"
-          background={{ fill: "#272A30" }}
-        >
-          {data.map((elem, index) => (
-            <Cell cursor="pointer" key={`cell-${index}`} radius={10} />
-          ))}
-        </Bar> */}
         {bar}
       </BarChartDefault>
     </ResponsiveContainer>

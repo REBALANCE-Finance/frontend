@@ -4,7 +4,7 @@ import React from "react";
 import { CircularProgress } from "../../../components/circular-progress";
 import { Icon } from "../../../components/icon";
 import { ICON_NAMES, MEDIA_QUERY_MAX } from "../../../consts";
-import { Menu } from "./components/Menu";
+// import { Menu } from "./components/Menu";
 import { Strategies } from "./components/Strategies";
 
 export const PoolsHeader = () => {
@@ -28,17 +28,17 @@ export const PoolsHeader = () => {
             color="rgba(92, 100, 112, 1)"
             divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}
           >
-            <Text>Running since 19 Jan 2024</Text>
+            <Text color="darkGray">Running since 19 Jan 2024</Text>
 
-            <Text>DAO governed</Text>
+            <Text color="darkGray">DAO governed</Text>
 
-            <Link as={Flex} alignItems="center" gap="8px">
+            <Link as={Flex} alignItems="center" gap="8px" color="darkGray">
               Audited
               <Icon name={ICON_NAMES.link} size="sm" />
             </Link>
           </HStack>
 
-          <Menu />
+          {/* <Menu /> */}
 
           <CircularProgress />
         </Flex>

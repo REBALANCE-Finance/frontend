@@ -1,5 +1,5 @@
 import { inputAnatomy as parts } from "@chakra-ui/anatomy";
-import { createMultiStyleConfigHelpers, defineStyle } from "@chakra-ui/styled-system";
+import { createMultiStyleConfigHelpers } from "@chakra-ui/styled-system";
 
 const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(parts.keys);
 
@@ -40,7 +40,6 @@ const variantCustom = definePartsStyle({
     bg: "transparent",
     color: "white"
   },
-  element: {},
   group: {
     border: "1px solid",
     borderColor: "#1E1E1E",
@@ -49,33 +48,16 @@ const variantCustom = definePartsStyle({
     _valid: {
       borderColor: "red"
     }
-  }
+  },
 });
 
 const variants = {
   custom: variantCustom
 };
 
-const size = {
-  md: defineStyle({
-    fontSize: "sm",
-    px: "4",
-    h: "10",
-    borderRadius: "none"
-  })
-};
-
-const sizes = {
-  md: definePartsStyle({
-    field: size.md,
-    addon: size.md
-  })
-};
-
 export const inputTheme = defineMultiStyleConfig({
   baseStyle,
   variants,
-  sizes,
   defaultProps: {
     variant: "custom"
   }

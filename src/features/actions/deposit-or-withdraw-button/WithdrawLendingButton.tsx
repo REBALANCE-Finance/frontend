@@ -11,7 +11,8 @@ interface IWithdrawProps {
 export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool }) => {
   const { openModal } = useStore("modalStore");
 
-  const handleOpenModal = () => {
+  const handleOpenModal = e => {
+    e.stopPropagation();
     openModal({ type: ModalEnum.Withdraw, props: { pool, type: ModalEnum.Withdraw } });
   };
   return (

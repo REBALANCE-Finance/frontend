@@ -7,12 +7,22 @@ import {
 } from "@chakra-ui/react";
 import React, { FC } from "react";
 
-export const Modal: FC<ModalProps> = ({ isOpen, onClose, children, ...rest }) => {
+interface IModalProps extends ModalProps {
+  isCloseBtn?: boolean;
+}
+
+export const Modal: FC<IModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  isCloseBtn = true,
+  ...rest
+}) => {
   return (
     <DefaultModal isOpen={isOpen} onClose={onClose} {...rest} isCentered>
       <ModalOverlay backdropFilter="auto" backdropBlur="5px" />
       <ModalContent bg="black.100" p="24px" borderRadius="4px" gap="24px">
-        <ModalCloseButton color="#626262" zIndex={10} />
+        {isCloseBtn && <ModalCloseButton color="#626262" zIndex={10} />}
         {children}
       </ModalContent>
     </DefaultModal>

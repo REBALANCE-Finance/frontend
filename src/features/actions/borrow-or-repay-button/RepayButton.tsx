@@ -11,7 +11,8 @@ interface IRepayButtonProps {
 export const RepayButton: FC<IRepayButtonProps> = ({ pool }) => {
   const { openModal } = useStore("modalStore");
 
-  const handleOpenModal = () => {
+  const handleOpenModal = e => {
+    e.stopPropagation();
     openModal({ type: ModalEnum.Repay, props: { pool, type: ModalEnum.Repay } });
   };
   return (

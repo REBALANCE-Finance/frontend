@@ -1,12 +1,15 @@
 import { IDefaultModalProps } from "../../features/modals/types";
 
 export enum ModalEnum {
-  SuccessTrx = "SuccessTrx",
-  ErrorTrx = "ErrorTrx",
   Deposit = "Deposit",
   Withdraw = "Withdraw",
   Borrow = "Borrow",
   Repay = "Repay"
+}
+
+export enum ModalContextEnum {
+  Success = "Success",
+  Reject = "Reject"
 }
 
 type Props<T> = Partial<T>;
@@ -28,3 +31,10 @@ export type IOpenModalArgs =
       type: ModalEnum.Repay;
       props?: Props<IDefaultModalProps>;
     };
+
+export type IOpenModalContextArgs =
+  | {
+      type: ModalContextEnum.Success;
+      props?: IDefaultModalProps;
+    }
+  | { type: ModalContextEnum.Reject; props?: IDefaultModalProps };

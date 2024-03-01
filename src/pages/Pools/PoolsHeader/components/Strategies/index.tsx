@@ -1,22 +1,83 @@
 import { Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import React from "react";
+import { useAccount, useSwitchChain } from "wagmi";
 
 import { Icon } from "../../../../../components/icon";
 import { ICON_NAMES } from "../../../../../consts";
 
+const chainIcons: Record<number, string> = {
+  42161: ICON_NAMES.arbitrum,
+  56: ICON_NAMES.bnbChain,
+  10: ICON_NAMES.optimism
+};
+
+const chainNames: Record<number, string> = {
+  42161: "Arbitrum",
+  56: "Binance Smart Chain",
+  10: "Optimism"
+};
+
 export const Strategies = () => {
+  const { chains, switchChain } = useSwitchChain();
+  const { chain } = useAccount();
+
+  const handleSwitchChain = (id: number) => {
+    switchChain({ chainId: id });
+  };
+
   return (
     <Menu>
       <MenuButton>
         <Flex alignItems="center" gap="12px" color="lightGray">
-          <Icon name={ICON_NAMES.arbitrum} />
-          <Text fontSize="xl">Arbitrum Yield Strategies</Text>
+          <Icon name={chainIcons[chain?.id ?? 0]} />
+          <Text fontSize="xl">{chainNames[chain?.id ?? 0]} Yield Strategies</Text>
           <Icon name={ICON_NAMES.chevronDown} />
         </Flex>
       </MenuButton>
 
-      <MenuList bg="black.70" border="none">
-        <MenuItem bg="transparent">Download</MenuItem>
+      <MenuList as={Flex} direction="column" bg="black.60" border="none" p="24px 12px" gap="24px">
+        <Text fontSize="sm">Select the Market</Text>
+
+        {chains.map(({ id, name }) => {
+          const isActiveChain = id === chain?.id;
+          if (id === 42161) {
+            return (
+              <MenuItem
+                key={name}
+                bg="transparent"
+                p="0"
+                gap="8px"
+                color={isActiveChain ? "greenAlpha.60" : undefined}
+                onClick={() => handleSwitchChain(id)}
+              >
+                <Icon name={chainIcons[id]} />
+                <Text>{name}</Text>
+              </MenuItem>
+            );
+          }
+          return (
+            <MenuItem
+              key={name}
+              bg="transparent"
+              p="0"
+              gap="8px"
+              onClick={() => handleSwitchChain(id)}
+              isDisabled
+            >
+              <Icon name={chainIcons[id]} />
+              <Text>{name}</Text>
+              <Text
+                fontSize="xs"
+                p="0 4px"
+                bg="greenAlpha.10"
+                color="greenAlpha.80"
+                borderRadius="50px"
+              >
+                Coming soon
+              </Text>
+            </MenuItem>
+          );
+        })}
       </MenuList>
     </Menu>
   );

@@ -11,12 +11,12 @@ import { getCurrentPath, performanceInfo } from "./utils";
 
 const infoMock = {
   lending: [
-    { label: "Total value locked", value: "100000" },
-    { label: "Total earned", value: "100000" }
+    { label: "Total value locked", value: "10254000" },
+    { label: "Total earned", value: "1012100" }
   ],
   borrowing: [
-    { label: "Total borrowed", value: "100000" },
-    { label: "Total money saved", value: "100000" }
+    { label: "Total borrowed", value: "112000" },
+    { label: "Total money saved", value: "43000" }
   ]
 };
 

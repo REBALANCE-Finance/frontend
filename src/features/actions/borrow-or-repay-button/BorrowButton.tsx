@@ -11,7 +11,8 @@ interface IBorrowButtonProps {
 export const BorrowButton: FC<IBorrowButtonProps> = ({ pool }) => {
   const { openModal } = useStore("modalStore");
 
-  const handleOpenModal = () => {
+  const handleOpenModal = e => {
+    e.stopPropagation();
     openModal({ type: ModalEnum.Borrow, props: { pool, type: ModalEnum.Borrow } });
   };
   return (
