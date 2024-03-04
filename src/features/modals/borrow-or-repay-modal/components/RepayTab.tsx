@@ -77,7 +77,11 @@ export const RepayTab = () => {
           <Text textStyle="textMono16">5.6%</Text>
         </HStack>
 
-        <Button variant="primaryFilled" type="submit">
+        <Button
+          variant="primaryFilled"
+          type="submit"
+          isDisabled={(!values.borrow && !values.collateral) || !isValid}
+        >
           Repay
         </Button>
       </Flex>

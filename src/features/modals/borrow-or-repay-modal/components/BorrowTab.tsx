@@ -78,7 +78,11 @@ export const BorrowTab = () => {
           <Text textStyle="textMono16">5.6%</Text>
         </HStack>
 
-        <Button variant="primaryFilled" type="submit">
+        <Button
+          variant="primaryFilled"
+          type="submit"
+          isDisabled={(!values.borrow && !values.collateral) || !isValid}
+        >
           Borrow
         </Button>
       </Flex>

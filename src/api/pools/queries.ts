@@ -3,8 +3,8 @@ import { IMockData } from "./types";
 export const mockData: IMockData[] = [
   {
     token: "usdt",
-    tokenAddress: "ffsdfsdfsdfdsf",
-    rebalancerAddress: "fdsfdsfsdfsf",
+    tokenAddress: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+    rebalancerAddress: "0x58008140AE706D915fFcC44F26E919a20f296d9e",
     tokenPriceInUsd: 1,
     tokenPrice24HrChangeInPercentages: 1,
     tokenPrice24HrChangeInUsd: 1,
@@ -16,7 +16,7 @@ export const mockData: IMockData[] = [
     deposit: 0,
     borrowRate: 12.5,
     borrowed: 1234334,
-    risk: 1
+    risk: 5
   },
   {
     token: "usdc",

@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import { PERFORMANCE_TYPE } from "../../../consts/performance-type";
+import { ROUTES_TYPE } from "../../../consts/routes-type";
 import { themes } from "../../../themes";
 
 export const colorsArea = {
@@ -15,10 +15,10 @@ export const tickFormatter = (e: string) => {
 export const areaLines = [
   {
     name: "Earned from lending",
-    type: PERFORMANCE_TYPE.lending
+    type: ROUTES_TYPE.lending
   },
   {
     name: "Spent on borrowing",
-    type: PERFORMANCE_TYPE.borrowing
+    type: ROUTES_TYPE.borrowing
   }
 ];

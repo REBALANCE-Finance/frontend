@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
 import { MEDIA_QUERY_MAX } from "../../consts";
-import { PERFORMANCE_TYPE } from "../../consts/performance-type";
+import { ROUTES_TYPE } from "../../consts/routes-type";
 import { RebalancePerformanceCard } from "./RebalancePerformanceCard";
 import { PerformanceChart } from "./RebalancePerformanceCharts";
 import { getCurrentPath, performanceInfo } from "./utils";
@@ -70,7 +70,7 @@ export const RebalancePerformanceMob = () => {
       <StackDivider />
 
       <Flex justify="space-between" w="100%" gap="10px" color="black.5" p="16px">
-        {infoMock[pathName as PERFORMANCE_TYPE]?.map((elem, i) => (
+        {infoMock[pathName as ROUTES_TYPE]?.map((elem, i) => (
           <Flex key={i}>
             <Text>{elem.label}:</Text>
             <Text>{elem.value}</Text>

@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import React, { FC, useState } from "react";
 
-import { Icon } from "../../components/icon";
+import Icon from "../../components/icon";
 import { ICON_NAMES } from "../../consts";
 import { ArchivedTab } from "./components/ArchivedTab";
 import { InboxTab } from "./components/InboxTab";

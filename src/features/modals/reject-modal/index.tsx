@@ -1,7 +1,7 @@
 import { Button, Flex, ModalBody, Text, VStack } from "@chakra-ui/react";
 import React, { FC } from "react";
 
-import { Icon } from "../../../components/icon";
+import Icon from "../../../components/icon";
 import { Modal } from "../../../components/modal";
 import { ICON_NAMES } from "../../../consts";
 import { IDefaultModalContextProps } from "../types";

@@ -1,3 +1,5 @@
+import "virtual:svg-icons-register";
+
 import { Buffer } from "buffer";
 import React from "react";
 import ReactDOM from "react-dom/client";

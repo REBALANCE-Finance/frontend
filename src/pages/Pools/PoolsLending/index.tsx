@@ -104,7 +104,7 @@ export const PoolsLending = () => {
   ];
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 3, lg: 4 }} spacing="24px">
+    <SimpleGrid columns={{ base: 1, md: 3, xl: 4 }} spacing="24px">
       {mockData.map(elem => (
         <CardPool
           key={elem.token}

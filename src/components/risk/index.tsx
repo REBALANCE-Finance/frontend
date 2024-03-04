@@ -1,26 +1,22 @@
 import { Box, Flex } from "@chakra-ui/react";
 import React, { FC } from "react";
 
-import { themes } from "../../themes";
 import { IRiskProps } from "./types";
+import { riskColor } from "./utils";
 
-const riskColor = {
-  1: themes.colors.greenAlpha["100"],
-  2: themes.colors.greenAlpha["100"],
-  3: themes.colors.orangeAlpha["100"],
-  4: themes.colors.orangeAlpha["100"],
-  5: themes.colors.redAlpha["100"]
-};
-
-export const Risk: FC<IRiskProps> = ({ risk }) => {
+export const Risk: FC<IRiskProps> = ({ risk, w = "4px", h = "24px", gap = "4px" }) => {
   const defaultRiskItems = Array.from({ length: 5 }, (_, i) => (
-    <Box key={i} w="4px" h="24px" bg="black.60"></Box>
+    <Box key={i} w={w} h={h} bg="black.60" borderRadius="2px"></Box>
   )).slice(risk);
   const activeRiskItems = Array.from({ length: risk }, (_, i) => (
-    <Box key={i} w="4px" h="24px" bg={riskColor[risk as keyof typeof riskColor]}></Box>
+    <Box key={i} w={w} h={h} borderRadius="2px" bg={riskColor[risk]}></Box>
   ));
 
   const finaly = [...activeRiskItems, ...defaultRiskItems];
 
-  return <Flex gap="4px">{finaly}</Flex>;
+  return (
+    <Flex gap={gap} align="center">
+      {finaly}
+    </Flex>
+  );
 };

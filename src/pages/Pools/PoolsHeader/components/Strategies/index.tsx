@@ -2,20 +2,8 @@ import { Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/rea
 import React from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 
-import { Icon } from "../../../../../components/icon";
-import { ICON_NAMES } from "../../../../../consts";
-
-const chainIcons: Record<number, string> = {
-  42161: ICON_NAMES.arbitrum,
-  56: ICON_NAMES.bnbChain,
-  10: ICON_NAMES.optimism
-};
-
-const chainNames: Record<number, string> = {
-  42161: "Arbitrum",
-  56: "Binance Smart Chain",
-  10: "Optimism"
-};
+import Icon from "../../../../../components/icon";
+import { CHAIN_ICONS, CHAIN_NAMES, ICON_NAMES } from "../../../../../consts";
 
 export const Strategies = () => {
   const { chains, switchChain } = useSwitchChain();
@@ -29,8 +17,8 @@ export const Strategies = () => {
     <Menu>
       <MenuButton>
         <Flex alignItems="center" gap="12px" color="lightGray">
-          <Icon name={chainIcons[chain?.id ?? 0]} />
-          <Text fontSize="xl">{chainNames[chain?.id ?? 0]} Yield Strategies</Text>
+          <Icon name={CHAIN_ICONS[chain?.id ?? 0]} />
+          <Text fontSize="xl">{CHAIN_NAMES[chain?.id ?? 0]} Yield Strategies</Text>
           <Icon name={ICON_NAMES.chevronDown} />
         </Flex>
       </MenuButton>
@@ -50,7 +38,7 @@ export const Strategies = () => {
                 color={isActiveChain ? "greenAlpha.60" : undefined}
                 onClick={() => handleSwitchChain(id)}
               >
-                <Icon name={chainIcons[id]} />
+                <Icon name={CHAIN_ICONS[id]} />
                 <Text>{name}</Text>
               </MenuItem>
             );
@@ -64,7 +52,7 @@ export const Strategies = () => {
               onClick={() => handleSwitchChain(id)}
               isDisabled
             >
-              <Icon name={chainIcons[id]} />
+              <Icon name={CHAIN_ICONS[id]} />
               <Text>{name}</Text>
               <Text
                 fontSize="xs"

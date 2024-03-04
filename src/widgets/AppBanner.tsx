@@ -14,7 +14,7 @@ export const AppBanner = () => {
       w="100%"
       bg="black.70"
       justify="center"
-      p="16px"
+      p={{ base: "16px", md: "0" }}
       order={{ base: 1, md: 0 }}
     >
       <Flex
@@ -22,7 +22,7 @@ export const AppBanner = () => {
         gap="44px"
         maxW={"1300px"}
         w="100%"
-        px={{ base: "16px", xxl: "0" }}
+        px={{ base: "16px", xl: "0" }}
       >
         <Image src={BannerImage} />
         <Flex

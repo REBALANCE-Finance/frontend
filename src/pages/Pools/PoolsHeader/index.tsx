@@ -2,7 +2,7 @@ import { Flex, HStack, Link, StackDivider, Text, useMediaQuery } from "@chakra-u
 import React from "react";
 
 import { CircularProgress } from "../../../components/circular-progress";
-import { Icon } from "../../../components/icon";
+import Icon from "../../../components/icon";
 import { ICON_NAMES, MEDIA_QUERY_MAX } from "../../../consts";
 // import { Menu } from "./components/Menu";
 import { Strategies } from "./components/Strategies";

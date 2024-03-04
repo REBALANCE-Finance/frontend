@@ -1,4 +1,4 @@
-export enum PERFORMANCE_TYPE {
+export enum ROUTES_TYPE {
   lending = "lending",
   borrowing = "borrowing"
 }

@@ -1,7 +1,7 @@
-import { PERFORMANCE_TYPE } from "../../../consts/performance-type";
+import { ROUTES_TYPE } from "../../../consts/routes-type";
 
 export interface IRebalancePerformanceProps {
-  activeType: PERFORMANCE_TYPE | string;
+  activeType: ROUTES_TYPE | string;
 }
 
 export interface ILegendAreaChart {
@@ -11,5 +11,5 @@ export interface ILegendAreaChart {
 
 export interface IAreaLineProps {
   name: string;
-  type: PERFORMANCE_TYPE;
+  type: ROUTES_TYPE;
 }
