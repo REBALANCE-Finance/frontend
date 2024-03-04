@@ -65,7 +65,9 @@ export const WithdrawTab: FC<IWithdrawTabProps> = ({ pool }) => {
           <Text textStyle="textMono16">{formatNumber(0.000005)} (ETH)</Text>
         </HStack>
 
-        <Button variant="primaryFilled">Withdraw</Button>
+        <Button variant="primaryFilled" type="submit" isDisabled={!values.withdraw || !isValid}>
+          Withdraw
+        </Button>
       </Flex>
     </form>
   );

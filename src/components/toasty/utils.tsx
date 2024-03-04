@@ -2,7 +2,7 @@ import { Text } from "@chakra-ui/react";
 import { toast } from "react-toastify";
 
 import { DEFAULT_TOAST_TIME, ICON_NAMES } from "../../consts";
-import { Icon } from "../icon";
+import Icon from "../icon";
 import { ToastWrapper } from ".";
 import { IToastProps, ToastyTypes } from "./types";
 

@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 
-import { Icon } from "../../../../components/icon";
+import Icon from "../../../../components/icon";
 import { ICON_NAMES } from "../../../../consts";
 import { TransactionHistory } from "./components/TransactionHistory";
 

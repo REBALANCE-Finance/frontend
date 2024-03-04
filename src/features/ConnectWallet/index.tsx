@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback } from "react";
 
-import { Icon } from "../../components/icon";
+import Icon from "../../components/icon";
 import { MEDIA_QUERY_MAX } from "../../consts";
 import { ConnectorNames } from "../../consts/connectors";
 import { ICON_NAMES } from "../../consts/iconNames";

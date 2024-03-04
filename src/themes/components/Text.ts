@@ -9,6 +9,14 @@ export const Text = defineStyleConfig({
       textDecoration: "underline",
       textDecorationStyle: "dashed",
       color: "darkGray"
+    },
+    t22: {
+      fontSize: "xl",
+      fontWeight: 500
+    },
+    t20: {
+      fontSize: "lg",
+      fontWeight: 500
     }
   },
   defaultProps: {}

@@ -1,7 +1,7 @@
 import { Box, Button, useDisclosure, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 
-import { Icon } from "../components/icon";
+import Icon from "../components/icon";
 import { ICON_NAMES, MEDIA_QUERY_MAX } from "../consts";
 import { Notification } from "../features/Notification";
 

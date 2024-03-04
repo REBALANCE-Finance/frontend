@@ -1,4 +1,3 @@
-import "virtual:svg-icons-register";
 import "react-toastify/dist/ReactToastify.css";
 import "../assets/styles/index.scss";
 

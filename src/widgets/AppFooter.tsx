@@ -3,7 +3,7 @@ import React from "react";
 
 import LogoDesc from "../assets/logo/logo-long.svg";
 import LogoMob from "../assets/logo/logo-short.svg";
-import { Icon } from "../components/icon";
+import Icon from "../components/icon";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { FooterLink, FooterMedia } from "./utils";
 

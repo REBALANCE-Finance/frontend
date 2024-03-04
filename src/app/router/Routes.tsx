@@ -2,9 +2,11 @@ import { Suspense } from "react";
 import { createBrowserRouter, Navigate, RouterProvider, ScrollRestoration } from "react-router-dom";
 
 import { ROUTE_PATHS } from "../../consts";
+import { AssetLayout } from "../../layout/AssetLayout";
 import { MainLayout } from "../../layout/MainLayout";
 import { PoolLayout } from "../../layout/PoolLayout";
-import { LendingAsset } from "../../pages/LendingAsset";
+import { BorrowAsset } from "../../pages/AssetsPages/BorrowAsset";
+import { LendingAsset } from "../../pages/AssetsPages/LendingAsset";
 import { NotFound } from "../../pages/NotFound";
 import { PoolsBorrow } from "../../pages/Pools/PoolsBorrow";
 import { PoolsLending } from "../../pages/Pools/PoolsLending";
@@ -43,8 +45,17 @@ const routes = createBrowserRouter([
         ]
       },
       {
-        path: ROUTE_PATHS.lendingAsset,
-        element: <LendingAsset />
+        element: <AssetLayout />,
+        children: [
+          {
+            path: ROUTE_PATHS.lendingAsset,
+            element: <LendingAsset />
+          },
+          {
+            path: ROUTE_PATHS.borrowingAsset,
+            element: <BorrowAsset />
+          }
+        ]
       }
     ]
   }

@@ -2,7 +2,7 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { FC } from "react";
 
-import { Icon } from "../../../../../../components/icon";
+import Icon from "../../../../../../components/icon";
 import { ICON_NAMES } from "../../../../../../consts";
 import { ellipsis } from "../../../../../../utils";
 import { ITransactionHistory } from "../../../../types";

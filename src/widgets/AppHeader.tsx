@@ -17,7 +17,7 @@ export const AppHeader = () => {
   return (
     <Flex
       alignItems="center"
-      p={{ base: "6px 16px", md: "24px 16px", xxl: "24px 0" }}
+      p={{ base: "6px 16px", xl: "24px 0px" }}
       justifyContent="space-between"
       maxW={"1300px"}
       minH={{ base: "56px", md: "auto" }}

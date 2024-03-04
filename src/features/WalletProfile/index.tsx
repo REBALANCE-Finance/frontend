@@ -14,7 +14,7 @@ import React from "react";
 import { useAccount, useDisconnect } from "wagmi";
 
 import { JazzIcon } from "../../components/address-icon/JazzIcon";
-import { Icon } from "../../components/icon";
+import Icon from "../../components/icon";
 import { ICON_NAMES } from "../../consts";
 import { ellipsis } from "../../utils";
 import { WalletProfileBtn } from "./components/WalletProfileBtn";
