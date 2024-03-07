@@ -37,14 +37,26 @@ export const RebalancePerformance = () => {
     <Flex gap="24px">
       <Flex direction="column" gap="12px">
         {performanceInfo.map(elem => (
-          <RebalancePerformanceCard
+          <Link
+            as={NavLink}
+            to={`/${elem.type}`}
             key={elem.title}
-            title={elem.title}
-            subtitle={elem.subtitle}
-            image={elem.image}
-            info={infoMock[elem.type]}
-            isActive={elem.type === pathName}
-          />
+            textAlign="center"
+            borderRadius="3px"
+            p="8px 12px"
+            w="100%"
+            color={elem.type === pathName ? "" : "black.0"}
+            borderColor={elem.type === pathName ? "greenAlpha.100" : "#1F1F1F"}
+          >
+            <RebalancePerformanceCard
+              key={elem.title}
+              title={elem.title}
+              subtitle={elem.subtitle}
+              image={elem.image}
+              info={infoMock[elem.type]}
+              isActive={elem.type === pathName}
+            />
+          </Link>
         ))}
       </Flex>
 

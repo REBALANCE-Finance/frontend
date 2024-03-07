@@ -13,7 +13,10 @@ import { PoolsLending } from "../../pages/Pools/PoolsLending";
 
 export const routesList = [
   { name: "Lending", path: ROUTE_PATHS.lending },
-  { name: "Borrowing", path: ROUTE_PATHS.borrowing }
+  { name: "Borrowing", path: ROUTE_PATHS.borrowing },
+  { name: "Swap", path: "/" },
+  { name: "Documentation", path: "/" },
+  { name: "DAO", path: "/" }
 ];
 
 const routes = createBrowserRouter([
