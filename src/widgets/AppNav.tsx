@@ -1,7 +1,7 @@
 import {
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
+  // DrawerCloseButton,
   DrawerContent,
   Flex,
   IconButton,
@@ -41,9 +41,14 @@ export const AppNav = () => {
         />
 
         <Drawer isOpen={isOpen} onClose={onClose}>
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerBody as={Flex} direction="column" gap="16px">
+          <DrawerContent
+            position="absolute"
+            height="calc(100% - 56px) !important"
+            marginTop="auto"
+            bg="#09090B"
+          >
+            {/* <DrawerCloseButton /> */}
+            <DrawerBody as={Flex} direction="column" gap="16px" mt="25px">
               {routesList.map(route => (
                 <Link
                   variant="nav"
