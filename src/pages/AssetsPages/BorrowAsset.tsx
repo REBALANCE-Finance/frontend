@@ -1,16 +1,42 @@
-import { Flex } from "@chakra-ui/layout";
-import React from "react";
+import { Flex } from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
+import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { mockData } from "../../api/pools/queries";
+import { storesContext } from "../../store/app.store";
 import { AssetHeader } from "./components/header/AssetHeader";
 
-export const BorrowAsset = () => {
+export const BorrowAsset = observer(() => {
+  const { poolsStore } = useContext(storesContext);
   const { poolAddress } = useParams();
-  const pool = mockData.find(item => item.rebalancerAddress === poolAddress);
+
+  useEffect(() => {
+    if (!poolsStore.isLoading && poolsStore.pools.length === 0) {
+      poolsStore.fetchPools("borrowing");
+    }
+  }, [poolsStore]);
+
+  const pool = poolsStore.pools.find(item => item.rebalancerAddress === poolAddress);
+
+  if (poolsStore.isLoading) {
+    return (
+      <Flex h="100%" w="100%" justifyContent="center" alignItems="center">
+        Loading...
+      </Flex>
+    );
+  }
+
+  if (!pool) {
+    return (
+      <Flex h="100%" w="100%" justifyContent="center" alignItems="center">
+        Pool not found
+      </Flex>
+    );
+  }
+
   return (
     <Flex h="100%" w="100%">
       <AssetHeader pool={pool} />
     </Flex>
   );
-};
+});

@@ -15,7 +15,3 @@ export interface IPoolData {
   borrowRate: number;
   borrowed: number;
 }
-export interface IPoolsData {
-  token: string;
-  vaultAddress: string;
-}

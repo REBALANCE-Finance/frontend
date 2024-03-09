@@ -1,22 +1,40 @@
-import { Divider, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/react";
-import React from "react";
+import { Box,Divider, Flex, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
+import React, { useContext, useEffect } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
 
-import { mockData } from "../../../api/pools/queries";
 import { CardPool } from "../../../components/card";
 import { Tooltip } from "../../../components/tooltip";
 import { ROUTE_PATHS } from "../../../consts";
 import { BorrowButton } from "../../../features/actions/borrow-or-repay-button/BorrowButton";
 import { RepayButton } from "../../../features/actions/borrow-or-repay-button/RepayButton";
+import { storesContext } from "../../../store/app.store";
 import { formatNumber, formatPercent } from "../../../utils/formatNumber";
-import { IRowCard, RowCardNames, RowCardProccessType } from "../types";
+import { IPoolData, IRowCard, RowCardNames, RowCardProccessType } from "../types";
 
-export const PoolsBorrow = () => {
+export const PoolsBorrow = observer(() => {
+  const { poolsStore } = useContext(storesContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    poolsStore.fetchPools("borrowing");
+  }, [poolsStore]);
 
   const handleLink = (poolAddress: string) => {
     navigate(generatePath(ROUTE_PATHS.borrowingAsset, { poolAddress }));
   };
+
+  if (poolsStore.isLoading && poolsStore.pools.length === 0) {
+    return (
+      <Flex justifyContent="center" alignItems="center" h="100vh">
+        <Spinner />
+      </Flex>
+    );
+  }
+
+  if (poolsStore.error) {
+    return <Box textAlign="center">Error loading pools: {poolsStore.error.message}</Box>;
+  }
 
   const rowCard: IRowCard[] = [
     {
@@ -73,16 +91,17 @@ export const PoolsBorrow = () => {
       }
     }
   ];
+
   return (
     <SimpleGrid columns={{ base: 1, md: 3, xl: 4 }} spacing="24px">
-      {mockData.map(elem => (
+      {poolsStore.pools.map((pool: IPoolData) => (
         <CardPool
-          key={elem.token}
+          key={pool.token}
+          itemCard={pool}
           rowCard={rowCard}
-          itemCard={elem}
-          onClick={() => handleLink(elem.rebalancerAddress)}
+          onClick={() => handleLink(pool.rebalancerAddress)}
         />
       ))}
     </SimpleGrid>
   );
-};
+});

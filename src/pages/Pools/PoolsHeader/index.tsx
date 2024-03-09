@@ -16,7 +16,7 @@ export const PoolsHeader = () => {
         {!media && (
           <Link as={Flex} alignItems="center" gap="8px" fontSize="sm" color="whiteAlpha.70">
             Bridge to Arbitrum
-            <Icon name={ICON_NAMES.link} size="sm" />
+            <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" />
           </Link>
         )}
       </Flex>

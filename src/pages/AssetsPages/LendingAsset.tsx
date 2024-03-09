@@ -1,12 +1,13 @@
 import { Button, Divider, Flex, HStack, Link, Text } from "@chakra-ui/react";
-import React from "react";
+import { observer } from "mobx-react-lite";
+import React, { useContext, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 
-import { mockData } from "../../api/pools/queries";
 import Icon from "../../components/icon";
 import { CHAIN_ICONS, ICON_NAMES } from "../../consts";
 import { STRATEGIES } from "../../consts/strategies";
+import { storesContext } from "../../store/app.store";
 import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
 
@@ -23,11 +24,17 @@ const strategies = [
   }
 ];
 
-export const LendingAsset = () => {
-  const { poolAddress } = useParams();
+export const LendingAsset = observer(() => {
   const { chain } = useAccount();
+  const { poolsStore } = useContext(storesContext);
+  const { poolAddress } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const pool = mockData.find(item => item.rebalancerAddress === poolAddress);
+
+  useEffect(() => {
+    poolsStore.fetchPools("lending");
+  }, [poolsStore]);
+
+  const pool = poolsStore.pools.find(item => item.rebalancerAddress === poolAddress);
 
   const strategic = searchParams.get("strategic") ?? STRATEGIES.based;
 
@@ -118,4 +125,4 @@ export const LendingAsset = () => {
       </Flex>
     </Flex>
   );
-};
+});

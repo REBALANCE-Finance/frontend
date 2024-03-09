@@ -12,12 +12,11 @@ export const Strategies = () => {
   const handleSwitchChain = (id: number) => {
     switchChain({ chainId: id });
   };
-
   return (
     <Menu>
       <MenuButton>
         <Flex alignItems="center" gap="12px" color="lightGray">
-          <Icon name={CHAIN_ICONS[chain?.id ?? 0]} />
+          <Icon name={CHAIN_ICONS[chain?.id ?? 42161]} />
           <Text fontSize="xl">{CHAIN_NAMES[chain?.id ?? 0]} Yield Strategies</Text>
           <Icon name={ICON_NAMES.chevronDown} />
         </Flex>

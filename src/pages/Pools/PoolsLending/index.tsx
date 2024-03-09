@@ -1,24 +1,29 @@
 import { Divider, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/react";
-import React from "react";
+import { observer } from "mobx-react-lite";
+import React, { useContext, useEffect } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
 
-import { mockData } from "../../../api/pools/queries";
 import { CardPool } from "../../../components/card";
 import { Risk } from "../../../components/risk";
 import { Tooltip } from "../../../components/tooltip";
 import { ROUTE_PATHS } from "../../../consts";
 import { DepositLendingButton } from "../../../features/actions/deposit-or-withdraw-button/DepositLendingButton";
 import { WithdrawLendingButton } from "../../../features/actions/deposit-or-withdraw-button/WithdrawLendingButton";
+import { storesContext } from "../../../store/app.store";
 import { formatNumber, formatPercent } from "../../../utils/formatNumber";
 import { IRowCard, RowCardNames, RowCardProccessType } from "../types";
 
-export const PoolsLending = () => {
+export const PoolsLending = observer(() => {
+  const { poolsStore } = useContext(storesContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    poolsStore.fetchPools("lending");
+  }, [poolsStore]);
 
   const handleLink = (poolAddress: string) => {
     navigate(generatePath(ROUTE_PATHS.lendingAsset, { poolAddress }));
   };
-
   const rowCard: IRowCard[] = [
     {
       name: RowCardNames.header,
@@ -105,16 +110,14 @@ export const PoolsLending = () => {
 
   return (
     <SimpleGrid columns={{ base: 1, md: 3, xl: 4 }} spacing="24px">
-      {mockData.map(elem => (
+      {poolsStore.pools.map(elem => (
         <CardPool
           key={elem.token}
           rowCard={rowCard}
           itemCard={elem}
-          onClick={() => {
-            handleLink(elem.rebalancerAddress);
-          }}
+          onClick={() => handleLink(elem.rebalancerAddress)}
         />
       ))}
     </SimpleGrid>
   );
-};
+});

@@ -56,7 +56,7 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
           ></Box>
         </Flex>
 
-        <Text fontSize="sm" fontWeight="500">
+        <Text fontSize="sm" fontWeight="500" textAlign="left">
           {subtitle}
         </Text>
 
