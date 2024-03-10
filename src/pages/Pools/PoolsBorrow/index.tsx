@@ -17,7 +17,7 @@ export const PoolsBorrow = observer(() => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    poolsStore.fetchPools("borrowing");
+    poolsStore.fetchPools("lending");
   }, [poolsStore]);
 
   const handleLink = (poolAddress: string) => {

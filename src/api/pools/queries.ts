@@ -12,9 +12,9 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
   const data: IPoolsData[] = await response.json();
   const pools: IPoolData[] = data.map(item => {
     return {
-      token: item.token?.toString()?.toLowerCase(),
-      tokenAddress: "0x58008140AE706D915fFcC44F26E919a20f296d9e",
-      rebalancerAddress: "0x58008140AE706D915fFcC44F26E919a20f296d9e",
+      token: item?.token?.toString()?.toLowerCase(),
+      tokenAddress: item?.tokenAddress,
+      rebalancerAddress: item?.vaultAddress,
       tokenPriceInUsd: 1,
       tokenPrice24HrChangeInPercentages: 1,
       tokenPrice24HrChangeInUsd: 1,

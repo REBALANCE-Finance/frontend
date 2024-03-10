@@ -12,7 +12,7 @@ export const BorrowAsset = observer(() => {
 
   useEffect(() => {
     if (!poolsStore.isLoading && poolsStore.pools.length === 0) {
-      poolsStore.fetchPools("borrowing");
+      poolsStore.fetchPools("lending");
     }
   }, [poolsStore]);
 

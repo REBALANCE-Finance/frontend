@@ -18,4 +18,5 @@ export interface IPoolData {
 export interface IPoolsData {
   token: string;
   vaultAddress: string;
+  tokenAddress: string;
 }
