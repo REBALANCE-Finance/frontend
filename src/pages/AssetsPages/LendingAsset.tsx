@@ -10,6 +10,7 @@ import { STRATEGIES } from "../../consts/strategies";
 import { storesContext } from "../../store/app.store";
 import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
+import BaseStrategy from "./components/header/BaseStrategy";
 
 const strategies = [
   {
@@ -85,7 +86,7 @@ export const LendingAsset = observer(() => {
       <Flex gap="10px" align="center">
         {strategies.map(({ key, title, description }) => {
           const isActive = key === strategic;
-
+          console.log(strategic, "strat");
           return (
             <Flex
               as={Button}
@@ -123,6 +124,7 @@ export const LendingAsset = observer(() => {
           <Icon name={ICON_NAMES.add} /> <Text>Add Your Strategy</Text>
         </Flex>
       </Flex>
+      <Flex direction="column">{strategic === STRATEGIES.based && <BaseStrategy />}</Flex>
     </Flex>
   );
 });

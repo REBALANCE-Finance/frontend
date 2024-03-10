@@ -1,4 +1,4 @@
-import { Flex, Image, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Image, Link, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 import { useAccount } from "wagmi";
 
@@ -23,12 +23,14 @@ export const AppHeader = () => {
       minH={{ base: "56px", md: "auto" }}
       w="100%"
     >
-      <Image src={media ? LogoMob : LogoDesc} w={{ base: "30px", md: "150px" }} />
+      <Link href="/">
+        <Image src={media ? LogoMob : LogoDesc} w={{ base: "30px", md: "150px" }} />
+      </Link>
 
       {!media && <AppNav />}
 
       <Flex gap="12px" alignItems="center">
-        <AppNotification />
+        {isConnected && <AppNotification />}
         {isConnected ? <WalletProfile /> : <ConnectWallet />}
         {media && <AppNav />}
       </Flex>

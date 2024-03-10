@@ -1,4 +1,4 @@
-import { Box,Divider, Flex, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
