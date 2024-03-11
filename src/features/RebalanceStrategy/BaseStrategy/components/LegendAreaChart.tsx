@@ -19,7 +19,7 @@ export const LegendAreaChart: FC<ILegendAreaChart> = ({ text, color }) => {
       }}
       margin={media ? "auto" : "inherit"}
     >
-      <Text color="black.5">{text}</Text>
+      <Text color="white">{text}</Text>
     </Flex>
   );
 };

@@ -1,4 +1,4 @@
-import { Flex, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { Area } from "recharts";
 
@@ -6,10 +6,9 @@ import { AreaChart } from "../../../components/charts/AreaChart";
 import { DateSwitcher } from "../../../components/data-switcher";
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES } from "../../../components/data-switcher/utils";
-import { MEDIA_QUERY_MAX } from "../../../consts";
+import { areaLines, colorsArea, tickFormatter } from "../utils";
 import { LegendAreaChart } from "./components/LegendAreaChart";
 import { IAreaLineProps } from "./types";
-import { areaLines, colorsArea, tickFormatter } from "./utils";
 
 const areaGradient = (
   <defs>
@@ -78,25 +77,19 @@ const data = [
   // }
 ];
 
-export const LendChart = () => {
-  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
+export const BaseChart = () => {
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
   return (
     <Flex w="100%" direction="column" position="relative">
       <Flex w="100%" alignItems="center" justify="space-between" mb={{ base: "0", md: "10px" }}>
-        {!media && (
-          <Flex alignItems="center" gap="12px">
-            {areaLines.map(elem => (
-              <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
-            ))}
-          </Flex>
-        )}
-
         <Flex
+          w="100%"
+          justifyContent="space-between"
           zIndex={{ base: 1, md: 0 }}
           position={{ base: "absolute", md: "relative" }}
           right={{ base: "0" }}
         >
+          <Text>Strategy Profitability</Text>
           <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
         </Flex>
       </Flex>
@@ -108,13 +101,11 @@ export const LendChart = () => {
         tickFormatter={tickFormatter}
       />
 
-      {media && (
-        <Flex alignItems="center" gap="12px">
-          {areaLines.map(elem => (
-            <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
-          ))}
-        </Flex>
-      )}
+      <Flex alignItems="center" gap="12px" mt="28px">
+        {areaLines.map(elem => (
+          <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
+        ))}
+      </Flex>
     </Flex>
   );
 };

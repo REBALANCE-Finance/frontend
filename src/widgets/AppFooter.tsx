@@ -17,7 +17,7 @@ export const AppFooter = () => {
       w="100%"
       alignItems="center"
       p={{ base: "6px 16px", md: "24px 16px", xxl: "24px 0" }}
-      mt="40px"
+      mt={!media ? "40px" : "24px"}
       gap={{ base: "24px", md: "0" }}
     >
       <Image

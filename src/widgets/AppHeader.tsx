@@ -1,5 +1,6 @@
 import { Flex, Image, Link, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
+import { NavLink } from "react-router-dom";
 import { useAccount } from "wagmi";
 
 import LogoDesc from "../assets/logo/logo-long.svg";
@@ -23,7 +24,7 @@ export const AppHeader = () => {
       minH={{ base: "56px", md: "auto" }}
       w="100%"
     >
-      <Link href="/">
+      <Link as={NavLink} to="/lending">
         <Image src={media ? LogoMob : LogoDesc} w={{ base: "30px", md: "150px" }} />
       </Link>
 

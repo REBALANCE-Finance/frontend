@@ -46,7 +46,7 @@ export const PoolsLending = observer(() => {
             return (
               <>
                 <HStack justify="space-between">
-                  <Text color="black.0">Funds in pool</Text>
+                  <Text color="white">Funds in pool</Text>
                   <Tooltip label="Funds in pool">
                     <Text variant="tooltip" textStyle="textMono16" color="white">
                       {formatNumber(item.funds)}
@@ -55,19 +55,21 @@ export const PoolsLending = observer(() => {
                 </HStack>
 
                 <HStack justify="space-between">
-                  <Text color="black.0">Profit Earned</Text>
+                  <Text color="white">Profit Earned</Text>
                   <Text textStyle="textMono16">{formatNumber(item.earned)}</Text>
                 </HStack>
 
                 <HStack justify="space-between">
                   <Tooltip label="APR INFO">
-                    <Text variant="tooltip">30D avg. APR</Text>
+                    <Text color="white" variant="tooltip">
+                      30D avg. APR
+                    </Text>
                   </Tooltip>
                   <Text textStyle="textMono16">{formatPercent(item.avgApr)}</Text>
                 </HStack>
 
                 <HStack justify="space-between">
-                  <Text color="black.0">APR {">"} market avg.</Text>
+                  <Text color="white">APR {">"} market avg.</Text>
                   <Text color={item.apr > 0 ? "green.100" : "red"} textStyle="textMono16">
                     {formatPercent(item.apr)}
                   </Text>

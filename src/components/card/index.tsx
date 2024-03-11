@@ -36,7 +36,13 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
             );
           case "body":
             return (
-              <CardBody as={Flex} direction="column" gap="20px" textStyle="text14">
+              <CardBody
+                as={Flex}
+                direction="column"
+                gap="20px"
+                textStyle="text16"
+                lineHeight="24px"
+              >
                 <Flex flex="1 1 0" direction="column" gap="10px">
                   {elem.proccess &&
                     elem.proccess({ item: itemCard, type: RowCardProccessType.metrics })}
@@ -49,7 +55,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
 
           case "footer":
             return (
-              <CardFooter gap="8px">
+              <CardFooter mt="64px" gap="8px">
                 {elem.proccess && elem.proccess({ item: itemCard })}
               </CardFooter>
             );

@@ -7,10 +7,10 @@ import { useAccount } from "wagmi";
 import Icon from "../../components/icon";
 import { CHAIN_ICONS, ICON_NAMES } from "../../consts";
 import { STRATEGIES } from "../../consts/strategies";
+import BaseStrategy from "../../features/RebalanceStrategy/BaseStrategy";
 import { storesContext } from "../../store/app.store";
 import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
-import BaseStrategy from "./components/header/BaseStrategy";
 
 const strategies = [
   {
