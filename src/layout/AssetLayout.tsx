@@ -9,7 +9,7 @@ import { ICON_NAMES } from "../consts";
 export const AssetLayout = () => {
   const nanigate = useNavigate();
   return (
-    <Flex direction="column" w="100%" gap="44px" align="center">
+    <Flex direction="column" w="100%" gap="44px" align="center" p={{ base: "16px", xl: 0 }}>
       <Flex
         direction="column"
         justify="center"

@@ -1,11 +1,13 @@
-import { Box, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, SimpleGrid, Text, useMediaQuery } from "@chakra-ui/react";
 
+import { MEDIA_QUERY_MAX } from "../../../consts";
 import { BaseChart } from "./BaseChart";
 import EarningsChart from "./EarningsChart";
 
 const BaseStrategy: React.FC = () => {
+  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   return (
-    <SimpleGrid columns={2} gap="24px">
+    <SimpleGrid columns={media ? 1 : 2} gap="24px">
       <Flex direction="column">
         <Text textStyle="text14" color="#9FA2A8">
           My deposit
