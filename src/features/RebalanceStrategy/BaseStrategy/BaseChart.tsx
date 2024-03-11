@@ -89,7 +89,7 @@ export const BaseChart = () => {
           position={{ base: "absolute", md: "relative" }}
           right={{ base: "0" }}
         >
-          <Text>Strategy Profitability</Text>
+          <Text fontSize="lg">Strategy Profitability</Text>
           <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
         </Flex>
       </Flex>

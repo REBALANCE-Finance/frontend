@@ -1,6 +1,7 @@
 import { Box, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 
 import { BaseChart } from "./BaseChart";
+import EarningsChart from "./EarningsChart";
 
 const BaseStrategy: React.FC = () => {
   return (
@@ -25,6 +26,9 @@ const BaseStrategy: React.FC = () => {
             Withdraw
           </Button>
         </SimpleGrid>
+        <Flex>
+          <EarningsChart />
+        </Flex>
       </Flex>
 
       <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
