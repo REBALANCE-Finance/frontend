@@ -3,7 +3,6 @@ import { IPoolData, IPoolsData } from "./types";
 const endpoint = "https://unhealthy-degree-production.up.railway.app/";
 
 export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData[]> => {
-  console.log(type, "type");
   const response = await fetch(`${endpoint}${type}`);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);

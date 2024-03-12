@@ -11,7 +11,6 @@ interface IDepositTabProps {
 }
 
 export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
-  console.log("🚀 ~ pool:", pool);
   const { handleSubmit, handleChange, values, setFieldValue, isValid, errors } = useFormik({
     initialValues: {
       deposit: ""

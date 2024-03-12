@@ -43,7 +43,6 @@ export const LendingAsset = observer(() => {
   //   setSearchParams({ strategic: type });
   // };
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  console.log(strategic, "strategic");
   if (media) {
     return (
       <Flex h="100%" w="100%" direction="column" gap="24px">
