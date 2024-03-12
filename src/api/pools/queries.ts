@@ -2,6 +2,60 @@ import { IPoolData, IPoolsData } from "./types";
 
 const endpoint = "https://unhealthy-degree-production.up.railway.app/";
 
+const mockData: IPoolData[] = [
+  {
+    token: "usdc",
+    tokenAddress: "",
+    rebalancerAddress: "",
+    tokenPriceInUsd: 1,
+    tokenPrice24HrChangeInPercentages: 1,
+    tokenPrice24HrChangeInUsd: 1,
+    apr: 1,
+    funds: 1020000,
+    avgApr: 1,
+    earned: 120,
+    decimals: 1,
+    deposit: 20000,
+    risk: 2,
+    borrowRate: 13.3,
+    borrowed: 532112
+  },
+  {
+    token: "weth",
+    tokenAddress: "",
+    rebalancerAddress: "",
+    tokenPriceInUsd: 1,
+    tokenPrice24HrChangeInPercentages: 1,
+    tokenPrice24HrChangeInUsd: 1,
+    apr: 1,
+    funds: 201010,
+    avgApr: 1,
+    earned: 1111,
+    decimals: 1,
+    deposit: 100,
+    risk: 3,
+    borrowRate: 9.22,
+    borrowed: 234320
+  },
+  {
+    token: "dai",
+    tokenAddress: "",
+    rebalancerAddress: "",
+    tokenPriceInUsd: 1,
+    tokenPrice24HrChangeInPercentages: 1,
+    tokenPrice24HrChangeInUsd: 1,
+    apr: -1,
+    funds: 2.45,
+    avgApr: 1,
+    earned: 1345,
+    decimals: 1,
+    deposit: 1200,
+    risk: 5,
+    borrowRate: 11.2,
+    borrowed: 1000000
+  }
+];
+
 export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData[]> => {
   const response = await fetch(`${endpoint}${type}`);
   if (!response.ok) {
@@ -29,7 +83,7 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
     };
   });
 
-  return pools;
+  return [...pools, ...mockData];
 };
 
 // export const mockData: IMockData[] = [
