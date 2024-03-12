@@ -1,4 +1,3 @@
-import { useMediaQuery } from "@chakra-ui/react";
 import React, { FC } from "react";
 import {
   AreaChart as AreaChartDefault,
@@ -9,7 +8,6 @@ import {
   YAxis
 } from "recharts";
 
-import { MEDIA_QUERY_MAX } from "../../consts";
 import { themes } from "../../themes";
 import { CustomTooltip } from "./components/CustomTooltip";
 import { IAreaChartProps } from "./types";
@@ -21,7 +19,6 @@ export const AreaChart: FC<IAreaChartProps> = ({
   tickFormatter,
   legend
 }) => {
-  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChartDefault
@@ -29,7 +26,7 @@ export const AreaChart: FC<IAreaChartProps> = ({
         margin={{
           top: 0,
           right: 10,
-          left: !media ? -30 : 0,
+          left: -25,
           bottom: 0
         }}
       >

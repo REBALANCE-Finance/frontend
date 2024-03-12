@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, HStack, Link, Text, useMediaQuery } from "@chakra-ui/react";
+import { Divider, Flex, HStack, Link, Text, useMediaQuery } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -12,24 +12,24 @@ import { storesContext } from "../../store/app.store";
 import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
 
-const strategies = [
-  {
-    key: STRATEGIES.based,
-    title: "AI-based Rebalance Strategy",
-    description: "Lowest risk. Average profit. Single-asset pool."
-  },
-  {
-    key: STRATEGIES.yield,
-    title: "AI Yield Strategy (coming soon)",
-    description: "Low risk. High profit. Concentrated liquidity."
-  }
-];
+// const strategies = [
+//   {
+//     key: STRATEGIES.based,
+//     title: "AI-based Rebalance Strategy",
+//     description: "Lowest risk. Average profit. Single-asset pool."
+//   },
+//   {
+//     key: STRATEGIES.yield,
+//     title: "AI Yield Strategy (coming soon)",
+//     description: "Low risk. High profit. Concentrated liquidity."
+//   }
+// ];
 
 export const LendingAsset = observer(() => {
   const { chain } = useAccount();
   const { poolsStore } = useContext(storesContext);
   const { poolAddress } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     poolsStore.fetchPools("lending");
@@ -39,9 +39,9 @@ export const LendingAsset = observer(() => {
 
   const strategic = searchParams.get("strategic") ?? STRATEGIES.based;
 
-  const handleLink = (type: string) => {
-    setSearchParams({ strategic: type });
-  };
+  // const handleLink = (type: string) => {
+  //   setSearchParams({ strategic: type });
+  // };
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   console.log(strategic, "strategic");
   if (media) {
@@ -85,7 +85,7 @@ export const LendingAsset = observer(() => {
             </HStack>
           </Flex>
         </Flex>
-        <Flex gap="2px">
+        {/* <Flex gap="2px">
           {strategies.map(({ key }) => {
             const isActive = key === strategic;
             return (
@@ -112,7 +112,7 @@ export const LendingAsset = observer(() => {
           <Flex as={Button} align="center" justify="center" color="greenAlpha.80" h="100%">
             <Icon name={ICON_NAMES.add} />
           </Flex>
-        </Flex>
+        </Flex> */}
         <Flex direction="column">{strategic === STRATEGIES.based && <BaseStrategy />}</Flex>
       </Flex>
     );
@@ -158,7 +158,7 @@ export const LendingAsset = observer(() => {
         </Flex>
       </Flex>
 
-      <Flex gap="10px" align="center">
+      {/* <Flex gap="10px" align="center">
         {strategies.map(({ key, title, description }) => {
           const isActive = key === strategic;
           console.log(strategic, "strat");
@@ -198,7 +198,7 @@ export const LendingAsset = observer(() => {
         >
           <Icon name={ICON_NAMES.add} /> <Text>Add Your Strategy</Text>
         </Flex>
-      </Flex>
+      </Flex> */}
       <Flex direction="column">{strategic === STRATEGIES.based && <BaseStrategy />}</Flex>
     </Flex>
   );

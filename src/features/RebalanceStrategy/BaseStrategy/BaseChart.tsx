@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 import { Area } from "recharts";
 
@@ -9,6 +9,7 @@ import { DATES } from "../../../components/data-switcher/utils";
 import { areaLines, colorsArea, tickFormatter } from "../utils";
 import { LegendAreaChart } from "./components/LegendAreaChart";
 import { IAreaLineProps } from "./types";
+import { MEDIA_QUERY_MAX } from "../../../consts";
 
 const areaGradient = (
   <defs>
@@ -78,10 +79,17 @@ const data = [
 ];
 
 export const BaseChart = () => {
+  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
   return (
     <Flex w="100%" direction="column" position="relative">
-      <Flex w="100%" alignItems="center" justify="space-between" mb={{ base: "0", md: "10px" }}>
+      <Flex
+        w="100%"
+        alignItems="center"
+        justify="space-between"
+        mb={{ base: "40px", md: "10px" }}
+        mt={{ base: "24px", md: "0px" }}
+      >
         <Flex
           w="100%"
           justifyContent="space-between"
@@ -101,7 +109,13 @@ export const BaseChart = () => {
         tickFormatter={tickFormatter}
       />
 
-      <Flex alignItems="center" gap="12px" mt="28px">
+      <Flex
+        alignItems="center"
+        gap="12px"
+        mt="28px"
+        flexDirection={media ? "column" : "row"}
+        mr={media ? "auto" : "0"}
+      >
         {areaLines.map(elem => (
           <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
         ))}
