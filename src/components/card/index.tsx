@@ -14,7 +14,27 @@ interface ICardProps {
 
 export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
   return (
-    <ChakraCard variant="poolCard" onClick={onClick}>
+    <ChakraCard variant="poolCard" onClick={onClick} position="relative">
+      {itemCard.token !== "usdt" ? (
+        <Flex
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          margin="auto"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          background="000"
+          backdropFilter="blur(4px)"
+          zIndex="999"
+          fontSize="large"
+          fontWeight="500"
+        >
+          Coming Soon
+        </Flex>
+      ) : null}
       {rowCard.map(elem => {
         switch (elem.name) {
           case "header":
@@ -55,7 +75,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
 
           case "footer":
             return (
-              <CardFooter mt="64px" gap="8px">
+              <CardFooter gap="8px">
                 {elem.proccess && elem.proccess({ item: itemCard })}
               </CardFooter>
             );

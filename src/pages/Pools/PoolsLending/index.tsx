@@ -117,7 +117,7 @@ export const PoolsLending = observer(() => {
           key={elem.token}
           rowCard={rowCard}
           itemCard={elem}
-          onClick={() => handleLink(elem.rebalancerAddress)}
+          onClick={() => elem.token == "usdt" && handleLink(elem.rebalancerAddress)}
         />
       ))}
     </SimpleGrid>
