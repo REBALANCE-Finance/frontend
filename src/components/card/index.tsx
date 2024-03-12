@@ -75,7 +75,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
 
           case "footer":
             return (
-              <CardFooter gap="8px">
+              <CardFooter mt="24px" gap="8px">
                 {elem.proccess && elem.proccess({ item: itemCard })}
               </CardFooter>
             );
