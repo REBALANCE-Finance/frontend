@@ -5,8 +5,8 @@ const endpoint = "https://unhealthy-degree-production.up.railway.app/";
 const mockData: IPoolData[] = [
   {
     token: "usdc",
-    tokenAddress: "",
-    rebalancerAddress: "",
+    tokenAddress: "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
+    rebalancerAddress: "0xe97830116fD3f065696E4aDfb3a337f02AD233be",
     tokenPriceInUsd: 1,
     tokenPrice24HrChangeInPercentages: 1,
     tokenPrice24HrChangeInUsd: 1,
@@ -14,7 +14,7 @@ const mockData: IPoolData[] = [
     funds: 1020000,
     avgApr: 1,
     earned: 120,
-    decimals: 1,
+    decimals: 6,
     deposit: 20000,
     risk: 2,
     borrowRate: 13.3,

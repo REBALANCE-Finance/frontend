@@ -20,20 +20,20 @@ const App = () => {
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <AppRoutes />
+
+          <ModalContextController />
+          <ModalController />
+
+          <ToastContainer
+            position="top-right"
+            autoClose={false}
+            hideProgressBar
+            closeOnClick
+            pauseOnHover={false}
+            draggable={false}
+          />
         </QueryClientProvider>
       </WagmiProvider>
-
-      <ModalContextController />
-      <ModalController />
-
-      <ToastContainer
-        position="top-right"
-        autoClose={false}
-        hideProgressBar
-        closeOnClick
-        pauseOnHover={false}
-        draggable={false}
-      />
     </ChakraProvider>
   );
 };

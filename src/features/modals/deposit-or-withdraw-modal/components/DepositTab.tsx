@@ -1,9 +1,12 @@
 import { Button, Divider, Flex, HStack, Switch, Text } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import React, { FC } from "react";
+import { useAccount, useBalance } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
 import { depositSchema } from "../../../../components/forms/schemas";
+import { useDeposit } from "../../../../hooks/useDeposit";
+import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber, formatPercent } from "../../../../utils/formatNumber";
 
 interface IDepositTabProps {
@@ -11,13 +14,27 @@ interface IDepositTabProps {
 }
 
 export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
+  const { address } = useAccount();
+  const { data: balanceToken } = useBalance({
+    address,
+    token: pool.tokenAddress
+  });
+
+  const { approve } = useDeposit(pool.rebalancerAddress);
+
   const { handleSubmit, handleChange, values, setFieldValue, isValid, errors } = useFormik({
     initialValues: {
       deposit: ""
     },
-    validationSchema: depositSchema("100", "101"),
-    onSubmit: e => {
-      console.log("submit", e);
+    validationSchema: depositSchema(
+      formatBigNumber(balanceToken?.value, balanceToken?.decimals),
+      "100000000000"
+    ),
+    onSubmit: values => {
+      approve({
+        value: parseBigNumber(values.deposit, pool.decimals),
+        tokenAddress: pool.tokenAddress
+      });
     }
   });
 
@@ -40,8 +57,13 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
         <HStack justify="space-between">
           <Text color="black.0">Wallet Balance</Text>
           <Flex align="inherit">
-            <Text textStyle="textMono16">${formatNumber(2222)}</Text>
-            <Button color="greenAlpha.100" onClick={() => setMax("100")}>
+            <Text textStyle="textMono16">
+              ${formatNumber(formatBigNumber(balanceToken?.value, balanceToken?.decimals))}
+            </Text>
+            <Button
+              color="greenAlpha.100"
+              onClick={() => setMax(formatBigNumber(balanceToken?.value, balanceToken?.decimals))}
+            >
               Max
             </Button>
           </Flex>
