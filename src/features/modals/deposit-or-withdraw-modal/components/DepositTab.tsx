@@ -1,7 +1,7 @@
 import { Button, Divider, Flex, HStack, Switch, Text } from "@chakra-ui/react";
 import { sepolia } from "@wagmi/core/chains";
 import { useFormik } from "formik";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
@@ -10,12 +10,16 @@ import { depositSchema } from "../../../../components/forms/schemas";
 import { useDeposit } from "../../../../hooks/useDeposit";
 import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber, formatPercent } from "../../../../utils/formatNumber";
+import ApproveBtn from "./ApproveBtn";
 
 interface IDepositTabProps {
   pool: any;
+  onClose: () => void;
 }
 
-export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
+export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
+  const [needsApproval, setNeedsApproval] = useState(false);
+  const [ isConfirmedApprove, setConfirmedApprove] = useState(false);
   const { address } = useAccount();
   const { data: balanceToken } = useBalance({
     address,
@@ -23,10 +27,12 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
     chainId: sepolia.id
   });
 
-  const { allowance, deposit, approve, isLoading } = useDeposit(
+  const { allowance, deposit, isLoading } = useDeposit(
     pool.rebalancerAddress,
-    pool.tokenAddress
+    pool.tokenAddress,
+    onClose
   );
+
   const formik = useFormik({
     initialValues: {
       deposit: ""
@@ -37,12 +43,15 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
     ),
     onSubmit: async values => {
       const depositValue = parseBigNumber(values.deposit, pool.decimals);
-      if (!allowance || allowance < depositValue) {
-        await approve({ value: depositValue, tokenAddress: pool.tokenAddress });
-      }
       if (address) {
-        console.log(depositValue, 'depositValue');
-        await deposit({ value: depositValue, address });
+        await deposit({
+          value: depositValue,
+          address,
+          onSuccess: () => {
+            setConfirmedApprove(false);
+            onClose();
+          }
+        });
       }
     }
   });
@@ -50,6 +59,24 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
   const setMax = () => {
     formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
   };
+
+  useEffect(() => {
+    const checkNeedsApproval = () => {
+      const depositValue = parseBigNumber(formik.values.deposit, pool.decimals);
+      const isApprovalNeeded = !allowance || allowance < depositValue;
+      setNeedsApproval(isApprovalNeeded);
+    };
+
+    checkNeedsApproval();
+  }, [allowance, formik.values.deposit, pool.decimals]);
+
+  useEffect(() => {
+    console.log(allowance, "allwnc");
+  }, [allowance, formik.values.deposit]);
+
+  useEffect(() => {
+    console.log(isConfirmedApprove, "isConfirmedApprove");
+  }, [isConfirmedApprove]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -91,14 +118,24 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
           <Text color="black.0">Gas fee</Text>
           <Text textStyle="textMono16">{formatNumber(0.000005)} (ETH)</Text>
         </HStack>
-
-        <Button
-          variant="primaryFilled"
-          type="submit"
-          isDisabled={!formik.values.deposit || !formik.isValid || isLoading}
-        >
-          {isLoading ? "Processing..." : "Deposit"}
-        </Button>
+        {isLoading ? (
+          <Button variant="primaryFilled">Processing...</Button>
+        ) : needsApproval && !isConfirmedApprove ? (
+          <ApproveBtn
+            tokenAddress={pool.tokenAddress}
+            poolAddress={pool.rebalancerAddress}
+            value={parseBigNumber(formik.values.deposit, pool.decimals)}
+            setConfirmedApprove={setConfirmedApprove}
+          />
+        ) : (
+          <Button
+            variant="primaryFilled"
+            type="submit"
+            isDisabled={!formik.values.deposit || !formik.isValid || isLoading}
+          >
+            Deposit
+          </Button>
+        )}
       </Flex>
     </form>
   );

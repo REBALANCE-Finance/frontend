@@ -48,7 +48,7 @@ export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose
           {address && (
             <TabPanels>
               <TabPanel p="0">
-                <DepositTab pool={pool} />
+                <DepositTab pool={pool} onClose={onClose} />
               </TabPanel>
               <TabPanel p="0">
                 <WithdrawTab pool={pool} balance={balance} onClose={onClose} address={address} />

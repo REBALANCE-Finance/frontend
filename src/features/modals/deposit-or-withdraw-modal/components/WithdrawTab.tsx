@@ -26,7 +26,7 @@ const withdrawSchema = yup.object({
 
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
-    const instantWithdraw = useWithdraw(pool.rebalancerAddress);
+    const instantWithdraw = useWithdraw(pool.rebalancerAddress, () => onClose());
 
     const formik = useFormik({
       initialValues: {
@@ -38,11 +38,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
       onSubmit: async values => {
         try {
           const assets = parseBigNumber(values.withdraw || "0", pool.decimals);
-          await instantWithdraw({
-            address: address,
-            assets: assets
-          });
-          onClose();
+          await instantWithdraw({ address, assets });
         } catch (error) {
           console.error("Ошибка при выводе средств: ", error);
         }
