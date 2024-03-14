@@ -1,7 +1,7 @@
 import { Button, Divider, Flex, HStack, Switch, Text } from "@chakra-ui/react";
 import { sepolia } from "@wagmi/core/chains";
 import { useFormik } from "formik";
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { useAccount, useBalance } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
@@ -16,7 +16,7 @@ interface IDepositTabProps {
   balance: number;
 }
 
-export const DepositTab: FC<IDepositTabProps> = ({ pool, balance }) => {
+export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
   const { address } = useAccount();
   const { data: balanceToken } = useBalance({
     address,
@@ -41,21 +41,15 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, balance }) => {
       if (!allowance || allowance < depositValue) {
         await approve({ value: depositValue, tokenAddress: pool.tokenAddress });
       }
-      await deposit({ value: depositValue, address: pool.tokenAddress });
+      if (address) {
+        await deposit({ value: depositValue, address });
+      }
     }
   });
 
   const setMax = () => {
     formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
   };
-
-  useEffect(() => {
-    console.log(`Current allowance is: ${allowance}`);
-  }, [allowance]);
-
-  useEffect(() => {
-    console.log(balance, "balance");
-  }, [balance]);
 
   return (
     <form onSubmit={formik.handleSubmit}>

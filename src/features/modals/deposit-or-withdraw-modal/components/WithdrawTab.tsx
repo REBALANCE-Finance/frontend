@@ -15,13 +15,12 @@ interface IWithdrawTabProps {
   address: `0x${string}`;
 }
 
-const withdrawSchema = yup.object().shape({
+const withdrawSchema = yup.object({
   withdraw: yup
     .number()
     .required("Required")
-    .max(yup.ref("balance"), "Cannot withdraw more than the balance")
     .positive("Must be positive")
-    .integer("Must be an integer")
+    .max(yup.ref("balance"), "Cannot withdraw more than the available balance")
 });
 
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(({ pool, balance, address }) => {
@@ -41,10 +40,8 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(({ pool, balance, add
           address: address,
           assets: assets
         });
-        // Обработка успешного вывода, например, показать уведомление или обновить UI
       } catch (error) {
         console.error("Ошибка при выводе средств: ", error);
-        // Обработка ошибки, например, показать сообщение об ошибке пользователю
       }
     }
   });
