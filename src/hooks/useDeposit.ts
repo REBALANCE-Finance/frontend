@@ -16,9 +16,13 @@ export const useDeposit = (poolAddress: `0x${string}`, tokenAddress: `0x${string
   });
 
   const deposit = async ({ value, address }: { value: bigint; address: `0x${string}` }) => {
+    console.log({
+      value,
+      address,
+      poolAddress
+    });
     try {
       setLoading(true);
-      console.log(value, "value");
       await writeContractAsync(
         {
           address: poolAddress,
@@ -49,6 +53,13 @@ export const useDeposit = (poolAddress: `0x${string}`, tokenAddress: `0x${string
     value: bigint;
     tokenAddress: `0x${string}`;
   }) => {
+    console.log(
+      {
+        tokenAddress,
+        poolAddress
+      },
+      "approve"
+    );
     try {
       setLoading(true);
 

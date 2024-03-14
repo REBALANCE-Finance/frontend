@@ -6,13 +6,13 @@ import { useAccount, useBalance } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
 import { depositSchema } from "../../../../components/forms/schemas";
+// import { useBalanceOfAsset } from "../../../../hooks/useBalanceOfAsset";
 import { useDeposit } from "../../../../hooks/useDeposit";
 import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber, formatPercent } from "../../../../utils/formatNumber";
 
 interface IDepositTabProps {
   pool: any;
-  balance: number;
 }
 
 export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
@@ -41,6 +41,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool }) => {
         await approve({ value: depositValue, tokenAddress: pool.tokenAddress });
       }
       if (address) {
+        console.log(depositValue, 'depositValue');
         await deposit({ value: depositValue, address });
       }
     }

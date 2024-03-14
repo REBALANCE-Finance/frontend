@@ -13,6 +13,7 @@ interface IWithdrawTabProps {
   pool: any;
   balance: number;
   address: `0x${string}`;
+  onClose: () => void;
 }
 
 const withdrawSchema = yup.object({
@@ -23,85 +24,88 @@ const withdrawSchema = yup.object({
     .max(yup.ref("balance"), "Cannot withdraw more than the available balance")
 });
 
-export const WithdrawTab: FC<IWithdrawTabProps> = observer(({ pool, balance, address }) => {
-  const instantWithdraw = useWithdraw(pool.rebalancerAddress);
+export const WithdrawTab: FC<IWithdrawTabProps> = observer(
+  ({ pool, balance, address, onClose }) => {
+    const instantWithdraw = useWithdraw(pool.rebalancerAddress);
 
-  const formik = useFormik({
-    initialValues: {
-      withdraw: ""
-    },
-    validationSchema: withdrawSchema.clone().shape({
-      balance: yup.number().default(balance)
-    }),
-    onSubmit: async values => {
-      try {
-        const assets = parseBigNumber(values.withdraw || "0", pool.decimals);
-        await instantWithdraw({
-          address: address,
-          assets: assets
-        });
-      } catch (error) {
-        console.error("Ошибка при выводе средств: ", error);
+    const formik = useFormik({
+      initialValues: {
+        withdraw: ""
+      },
+      validationSchema: withdrawSchema.clone().shape({
+        balance: yup.number().default(balance)
+      }),
+      onSubmit: async values => {
+        try {
+          const assets = parseBigNumber(values.withdraw || "0", pool.decimals);
+          await instantWithdraw({
+            address: address,
+            assets: assets
+          });
+          onClose();
+        } catch (error) {
+          console.error("Ошибка при выводе средств: ", error);
+        }
       }
-    }
-  });
+    });
 
-  const setMax = () => {
-    formik.setFieldValue("withdraw", balance.toString());
-    formik.validateField("withdraw");
-  };
+    const setMax = () => {
+      formik.setFieldValue("withdraw", balance.toString());
+      formik.validateField("withdraw");
+    };
 
-  return (
-    <form onSubmit={formik.handleSubmit}>
-      <Flex direction="column" gap="24px">
-        <FormInput
-          id="withdraw"
-          name="withdraw"
-          isValid={formik.isValid}
-          errorMessage={formik.errors.withdraw}
-          value={formik.values.withdraw}
-          handleChange={formik.handleChange}
-        />
-        <HStack justify="space-between">
-          <Text color="black.0">Your deposit</Text>
-          <Text textStyle="textMono16">${formatNumber(balance)}</Text>
-        </HStack>
-
-        <HStack justify="space-between">
-          <Text color="black.0">Use as collateral</Text>
-          <Text>-</Text>
-        </HStack>
-
-        <HStack justify="space-between">
-          <Text color="black.0">Available to withdraw</Text>
-          <Flex align="inherit">
+    return (
+      <form onSubmit={formik.handleSubmit}>
+        <Flex direction="column" gap="24px">
+          <FormInput
+            id="withdraw"
+            name="withdraw"
+            isValid={formik.isValid}
+            errorMessage={formik.errors.withdraw}
+            value={formik.values.withdraw}
+            handleChange={formik.handleChange}
+          />
+          <HStack justify="space-between">
+            <Text color="black.0">Your deposit</Text>
             <Text textStyle="textMono16">${formatNumber(balance)}</Text>
-            <Button color="greenAlpha.100" onClick={() => setMax()}>
-              Max
-            </Button>
-          </Flex>
-        </HStack>
+          </HStack>
 
-        <Divider borderColor="black.90" />
+          <HStack justify="space-between">
+            <Text color="black.0">Use as collateral</Text>
+            <Text>-</Text>
+          </HStack>
 
-        <HStack justify="space-between">
-          <Text color="black.0">30D profit</Text>
-          <Text textStyle="textMono16">${formatNumber(30)}</Text>
-        </HStack>
+          <HStack justify="space-between">
+            <Text color="black.0">Available to withdraw</Text>
+            <Flex align="inherit">
+              <Text textStyle="textMono16">${formatNumber(balance)}</Text>
+              <Button color="greenAlpha.100" onClick={() => setMax()}>
+                Max
+              </Button>
+            </Flex>
+          </HStack>
 
-        <HStack justify="space-between">
-          <Text color="black.0">Gas fee</Text>
-          <Text textStyle="textMono16">{formatNumber(0.000005)} (ETH)</Text>
-        </HStack>
+          <Divider borderColor="black.90" />
 
-        <Button
-          variant="primaryFilled"
-          type="submit"
-          isDisabled={!formik.values.withdraw || !formik.isValid}
-        >
-          Withdraw
-        </Button>
-      </Flex>
-    </form>
-  );
-});
+          <HStack justify="space-between">
+            <Text color="black.0">30D profit</Text>
+            <Text textStyle="textMono16">${formatNumber(30)}</Text>
+          </HStack>
+
+          <HStack justify="space-between">
+            <Text color="black.0">Gas fee</Text>
+            <Text textStyle="textMono16">{formatNumber(0.000005)} (ETH)</Text>
+          </HStack>
+
+          <Button
+            variant="primaryFilled"
+            type="submit"
+            isDisabled={!formik.values.withdraw || !formik.isValid}
+          >
+            Withdraw
+          </Button>
+        </Flex>
+      </form>
+    );
+  }
+);

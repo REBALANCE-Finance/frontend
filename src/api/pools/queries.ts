@@ -77,7 +77,7 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
       funds: 1230000022,
       avgApr: 1.2,
       earned: 1232323,
-      decimals: 1,
+      decimals: 6,
       deposit: 0,
       risk: 1,
       borrowRate: 12.5,
