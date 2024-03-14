@@ -2,6 +2,7 @@ import { Divider, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
+import { useAccount } from "wagmi";
 
 import { CardPool } from "../../../components/card";
 import { Risk } from "../../../components/risk";
@@ -12,11 +13,12 @@ import { WithdrawLendingButton } from "../../../features/actions/deposit-or-with
 import { storesContext } from "../../../store/app.store";
 import { formatNumber, formatPercent } from "../../../utils/formatNumber";
 import { IRowCard, RowCardNames, RowCardProccessType } from "../types";
+import DepositInfo from "./components/DepositInfo";
 
 export const PoolsLending = observer(() => {
   const { poolsStore } = useContext(storesContext);
   const navigate = useNavigate();
-
+  const { address } = useAccount();
   useEffect(() => {
     poolsStore.fetchPools("lending");
   }, [poolsStore]);
@@ -79,17 +81,12 @@ export const PoolsLending = observer(() => {
           case RowCardProccessType.assets:
             return (
               <>
-                {!!item.deposit && (
+                {!!address && item.token == "usdc" ? (
                   <>
                     <Divider borderColor="black.60" />
-                    <Flex alignItems="center" justifyContent="space-between">
-                      <Text fontSize="md" fontWeight="500" color="whiteAlpha.70">
-                        My Deposit
-                      </Text>
-                      <Text textStyle="textMono16">{formatNumber(item.deposit)}</Text>
-                    </Flex>
+                    <DepositInfo contractAddress={item.rebalancerAddress} ownerAddress={address} />
                   </>
-                )}
+                ) : null}
               </>
             );
           default:

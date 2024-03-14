@@ -9,9 +9,11 @@ import {
   TabPanels
 } from "@chakra-ui/react";
 import React, { FC } from "react";
+import { useAccount } from "wagmi";
 
 import { Modal } from "../../../components/modal";
 import { Tabs } from "../../../components/tabs";
+import { useBalanceOfAsset } from "../../../hooks/useBalanceOfAsset";
 import { useTab } from "../../../hooks/useTab";
 import { IDefaultModalProps } from "../types";
 import { TABS_DEPOSIT_AND_WITHDRAW } from "../utils";
@@ -21,7 +23,8 @@ import { WithdrawTab } from "./components/WithdrawTab";
 export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose, pool, type }) => {
   const defaultIndex = TABS_DEPOSIT_AND_WITHDRAW.indexOf(type);
   const { tabIndex, handleTab } = useTab(defaultIndex);
-
+  const { address } = useAccount();
+  const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x");
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Tabs index={tabIndex} onChange={handleTab}>
@@ -42,14 +45,16 @@ export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose
         </ModalHeader>
 
         <ModalBody p="0">
-          <TabPanels>
-            <TabPanel p="0">
-              <DepositTab pool={pool} />
-            </TabPanel>
-            <TabPanel p="0">
-              <WithdrawTab pool={pool} />
-            </TabPanel>
-          </TabPanels>
+          {address && (
+            <TabPanels>
+              <TabPanel p="0">
+                <DepositTab pool={pool} balance={balance} />
+              </TabPanel>
+              <TabPanel p="0">
+                <WithdrawTab pool={pool} balance={balance} address={address} />
+              </TabPanel>
+            </TabPanels>
+          )}
         </ModalBody>
       </Tabs>
     </Modal>

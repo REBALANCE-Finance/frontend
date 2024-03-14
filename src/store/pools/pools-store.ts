@@ -13,7 +13,7 @@ class PoolsStore {
       pools: observable,
       isLoading: observable,
       error: observable,
-      fetchPools: action,
+      fetchPools: action
     });
   }
 

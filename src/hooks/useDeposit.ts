@@ -3,13 +3,13 @@ import { useAccount, useReadContract, useWriteContract } from "wagmi";
 
 import { ABI_REBALANCE } from "../abi/rebalance";
 
-export const useDeposit = (poolAddress: `0x${string}`) => {
+export const useDeposit = (poolAddress: `0x${string}`, tokenAddress: `0x${string}`) => {
   const [isLoading, setLoading] = useState(false);
   const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
 
   const { data: allowance } = useReadContract({
-    address: poolAddress,
+    address: tokenAddress,
     abi: ABI_REBALANCE,
     functionName: "allowance",
     args: [address ?? "0x", poolAddress]
@@ -18,7 +18,7 @@ export const useDeposit = (poolAddress: `0x${string}`) => {
   const deposit = async ({ value, address }: { value: bigint; address: `0x${string}` }) => {
     try {
       setLoading(true);
-
+      console.log(value, "value");
       await writeContractAsync(
         {
           address: poolAddress,
@@ -42,15 +42,21 @@ export const useDeposit = (poolAddress: `0x${string}`) => {
     }
   };
 
-  const approve = async ({ value, tokenAddress }: { value: bigint; tokenAddress: any }) => {
+  const approve = async ({
+    value,
+    tokenAddress
+  }: {
+    value: bigint;
+    tokenAddress: `0x${string}`;
+  }) => {
     try {
       setLoading(true);
 
       await writeContractAsync({
-        address: poolAddress,
+        address: tokenAddress,
         abi: ABI_REBALANCE,
         functionName: "approve",
-        args: [tokenAddress, value]
+        args: [poolAddress, value]
       });
 
       setLoading(false);
