@@ -6,9 +6,11 @@ import { ModalEnum } from "../../../store/modal/types";
 
 interface IWithdrawProps {
   pool: any;
+  variant?: string;
+  disabled?: boolean;
 }
 
-export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool }) => {
+export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool, variant, disabled }) => {
   const { openModal } = useStore("modalStore");
 
   const handleOpenModal = () => {
@@ -16,9 +18,11 @@ export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool }) => {
   };
   return (
     <Button
-      variant="secondaryOutline"
+      variant={variant ?? "secondaryOutline"}
+      disabled={true}
       flex="1 1 0"
       onClick={e => {
+        if (disabled) return;
         e.stopPropagation();
         handleOpenModal();
       }}

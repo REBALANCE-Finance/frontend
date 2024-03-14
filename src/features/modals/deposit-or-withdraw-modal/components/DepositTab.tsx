@@ -6,7 +6,6 @@ import { useAccount, useBalance } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
 import { depositSchema } from "../../../../components/forms/schemas";
-// import { useBalanceOfAsset } from "../../../../hooks/useBalanceOfAsset";
 import { useDeposit } from "../../../../hooks/useDeposit";
 import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber, formatPercent } from "../../../../utils/formatNumber";

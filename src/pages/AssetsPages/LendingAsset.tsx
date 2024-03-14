@@ -36,7 +36,6 @@ export const LendingAsset = observer(() => {
   }, [poolsStore]);
 
   const pool = poolsStore.pools.find(item => item.rebalancerAddress === poolAddress);
-
   const strategic = searchParams.get("strategic") ?? STRATEGIES.based;
 
   // const handleLink = (type: string) => {
@@ -112,7 +111,9 @@ export const LendingAsset = observer(() => {
             <Icon name={ICON_NAMES.add} />
           </Flex>
         </Flex> */}
-        <Flex direction="column">{strategic === STRATEGIES.based && <BaseStrategy />}</Flex>
+        <Flex direction="column">
+          {strategic === STRATEGIES.based && <BaseStrategy pool={pool} />}
+        </Flex>
       </Flex>
     );
   }
@@ -198,7 +199,9 @@ export const LendingAsset = observer(() => {
           <Icon name={ICON_NAMES.add} /> <Text>Add Your Strategy</Text>
         </Flex>
       </Flex> */}
-      <Flex direction="column">{strategic === STRATEGIES.based && <BaseStrategy />}</Flex>
+      <Flex direction="column">
+        {strategic === STRATEGIES.based && <BaseStrategy pool={pool} />}
+      </Flex>
     </Flex>
   );
 });

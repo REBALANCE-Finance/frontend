@@ -66,8 +66,10 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
   const pools: IPoolData[] = data.map(item => {
     return {
       token: item?.token?.toString()?.toLowerCase(),
-      tokenAddress: item?.tokenAddress,
-      rebalancerAddress: item?.vaultAddress,
+      // tokenAddress: item?.tokenAddress,
+      tokenAddress: "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
+      // rebalancerAddress: item?.vaultAddress,
+      rebalancerAddress: "0xe97830116fD3f065696E4aDfb3a337f02AD233be",
       tokenPriceInUsd: 1,
       tokenPrice24HrChangeInPercentages: 1,
       tokenPrice24HrChangeInUsd: 1,

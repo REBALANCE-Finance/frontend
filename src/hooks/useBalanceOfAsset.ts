@@ -2,7 +2,6 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
 
-// Убедитесь, что ABI контракта содержит необходимый метод balanceOfAsset
 import { ABI_REBALANCE } from "../abi/rebalance";
 
 export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: `0x${string}`) => {
@@ -10,10 +9,10 @@ export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: 
   const [isLoading, setIsLoading] = useState(true);
 
   const { data, isLoading: loading } = useReadContract({
-    address: contractAddress, // Адрес контракта
-    abi: ABI_REBALANCE, // ABI контракта
-    functionName: "balanceOf", // Имя функции для вызова
-    args: [ownerAddress] // Аргументы для функции
+    address: contractAddress,
+    abi: ABI_REBALANCE,
+    functionName: "balanceOf",
+    args: [ownerAddress]
   });
 
   useEffect(() => {

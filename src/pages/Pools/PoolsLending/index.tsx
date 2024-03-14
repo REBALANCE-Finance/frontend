@@ -81,7 +81,7 @@ export const PoolsLending = observer(() => {
           case RowCardProccessType.assets:
             return (
               <>
-                {!!address && item.token == "usdc" ? (
+                {!!address && item.token == "usdt" ? (
                   <>
                     <Divider borderColor="black.60" />
                     <DepositInfo contractAddress={item.rebalancerAddress} ownerAddress={address} />

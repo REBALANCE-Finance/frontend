@@ -6,9 +6,10 @@ import { ModalEnum } from "../../../store/modal/types";
 
 interface IDepositProps {
   pool: any;
+  variant?: string;
 }
 
-export const DepositLendingButton: FC<IDepositProps> = ({ pool }) => {
+export const DepositLendingButton: FC<IDepositProps> = ({ pool, variant }) => {
   const { openModal } = useStore("modalStore");
 
   const handleOpenModal = () => {
@@ -16,7 +17,7 @@ export const DepositLendingButton: FC<IDepositProps> = ({ pool }) => {
   };
   return (
     <Button
-      variant="primaryFilled"
+      variant={variant ?? "primaryFilled"}
       flex="1 1 0"
       onClick={e => {
         e.stopPropagation();
