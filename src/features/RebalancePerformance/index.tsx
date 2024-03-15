@@ -1,7 +1,6 @@
-import { Flex, Link, StackDivider, Text, useMediaQuery, VStack } from "@chakra-ui/react";
+import { Flex, StackDivider, Text, useMediaQuery, VStack } from "@chakra-ui/react";
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 
 import { MEDIA_QUERY_MAX } from "../../consts";
 import { ROUTES_TYPE } from "../../consts/routes-type";
@@ -37,9 +36,9 @@ export const RebalancePerformance = () => {
     <Flex gap="24px">
       <Flex direction="column" gap="12px">
         {performanceInfo.map(elem => (
-          <Link
-            as={NavLink}
-            to={`/${elem.type}`}
+          <Flex
+            // as={NavLink}
+            // to={`/${elem.type}`}
             key={elem.title}
             textAlign="center"
             borderRadius="3px"
@@ -56,7 +55,7 @@ export const RebalancePerformance = () => {
               info={infoMock[elem.type]}
               isActive={elem.type === pathName}
             />
-          </Link>
+          </Flex>
         ))}
       </Flex>
 
@@ -92,9 +91,9 @@ export const RebalancePerformanceMob = () => {
 
       <Flex w="100%" px="16px">
         {performanceInfo.map(elem => (
-          <Link
-            as={NavLink}
-            to={`/${elem.type}`}
+          <Flex
+            // as={NavLink}
+            // to={`/${elem.type}`}
             key={elem.title}
             textAlign="center"
             borderRadius="3px"
@@ -105,7 +104,7 @@ export const RebalancePerformanceMob = () => {
             borderColor={elem.type === pathName ? "greenAlpha.100" : "#1F1F1F"}
           >
             {elem.title}
-          </Link>
+          </Flex>
         ))}
       </Flex>
     </VStack>
