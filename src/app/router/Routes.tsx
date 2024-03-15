@@ -16,7 +16,7 @@ export const routesList = [
   // { name: "Borrowing", path: ROUTE_PATHS.borrowing },
   // { name: "Swap", path: "/" },
   { name: "Documentation", path: "https://rebalance.gitbook.io/rebalance/intro/what-is-rebalance" },
-  { name: "DAO", path: "/" }
+  // { name: "DAO", path: "/" }
 ];
 
 const routes = createBrowserRouter([
