@@ -1,5 +1,4 @@
 import { Button, Divider, Flex, HStack, Switch, Text } from "@chakra-ui/react";
-import { sepolia } from "@wagmi/core/chains";
 import { useFormik } from "formik";
 import React, { FC, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
@@ -19,12 +18,11 @@ interface IDepositTabProps {
 
 export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const [needsApproval, setNeedsApproval] = useState(false);
-  const [ isConfirmedApprove, setConfirmedApprove] = useState(false);
+  const [isConfirmedApprove, setConfirmedApprove] = useState(false);
   const { address } = useAccount();
   const { data: balanceToken } = useBalance({
     address,
-    token: pool.tokenAddress,
-    chainId: sepolia.id
+    token: pool.tokenAddress
   });
 
   const { allowance, deposit, isLoading } = useDeposit(
@@ -73,10 +71,6 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   useEffect(() => {
     console.log(allowance, "allwnc");
   }, [allowance, formik.values.deposit]);
-
-  useEffect(() => {
-    console.log(isConfirmedApprove, "isConfirmedApprove");
-  }, [isConfirmedApprove]);
 
   return (
     <form onSubmit={formik.handleSubmit}>

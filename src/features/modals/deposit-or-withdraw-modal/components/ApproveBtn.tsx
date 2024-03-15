@@ -35,6 +35,13 @@ const ApproveBtn = ({
     }
   }, [isSuccess, setConfirmedApprove]);
 
+  console.log({
+    value,
+    poolAddress,
+    tokenAddress,
+    setConfirmedApprove
+  });
+
   return (
     <Button variant="primaryFilled" onClick={() => approve()}>
       {isLoading ? "Processing..." : "Aprove"}

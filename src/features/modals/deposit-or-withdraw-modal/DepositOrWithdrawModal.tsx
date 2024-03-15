@@ -24,7 +24,7 @@ export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose
   const defaultIndex = TABS_DEPOSIT_AND_WITHDRAW.indexOf(type);
   const { tabIndex, handleTab } = useTab(defaultIndex);
   const { address } = useAccount();
-  const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x");
+  const { balance } = useBalanceOfAsset(pool?.rebalancerAddress, address ?? "0x");
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Tabs index={tabIndex} onChange={handleTab}>
