@@ -5,14 +5,13 @@ import { Outlet } from "react-router-dom";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pages/Pools/PoolsHeader";
-import { AppBanner } from "../widgets/AppBanner";
 
 export const PoolLayout = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
 
   return (
     <Flex direction="column" w="100%" gap="44px" align="center">
-      <AppBanner />
+      {/* <AppBanner /> */}
       {media && <RebalancePerformanceMob />}
 
       <Flex
