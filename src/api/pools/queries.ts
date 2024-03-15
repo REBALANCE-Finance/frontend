@@ -1,6 +1,6 @@
 import { IPoolData, IPoolsData } from "./types";
 
-const endpoint = "https://unhealthy-degree-production.up.railway.app/";
+const endpoint = "https://rebalancerfinanceapi.net/";
 
 const mockData: IPoolData[] = [
   {
