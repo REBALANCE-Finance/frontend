@@ -66,10 +66,10 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
             <Text textStyle="textMono16">${formatNumber(balance)}</Text>
           </HStack>
 
-          <HStack justify="space-between">
+          {/* <HStack justify="space-between">
             <Text color="black.0">Use as collateral</Text>
             <Text>-</Text>
-          </HStack>
+          </HStack> */}
 
           <HStack justify="space-between">
             <Text color="black.0">Available to withdraw</Text>

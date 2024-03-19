@@ -67,7 +67,7 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
                 {el.label}:
               </Text>
               <Text fontWeight="500" color="darkGray">
-                ${numeral(el.value).format("0,0")}
+                {el.value == "-" ? "-" : `$ ${numeral(el.value).format("0,0")}`}
               </Text>
             </Flex>
           ))}

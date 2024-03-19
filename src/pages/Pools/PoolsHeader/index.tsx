@@ -14,7 +14,16 @@ export const PoolsHeader = () => {
       <Flex gap="20px">
         <Strategies />
         {!media && (
-          <Link as={Flex} alignItems="center" gap="8px" fontSize="sm" color="whiteAlpha.70">
+          <Link
+            // as={Flex}
+            display="flex"
+            href="https://bridge.arbitrum.io/?destinationChain=arbitrum-one&sourceChain=ethereum"
+            alignItems="center"
+            gap="8px"
+            fontSize="sm"
+            color="whiteAlpha.70"
+            isExternal
+          >
             Bridge to Arbitrum
             <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" />
           </Link>

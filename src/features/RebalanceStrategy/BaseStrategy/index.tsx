@@ -1,4 +1,5 @@
 import { Box, Flex, SimpleGrid, Text, useMediaQuery } from "@chakra-ui/react";
+import React from "react";
 import { useAccount } from "wagmi";
 
 import { MEDIA_QUERY_MAX } from "../../../consts";

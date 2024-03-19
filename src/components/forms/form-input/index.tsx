@@ -38,7 +38,7 @@ export const FormInput: FC<IFormInputProps> = ({
           borderRight="1px solid"
           borderColor="black.90"
         >
-          <Text>Token</Text>
+          <Text>USDT</Text>
         </Flex>
 
         <Input
@@ -50,7 +50,7 @@ export const FormInput: FC<IFormInputProps> = ({
 
         <InputRightAddon>
           <Text textStyle="textMono12" color="darkGray">
-            ${formatNumber(100000)}
+            ${formatNumber(rest?.value)}
           </Text>
         </InputRightAddon>
       </InputGroup>

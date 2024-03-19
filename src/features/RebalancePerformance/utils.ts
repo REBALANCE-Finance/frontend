@@ -16,7 +16,7 @@ export const performanceInfo = [
     type: ROUTES_TYPE.lending
   },
   {
-    title: "I want to Borrow",
+    title: "I want to Borrow (coming soon)",
     subtitle: "The lowest borrowing rates in the market.",
     image: BorrowImage,
     type: ROUTES_TYPE.borrowing

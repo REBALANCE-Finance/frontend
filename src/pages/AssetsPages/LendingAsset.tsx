@@ -73,12 +73,15 @@ export const LendingAsset = observer(() => {
               </Flex>
             </Flex>
             <HStack divider={<Divider orientation="vertical" />} h="100%" color="black.5">
-              <Link href="" isExternal>
+              {/* <Link href="" isExternal>
                 <Flex align="center">
                   Audited pool contracts <Icon name={ICON_NAMES.link} size="18px" />
                 </Flex>
-              </Link>
-              <Link href="" isExternal>
+              </Link> */}
+              <Link
+                href="https://rebalance.gitbook.io/rebalance/yield-optimization-and-lp/lending-rebalance-strategy#mechanism-behind-the-rebalancer"
+                isExternal
+              >
                 <Flex align="center">
                   How the strategy works <Icon name={ICON_NAMES.link} size="18px" />
                 </Flex>
@@ -147,12 +150,15 @@ export const LendingAsset = observer(() => {
           </Flex>
 
           <HStack divider={<Divider orientation="vertical" />} h="100%" color="black.5">
-            <Link href="" isExternal>
+            {/* <Link href="" isExternal>
               <Flex align="center" gap="8px">
                 Audited pool contracts <Icon name={ICON_NAMES.link} size="18px" />
               </Flex>
-            </Link>
-            <Link href="" isExternal>
+            </Link> */}
+            <Link
+              href="https://rebalance.gitbook.io/rebalance/yield-optimization-and-lp/lending-rebalance-strategy#mechanism-behind-the-rebalancer"
+              isExternal
+            >
               <Flex align="center" gap="8px">
                 How the strategy works <Icon name={ICON_NAMES.link} size="18px" />
               </Flex>

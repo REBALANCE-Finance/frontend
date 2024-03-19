@@ -45,7 +45,7 @@ const CONNECT_METHODS = [
   }
 ];
 
-export const ConnectWallet = () => {
+export const ConnectWallet = ({ title }: { title: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { login } = useAuth();
@@ -74,8 +74,13 @@ export const ConnectWallet = () => {
   if (media) {
     return (
       <>
-        <Button p="0" onClick={onOpen}>
-          Connect wallet
+        <Button
+          p="0"
+          onClick={onOpen}
+          variant={title === "Deposit" ? "primaryFilled" : ""}
+          flex="1 1 0"
+        >
+          {title ? title : "Connect wallet"}
         </Button>
 
         <Drawer isOpen={isOpen} placement="right" size="full" onClose={onClose}>
@@ -127,8 +132,13 @@ export const ConnectWallet = () => {
 
   return (
     <>
-      <Button p="0" onClick={onOpen}>
-        Connect wallet
+      <Button
+        p="0"
+        onClick={onOpen}
+        variant={title === "Deposit" ? "primaryFilled" : ""}
+        flex="1 1 0"
+      >
+        {title ? title : "Connect wallet"}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>

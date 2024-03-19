@@ -42,7 +42,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
             </Flex>
             <Flex justifyContent="space-between" alignItems="center">
               <Text>Total supply</Text>
-              <Text variant="t22">{formatNumber(pool.funds.toFixed(2))}</Text>
+              <Text variant="t22">$ {formatNumber(pool.funds.toFixed(2))}</Text>
             </Flex>
           </Flex>
         </Flex>
@@ -99,7 +99,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
 
         <Flex direction="column" gap="8px">
           <Text>Total supply</Text>
-          <Text variant="t22">{formatNumber(pool.funds.toFixed(2))}</Text>
+          <Text variant="t22">$ {formatNumber(pool.funds.toFixed(2))}</Text>
         </Flex>
       </Flex>
 

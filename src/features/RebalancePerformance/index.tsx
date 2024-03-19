@@ -14,8 +14,8 @@ const infoMock = {
     { label: "Total earned", value: "1012100" }
   ],
   borrowing: [
-    { label: "Total borrowed", value: "112000" },
-    { label: "Total money saved", value: "43000" }
+    { label: "Total borrowed", value: "-" },
+    { label: "Total money saved", value: "-" }
   ]
 };
 

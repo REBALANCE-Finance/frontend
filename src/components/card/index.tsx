@@ -14,7 +14,7 @@ interface ICardProps {
 
 export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
   return (
-    <ChakraCard variant="poolCard" onClick={onClick} position="relative">
+    <ChakraCard cursor="pointer" variant="poolCard" position="relative">
       {itemCard.token !== "usdt" ? (
         <Flex
           position="absolute"
@@ -40,10 +40,12 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
           case "header":
             return (
               <CardHeader
+                cursor="pointer"
                 key={elem.name}
                 as={Flex}
                 justifyContent="space-between"
                 alignItems="center"
+                onClick={onClick}
               >
                 <Flex alignItems="center" gap="12px">
                   <TokenIcon name={TOKEN_ICONS[itemCard.token]} />
@@ -57,6 +59,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
           case "body":
             return (
               <CardBody
+                onClick={onClick}
                 as={Flex}
                 direction="column"
                 gap="20px"

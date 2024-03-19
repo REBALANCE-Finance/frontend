@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import React from "react";
 import { createBrowserRouter, Navigate, RouterProvider, ScrollRestoration } from "react-router-dom";
 
 import { ROUTE_PATHS } from "../../consts";

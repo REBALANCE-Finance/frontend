@@ -51,14 +51,14 @@ export const PoolsLending = observer(() => {
                   <Text color="white">Funds in pool</Text>
                   <Tooltip label="Funds in pool">
                     <Text variant="tooltip" textStyle="textMono16" color="white">
-                      {formatNumber(item.funds)}
+                      {formatNumber(item.funds)} $
                     </Text>
                   </Tooltip>
                 </HStack>
 
                 <HStack justify="space-between">
                   <Text color="white">Profit Earned</Text>
-                  <Text textStyle="textMono16">{formatNumber(item.earned)}</Text>
+                  <Text textStyle="textMono16">{formatNumber(item.earned)} $</Text>
                 </HStack>
 
                 <HStack justify="space-between">
@@ -100,7 +100,7 @@ export const PoolsLending = observer(() => {
         return (
           <>
             <DepositLendingButton pool={item} />
-            {!!item.deposit && <WithdrawLendingButton pool={item} />}
+            <WithdrawLendingButton pool={item} />
           </>
         );
       }

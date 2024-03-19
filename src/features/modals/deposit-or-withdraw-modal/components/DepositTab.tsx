@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, HStack, Switch, Text } from "@chakra-ui/react";
+import { Button, Divider, Flex, HStack, Text } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import React, { FC, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
@@ -94,10 +94,10 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
 
         <Divider borderColor="black.90" />
 
-        <HStack justify="space-between">
+        {/* <HStack justify="space-between">
           <Text color="black.0">Use as collateral</Text>
           <Switch />
-        </HStack>
+        </HStack> */}
 
         <HStack justify="space-between">
           <Text color="black.0">30D average APR</Text>
