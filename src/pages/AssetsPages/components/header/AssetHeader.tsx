@@ -41,11 +41,11 @@ export const AssetHeader: FC<any> = ({ pool }) => {
           <Flex flexDirection="column" fontWeight="500">
             <Flex justifyContent="space-between" alignItems="center">
               <Text>Average 30D APR</Text>
-              <Text variant="t22">{pool.avgApr}%</Text>
+              <Text variant="t22">{pool.avgApr.toFixed(2)}%</Text>
             </Flex>
             <Flex justifyContent="space-between" alignItems="center">
               <Text>Total supply</Text>
-              <Text variant="t22">{formatNumber(pool.funds)}</Text>
+              <Text variant="t22">{formatNumber(pool.funds.toFixed(2))}</Text>
             </Flex>
           </Flex>
         </Flex>
@@ -97,7 +97,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
 
         <Flex direction="column" gap="8px">
           <Text>Average 30D APR</Text>
-          <Text variant="t22">{pool.avgApr}%</Text>
+          <Text variant="t22">{pool.avgApr.toFixed(2)}%</Text>
         </Flex>
 
         <Flex direction="column" gap="8px">

@@ -20,4 +20,9 @@ export interface IPoolsData {
   vaultAddress: string;
   tokenAddress: string;
   tokeDecimals: number;
+  tokenPrice: number;
+  funds: number;
+  earned: number;
+  avgApr30D: number;
+  highestMarket30DAvgAprDiffPercentage: number;
 }
