@@ -44,7 +44,7 @@ const ApproveBtn = ({
 
   return (
     <Button variant="primaryFilled" onClick={() => approve()}>
-      {isLoading ? "Processing..." : "Aprove"}
+      {isLoading ? "Processing..." : "Approve"}
     </Button>
   );
 };

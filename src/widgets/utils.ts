@@ -1,12 +1,12 @@
 export const FooterLink = [
-  { name: "GitBook", path: "" },
-  { name: "Media Kit", path: "" },
-  { name: "Contact for partnerships", path: "" }
+  { name: "GitBook", path: "https://rebalance.gitbook.io/rebalance/intro/what-is-rebalance" },
+  // { name: "Media Kit", path: "" },
+  { name: "Contact for partnerships", path: "mailto:artem@rebalance.finance" }
 ];
 
 export const FooterMedia = [
-  { name: "descord", path: "", icon: "" },
-  { name: "twitter", path: "", icon: "" },
-  { name: "telegram", path: "", icon: "" },
-  { name: "linkedin", path: "", icon: "" }
+  { name: "descord", path: "https://discord.gg/pgUBRSWkNY", icon: "" },
+  { name: "twitter", path: "https://twitter.com/rebalanceai", icon: "" },
+  { name: "telegram", path: "https://t.me/+sQu_wAoL_FtlNjgy", icon: "" }
+  // { name: "linkedin", path: "", icon: "" }
 ];
