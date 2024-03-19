@@ -89,7 +89,7 @@ export const ConnectWallet = () => {
                 Connect Wallet
               </Text>
               <Text fontSize="sm" fontWeight="400">
-                To start using REBALACE
+                To start using REBALANCE
               </Text>
             </DrawerHeader>
 
@@ -142,7 +142,7 @@ export const ConnectWallet = () => {
               Connect Wallet
             </Text>
             <Text fontSize="sm" fontWeight="400">
-              To start using REBALACE
+              To start using REBALANCE
             </Text>
           </ModalHeader>
 
