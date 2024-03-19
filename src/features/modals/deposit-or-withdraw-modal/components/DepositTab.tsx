@@ -68,10 +68,6 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     checkNeedsApproval();
   }, [allowance, formik.values.deposit, pool.decimals]);
 
-  useEffect(() => {
-    console.log(allowance, "allwnc");
-  }, [allowance, formik.values.deposit]);
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <Flex direction="column" gap="24px">

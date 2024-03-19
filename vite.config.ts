@@ -11,6 +11,14 @@ const root = path.resolve(__dirname, resolveApp("src"));
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true
+      }
+    }
+  },
   plugins: [
     react(),
     tsconfigPaths(),
@@ -26,5 +34,8 @@ export default defineConfig({
       "@": `${root}/`,
       "@public": `${root}/../public`
     }
+  },
+  optimizeDeps: {
+    include: ["react", "react-dom"]
   }
 });

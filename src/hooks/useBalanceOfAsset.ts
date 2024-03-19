@@ -19,7 +19,6 @@ export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: 
     if (data) {
       const formattedBalance = ethers.formatUnits(data, 6);
       setBalance(+formattedBalance);
-      console.log(formattedBalance, "data");
     } else {
       setBalance(0);
     }

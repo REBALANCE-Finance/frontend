@@ -9,7 +9,6 @@ import { BaseChart } from "./BaseChart";
 import EarningsChart from "./EarningsChart";
 
 const BaseStrategy: React.FC<any> = ({ pool }) => {
-  console.log(pool.rebalancerAddress, "pool");
   const { address } = useAccount();
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x");
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);

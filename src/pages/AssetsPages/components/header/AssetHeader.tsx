@@ -2,12 +2,11 @@ import { Flex, Text } from "@chakra-ui/layout";
 import { useMediaQuery } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useLocation } from "react-router";
-import { useAccount } from "wagmi";
 
 import { Risk } from "../../../../components/risk";
 import { riskBgColor, riskColor } from "../../../../components/risk/utils";
 import { TokenIcon } from "../../../../components/token-icon";
-import { CHAIN_NAMES, MEDIA_QUERY_MAX } from "../../../../consts";
+import { MEDIA_QUERY_MAX } from "../../../../consts";
 import { ROUTES_TYPE } from "../../../../consts/routes-type";
 import { getCurrentPath } from "../../../../features/RebalancePerformance/utils";
 import { formatNumber } from "../../../../utils/formatNumber";
@@ -15,9 +14,7 @@ import { formatNumber } from "../../../../utils/formatNumber";
 export const AssetHeader: FC<any> = ({ pool }) => {
   const location = useLocation();
   const pathName = getCurrentPath(location.pathname);
-  const { chain } = useAccount();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  console.log({ chain, CHAIN_NAMES }, "chain");
 
   if (media) {
     return (
@@ -102,7 +99,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
 
         <Flex direction="column" gap="8px">
           <Text>Total supply</Text>
-          <Text variant="t22">{formatNumber(pool.funds)}</Text>
+          <Text variant="t22">{formatNumber(pool.funds.toFixed(2))}</Text>
         </Flex>
       </Flex>
 
