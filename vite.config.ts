@@ -1,41 +1,36 @@
-import react from "@vitejs/plugin-react";
-import fs from "fs";
 import path from "path";
 import { defineConfig } from "vite";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = (relative: string) => path.resolve(appDirectory, relative);
-const root = path.resolve(__dirname, resolveApp("src"));
+// Путь к папке с иконками
+const iconDirs = path.resolve(process.cwd(), "src/assets/icons");
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  plugins: [
+    tsconfigPaths(), // Автоматическое разрешение путей из tsconfig.json
+    createSvgIconsPlugin({
+      iconDirs: [iconDirs],
+      symbolId: "[name]"
+    }),
+    // Рассмотрите возможность добавления других плагинов для оптимизации, если это необходимо
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src")
+    }
+  },
   build: {
-    minify: "terser",
+    // Оптимизация для production
+    minify: "terser", // Минификация кода
     terserOptions: {
       compress: {
         drop_console: true
       }
-    }
-  },
-  plugins: [
-    react(),
-    tsconfigPaths(),
-    createSvgIconsPlugin({
-      iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],
-      symbolId: "[name]"
-    })
-  ],
-  resolve: {
-    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
-    dedupe: ["react"],
-    alias: {
-      "@": `${root}/`,
-      "@public": `${root}/../public`
-    }
+    },
+    chunkSizeWarningLimit: 500
   },
   optimizeDeps: {
-    include: ["react", "react-dom"]
+    include: ["react", "react-dom", "@chakra-ui/react", "mobx", "react-router-dom"]
   }
 });
