@@ -50,7 +50,7 @@ export const FormInput: FC<IFormInputProps> = ({
 
         <InputRightAddon>
           <Text textStyle="textMono12" color="darkGray">
-            ${formatNumber(rest?.value)}
+            ${formatNumber(rest?.value + "")}
           </Text>
         </InputRightAddon>
       </InputGroup>
