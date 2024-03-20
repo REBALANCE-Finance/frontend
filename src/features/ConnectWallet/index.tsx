@@ -45,7 +45,7 @@ const CONNECT_METHODS = [
   }
 ];
 
-export const ConnectWallet = ({ title }: { title: string }) => {
+export const ConnectWallet = ({ title }: { title?: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { login } = useAuth();
