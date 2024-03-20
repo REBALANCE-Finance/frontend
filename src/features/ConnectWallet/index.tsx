@@ -33,11 +33,6 @@ const CONNECT_METHODS = [
     method: ConnectorNames.WalletConnect,
     title: "WalletConnect",
     imgName: ICON_NAMES.walletConnect
-  },
-  {
-    method: ConnectorNames.CoinBase,
-    title: "CoinBase",
-    imgName: ICON_NAMES.coinBase
   }
 ];
 
@@ -46,6 +41,11 @@ if (!isMobile) {
     method: ConnectorNames.MetaMask,
     title: "Metamask",
     imgName: ICON_NAMES.metamask
+  });
+  CONNECT_METHODS.push({
+    method: ConnectorNames.CoinBase,
+    title: "CoinBase",
+    imgName: ICON_NAMES.coinBase
   });
 }
 
