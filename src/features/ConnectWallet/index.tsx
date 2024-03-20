@@ -20,6 +20,7 @@ import {
   useMediaQuery
 } from "@chakra-ui/react";
 import React, { useCallback } from "react";
+import { isMobile } from "react-device-detect";
 
 import Icon from "../../components/icon";
 import { MEDIA_QUERY_MAX } from "../../consts";
@@ -28,11 +29,6 @@ import { ICON_NAMES } from "../../consts/iconNames";
 import { useAuth } from "../../hooks/useAuth";
 
 const CONNECT_METHODS = [
-  {
-    method: ConnectorNames.MetaMask,
-    title: "Metamask",
-    imgName: ICON_NAMES.metamask
-  },
   {
     method: ConnectorNames.WalletConnect,
     title: "WalletConnect",
@@ -44,6 +40,14 @@ const CONNECT_METHODS = [
     imgName: ICON_NAMES.coinBase
   }
 ];
+
+if (!isMobile) {
+  CONNECT_METHODS.unshift({
+    method: ConnectorNames.MetaMask,
+    title: "Metamask",
+    imgName: ICON_NAMES.metamask
+  });
+}
 
 export const ConnectWallet = ({ title }: { title?: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

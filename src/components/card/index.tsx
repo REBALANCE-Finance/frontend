@@ -28,7 +28,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
           alignItems="center"
           background="000"
           backdropFilter="blur(4px)"
-          zIndex="999"
+          zIndex="9"
           fontSize="large"
           fontWeight="500"
         >
