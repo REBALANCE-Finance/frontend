@@ -15,8 +15,8 @@ export const RebalancePerformance = ({ pools }: { pools: IPoolData[] }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const infoMock = {
     lending: [
-      { label: "Total value locked", value: pools[0].funds.toFixed(2) },
-      { label: "Total earned", value: pools[0].earned.toFixed(2) }
+      { label: "Total value locked", value: pools[0]?.funds.toFixed(2) },
+      { label: "Total earned", value: pools[0]?.earned.toFixed(2) }
     ],
     borrowing: [
       { label: "Total borrowed", value: "-" },
@@ -71,8 +71,8 @@ export const RebalancePerformanceMob = ({ pools }: { pools: IPoolData[] }) => {
   const pathName = getCurrentPath(location.pathname);
   const infoMock = {
     lending: [
-      { label: "Total value locked", value: pools[0].funds.toFixed(2) },
-      { label: "Total earned", value: pools[0].earned.toFixed(2) }
+      { label: "Total value locked", value: pools[0]?.funds.toFixed(2) },
+      { label: "Total earned", value: pools[0]?.earned.toFixed(2) }
     ],
     borrowing: [
       { label: "Total borrowed", value: "-" },

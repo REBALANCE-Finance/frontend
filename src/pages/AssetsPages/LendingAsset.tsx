@@ -170,7 +170,6 @@ export const LendingAsset = observer(() => {
       {/* <Flex gap="10px" align="center">
         {strategies.map(({ key, title, description }) => {
           const isActive = key === strategic;
-          console.log(strategic, "strat");
           return (
             <Flex
               as={Button}
