@@ -1,6 +1,7 @@
 import { Flex, StackDivider, Text, useMediaQuery, VStack } from "@chakra-ui/react";
-import React from "react";
 import { useLocation } from "react-router-dom";
+
+import { IPoolData } from "@/api/pools/types";
 
 import { MEDIA_QUERY_MAX } from "../../consts";
 import { ROUTES_TYPE } from "../../consts/routes-type";
@@ -8,21 +9,20 @@ import { RebalancePerformanceCard } from "./RebalancePerformanceCard";
 import { PerformanceChart } from "./RebalancePerformanceCharts";
 import { getCurrentPath, performanceInfo } from "./utils";
 
-const infoMock = {
-  lending: [
-    { label: "Total value locked", value: "10254000" },
-    { label: "Total earned", value: "1012100" }
-  ],
-  borrowing: [
-    { label: "Total borrowed", value: "-" },
-    { label: "Total money saved", value: "-" }
-  ]
-};
-
-export const RebalancePerformance = () => {
+export const RebalancePerformance = ({ pools }: { pools: IPoolData[] }) => {
   const location = useLocation();
   const pathName = getCurrentPath(location.pathname);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
+  const infoMock = {
+    lending: [
+      { label: "Total value locked", value: pools[0].funds.toFixed(2) },
+      { label: "Total earned", value: pools[0].earned.toFixed(2) }
+    ],
+    borrowing: [
+      { label: "Total borrowed", value: "-" },
+      { label: "Total money saved", value: "-" }
+    ]
+  };
 
   if (media) {
     return (
@@ -66,9 +66,19 @@ export const RebalancePerformance = () => {
   );
 };
 
-export const RebalancePerformanceMob = () => {
+export const RebalancePerformanceMob = ({ pools }: { pools: IPoolData[] }) => {
   const location = useLocation();
   const pathName = getCurrentPath(location.pathname);
+  const infoMock = {
+    lending: [
+      { label: "Total value locked", value: pools[0].funds.toFixed(2) },
+      { label: "Total earned", value: pools[0].earned.toFixed(2) }
+    ],
+    borrowing: [
+      { label: "Total borrowed", value: "-" },
+      { label: "Total money saved", value: "-" }
+    ]
+  };
 
   return (
     <VStack
