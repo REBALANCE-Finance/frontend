@@ -29,7 +29,7 @@ export const PoolLayout = () => {
         p={{ base: "16px", xl: 0 }}
         order={{ base: 3 }}
       >
-        {poolsStore ? <RebalancePerformance pools={poolsStore.pools} /> : null}
+        {poolsStore?.pools ? <RebalancePerformance pools={poolsStore?.pools} /> : null}
         <Flex direction="column" gap="24px">
           <PoolsHeader />
           <Outlet />
