@@ -37,7 +37,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
       }),
       onSubmit: async values => {
         try {
-          const assets = parseBigNumber(values.withdraw || "0", pool.decimals);
+          const assets = parseBigNumber(values.withdraw || "0", 6);
           await instantWithdraw({ address, assets });
         } catch (error) {
           console.error("Ошибка при выводе средств: ", error);

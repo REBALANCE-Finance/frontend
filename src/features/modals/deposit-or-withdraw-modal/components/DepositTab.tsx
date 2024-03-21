@@ -36,11 +36,11 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       deposit: ""
     },
     validationSchema: depositSchema(
-      formatBigNumber(balanceToken?.value, balanceToken?.decimals),
+      formatBigNumber(balanceToken?.value, 6),
       "100000000000"
     ),
     onSubmit: async values => {
-      const depositValue = parseBigNumber(values.deposit, pool.decimals);
+      const depositValue = parseBigNumber(values.deposit, 6);
       if (address) {
         await deposit({
           value: depositValue,
@@ -55,18 +55,18 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   });
 
   const setMax = () => {
-    formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
+    formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, 6));
   };
 
   useEffect(() => {
     const checkNeedsApproval = () => {
-      const depositValue = parseBigNumber(formik.values.deposit, pool.decimals);
+      const depositValue = parseBigNumber(formik.values.deposit, 6);
       const isApprovalNeeded = !allowance || allowance < depositValue;
       setNeedsApproval(isApprovalNeeded);
     };
 
     checkNeedsApproval();
-  }, [allowance, formik.values.deposit, pool.decimals]);
+  }, [allowance, formik.values.deposit]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -84,7 +84,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           <Text color="black.0">Wallet Balance</Text>
           <Flex align="inherit">
             <Text textStyle="textMono16">
-              ${formatNumber(formatBigNumber(balanceToken?.value, balanceToken?.decimals))}
+              ${formatNumber(formatBigNumber(balanceToken?.value, 6))}
             </Text>
             <Button color="greenAlpha.100" onClick={setMax} isDisabled={isLoading}>
               Max
@@ -114,7 +114,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           <ApproveBtn
             tokenAddress={pool.tokenAddress}
             poolAddress={pool.rebalancerAddress}
-            value={parseBigNumber(formik.values.deposit, pool.decimals)}
+            value={parseBigNumber(formik.values.deposit, 6)}
             setConfirmedApprove={setConfirmedApprove}
           />
         ) : (

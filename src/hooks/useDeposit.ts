@@ -27,6 +27,7 @@ export const useDeposit = (
     address: `0x${string}`;
     onSuccess: () => void;
   }) => {
+    console.log(value, address);
     try {
       setLoading(true);
       await writeContractAsync(
