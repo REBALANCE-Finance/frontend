@@ -15,10 +15,34 @@ export const PoolLayout = () => {
     poolsStore.fetchPools("lending");
   }, [poolsStore]);
 
+  if (media) {
+    return (
+      <Flex direction="column" w="100%" align="center">
+        {/* <AppBanner /> */}
+        <RebalancePerformanceMob />
+        <Flex direction="column" gap="24px" p={{ base: "16px", xl: 0 }} w="100%">
+          <PoolsHeader />
+          <Outlet />
+        </Flex>
+        <Flex
+          direction="column"
+          justify="center"
+          gap="44px"
+          maxW="1300px"
+          w="100%"
+          p={{ base: "16px", xl: 0 }}
+          order={{ base: 3 }}
+        >
+          {poolsStore?.pools ? <RebalancePerformance pools={poolsStore?.pools} /> : null}
+        </Flex>
+      </Flex>
+    );
+  }
+
   return (
     <Flex direction="column" w="100%" gap="44px" align="center">
       {/* <AppBanner /> */}
-      {media && <RebalancePerformanceMob pools={poolsStore.pools} />}
+      {media && <RebalancePerformanceMob />}
 
       <Flex
         direction="column"

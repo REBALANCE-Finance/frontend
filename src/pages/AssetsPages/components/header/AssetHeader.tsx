@@ -1,12 +1,16 @@
-import { Flex, Text } from "@chakra-ui/layout";
+import { Flex, Link,Text } from "@chakra-ui/layout";
 import { useMediaQuery } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useLocation } from "react-router";
+import { useAccount } from "wagmi";
+
+import Icon from "@/components/icon";
+import { getFinalExplorerUrl } from "@/utils/url";
 
 import { Risk } from "../../../../components/risk";
 import { riskBgColor, riskColor } from "../../../../components/risk/utils";
 import { TokenIcon } from "../../../../components/token-icon";
-import { MEDIA_QUERY_MAX } from "../../../../consts";
+import { CHAIN_ICONS, ICON_NAMES, MEDIA_QUERY_MAX } from "../../../../consts";
 import { ROUTES_TYPE } from "../../../../consts/routes-type";
 import { getCurrentPath } from "../../../../features/RebalancePerformance/utils";
 import { formatNumber } from "../../../../utils/formatNumber";
@@ -15,22 +19,49 @@ export const AssetHeader: FC<any> = ({ pool }) => {
   const location = useLocation();
   const pathName = getCurrentPath(location.pathname);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-
+  const { chain } = useAccount();
   if (media) {
     return (
       <Flex w="100%" h="fit-content" flexDirection="column">
         <Flex gap="24px" flexDirection="column">
           <Flex gap="8px" align="inherit">
             <TokenIcon name={pool.token} size="32px" sizeIcon="22px" />
-            <Flex direction="row" gap="8px" alignItems="center">
+            <Flex
+              direction="row"
+              gap="8px"
+              alignItems="center"
+              w="100%"
+              justifyContent="space-between"
+            >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px">
                 <Text textTransform="uppercase">{pool.token}</Text>
-                <Text>Coin</Text>
+                {/* <Text>Coin</Text> */}
               </Flex>
               <Text display="flex" flexDirection="row" mt="4px">
                 {/* {pool.token} ({CHAIN_NAMES[chain?.id ?? 0]}) */}
-                <Text textTransform="uppercase">{pool.token}</Text>
-                <Text>(Arbitrum)</Text>
+                {/* <Text textTransform="uppercase">{pool.token}</Text> */}
+                {/* <Text>(Arbitrum)</Text> */}
+                <Flex gap="8px" alignItems="center">
+                  <Text fontWeight="500">Pool</Text>
+                  <Flex gap="5px">
+                    <Icon name={CHAIN_ICONS[chain?.id ?? 0]} size="18px" />
+                    <Text textStyle="text14" color="black.5">
+                      {pool.rebalancerAddress?.substring(0, 12) +
+                        "..." +
+                        pool.rebalancerAddress?.substring(pool.rebalancerAddress?.length - 5)}
+                    </Text>
+                    <Link
+                      href={getFinalExplorerUrl({
+                        url: chain?.blockExplorers?.default.url,
+                        address: pool.rebalancerAddress,
+                        type: "address"
+                      })}
+                      isExternal
+                    >
+                      <Icon name={ICON_NAMES.link} size="sm" />
+                    </Link>
+                  </Flex>
+                </Flex>
               </Text>
             </Flex>
           </Flex>

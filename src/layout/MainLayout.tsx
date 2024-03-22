@@ -7,7 +7,7 @@ import { AppWarning } from "../widgets/AppWarning";
 
 export const MainLayout = () => {
   return (
-    <Flex direction="column" h="100vh" alignItems="center" w="100%">
+    <Flex direction="column" minH="100vh" alignItems="center" w="100%">
       <AppHeader />
       <AppWarning />
       <Flex flex="1 0" w="100%">

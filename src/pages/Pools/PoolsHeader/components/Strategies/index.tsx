@@ -1,23 +1,26 @@
 import { Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 
 import Icon from "../../../../../components/icon";
-import { CHAIN_ICONS, CHAIN_NAMES, ICON_NAMES } from "../../../../../consts";
+import { CHAIN_ICONS, ICON_NAMES } from "../../../../../consts";
 
 export const Strategies = () => {
   const { chains, switchChain } = useSwitchChain();
   const { chain } = useAccount();
+  const [isActiveChain, setIsActiveChain] = useState(chains[0].id === chain?.id);
 
   const handleSwitchChain = (id: number) => {
     switchChain({ chainId: id });
+    setIsActiveChain(chains[0].id === id);
   };
   return (
     <Menu>
       <MenuButton>
         <Flex alignItems="center" gap="12px" color="lightGray">
           <Icon name={CHAIN_ICONS[chain?.id ?? 42161]} />
-          <Text fontSize="xl">{CHAIN_NAMES[chain?.id ?? 0]} Yield Strategies</Text>
+          {/* <Text fontSize="xl">{CHAIN_NAMES[chain?.id ?? 0]}</Text> */}
+          <Text fontSize="medium">Arbitrum</Text>
           <Icon name={ICON_NAMES.chevronDown} />
         </Flex>
       </MenuButton>
@@ -26,7 +29,7 @@ export const Strategies = () => {
         <Text fontSize="sm">Select the Market</Text>
 
         {chains.map(({ id, name }) => {
-          const isActiveChain = id === chain?.id;
+          // const isActiveChain = id === chain?.id;
           if (id === 42161) {
             return (
               <MenuItem

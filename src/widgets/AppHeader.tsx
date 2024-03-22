@@ -23,6 +23,10 @@ export const AppHeader = () => {
       maxW={"1300px"}
       minH={{ base: "56px", md: "auto" }}
       w="100%"
+      position="sticky"
+      top="0"
+      zIndex={100}
+      bg="black"
     >
       <Link as={NavLink} to="/lending">
         <Image src={media ? LogoMob : LogoDesc} w={{ base: "30px", md: "150px" }} />

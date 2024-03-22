@@ -27,7 +27,16 @@ export const AppWarning = () => {
     >
       <Text>{InfoText ?? "Info"}</Text>
 
-      <CloseButton position="absolute" top="0" right="0" size="sm" onClick={handleClose} />
+      <Flex
+        position="absolute"
+        bottom="0"
+        right="0"
+        top="0"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CloseButton size="lg" onClick={handleClose} />
+      </Flex>
     </Flex>
   );
 };

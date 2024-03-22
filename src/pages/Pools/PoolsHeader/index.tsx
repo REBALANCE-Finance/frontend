@@ -10,24 +10,23 @@ import { Strategies } from "./components/Strategies";
 export const PoolsHeader = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   return (
-    <Flex alignItems="center" justifyContent={{ base: "center", md: "space-between" }}>
-      <Flex gap="20px">
+    <Flex alignItems="center" justifyContent="space-between">
+      <Flex gap="20px" w={media ? "100%" : "auto"}>
         <Strategies />
-        {!media && (
-          <Link
-            // as={Flex}
-            display="flex"
-            href="https://bridge.arbitrum.io/?destinationChain=arbitrum-one&sourceChain=ethereum"
-            alignItems="center"
-            gap="8px"
-            fontSize="sm"
-            color="whiteAlpha.70"
-            isExternal
-          >
-            Bridge to Arbitrum
-            <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" />
-          </Link>
-        )}
+        <Link
+          ml="auto"
+          // as={Flex}
+          display="flex"
+          href="https://bridge.arbitrum.io/?destinationChain=arbitrum-one&sourceChain=ethereum"
+          alignItems="center"
+          gap="8px"
+          fontSize="sm"
+          color="whiteAlpha.70"
+          isExternal
+        >
+          Bridge to Arbitrum
+          <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" />
+        </Link>
       </Flex>
 
       {!media && (

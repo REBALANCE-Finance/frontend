@@ -26,9 +26,9 @@ const BaseStrategy: React.FC<any> = ({ pool }) => {
               {balance.toFixed(2)} $
             </Text>
           </Box>
-          <SimpleGrid columns={2} gap="8px">
+          <SimpleGrid columns={!media || balance > 0 ? 2 : 1} gap="8px">
             <DepositLendingButton variant="primaryWhite" pool={pool} />
-            <WithdrawLendingButton pool={pool} disabled={balance <= 0} />
+            {balance > 0 && <WithdrawLendingButton pool={pool} />}
           </SimpleGrid>
         </Flex>
         <Flex>

@@ -1,10 +1,10 @@
-import { Flex, StackDivider, Text, useMediaQuery, VStack } from "@chakra-ui/react";
+import { Flex, StackDivider, useMediaQuery, VStack } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 
 import { IPoolData } from "@/api/pools/types";
 
 import { MEDIA_QUERY_MAX } from "../../consts";
-import { ROUTES_TYPE } from "../../consts/routes-type";
+// import { ROUTES_TYPE } from "../../consts/routes-type";
 import { RebalancePerformanceCard } from "./RebalancePerformanceCard";
 import { PerformanceChart } from "./RebalancePerformanceCharts";
 import { getCurrentPath, performanceInfo } from "./utils";
@@ -66,19 +66,19 @@ export const RebalancePerformance = ({ pools }: { pools: IPoolData[] }) => {
   );
 };
 
-export const RebalancePerformanceMob = ({ pools }: { pools: IPoolData[] }) => {
+export const RebalancePerformanceMob = () => {
   const location = useLocation();
   const pathName = getCurrentPath(location.pathname);
-  const infoMock = {
-    lending: [
-      { label: "Total value locked", value: pools[0]?.funds.toFixed(2) },
-      { label: "Total earned", value: pools[0]?.earned.toFixed(2) }
-    ],
-    borrowing: [
-      { label: "Total borrowed", value: "-" },
-      { label: "Total money saved", value: "-" }
-    ]
-  };
+  // const infoMock = {
+  //   lending: [
+  //     { label: "Total value locked", value: pools[0]?.funds.toFixed(2) },
+  //     { label: "Total earned", value: pools[0]?.earned.toFixed(2) }
+  //   ],
+  //   borrowing: [
+  //     { label: "Total borrowed", value: "-" },
+  //     { label: "Total money saved", value: "-" }
+  //   ]
+  // };
 
   return (
     <VStack
@@ -88,18 +88,18 @@ export const RebalancePerformanceMob = ({ pools }: { pools: IPoolData[] }) => {
       w="100%"
       order={{ base: 0, md: 1 }}
     >
-      <StackDivider />
+      {/* <StackDivider /> */}
 
-      <Flex justify="space-between" w="100%" gap="10px" color="black.5" p="16px">
+      {/* <Flex justify="space-between" w="100%" gap="10px" color="black.5" p="16px">
         {infoMock[pathName as ROUTES_TYPE]?.map((elem, i) => (
           <Flex key={i}>
             <Text>{elem.label}:</Text>
             <Text>{elem.value}</Text>
           </Flex>
         ))}
-      </Flex>
+      </Flex> */}
 
-      <Flex w="100%" px="16px">
+      <Flex w="100%" px="16px" gap="8px">
         {performanceInfo.map(elem => (
           <Flex
             // as={NavLink}
@@ -107,11 +107,14 @@ export const RebalancePerformanceMob = ({ pools }: { pools: IPoolData[] }) => {
             key={elem.title}
             textAlign="center"
             borderRadius="3px"
-            border="1px solid"
+            // border="1px solid"
             p="8px 12px"
             w="100%"
-            color={elem.type === pathName ? "" : "black.0"}
-            borderColor={elem.type === pathName ? "greenAlpha.100" : "#1F1F1F"}
+            color={elem.type !== pathName ? "" : "black"}
+            // borderColor={elem.type === pathName ? "greenAlpha.100" : "#1F1F1F"}
+            justifyContent="center"
+            alignItems="center"
+            bg={elem.type === pathName ? "greenAlpha.100" : "#282a31"}
           >
             {elem.title}
           </Flex>

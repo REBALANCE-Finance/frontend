@@ -51,7 +51,7 @@ export const LendingAsset = observer(() => {
         <AssetHeader pool={pool} />
         <Flex direction="column">
           <Flex flexDirection="column">
-            <Flex gap="8px">
+            {/* <Flex gap="8px">
               <Text fontWeight="500">Pool</Text>
               <Flex gap="5px">
                 <Icon name={CHAIN_ICONS[chain?.id ?? 0]} size="18px" />
@@ -71,7 +71,7 @@ export const LendingAsset = observer(() => {
                   <Icon name={ICON_NAMES.link} size="sm" />
                 </Link>
               </Flex>
-            </Flex>
+            </Flex> */}
             <HStack divider={<Divider orientation="vertical" />} h="100%" color="black.5">
               {/* <Link href="" isExternal>
                 <Flex align="center">

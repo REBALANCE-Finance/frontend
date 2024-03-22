@@ -1,5 +1,5 @@
 import { createConfig, http } from "@wagmi/core";
-import { arbitrum, bsc, optimism, sepolia } from "wagmi/chains";
+import { arbitrum, bsc, optimism } from "wagmi/chains";
 import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
 
 const connectors = [
@@ -9,10 +9,10 @@ const connectors = [
 ];
 
 export const wagmiConfig = createConfig({
-  chains: [sepolia, arbitrum, bsc, optimism],
+  chains: [arbitrum, bsc, optimism],
   connectors,
   transports: {
-    [sepolia.id]: http(),
+    // [sepolia.id]: http(),
     [arbitrum.id]: http(),
     [bsc.id]: http(),
     [optimism.id]: http()

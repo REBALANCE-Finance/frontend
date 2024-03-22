@@ -2,7 +2,7 @@ import { useConnect } from "wagmi";
 
 import { ConnectorNames } from "../consts/connectors";
 
-const defChainIdSepolia = 42161;
+const defChainIdArbitrum = 42161;
 
 export const useAuth = () => {
   const { connectAsync, connectors, ...rest } = useConnect();
@@ -13,7 +13,7 @@ export const useAuth = () => {
       throw new Error("Connector not found");
     }
 
-    return await connectAsync({ chainId: defChainIdSepolia, connector: findConnector });
+    return await connectAsync({ chainId: defChainIdArbitrum, connector: findConnector });
   };
   return {
     login,

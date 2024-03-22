@@ -8,7 +8,6 @@ export const CHAIN_ICONS: Record<number, string> = {
 };
 
 export const CHAIN_NAMES: Record<number, string> = {
-  11155111: "Sepolia",
   42161: "Arbitrum",
   56: "Binance Smart Chain",
   10: "Optimism"
