@@ -19,7 +19,7 @@ export interface IPoolsData {
   token: string;
   vaultAddress: string;
   tokenAddress: string;
-  tokeDecimals: number;
+  tokenDecimals: number;
   tokenPrice: number;
   funds: number;
   earned: number;
