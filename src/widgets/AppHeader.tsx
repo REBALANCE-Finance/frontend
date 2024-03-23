@@ -5,8 +5,8 @@ import React from "react";
 import NextLink from "next/link";
 import { useAccount } from "wagmi";
 
-import LogoDesc from "../assets/logo/logo-long.svg";
-import LogoMob from "../assets/logo/logo-short.svg";
+import LogoDesc from "/public/assets/logo/logo-long.svg";
+import LogoMob from "/public/assets/logo/logo-short.svg";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { ConnectWallet } from "../features/ConnectWallet";
 import { WalletProfile } from "../features/WalletProfile";
@@ -31,7 +31,7 @@ export const AppHeader = () => {
       bg="black"
     >
       <Link as={NextLink} href="/lending">
-        <Image src={media ? LogoMob : LogoDesc} w={{ base: "30px", md: "150px" }} />
+        <Image src={media ? LogoMob.src : LogoDesc.src} w={{ base: "30px", md: "150px" }} />
       </Link>
 
       {!media && <AppNav />}

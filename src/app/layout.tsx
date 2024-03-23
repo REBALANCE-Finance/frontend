@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
-import "../assets/styles/index.scss";
+import "/public/assets/styles/index.scss";
 import { Providers } from "@/utils/providers";
 
 import { ModalContextController } from "../features/modals/ModalContextController";

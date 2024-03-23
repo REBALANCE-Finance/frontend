@@ -7,15 +7,18 @@ const Icon: FC<TIconProps> = ({ name, size = "md", width, height, ...props }) =>
   const currentSize = EnumSizes[size as Sizes] ?? size;
 
   if (Object.values(ICON_NAMES).includes(name)) {
+    // return (
+    //   <svg
+    //     aria-hidden="true"
+    //     width={width ?? currentSize}
+    //     height={height ?? currentSize}
+    //     {...props}
+    //   >
+    //     <use href={String("#").concat(name).concat("-icon")} />
+    //   </svg>
+    // );
     return (
-      <svg
-        aria-hidden="true"
-        width={width ?? currentSize}
-        height={height ?? currentSize}
-        {...props}
-      >
-        <use href={String("#").concat(name).concat("-icon")} />
-      </svg>
+      <img src={`/assets/icons/${name}-icon.svg`} alt={name} width={width} height={height} {...props}/>
     );
   }
 
