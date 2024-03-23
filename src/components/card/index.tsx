@@ -2,7 +2,7 @@ import { Card as ChakraCard, CardBody, CardFooter, CardHeader, Flex, Text } from
 import React, { FC } from "react";
 
 import { TOKEN_ICONS } from "../../consts";
-import { IRowCard, RowCardProccessType } from "../../pages/Pools/types";
+import { IRowCard, RowCardProccessType } from "../../pagesComponents/Pools/types";
 import { DefaultDataType } from "../../types";
 import { TokenIcon } from "../token-icon";
 

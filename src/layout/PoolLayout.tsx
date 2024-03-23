@@ -8,7 +8,7 @@ import { storesContext } from "@/store/app.store";
 
 import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
-import { PoolsHeader } from "../pages/Pools/PoolsHeader";
+import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 
 export const PoolLayout = ({ children } : {
   children: React.ReactNode;

@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 
 export const RebalancePerformance = ({ pools }: { pools: IPoolData[] }) => {
   const location = usePathname();
-  const pathName = getCurrentPath(location);
+  const pathName = getCurrentPath(location || '');
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const infoMock = {
     lending: [
