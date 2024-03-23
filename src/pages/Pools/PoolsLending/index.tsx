@@ -1,3 +1,5 @@
+'use client'
+
 import { Divider, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";

@@ -1,3 +1,5 @@
+'use client'
+
 import { Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";

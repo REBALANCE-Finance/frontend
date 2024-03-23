@@ -1,3 +1,5 @@
+'use client'
+
 import { Divider, Flex, HStack, Link, Text, useMediaQuery } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";

@@ -10,11 +10,11 @@ import {
   useMediaQuery
 } from "@chakra-ui/react";
 import React from "react";
-import { NavLink } from "react-router-dom";
 
-import { routesList } from "../app/router/Routes";
+import { routesList } from "@/routes/RouterList";
 import Icon from "../components/icon";
 import { MEDIA_QUERY_MAX } from "../consts";
+import NextLink from "next/link";
 
 export const AppNav = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,8 +53,8 @@ export const AppNav = () => {
                 <Link
                   variant="nav"
                   key={route.name}
-                  as={NavLink}
-                  to={route.path}
+                  href={route.path}
+                  as={NextLink}
                   onClick={onClose}
                   fontSize="lg"
                 >
@@ -71,7 +71,7 @@ export const AppNav = () => {
   return (
     <Flex gap="24px">
       {routesList.map(route => (
-        <Link variant="nav" key={route.name} as={NavLink} to={route.path}>
+        <Link variant="nav" key={route.name} as={NextLink} href={route.path}>
           {route.name}
         </Link>
       ))}

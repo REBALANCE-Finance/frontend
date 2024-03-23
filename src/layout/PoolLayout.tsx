@@ -1,3 +1,5 @@
+'use client'
+
 import { Flex, useMediaQuery } from "@chakra-ui/react";
 import React, { useContext, useEffect } from "react";
 import { Outlet } from "react-router-dom";
@@ -8,7 +10,9 @@ import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pages/Pools/PoolsHeader";
 
-export const PoolLayout = () => {
+export const PoolLayout = ({ children } : {
+  children: React.ReactNode;
+}) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { poolsStore } = useContext(storesContext);
   useEffect(() => {
@@ -22,7 +26,7 @@ export const PoolLayout = () => {
         <RebalancePerformanceMob />
         <Flex direction="column" gap="24px" p={{ base: "16px", xl: 0 }} w="100%">
           <PoolsHeader />
-          <Outlet />
+          {children}
         </Flex>
         <Flex
           direction="column"

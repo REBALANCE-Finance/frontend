@@ -8,10 +8,11 @@ import { MEDIA_QUERY_MAX } from "../../consts";
 import { RebalancePerformanceCard } from "./RebalancePerformanceCard";
 import { PerformanceChart } from "./RebalancePerformanceCharts";
 import { getCurrentPath, performanceInfo } from "./utils";
+import { usePathname } from "next/navigation";
 
 export const RebalancePerformance = ({ pools }: { pools: IPoolData[] }) => {
-  const location = useLocation();
-  const pathName = getCurrentPath(location.pathname);
+  const location = usePathname();
+  const pathName = getCurrentPath(location);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const infoMock = {
     lending: [

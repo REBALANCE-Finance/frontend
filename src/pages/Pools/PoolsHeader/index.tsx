@@ -6,6 +6,7 @@ import Icon from "../../../components/icon";
 import { ICON_NAMES, MEDIA_QUERY_MAX } from "../../../consts";
 // import { Menu } from "./components/Menu";
 import { Strategies } from "./components/Strategies";
+import NextLink from "next/link";
 
 export const PoolsHeader = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -15,6 +16,7 @@ export const PoolsHeader = () => {
         <Strategies />
         <Link
           ml="auto"
+          as={NextLink}
           // as={Flex}
           display="flex"
           href="https://bridge.arbitrum.io/?destinationChain=arbitrum-one&sourceChain=ethereum"

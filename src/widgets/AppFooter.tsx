@@ -6,6 +6,7 @@ import LogoMob from "../assets/logo/logo-short.svg";
 import Icon from "../components/icon";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { FooterLink, FooterMedia } from "./utils";
+import NextLink from "next/link";
 
 export const AppFooter = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -29,7 +30,7 @@ export const AppFooter = () => {
 
       <Flex gap={{ base: "24px", md: "40px" }} order={{ base: 0, md: 1 }}>
         {FooterLink.map(link => (
-          <Link variant="link" key={link.name} href={link.path}>
+          <Link variant="link" as={NextLink} key={link.name} href={link.path}>
             {link.name}
           </Link>
         ))}
@@ -37,7 +38,7 @@ export const AppFooter = () => {
 
       <Flex gap={{ base: "24px" }} order={{ base: 1, md: 2 }}>
         {FooterMedia.map(media => (
-          <Link key={media.name} href={media.path} target="_blank">
+          <Link key={media.name} as={NextLink} href={media.path} target="_blank">
             <Icon name={media.name} />
           </Link>
         ))}

@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, Divider, Flex, HStack, Text } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { observer } from "mobx-react-lite";
