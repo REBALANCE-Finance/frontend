@@ -9,15 +9,13 @@ import { storesContext } from "@/store/app.store";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
+import { IPoolData } from "@/api/pools/types";
 
-export const PoolLayout = ({ children } : {
-  children: React.ReactNode;
+export const PoolLayout = ({ children, pools } : {
+  children: React.ReactNode,
+  pools: IPoolData[]
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  const { poolsStore } = useContext(storesContext);
-  useEffect(() => {
-    poolsStore.fetchPools("lending");
-  }, [poolsStore]);
 
   if (media) {
     return (
@@ -37,7 +35,7 @@ export const PoolLayout = ({ children } : {
           p={{ base: "16px", xl: 0 }}
           order={{ base: 3 }}
         >
-          {poolsStore?.pools ? <RebalancePerformance pools={poolsStore?.pools} /> : null}
+          {pools ? <RebalancePerformance pools={pools} /> : null}
         </Flex>
       </Flex>
     );
@@ -46,7 +44,7 @@ export const PoolLayout = ({ children } : {
   return (
     <Flex direction="column" w="100%" gap="44px" align="center">
       {/* <AppBanner /> */}
-      {media && <RebalancePerformanceMob />}
+      {media ? <RebalancePerformanceMob /> : null}
 
       <Flex
         direction="column"
@@ -57,7 +55,7 @@ export const PoolLayout = ({ children } : {
         p={{ base: "16px", xl: 0 }}
         order={{ base: 3 }}
       >
-        {poolsStore?.pools ? <RebalancePerformance pools={poolsStore?.pools} /> : null}
+        {pools ? <RebalancePerformance pools={pools} /> : null}
         <Flex direction="column" gap="24px">
           <PoolsHeader />
           {children}

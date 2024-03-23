@@ -17,11 +17,13 @@ import { routesList } from "@/routes/RouterList";
 import Icon from "../components/icon";
 import { MEDIA_QUERY_MAX } from "../consts";
 import NextLink from "next/link";
+import { usePathname } from "next/navigation";
 
 export const AppNav = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const btnRef = React.useRef(null);
+  const pathname = usePathname()
 
   const handleOpen = () => {
     if (isOpen) {
@@ -73,7 +75,7 @@ export const AppNav = () => {
   return (
     <Flex gap="24px">
       {routesList.map(route => (
-        <Link variant="nav" key={route.name} as={NextLink} href={route.path}>
+        <Link variant="nav" key={route.name} as={NextLink} href={route.path} style={ pathname === route.path ? {color: "#fff"} : {}}>
           {route.name}
         </Link>
       ))}

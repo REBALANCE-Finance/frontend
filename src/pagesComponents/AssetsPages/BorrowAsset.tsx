@@ -7,8 +7,11 @@ import { useParams } from 'next/navigation'
 
 import { storesContext } from "../../store/app.store";
 import { AssetHeader } from "./components/header/AssetHeader";
+import { IPoolData } from "../Pools/types";
 
-export const BorrowAsset = observer(() => {
+export const BorrowAsset = observer(({ pools } : {
+  pools: IPoolData[]
+}) => {
   const { poolsStore } = useContext(storesContext);
   const { poolAddress } = useParams();
   const finalAddress = Array.isArray(poolAddress) ? poolAddress[0] : poolAddress;

@@ -12,19 +12,16 @@ import { Tooltip } from "../../../components/tooltip";
 import { ROUTE_PATHS } from "../../../consts";
 import { DepositLendingButton } from "../../../features/actions/deposit-or-withdraw-button/DepositLendingButton";
 import { WithdrawLendingButton } from "../../../features/actions/deposit-or-withdraw-button/WithdrawLendingButton";
-import { storesContext } from "../../../store/app.store";
 import { formatNumber, formatPercent } from "../../../utils/formatNumber";
-import { IRowCard, RowCardNames, RowCardProccessType } from "../types";
+import { IPoolData, IRowCard, RowCardNames, RowCardProccessType } from "../types";
 import DepositInfo from "./components/DepositInfo";
 import { useRouter } from 'next/navigation'
 
-export const PoolsLending = observer(() => {
-  const { poolsStore } = useContext(storesContext);
+export const PoolsLending = observer(({ pools } : {
+  pools: IPoolData[]
+}) => {
   const router = useRouter()
   const { address } = useAccount();
-  useEffect(() => {
-    poolsStore.fetchPools("lending");
-  }, [poolsStore]);
 
   const handleLink = (poolAddress: string) => {
     router.push(generatePath(ROUTE_PATHS.lendingAsset, { poolAddress }));
@@ -112,7 +109,7 @@ export const PoolsLending = observer(() => {
 
   return (
     <SimpleGrid columns={{ base: 1, md: 3, xl: 4 }} spacing="24px">
-      {poolsStore.pools.map(elem => (
+      {pools.map(elem => (
         <CardPool
           key={elem.token}
           rowCard={rowCard}

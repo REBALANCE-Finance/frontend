@@ -1,10 +1,13 @@
+import { getPools } from "@/api/pools/queries";
 import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
 
-const LendingPage = () => {
+const LendingPage = async () => {
+  const pools = await getPools('lending');
+
   return (
-    <PoolLayout>
-      <PoolsLending />
+    <PoolLayout pools={pools}>
+      <PoolsLending pools={pools} />
     </PoolLayout>
   );
 };

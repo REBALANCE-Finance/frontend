@@ -1,33 +1,29 @@
 'use client'
 
-import { Box, Divider, Flex, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
+import { Divider, Flex, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect } from "react";
-import { generatePath, useNavigate } from "react-router-dom";
+import React from "react";
+import { generatePath } from "react-router-dom";
 
 import { CardPool } from "../../../components/card";
 import { Tooltip } from "../../../components/tooltip";
 import { ROUTE_PATHS } from "../../../consts";
 import { BorrowButton } from "../../../features/actions/borrow-or-repay-button/BorrowButton";
 import { RepayButton } from "../../../features/actions/borrow-or-repay-button/RepayButton";
-import { storesContext } from "../../../store/app.store";
 import { formatNumber, formatPercent } from "../../../utils/formatNumber";
 import { IPoolData, IRowCard, RowCardNames, RowCardProccessType } from "../types";
 import { useRouter } from "next/navigation";
 
-export const PoolsBorrow = observer(() => {
-  const { poolsStore } = useContext(storesContext);
+export const PoolsBorrow = observer(({ pools } : {
+  pools: IPoolData[]
+}) => {
   const router = useRouter();
-
-  useEffect(() => {
-    poolsStore.fetchPools("lending");
-  }, [poolsStore]);
 
   const handleLink = (poolAddress: string) => {
     router.push(generatePath(ROUTE_PATHS.borrowingAsset, { poolAddress }));
   };
 
-  if (poolsStore.isLoading && poolsStore.pools.length === 0) {
+  if (!pools) {
     return (
       <Flex justifyContent="center" alignItems="center" h="100vh">
         <Spinner />
@@ -35,9 +31,9 @@ export const PoolsBorrow = observer(() => {
     );
   }
 
-  if (poolsStore.error) {
-    return <Box textAlign="center">Error loading pools: {poolsStore.error.message}</Box>;
-  }
+  // if (poolsStore.error) {
+  //   return <Box textAlign="center">Error loading pools: {poolsStore.error.message}</Box>;
+  // }
 
   const rowCard: IRowCard[] = [
     {
@@ -97,7 +93,7 @@ export const PoolsBorrow = observer(() => {
 
   return (
     <SimpleGrid columns={{ base: 1, md: 3, xl: 4 }} spacing="24px">
-      {poolsStore.pools.map((pool: IPoolData) => (
+      {pools.map((pool: IPoolData) => (
         <CardPool
           key={pool.token}
           itemCard={pool}

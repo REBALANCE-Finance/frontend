@@ -13,6 +13,7 @@ import BaseStrategy from "../../features/RebalanceStrategy/BaseStrategy";
 import { storesContext } from "../../store/app.store";
 import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
+import { IPoolData } from "../Pools/types";
 
 // const strategies = [
 //   {
@@ -27,18 +28,15 @@ import { AssetHeader } from "./components/header/AssetHeader";
 //   }
 // ];
 
-export const LendingAsset = observer(() => {
+export const LendingAsset = observer(({ pools } : {
+  pools: IPoolData[]
+}) => {
   const { chain } = useAccount();
-  const { poolsStore } = useContext(storesContext);
   const { poolAddress } = useParams();
   const finalAddress = Array.isArray(poolAddress) ? poolAddress[0] : poolAddress;
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    poolsStore.fetchPools("lending");
-  }, [poolsStore]);
-
-  const pool = poolsStore.pools.find(item => item.rebalancerAddress === poolAddress);
+  const pool = pools.find(item => item.rebalancerAddress === poolAddress);
   const strategic = searchParams.get("strategic") ?? STRATEGIES.based;
 
   // const handleLink = (type: string) => {

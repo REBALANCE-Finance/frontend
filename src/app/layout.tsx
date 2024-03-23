@@ -10,8 +10,6 @@ import { ModalController } from "../features/modals/ModalController";
 import { ToastContainer } from "react-toastify";
 import { MainLayout } from "@/layout/MainLayout";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
   title: "Rebalance",
   description: "Rebalance",
@@ -24,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body >
         <Providers>
           <MainLayout>
             {children}

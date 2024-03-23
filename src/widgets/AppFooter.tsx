@@ -22,7 +22,7 @@ export const AppFooter = () => {
       gap={{ base: "24px", md: "0" }}
     >
       <Image
-        src={media ? LogoDesc : LogoMob}
+        src={media ? LogoDesc.src : LogoMob.src}
         w={{ base: "auto", md: "30px" }}
         h="30px"
         order={{ base: 2, md: 0 }}
