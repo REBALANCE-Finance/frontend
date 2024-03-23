@@ -8,7 +8,7 @@ import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
 const connectors = [
   injected({ target: "metaMask" }),
   coinbaseWallet({ appName: "Rebalance" }),
-  walletConnect({ projectId: process?.env?.VITE_WALLETCONNECT_KEY || '' })
+  walletConnect({ projectId: process?.env?.NEXT_PUBLIC_WALLETCONNECT_KEY || '' })
 ];
 
 

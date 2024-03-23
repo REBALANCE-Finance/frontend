@@ -13,17 +13,18 @@ import { RepayButton } from "../../../features/actions/borrow-or-repay-button/Re
 import { storesContext } from "../../../store/app.store";
 import { formatNumber, formatPercent } from "../../../utils/formatNumber";
 import { IPoolData, IRowCard, RowCardNames, RowCardProccessType } from "../types";
+import { useRouter } from "next/navigation";
 
 export const PoolsBorrow = observer(() => {
   const { poolsStore } = useContext(storesContext);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     poolsStore.fetchPools("lending");
   }, [poolsStore]);
 
   const handleLink = (poolAddress: string) => {
-    navigate(generatePath(ROUTE_PATHS.borrowingAsset, { poolAddress }));
+    router.push(generatePath(ROUTE_PATHS.borrowingAsset, { poolAddress }));
   };
 
   if (poolsStore.isLoading && poolsStore.pools.length === 0) {

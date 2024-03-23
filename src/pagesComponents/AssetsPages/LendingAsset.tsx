@@ -31,6 +31,7 @@ export const LendingAsset = observer(() => {
   const { chain } = useAccount();
   const { poolsStore } = useContext(storesContext);
   const { poolAddress } = useParams();
+  const finalAddress = Array.isArray(poolAddress) ? poolAddress[0] : poolAddress;
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -141,7 +142,7 @@ export const LendingAsset = observer(() => {
               <Link
                 href={getFinalExplorerUrl({
                   url: chain?.blockExplorers?.default.url,
-                  address: poolAddress,
+                  address: finalAddress,
                   type: "address"
                 })}
                 isExternal

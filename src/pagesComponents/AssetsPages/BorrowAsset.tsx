@@ -3,7 +3,7 @@
 import { Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from 'next/navigation'
 
 import { storesContext } from "../../store/app.store";
 import { AssetHeader } from "./components/header/AssetHeader";
@@ -11,6 +11,7 @@ import { AssetHeader } from "./components/header/AssetHeader";
 export const BorrowAsset = observer(() => {
   const { poolsStore } = useContext(storesContext);
   const { poolAddress } = useParams();
+  const finalAddress = Array.isArray(poolAddress) ? poolAddress[0] : poolAddress;
 
   useEffect(() => {
     if (!poolsStore.isLoading && poolsStore.pools.length === 0) {
@@ -18,7 +19,7 @@ export const BorrowAsset = observer(() => {
     }
   }, [poolsStore]);
 
-  const pool = poolsStore.pools.find(item => item.rebalancerAddress === poolAddress);
+  const pool = poolsStore.pools.find(item => item.rebalancerAddress === finalAddress);
 
   if (poolsStore.isLoading) {
     return (
