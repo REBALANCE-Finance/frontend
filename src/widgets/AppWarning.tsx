@@ -1,22 +1,27 @@
 'use client'
 
 import { CloseButton, Flex, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const WARNING_BANNER = "open-warning-banner";
-const localStateWornBanner = typeof window !== 'undefined' ? localStorage.getItem(WARNING_BANNER) : null;;
-const InfoText = process.env.VITE_WARNING_TEXT;
-const isWarningBannerOpen = localStateWornBanner ? JSON.parse(localStateWornBanner) : true;
+
 
 export const AppWarning = () => {
-
-  const [isOpenWarn, setOpenWarn] = useState(isWarningBannerOpen);
+  const WARNING_BANNER = "open-warning-banner";
+  const InfoText = process.env.NEXT_PUBLIC_WARNING_TEXT;
+  const [isOpenWarn, setOpenWarn] = useState<boolean | null>(null);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const localStateWornBanner = localStorage.getItem(WARNING_BANNER);
+      setOpenWarn(localStateWornBanner ? JSON.parse(localStateWornBanner) : true);
+    }
+  },[])
   
   const handleClose = () => {
     if (typeof window !== 'undefined') {
       localStorage.setItem(WARNING_BANNER, "false");
-      setOpenWarn(false);
     }
+    setOpenWarn(false);
   };
   return (
     <Flex

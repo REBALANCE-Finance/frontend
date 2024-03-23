@@ -68,8 +68,8 @@ export const RebalancePerformance = ({ pools }: { pools: IPoolData[] }) => {
 };
 
 export const RebalancePerformanceMob = () => {
-  const location = useLocation();
-  const pathName = getCurrentPath(location.pathname);
+  const location = usePathname();
+  const pathName = getCurrentPath(location || '');
   // const infoMock = {
   //   lending: [
   //     { label: "Total value locked", value: pools[0]?.funds.toFixed(2) },

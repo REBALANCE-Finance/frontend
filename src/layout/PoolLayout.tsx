@@ -60,7 +60,7 @@ export const PoolLayout = ({ children } : {
         {poolsStore?.pools ? <RebalancePerformance pools={poolsStore?.pools} /> : null}
         <Flex direction="column" gap="24px">
           <PoolsHeader />
-          <Outlet />
+          {children}
         </Flex>
       </Flex>
     </Flex>

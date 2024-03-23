@@ -1,8 +1,11 @@
 import { PoolLayout } from "@/layout/PoolLayout";
+import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
 
 const LendingPage = () => {
   return (
-    <div>hello</div>
+    <PoolLayout>
+      <PoolsLending />
+    </PoolLayout>
   );
 };
 

@@ -16,17 +16,18 @@ import { storesContext } from "../../../store/app.store";
 import { formatNumber, formatPercent } from "../../../utils/formatNumber";
 import { IRowCard, RowCardNames, RowCardProccessType } from "../types";
 import DepositInfo from "./components/DepositInfo";
+import { useRouter } from 'next/navigation'
 
 export const PoolsLending = observer(() => {
   const { poolsStore } = useContext(storesContext);
-  const navigate = useNavigate();
+  const router = useRouter()
   const { address } = useAccount();
   useEffect(() => {
     poolsStore.fetchPools("lending");
   }, [poolsStore]);
 
   const handleLink = (poolAddress: string) => {
-    navigate(generatePath(ROUTE_PATHS.lendingAsset, { poolAddress }));
+    router.push(generatePath(ROUTE_PATHS.lendingAsset, { poolAddress }));
   };
   const rowCard: IRowCard[] = [
     {

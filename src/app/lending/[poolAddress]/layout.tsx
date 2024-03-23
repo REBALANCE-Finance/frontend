@@ -1,4 +1,4 @@
-import { PoolLayout } from "@/layout/PoolLayout";
+import { AssetLayout } from "@/layout/AssetLayout";
 
 export default function Layout({
   children,
@@ -6,8 +6,8 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <PoolLayout>
+    <AssetLayout>
       {children}
-    </PoolLayout>
+    </AssetLayout>
   )
 }

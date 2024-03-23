@@ -1,7 +1,6 @@
 import { Flex, Link,Text } from "@chakra-ui/layout";
 import { useMediaQuery } from "@chakra-ui/react";
 import React, { FC } from "react";
-import { useLocation } from "react-router";
 import { useAccount } from "wagmi";
 
 import Icon from "@/components/icon";
@@ -14,10 +13,11 @@ import { CHAIN_ICONS, ICON_NAMES, MEDIA_QUERY_MAX } from "../../../../consts";
 import { ROUTES_TYPE } from "../../../../consts/routes-type";
 import { getCurrentPath } from "../../../../features/RebalancePerformance/utils";
 import { formatNumber } from "../../../../utils/formatNumber";
+import { usePathname } from "next/navigation";
 
 export const AssetHeader: FC<any> = ({ pool }) => {
-  const location = useLocation();
-  const pathName = getCurrentPath(location.pathname);
+  const location = usePathname();
+  const pathName = getCurrentPath(location);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { chain } = useAccount();
   if (media) {

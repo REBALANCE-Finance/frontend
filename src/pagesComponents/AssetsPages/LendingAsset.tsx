@@ -3,7 +3,7 @@
 import { Divider, Flex, HStack, Link, Text, useMediaQuery } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from 'next/navigation'
 import { useAccount } from "wagmi";
 
 import Icon from "../../components/icon";
@@ -31,7 +31,7 @@ export const LendingAsset = observer(() => {
   const { chain } = useAccount();
   const { poolsStore } = useContext(storesContext);
   const { poolAddress } = useParams();
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     poolsStore.fetchPools("lending");
