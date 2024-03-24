@@ -1,12 +1,15 @@
-import { getPools } from "@/api/pools/queries";
+import { getChartData, getPools } from "@/api/pools/queries";
 import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsBorrow } from "@/pagesComponents/Pools/PoolsBorrow";
 
-const BorrowingPage = async () => {
+const BorrowingPage = async ({searchParams} : {
+  searchParams: any
+}) => {
   const pools = await getPools('lending');
-
+  const { interval, intervals} = searchParams;
+  const chartData = await getChartData(+interval || 1, +intervals || 30);
   return (
-    <PoolLayout pools={pools}>
+    <PoolLayout pools={pools} chartData={chartData.chartData}>
       <PoolsBorrow pools={pools}/>
     </PoolLayout>
   );

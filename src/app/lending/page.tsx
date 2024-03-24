@@ -7,7 +7,7 @@ const LendingPage = async ({searchParams} : {
 }) => {
   const pools = await getPools('lending');
   const { interval, intervals} = searchParams;
-  const chartData = await getChartData(+interval || 1, +intervals || 30);  
+  const chartData = await getChartData(+interval || 1, +intervals || 30);
 
   return (
     <PoolLayout pools={pools} chartData={chartData.chartData}>
