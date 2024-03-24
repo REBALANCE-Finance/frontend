@@ -1,5 +1,5 @@
 export enum ConnectorNames {
-  MetaMask = "io.metamask",
+  MetaMask = "metaMask",
   Injected = "injected",
   WalletConnect = "walletConnect",
   CoinBase = "coinbaseWalletSDK"

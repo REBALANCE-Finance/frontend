@@ -123,10 +123,10 @@ export const WalletProfileTransactionHistory = () => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader as={Flex} align="center" gap="4px">
-            <IconButton
+            <Icon
+              style={{cursor: "pointer"}}
               aria-label="back"
-              as={Icon}
-              name={ICON_NAMES.chevronLeft}
+              name={ICON_NAMES.close}
               size="36px"
               onClick={onClose}
             />
