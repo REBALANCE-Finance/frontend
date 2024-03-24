@@ -14,8 +14,6 @@ export const PoolLayout = ({ children, pools, chartData } : {
   chartData: ILendChartData[]
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  console.log(chartData);
-  
 
   if (media) {
     return (
