@@ -75,7 +75,7 @@ export const AppNav = () => {
   return (
     <Flex gap="24px">
       {routesList.map(route => (
-        <Link variant="nav" key={route.name} as={NextLink} href={route.path} style={ pathname === route.path ? {color: "#fff"} : {}}>
+        <Link variant="nav" key={route.name} as={NextLink} href={route.path} style={ pathname.includes(route.path) ? {color: "#fff"} : {}}>
           {route.name}
         </Link>
       ))}

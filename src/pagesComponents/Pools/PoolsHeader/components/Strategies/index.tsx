@@ -29,7 +29,6 @@ export const Strategies = () => {
         <Text fontSize="sm">Select the Market</Text>
 
         {chains.map(({ id, name }) => {
-          // const isActiveChain = id === chain?.id;
           if (id === 42161) {
             return (
               <MenuItem

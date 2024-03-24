@@ -1,7 +1,7 @@
 import { Flex, StackDivider, useMediaQuery, VStack } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 
-import { IPoolData } from "@/api/pools/types";
+import { ILendChartData, IPoolData } from "@/api/pools/types";
 
 import { MEDIA_QUERY_MAX } from "../../consts";
 // import { ROUTES_TYPE } from "../../consts/routes-type";
@@ -10,7 +10,11 @@ import { PerformanceChart } from "./RebalancePerformanceCharts";
 import { getCurrentPath, performanceInfo } from "./utils";
 import { usePathname } from "next/navigation";
 
-export const RebalancePerformance = ({ pools }: { pools: IPoolData[] }) => {
+export const RebalancePerformance = ({ pools, chartData } : 
+{ 
+  pools: IPoolData[],
+  chartData: ILendChartData[] 
+}) => {
   const location = usePathname();
   const pathName = getCurrentPath(location || '');
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -28,7 +32,7 @@ export const RebalancePerformance = ({ pools }: { pools: IPoolData[] }) => {
   if (media) {
     return (
       <Flex w="100%" minH="319px">
-        <PerformanceChart activeType={pathName} />
+        <PerformanceChart activeType={pathName} chartData={chartData}/>
       </Flex>
     );
   }
@@ -61,7 +65,7 @@ export const RebalancePerformance = ({ pools }: { pools: IPoolData[] }) => {
       </Flex>
 
       <Flex w="100%">
-        <PerformanceChart activeType={pathName} />
+        <PerformanceChart activeType={pathName} chartData={chartData}/>
       </Flex>
     </Flex>
   );

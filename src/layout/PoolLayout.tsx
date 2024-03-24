@@ -9,13 +9,16 @@ import { storesContext } from "@/store/app.store";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
-import { IPoolData } from "@/api/pools/types";
+import { ILendChartData, IPoolData } from "@/api/pools/types";
 
-export const PoolLayout = ({ children, pools } : {
+export const PoolLayout = ({ children, pools, chartData } : {
   children: React.ReactNode,
-  pools: IPoolData[]
+  pools: IPoolData[],
+  chartData: ILendChartData[]
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
+  console.log(chartData);
+  
 
   if (media) {
     return (
@@ -35,7 +38,7 @@ export const PoolLayout = ({ children, pools } : {
           p={{ base: "16px", xl: 0 }}
           order={{ base: 3 }}
         >
-          {pools ? <RebalancePerformance pools={pools} /> : null}
+          {pools ? <RebalancePerformance pools={pools} chartData={chartData}/> : null}
         </Flex>
       </Flex>
     );
@@ -55,7 +58,7 @@ export const PoolLayout = ({ children, pools } : {
         p={{ base: "16px", xl: 0 }}
         order={{ base: 3 }}
       >
-        {pools ? <RebalancePerformance pools={pools} /> : null}
+        {pools ? <RebalancePerformance pools={pools} chartData={chartData}/> : null}
         <Flex direction="column" gap="24px">
           <PoolsHeader />
           {children}

@@ -10,6 +10,7 @@ import { MEDIA_QUERY_MAX } from "../../../consts";
 import { LegendAreaChart } from "./components/LegendAreaChart";
 import { IAreaLineProps } from "./types";
 import { areaLines, colorsArea, tickFormatter } from "./utils";
+import { ILendChartData } from "@/api/pools/types";
 
 const areaGradient = (
   <defs>
@@ -78,7 +79,9 @@ const data = [
   // }
 ];
 
-export const LendChart = () => {
+export const LendChart = ({ chartData } : {
+  chartData: ILendChartData[]
+}) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
   return (
@@ -102,7 +105,7 @@ export const LendChart = () => {
       </Flex>
 
       <AreaChart
-        data={data}
+        data={chartData}
         lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}
