@@ -14,6 +14,7 @@ import { storesContext } from "../../store/app.store";
 import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
 import { IPoolData } from "../Pools/types";
+import { ILendChartData } from "@/api/pools/types";
 
 // const strategies = [
 //   {
@@ -27,9 +28,14 @@ import { IPoolData } from "../Pools/types";
 //     description: "Low risk. High profit. Concentrated liquidity."
 //   }
 // ];
+interface IChartData {
+  chartData: ILendChartData[],
+  poolChart: any[]
+}
 
-export const LendingAsset = observer(({ pools } : {
-  pools: IPoolData[]
+export const LendingAsset = observer(({ pools, chartData } : {
+  pools: IPoolData[],
+  chartData: IChartData
 }) => {
   const { chain } = useAccount();
   const { poolAddress } = useParams();
@@ -119,7 +125,7 @@ export const LendingAsset = observer(({ pools } : {
           </Flex>
         </Flex> */}
         <Flex direction="column">
-          {strategic === STRATEGIES.based && <BaseStrategy pool={pool} />}
+          {strategic === STRATEGIES.based && <BaseStrategy pool={pool} chartData={chartData}/>}
         </Flex>
       </Flex>
     );
@@ -209,7 +215,7 @@ export const LendingAsset = observer(({ pools } : {
         </Flex>
       </Flex> */}
       <Flex direction="column">
-        {strategic === STRATEGIES.based && <BaseStrategy pool={pool} />}
+        {strategic === STRATEGIES.based && <BaseStrategy pool={pool} chartData={chartData}/>}
       </Flex>
     </Flex>
   );

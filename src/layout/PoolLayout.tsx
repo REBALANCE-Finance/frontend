@@ -1,10 +1,7 @@
 'use client'
 
 import { Flex, useMediaQuery } from "@chakra-ui/react";
-import React, { useContext, useEffect } from "react";
-import { Outlet } from "react-router-dom";
-
-import { storesContext } from "@/store/app.store";
+import React from "react";
 
 import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";

@@ -84,6 +84,7 @@ export const LendChart = ({ chartData } : {
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
+
   return (
     <Flex w="100%" direction="column" position="relative">
       <Flex w="100%" alignItems="center" justify="space-between" mb={{ base: "0", md: "10px" }}>

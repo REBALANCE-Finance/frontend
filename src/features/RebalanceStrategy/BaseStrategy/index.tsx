@@ -9,10 +9,12 @@ import { WithdrawLendingButton } from "../../actions/deposit-or-withdraw-button/
 import { BaseChart } from "./BaseChart";
 import EarningsChart from "./EarningsChart";
 
-const BaseStrategy: React.FC<any> = ({ pool }) => {
+
+const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
   const { address } = useAccount();
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x");
-  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
+  const [media] = useMediaQuery(MEDIA_QUERY_MAX);  
+
   return (
     <SimpleGrid columns={media ? 1 : 2} gap="24px">
       <Flex direction="column">
@@ -37,7 +39,7 @@ const BaseStrategy: React.FC<any> = ({ pool }) => {
       </Flex>
 
       <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
-        <BaseChart />
+        <BaseChart chartData={chartData}/>
       </Flex>
     </SimpleGrid>
   );

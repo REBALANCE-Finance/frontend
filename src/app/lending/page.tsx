@@ -7,7 +7,7 @@ const LendingPage = async () => {
   const chartData = await getChartData(1, 30);
 
   return (
-    <PoolLayout pools={pools} chartData={chartData}>
+    <PoolLayout pools={pools} chartData={chartData.chartData}>
       <PoolsLending pools={pools} />
     </PoolLayout>
   );

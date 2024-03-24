@@ -10,6 +10,7 @@ import { areaLines, colorsArea, tickFormatter } from "../utils";
 import { LegendAreaChart } from "./components/LegendAreaChart";
 import { IAreaLineProps } from "./types";
 import { MEDIA_QUERY_MAX } from "../../../consts";
+import { ILendChartData } from "@/api/pools/types";
 
 const areaGradient = (
   <defs>
@@ -78,9 +79,17 @@ const data = [
   // }
 ];
 
-export const BaseChart = () => {
+interface IChartData {
+  chartData: ILendChartData[],
+  poolChart: any[]
+}
+
+export const BaseChart = ({ chartData } : {
+  chartData: IChartData
+}) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
+
   return (
     <Flex w="100%" direction="column" position="relative">
       <Flex
@@ -103,7 +112,7 @@ export const BaseChart = () => {
       </Flex>
 
       <AreaChart
-        data={data}
+        data={chartData.poolChart}
         lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}
