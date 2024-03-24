@@ -8,14 +8,7 @@ const Icon: FC<TIconProps> = ({ name, size = "md", width, height, ...props }) =>
 
   if (Object.values(ICON_NAMES).includes(name)) {
     return (
-      <svg
-        aria-hidden="true"
-        width={width ?? currentSize}
-        height={height ?? currentSize}
-        {...props}
-      >
-        <use href={String("#").concat(name).concat("-icon")} />
-      </svg>
+      <img src={`/assets/icons/${name}-icon.svg`} alt={name} width={width} height={height} {...props} style={currentSize ? {width: currentSize, height: currentSize} : {}}/>
     );
   }
 

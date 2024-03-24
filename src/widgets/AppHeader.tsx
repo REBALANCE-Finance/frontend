@@ -1,10 +1,12 @@
-import { Flex, Image, Link, useMediaQuery } from "@chakra-ui/react";
+'use client'
+
+import { Flex, Link, Image, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import NextLink from "next/link";
 import { useAccount } from "wagmi";
 
-import LogoDesc from "../assets/logo/logo-long.svg";
-import LogoMob from "../assets/logo/logo-short.svg";
+import LogoDesc from "/public/assets/logo/logo-long.svg";
+import LogoMob from "/public/assets/logo/logo-short.svg";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { ConnectWallet } from "../features/ConnectWallet";
 import { WalletProfile } from "../features/WalletProfile";
@@ -28,8 +30,8 @@ export const AppHeader = () => {
       zIndex={100}
       bg="black"
     >
-      <Link as={NavLink} to="/lending">
-        <Image src={media ? LogoMob : LogoDesc} w={{ base: "30px", md: "150px" }} />
+      <Link as={NextLink} href="/lending">
+        <Image src={media ? LogoMob.src : LogoDesc.src} w={{ base: "30px", md: "150px" }} />
       </Link>
 
       {!media && <AppNav />}

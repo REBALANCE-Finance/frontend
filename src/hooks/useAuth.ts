@@ -9,6 +9,8 @@ export const useAuth = () => {
 
   const login = async (connectorId: ConnectorNames) => {
     const findConnector = connectors.find(c => c.id === connectorId);
+    console.log(findConnector);
+    
     if (!findConnector) {
       throw new Error("Connector not found");
     }

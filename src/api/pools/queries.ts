@@ -1,4 +1,4 @@
-import { IPoolData, IPoolsData } from "./types";
+import { ILendChartData, IPoolData, IPoolsData } from "./types";
 
 const endpoint = "https://rebalancerfinanceapi.net/";
 
@@ -155,3 +155,41 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
 //     borrowed: 1000000
 //   }
 // ];
+
+
+export const getChartData = async (interval: number, intervalsCount: number): Promise<any> => {
+  const highestMarketResponse = await fetch(`${endpoint}lending/USDT/highest-market-apr-ticks/${interval}/${intervalsCount}`);
+  const rebalanceAprResponse = await fetch(`${endpoint}lending/USDT/apr-ticks/${interval}/${intervalsCount}`);
+
+
+  if (!highestMarketResponse.ok) {
+    throw new Error(`HTTP error! status: ${highestMarketResponse.status}`);
+  }
+
+  if (!rebalanceAprResponse.ok) {
+    throw new Error(`HTTP error! status: ${rebalanceAprResponse.status}`);
+  }
+
+  const highestMarketData = await highestMarketResponse.json();
+  const rebalanceAprData = await rebalanceAprResponse.json();
+
+  const marketAprChart = highestMarketData.map((el: any) => ({ lending: el.value || 0, date: el.from }));
+  const rebalanceAprChart = rebalanceAprData.map((el: any) => ({ lending: el.value || 0, date: el.from }));
+  const chartData: ILendChartData[] = rebalanceAprData.map((el: any) => ({ lending: el.value >= 0 && el.value ? el.value : 0, date: el.from }));
+  const poolChart: any[] = [];
+
+  for (let i = 0; i < marketAprChart.length; i++) {
+    const marketValue = marketAprChart[i];
+    const rebalanceValue = rebalanceAprChart[i];  
+    
+    const chartPoint = {
+      date: marketValue.date,
+      lending: rebalanceValue.lending,
+      borrowing: marketValue.lending
+    }
+
+    poolChart.push(chartPoint);
+  }
+
+  return {chartData: chartData, poolChart};
+};

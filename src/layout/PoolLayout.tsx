@@ -1,19 +1,19 @@
-import { Flex, useMediaQuery } from "@chakra-ui/react";
-import React, { useContext, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+'use client'
 
-import { storesContext } from "@/store/app.store";
+import { Flex, useMediaQuery } from "@chakra-ui/react";
+import React from "react";
 
 import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
-import { PoolsHeader } from "../pages/Pools/PoolsHeader";
+import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
+import { ILendChartData, IPoolData } from "@/api/pools/types";
 
-export const PoolLayout = () => {
+export const PoolLayout = ({ children, pools, chartData } : {
+  children: React.ReactNode,
+  pools: IPoolData[],
+  chartData: ILendChartData[]
+}) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  const { poolsStore } = useContext(storesContext);
-  useEffect(() => {
-    poolsStore.fetchPools("lending");
-  }, [poolsStore]);
 
   if (media) {
     return (
@@ -22,7 +22,7 @@ export const PoolLayout = () => {
         <RebalancePerformanceMob />
         <Flex direction="column" gap="24px" p={{ base: "16px", xl: 0 }} w="100%">
           <PoolsHeader />
-          <Outlet />
+          {children}
         </Flex>
         <Flex
           direction="column"
@@ -33,7 +33,7 @@ export const PoolLayout = () => {
           p={{ base: "16px", xl: 0 }}
           order={{ base: 3 }}
         >
-          {poolsStore?.pools ? <RebalancePerformance pools={poolsStore?.pools} /> : null}
+          {pools ? <RebalancePerformance pools={pools} chartData={chartData}/> : null}
         </Flex>
       </Flex>
     );
@@ -42,7 +42,7 @@ export const PoolLayout = () => {
   return (
     <Flex direction="column" w="100%" gap="44px" align="center">
       {/* <AppBanner /> */}
-      {media && <RebalancePerformanceMob />}
+      {media ? <RebalancePerformanceMob /> : null}
 
       <Flex
         direction="column"
@@ -53,10 +53,10 @@ export const PoolLayout = () => {
         p={{ base: "16px", xl: 0 }}
         order={{ base: 3 }}
       >
-        {poolsStore?.pools ? <RebalancePerformance pools={poolsStore?.pools} /> : null}
+        {pools ? <RebalancePerformance pools={pools} chartData={chartData}/> : null}
         <Flex direction="column" gap="24px">
           <PoolsHeader />
-          <Outlet />
+          {children}
         </Flex>
       </Flex>
     </Flex>

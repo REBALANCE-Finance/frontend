@@ -26,3 +26,8 @@ export interface IPoolsData {
   avgApr30D: number;
   highestMarket30DAvgAprDiffPercentage: number;
 }
+
+export interface ILendChartData {
+  date: Date,
+  lending: number | null
+}

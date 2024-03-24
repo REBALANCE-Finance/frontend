@@ -1,7 +1,7 @@
 import { Button, Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
 
-import BannerImage from "../assets/image/Banner.svg";
+import BannerImage from "/public/assets/image/Banner.svg";
 import { useStore } from "../hooks/useStoreContext";
 import { ModalContextEnum } from "../store/modal/types";
 

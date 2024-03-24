@@ -37,10 +37,9 @@ export const WalletProfile = () => {
         <DrawerContent>
           <DrawerHeader as={Flex} align="center" justify="start">
             <Flex align="inherit" gap="4px">
-              <IconButton
-                cursor="pointer"
+              <Icon
+                style={{cursor: "pointer"}}
                 aria-label="back"
-                as={Icon}
                 name={ICON_NAMES.close}
                 size="36px"
                 onClick={onClose}

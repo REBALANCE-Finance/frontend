@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext } from "react";
 
 import { ModalContextStore } from "./modal/modal-context-store";

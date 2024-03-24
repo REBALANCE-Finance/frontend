@@ -29,10 +29,10 @@ export const WalletProfileSettings = () => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader as={Flex} align="center">
-            <IconButton
+            <Icon
+              style={{cursor: "pointer"}}
               aria-label="back"
-              as={Icon}
-              name={ICON_NAMES.chevronLeft}
+              name={ICON_NAMES.close}
               size="36px"
               onClick={onClose}
             />

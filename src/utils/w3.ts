@@ -1,16 +1,21 @@
+'use client'
+
 import { createConfig, http } from "@wagmi/core";
 import { arbitrum, bsc, optimism } from "wagmi/chains";
 import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
 
+
 const connectors = [
   injected({ target: "metaMask" }),
   coinbaseWallet({ appName: "Rebalance" }),
-  walletConnect({ projectId: import.meta.env.VITE_WALLETCONNECT_KEY })
+  walletConnect({ projectId: process?.env?.NEXT_PUBLIC_WALLETCONNECT_KEY || '' })
 ];
+
 
 export const wagmiConfig = createConfig({
   chains: [arbitrum, bsc, optimism],
   connectors,
+  ssr: true,
   transports: {
     // [sepolia.id]: http(),
     [arbitrum.id]: http(),

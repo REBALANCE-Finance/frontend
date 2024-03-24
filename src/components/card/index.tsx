@@ -2,7 +2,7 @@ import { Card as ChakraCard, CardBody, CardFooter, CardHeader, Flex, Text } from
 import React, { FC } from "react";
 
 import { TOKEN_ICONS } from "../../consts";
-import { IRowCard, RowCardProccessType } from "../../pages/Pools/types";
+import { IRowCard, RowCardProccessType } from "../../pagesComponents/Pools/types";
 import { DefaultDataType } from "../../types";
 import { TokenIcon } from "../token-icon";
 
@@ -35,7 +35,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
           Coming Soon
         </Flex>
       ) : null}
-      {rowCard.map(elem => {
+      {rowCard.map((elem) => {
         switch (elem.name) {
           case "header":
             return (
@@ -60,6 +60,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
             return (
               <CardBody
                 onClick={onClick}
+                key={elem.name}
                 as={Flex}
                 direction="column"
                 gap="20px"
@@ -78,7 +79,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
 
           case "footer":
             return (
-              <CardFooter mt="24px" gap="8px">
+              <CardFooter mt="24px" gap="8px" key={elem.name}>
                 {elem.proccess && elem.proccess({ item: itemCard })}
               </CardFooter>
             );

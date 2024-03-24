@@ -17,8 +17,8 @@ export const areaLines = [
     name: "Earned from lending",
     type: ROUTES_TYPE.lending
   },
-  {
-    name: "Spent on borrowing",
-    type: ROUTES_TYPE.borrowing
-  }
+  // {
+  //   name: "Spent on borrowing",
+  //   type: ROUTES_TYPE.borrowing
+  // }
 ];
