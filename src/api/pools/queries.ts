@@ -173,17 +173,17 @@ export const getChartData = async (interval: number, intervalsCount: number): Pr
   const highestMarketData = await highestMarketResponse.json();
   const rebalanceAprData = await rebalanceAprResponse.json();
 
-  const marketAprChart = highestMarketData.map((el: any) => ({ lending: el.value, date: el.from }));
-  const rebalanceAprChart = rebalanceAprData.map((el: any) => ({ lending: el.value, date: el.from }));
-  const chartData: ILendChartData[] = rebalanceAprData.map((el: any) => ({ lending: el.value >= 0 ? el.value : 0, date: el.from }));
+  const marketAprChart = highestMarketData.map((el: any) => ({ lending: el.value || 0, date: el.from }));
+  const rebalanceAprChart = rebalanceAprData.map((el: any) => ({ lending: el.value || 0, date: el.from }));
+  const chartData: ILendChartData[] = rebalanceAprData.map((el: any) => ({ lending: el.value >= 0 && el.value ? el.value : 0, date: el.from }));
   const poolChart: any[] = [];
 
   for (let i = 0; i < marketAprChart.length; i++) {
     const marketValue = marketAprChart[i];
-    const rebalanceValue = rebalanceAprChart[i];
+    const rebalanceValue = rebalanceAprChart[i];  
     
     const chartPoint = {
-      date: marketValue.from,
+      date: marketValue.date,
       lending: rebalanceValue.lending,
       borrowing: marketValue.lending
     }
