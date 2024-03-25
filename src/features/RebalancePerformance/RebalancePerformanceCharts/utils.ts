@@ -14,7 +14,7 @@ export const tickFormatter = (e: string) => {
 
 export const areaLines = [
   {
-    name: "Earned from lending",
+    name: "REBALANCE APR",
     type: ROUTES_TYPE.lending
   },
   // {
