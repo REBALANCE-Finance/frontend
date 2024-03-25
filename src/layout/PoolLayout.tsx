@@ -6,12 +6,12 @@ import React from "react";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
-import { ILendChartData, IPoolData } from "@/api/pools/types";
+import { IAreaChartData, IPoolData } from "@/api/pools/types";
 
 export const PoolLayout = ({ children, pools, chartData } : {
   children: React.ReactNode,
   pools: IPoolData[],
-  chartData: ILendChartData[]
+  chartData: IAreaChartData
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
 

@@ -1,5 +1,5 @@
 import { Flex, useMediaQuery } from "@chakra-ui/react";
-import React from "react";
+import React, { useMemo } from "react";
 import { Area } from "recharts";
 
 import { AreaChart } from "../../../components/charts/AreaChart";
@@ -10,7 +10,7 @@ import { MEDIA_QUERY_MAX } from "../../../consts";
 import { LegendAreaChart } from "./components/LegendAreaChart";
 import { IAreaLineProps } from "./types";
 import { areaLines, colorsArea, tickFormatter } from "./utils";
-import { ILendChartData } from "@/api/pools/types";
+import { IAreaChartData } from "@/api/pools/types";
 
 const areaGradient = (
   <defs>
@@ -80,7 +80,7 @@ const data = [
 ];
 
 export const LendChart = ({ chartData } : {
-  chartData: ILendChartData[]
+  chartData: IAreaChartData
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
@@ -106,7 +106,7 @@ export const LendChart = ({ chartData } : {
       </Flex>
 
       <AreaChart
-        data={chartData}
+        data={chartData.chartData[selectedDate.name]}
         lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}

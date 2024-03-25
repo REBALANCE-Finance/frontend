@@ -1,16 +1,13 @@
-import { getChartData, getPools } from "@/api/pools/queries";
+import { getAreaChartAllIntervals, getChartData, getPools } from "@/api/pools/queries";
 import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
 
-const LendingPage = async ({searchParams} : {
-  searchParams: any
-}) => {
+const LendingPage = async () => {
   const pools = await getPools('lending');
-  const { interval, intervals} = searchParams;
-  const chartData = await getChartData(+interval || 1, +intervals || 30);
+  const chartData = await getAreaChartAllIntervals(); 
 
   return (
-    <PoolLayout pools={pools} chartData={chartData.chartData}>
+    <PoolLayout pools={pools} chartData={chartData}>
       <PoolsLending pools={pools} />
     </PoolLayout>
   );

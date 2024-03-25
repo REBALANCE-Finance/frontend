@@ -14,7 +14,7 @@ import { storesContext } from "../../store/app.store";
 import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
 import { IPoolData } from "../Pools/types";
-import { ILendChartData } from "@/api/pools/types";
+import { IAreaChartData, ILendChartData } from "@/api/pools/types";
 
 // const strategies = [
 //   {
@@ -28,14 +28,10 @@ import { ILendChartData } from "@/api/pools/types";
 //     description: "Low risk. High profit. Concentrated liquidity."
 //   }
 // ];
-interface IChartData {
-  chartData: ILendChartData[],
-  poolChart: any[]
-}
 
 export const LendingAsset = observer(({ pools, chartData } : {
   pools: IPoolData[],
-  chartData: IChartData
+  chartData: IAreaChartData
 }) => {
   const { chain } = useAccount();
   const { poolAddress } = useParams();

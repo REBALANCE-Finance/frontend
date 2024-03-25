@@ -1,7 +1,6 @@
 import { Flex, StackDivider, useMediaQuery, VStack } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
 
-import { ILendChartData, IPoolData } from "@/api/pools/types";
+import { IAreaChartData, IPoolData } from "@/api/pools/types";
 
 import { MEDIA_QUERY_MAX } from "../../consts";
 // import { ROUTES_TYPE } from "../../consts/routes-type";
@@ -13,7 +12,7 @@ import { usePathname } from "next/navigation";
 export const RebalancePerformance = ({ pools, chartData } : 
 { 
   pools: IPoolData[],
-  chartData: ILendChartData[] 
+  chartData: IAreaChartData
 }) => {
   const location = usePathname();
   const pathName = getCurrentPath(location || '');

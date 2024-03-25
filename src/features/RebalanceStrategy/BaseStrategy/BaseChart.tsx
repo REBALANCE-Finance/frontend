@@ -1,5 +1,5 @@
 import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { Area } from "recharts";
 
 import { AreaChart } from "../../../components/charts/AreaChart";
@@ -112,7 +112,7 @@ export const BaseChart = ({ chartData } : {
       </Flex>
 
       <AreaChart
-        data={chartData.poolChart}
+        data={chartData.poolChart[selectedDate.name as any]}
         lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}

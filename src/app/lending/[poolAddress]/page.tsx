@@ -1,12 +1,9 @@
-import { getChartData, getPools } from "@/api/pools/queries";
+import { getAreaChartAllIntervals, getChartData, getPools } from "@/api/pools/queries";
 import { LendingAsset } from "@/pagesComponents/AssetsPages/LendingAsset"
 
-const LendingAssetPage = async ({ searchParams } : {
-  searchParams: any
-}) => {
+const LendingAssetPage = async () => {
   const pools = await getPools('lending');
-  const { interval, intervals} = searchParams;
-  const chartData = await getChartData(+interval || 1, +intervals || 30); 
+  const chartData = await getAreaChartAllIntervals(); 
 
   return <LendingAsset pools={pools} chartData={chartData}/>
 }

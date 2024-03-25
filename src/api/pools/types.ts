@@ -31,3 +31,18 @@ export interface ILendChartData {
   date: Date,
   lending: number | null
 }
+
+export interface IAreaChartData {
+  chartData: {
+    [key: string]: ILendChartData[],
+    '1m': ILendChartData[],
+    '6m': ILendChartData[],
+    '1y': ILendChartData[],
+  },
+  poolChart: {
+    [key: string]: ILendChartData[],
+    '1m': ILendChartData[],
+    '6m': ILendChartData[],
+    '1y': ILendChartData[],
+  }
+}

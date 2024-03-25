@@ -1,9 +1,9 @@
-import { ILendChartData } from "@/api/pools/types";
+import { IAreaChartData } from "@/api/pools/types";
 import { ROUTES_TYPE } from "../../../consts/routes-type";
 
 export interface IRebalancePerformanceProps {
   activeType: ROUTES_TYPE | string;
-  chartData: ILendChartData[]
+  chartData: IAreaChartData
 }
 
 export interface ILegendAreaChart {

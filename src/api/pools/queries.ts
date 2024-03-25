@@ -193,3 +193,24 @@ export const getChartData = async (interval: number, intervalsCount: number): Pr
 
   return {chartData: chartData, poolChart};
 };
+
+export const getAreaChartAllIntervals = async () => {
+  const monthData = await getChartData(1, 30);
+  const halfYearData = await getChartData(7, 26);
+  const yearData = await getChartData(7, 52);
+
+  const preparedChartData = {
+    chartData: {
+      '1m': monthData.chartData,
+      '6m': halfYearData.chartData,
+      '1y': yearData.chartData,
+    },
+    poolChart: {
+      '1m': monthData.poolChart,
+      '6m': halfYearData.poolChart,
+      '1y': yearData.poolChart,
+    }
+  };
+
+  return preparedChartData;
+}
