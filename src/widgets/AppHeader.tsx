@@ -28,7 +28,7 @@ export const AppHeader = () => {
       position="sticky"
       top="0"
       zIndex={100}
-      bg="black"
+      bg="black.100"
     >
       <Link as={NextLink} href="/lending">
         <Image src={media ? LogoMob.src : LogoDesc.src} w={{ base: "30px", md: "150px" }} />

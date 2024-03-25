@@ -8,6 +8,10 @@ const BorrowingPage = async ({searchParams} : {
   const pools = await getPools('lending');
   const { interval, intervals} = searchParams;
   const chartData = await getChartData(+interval || 1, +intervals || 30);
+
+  console.log(pools);
+  console.log(chartData);
+
   return (
     <PoolLayout pools={pools} chartData={chartData.chartData}>
       <PoolsBorrow pools={pools}/>

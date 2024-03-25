@@ -8,23 +8,24 @@ import { useParams } from 'next/navigation'
 import { storesContext } from "../../store/app.store";
 import { AssetHeader } from "./components/header/AssetHeader";
 import { IPoolData } from "../Pools/types";
+import { ILendChartData } from "@/api/pools/types";
 
-export const BorrowAsset = observer(({ pools } : {
-  pools: IPoolData[]
+interface IChartData {
+  chartData: ILendChartData[],
+  poolChart: any[]
+}
+
+export const BorrowAsset = observer(({ pools, chartData } : {
+  pools: IPoolData[],
+  chartData: IChartData
 }) => {
-  const { poolsStore } = useContext(storesContext);
   const { poolAddress } = useParams();
   const finalAddress = Array.isArray(poolAddress) ? poolAddress[0] : poolAddress;
 
-  useEffect(() => {
-    if (!poolsStore.isLoading && poolsStore.pools.length === 0) {
-      poolsStore.fetchPools("lending");
-    }
-  }, [poolsStore]);
 
-  const pool = poolsStore.pools.find(item => item.rebalancerAddress === finalAddress);
+  const pool = pools.find(item => item.rebalancerAddress === finalAddress);
 
-  if (poolsStore.isLoading) {
+  if (!pools) {
     return (
       <Flex h="100%" w="100%" justifyContent="center" alignItems="center">
         Loading...
