@@ -1,4 +1,4 @@
-import { ILendChartData, IPoolData, IPoolsData } from "./types";
+import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData } from "./types";
 
 const endpoint = "https://rebalancerfinanceapi.net/";
 
@@ -213,4 +213,18 @@ export const getAreaChartAllIntervals = async () => {
   };
 
   return preparedChartData;
+}
+
+export const getPersonalEarnings = async (interval: number, intervalsCount: number, address: string) => {
+  const userEarningsResponse = await fetch(`${endpoint}lending/USDT/user-earned-ticks/${address}/${interval}/${intervalsCount}`);
+
+  if (!userEarningsResponse.ok) {
+    throw new Error(`HTTP error! status: ${userEarningsResponse.status}`);
+  }
+
+  const userEarningsData: IIntervalResponse[] = await userEarningsResponse.json();
+
+  const preparedUserEarnings = userEarningsData.map(el => ({name: el.from, uv: el.value || 0}))
+
+  return preparedUserEarnings;
 }

@@ -4,6 +4,9 @@ import { Bar, BarChart, ResponsiveContainer } from "recharts";
 import { DateSwitcher } from "../../../components/data-switcher";
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES } from "../../../components/data-switcher/utils";
+import { useEffect, useState } from "react";
+import { getPersonalEarnings } from "@/api/pools/queries";
+import { formatNumber } from "@/utils/formatNumber";
 
 const data = [
   {
@@ -120,8 +123,26 @@ const data = [
   }
 ];
 
-const EarningsChart = () => {
+interface IBarChartData {
+  name: Date | string,
+  uv: number
+}
+
+const EarningsChart = ({ address } : {
+  address: `0x${string}` | undefined
+}) => {
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
+  const [userEarningsData, setUserEarningsData] = useState<IBarChartData[] | undefined>(undefined);
+
+  useEffect(() => {
+    if (address) {
+      getPersonalEarnings(selectedDate.interval, selectedDate.intervals, address)
+        .then(data => setUserEarningsData(data))
+    }
+  }, [address, selectedDate])
+
+  const userTotalEarning = userEarningsData?.reduce((acc, el) => (acc + el.uv), 0) || 0;
+
   return (
     <Flex flexDirection="column" width="100%">
       <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
@@ -132,7 +153,7 @@ const EarningsChart = () => {
         <Flex flexDirection="column" width="25%" justifyContent="center">
           <Flex flexDirection="column">
             <Text color="#B4B4B4">Earned</Text>
-            <Text textStyle="textMono16">1,450 $</Text>
+            <Text textStyle="textMono16">{`${formatNumber(userTotalEarning)} $`}</Text>
           </Flex>
           <Divider mt="22px" mb="22px" borderColor="#0F1113" height="2px" width="82px" />
           <Flex flexDirection="column">
@@ -141,9 +162,15 @@ const EarningsChart = () => {
           </Flex>
         </Flex>
         <ResponsiveContainer width="90%" height="100%">
-          <BarChart width={150} height={10} data={data}>
-            <Bar barSize={6} dataKey="uv" fill="#4CFF94" />
-          </BarChart>
+          {address ? (
+            <BarChart width={150} height={10} data={userEarningsData}>
+              <Bar barSize={6} dataKey="uv" fill="#4CFF94" />
+            </BarChart>
+          ) : (
+            <BarChart width={150} height={10} data={data}>
+              <Bar barSize={6} dataKey="uv" fill="#4CFF94" />
+            </BarChart>
+          )}
         </ResponsiveContainer>
       </Flex>
     </Flex>

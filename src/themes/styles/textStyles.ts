@@ -1,3 +1,9 @@
+import { Roboto_Mono } from 'next/font/google'
+
+const roboto_mono = Roboto_Mono({
+  subsets: ['cyrillic'],
+})
+
 export const textStyles = {
   h1: {
     fontSize: { base: "22px", md: "30px" },
@@ -20,17 +26,17 @@ export const textStyles = {
     fontWeight: "400"
   },
   textMono16: {
-    fontFamily: "Roboto mono",
+    fontFamily: roboto_mono.style.fontFamily,
     fontSize: "16px",
     fontWeight: "500"
   },
   textMono14: {
-    fontFamily: "Roboto mono",
+    fontFamily: roboto_mono.style.fontFamily,
     fontSize: "14px",
     fontWeight: "500"
   },
   textMono12: {
-    fontFamily: "Roboto mono",
+    fontFamily: roboto_mono.style.fontFamily,
     fontSize: "12px",
     fontWeight: "500"
   }

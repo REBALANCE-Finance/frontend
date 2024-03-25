@@ -32,6 +32,12 @@ export interface ILendChartData {
   lending: number | null
 }
 
+export interface IIntervalResponse {
+  from: Date,
+  to: Date,
+  value: number | null
+}
+
 export interface IAreaChartData {
   chartData: {
     [key: string]: ILendChartData[],

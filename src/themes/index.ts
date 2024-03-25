@@ -15,7 +15,7 @@ import { Roboto, Roboto_Mono } from 'next/font/google'
 
 const roboto = Roboto({
   subsets: ['cyrillic'],
-  weight: "500"
+  weight: ['100','300','400', "500", '700', '900']
 })
 
 const roboto_mono = Roboto_Mono({

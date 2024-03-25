@@ -116,9 +116,13 @@ export const AssetHeader: FC<any> = ({ pool }) => {
               {/* {pool.token} ({CHAIN_NAMES[chain?.id ?? 0]}) */}
               {pool.token?.toString().toUpperCase()} (Arbitrum)
             </Text>
-            <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
-              <Text textTransform="uppercase">{pool.token}</Text>
-              <Text>Coin</Text>
+            <Flex gap='12px' align='center'>
+              <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
+                <Text textTransform="uppercase">{pool.token}</Text>
+                <Text>Coin</Text>
+              </Flex>
+
+              <Icon name={ICON_NAMES.assetFunction} size="sm"/>
             </Flex>
           </Flex>
         </Flex>

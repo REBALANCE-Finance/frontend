@@ -49,7 +49,7 @@ export const PoolsLending = observer(({ pools } : {
               <>
                 <HStack justify="space-between">
                   <Text color="white">Funds in pool</Text>
-                  <Tooltip label="Funds in pool">
+                  <Tooltip label="Funds in pool" color="white">
                     <Text variant="tooltip" textStyle="textMono16" color="white">
                       {formatNumber(item.funds)} $
                     </Text>

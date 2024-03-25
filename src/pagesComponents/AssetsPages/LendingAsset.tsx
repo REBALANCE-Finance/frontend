@@ -10,11 +10,10 @@ import Icon from "../../components/icon";
 import { CHAIN_ICONS, ICON_NAMES, MEDIA_QUERY_MAX } from "../../consts";
 import { STRATEGIES } from "../../consts/strategies";
 import BaseStrategy from "../../features/RebalanceStrategy/BaseStrategy";
-import { storesContext } from "../../store/app.store";
 import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
 import { IPoolData } from "../Pools/types";
-import { IAreaChartData, ILendChartData } from "@/api/pools/types";
+import { IAreaChartData } from "@/api/pools/types";
 
 // const strategies = [
 //   {
