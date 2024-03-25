@@ -1,5 +1,5 @@
 import { Box, Flex, SimpleGrid, Text, useMediaQuery } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useAccount } from "wagmi";
 
 import { MEDIA_QUERY_MAX } from "../../../consts";
@@ -15,9 +15,13 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x");
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);  
 
+  // useEffect(() => {
+
+  // }, [address]);
+
   return (
     <SimpleGrid columns={media ? 1 : 2} gap="24px">
-      <Flex direction="column">
+      <Flex direction="column" position='relative'>
         <Flex direction="column" bg="#17191C" borderRadius="8px" padding="24px">
           <Text fontSize="lg">My deposit</Text>
           <Box mt="16px" mb="24px" display="flex" flexDirection="row" alignItems="baseline">
@@ -36,6 +40,25 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
         <Flex>
           <EarningsChart />
         </Flex>
+      {!address ? (
+        <Flex
+          position='absolute'
+          inset='0'
+          margin="auto"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          background="000"
+          backdropFilter="blur(4px)"
+          zIndex="9"
+          fontSize="large"
+          fontWeight="500"
+        >
+          <Flex w={'50%'}>
+            <DepositLendingButton variant="primaryWhite" pool={pool} />
+          </Flex>
+        </Flex>
+      ) : null}
       </Flex>
 
       <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
