@@ -201,14 +201,14 @@ export const getAreaChartAllIntervals = async () => {
 
   const preparedChartData = {
     chartData: {
-      '1m': monthData.chartData,
-      '6m': halfYearData.chartData,
-      '1y': yearData.chartData,
+      '1m': monthData.chartData.reverse(),
+      '6m': halfYearData.chartData.reverse(),
+      '1y': yearData.chartData.reverse(),
     },
     poolChart: {
-      '1m': monthData.poolChart,
-      '6m': halfYearData.poolChart,
-      '1y': yearData.poolChart,
+      '1m': monthData.poolChart.reverse(),
+      '6m': halfYearData.poolChart.reverse(),
+      '1y': yearData.poolChart.reverse(),
     }
   };
 
@@ -224,7 +224,7 @@ export const getPersonalEarnings = async (interval: number, intervalsCount: numb
 
   const userEarningsData: IIntervalResponse[] = await userEarningsResponse.json();
 
-  const preparedUserEarnings = userEarningsData.map(el => ({name: el.from, uv: el.value || 0}))
+  const preparedUserEarnings = userEarningsData.map(el => ({name: el.from, uv: el.value || 0})).reverse()
 
   return preparedUserEarnings;
 }
