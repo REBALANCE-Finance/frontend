@@ -6,7 +6,7 @@ import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES } from "../../../components/data-switcher/utils";
 import { useEffect, useState } from "react";
 import { getPersonalEarnings } from "@/api/pools/queries";
-import { formatNumber } from "@/utils/formatNumber";
+import { formatNumber, formatPercent } from "@/utils/formatNumber";
 
 const data = [
   {
@@ -128,16 +128,21 @@ interface IBarChartData {
   uv: number
 }
 
-const EarningsChart = ({ address } : {
-  address: `0x${string}` | undefined
+const EarningsChart = ({ address, token } : {
+  address: `0x${string}` | undefined,
+  token: string
 }) => {
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
   const [userEarningsData, setUserEarningsData] = useState<IBarChartData[] | undefined>(undefined);
+  const [avgApr, setAvgApr] = useState<number>(0);
 
   useEffect(() => {
     if (address) {
-      getPersonalEarnings(selectedDate.interval, selectedDate.intervals, address)
-        .then(data => setUserEarningsData(data))
+      getPersonalEarnings(selectedDate.interval, selectedDate.intervals, address, token)
+        .then(data => {
+          setUserEarningsData(data.userEarned);
+          setAvgApr(data.avgAPR);
+        })
     }
   }, [address, selectedDate])
 
@@ -158,7 +163,7 @@ const EarningsChart = ({ address } : {
           <Divider mt="22px" mb="22px" borderColor="#0F1113" height="2px" width="82px" />
           <Flex flexDirection="column">
             <Text color="#B4B4B4">APR</Text>
-            <Text textStyle="textMono16">10.2 %</Text>
+            <Text textStyle="textMono16">{`${avgApr.toFixed(2)} %`}</Text>
           </Flex>
         </Flex>
         <ResponsiveContainer width="90%" height="100%">

@@ -215,16 +215,23 @@ export const getAreaChartAllIntervals = async () => {
   return preparedChartData;
 }
 
-export const getPersonalEarnings = async (interval: number, intervalsCount: number, address: string) => {
-  const userEarningsResponse = await fetch(`${endpoint}lending/USDT/user-earned-ticks/${address}/${interval}/${intervalsCount}`);
+export const getPersonalEarnings = async (interval: number, intervalsCount: number, address: string, token: string) => {
+  const userEarningsResponse = await fetch(`${endpoint}lending/${token}/user-earned-ticks/${address}/${interval}/${intervalsCount}`);
+  const avgAPRTiksResponse = await fetch(`${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}`);
 
   if (!userEarningsResponse.ok) {
     throw new Error(`HTTP error! status: ${userEarningsResponse.status}`);
   }
 
-  const userEarningsData: IIntervalResponse[] = await userEarningsResponse.json();
+  if (!avgAPRTiksResponse.ok) {
+    throw new Error(`HTTP error! status: ${avgAPRTiksResponse.status}`);
+  }
 
+  const userEarningsData: IIntervalResponse[] = await userEarningsResponse.json();
+  const avgAPRTicksData: IIntervalResponse[] = await avgAPRTiksResponse.json();
+
+  const avgAPR = avgAPRTicksData.map(el => el.value || 0).reduce((acc, el) => (acc + el), 0) / intervalsCount;
   const preparedUserEarnings = userEarningsData.map(el => ({name: el.from, uv: el.value || 0})).reverse()
 
-  return preparedUserEarnings;
+  return { userEarned: preparedUserEarnings, avgAPR };
 }

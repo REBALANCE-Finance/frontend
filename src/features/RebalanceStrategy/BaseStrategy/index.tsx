@@ -14,7 +14,7 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
   const { address } = useAccount();
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x");
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-
+  
   return (
     <SimpleGrid columns={media ? 1 : 2} gap="24px">
       <Flex direction="column" >
@@ -34,7 +34,7 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
           </SimpleGrid>
         </Flex>
         <Flex position='relative'>
-          <EarningsChart address={address}/>
+          <EarningsChart token={pool?.token.toUpperCase()} address={address}/>
 
           {!address ? (
             <Flex
