@@ -231,7 +231,7 @@ export const getPersonalEarnings = async (interval: number, intervalsCount: numb
   const avgAPRTicksData: IIntervalResponse[] = await avgAPRTiksResponse.json();
 
   const avgAPR = avgAPRTicksData.map(el => el.value || 0).reduce((acc, el) => (acc + el), 0) / intervalsCount;
-  const preparedUserEarnings = userEarningsData.map(el => ({name: el.from, uv: el.value || 0})).reverse()
+  const preparedUserEarnings = userEarningsData.map((el, index) => ({name: el.from, uv: el.value || 0, apr: avgAPRTicksData[index].value})).reverse()
 
   return { userEarned: preparedUserEarnings, avgAPR };
 }

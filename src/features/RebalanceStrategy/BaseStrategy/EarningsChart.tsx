@@ -1,12 +1,13 @@
 import { Divider, Flex, Text } from "@chakra-ui/react";
-import { Bar, BarChart, ResponsiveContainer } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, Tooltip } from "recharts";
 
 import { DateSwitcher } from "../../../components/data-switcher";
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES } from "../../../components/data-switcher/utils";
 import { useEffect, useState } from "react";
 import { getPersonalEarnings } from "@/api/pools/queries";
-import { formatNumber, formatPercent } from "@/utils/formatNumber";
+import { formatNumber } from "@/utils/formatNumber";
+import { CustomTooltipBarChart } from "./components/CustomToolTipBarChart";
 
 const data = [
   {
@@ -170,6 +171,7 @@ const EarningsChart = ({ address, token } : {
           {address ? (
             <BarChart width={150} height={10} data={userEarningsData}>
               <Bar barSize={6} dataKey="uv" fill="#4CFF94" />
+              <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltipBarChart />} />
             </BarChart>
           ) : (
             <BarChart width={150} height={10} data={data}>
