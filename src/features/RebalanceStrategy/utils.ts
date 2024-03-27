@@ -13,11 +13,11 @@ export const tickFormatter = (e: string) => {
 
 export const areaLines = [
   {
-    name: "REBALANCE Strategy APR",
+    name: "Rebalance APR (14.26% monthly average)",
     type: ROUTES_TYPE.lending
   },
   {
-    name: "Market highest lending APR",
+    name: "Aave APR (10.33% monthly average)",
     type: ROUTES_TYPE.borrowing
   }
 ];
