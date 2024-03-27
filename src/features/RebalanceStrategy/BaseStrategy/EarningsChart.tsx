@@ -3,7 +3,7 @@ import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 import { DateSwitcher } from "../../../components/data-switcher";
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
-import { DATES } from "../../../components/data-switcher/utils";
+import { DATESEarned } from "../../../components/data-switcher/utils";
 import { useEffect, useState } from "react";
 import { getPersonalEarnings } from "@/api/pools/queries";
 import { formatNumber } from "@/utils/formatNumber";
@@ -133,12 +133,10 @@ const EarningsChart = ({ address, token } : {
   address: `0x${string}` | undefined,
   token: string
 }) => {
-  const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
+  const { selectedDate, setSelectDate } = useDateSwitcher(DATESEarned[0]);
   const [userEarningsData, setUserEarningsData] = useState<IBarChartData[] | undefined>(undefined);
   const [avgApr, setAvgApr] = useState<number>(0);
   const [error, setError] = useState(false);
-  console.log(userEarningsData);
-  
 
   useEffect(() => {
     if (address) {
@@ -161,8 +159,8 @@ const EarningsChart = ({ address, token } : {
       {!error ? (
         <Flex flexDirection="column" width="100%">
           <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
-            <Text fontSize="lg">My earnings</Text>
-            <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
+            <Text fontSize="lg">My monthly earnings</Text>
+            <DateSwitcher date={DATESEarned} selectDate={setSelectDate} selectedDate={selectedDate} />
           </Flex>
           <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
             <Flex flexDirection="column" width="25%" justifyContent="center">
@@ -202,15 +200,14 @@ const EarningsChart = ({ address, token } : {
       ) : (
         <Flex flexDirection="column" width="100%">
           <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
-            <Text fontSize="lg">My earnings</Text>
-            <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
+            <Text fontSize="lg">My monthly earnings</Text>
+            <DateSwitcher date={DATESEarned} selectDate={setSelectDate} selectedDate={selectedDate} />
           </Flex>
           <Flex align={'center'} justify={'center'} width="100%" mt="48px">
             <Text color="white">Error on loading data. Please try again later</Text>
           </Flex>
         </Flex>
       )}
-    
     </>
   );
 };
