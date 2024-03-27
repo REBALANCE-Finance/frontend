@@ -19,10 +19,36 @@ export interface IPoolsData {
   token: string;
   vaultAddress: string;
   tokenAddress: string;
-  tokeDecimals: number;
+  tokenDecimals: number;
   tokenPrice: number;
   funds: number;
   earned: number;
   avgApr30D: number;
   highestMarket30DAvgAprDiffPercentage: number;
+}
+
+export interface ILendChartData {
+  date: Date,
+  lending: number | null
+}
+
+export interface IIntervalResponse {
+  from: Date,
+  to: Date,
+  value: number | null
+}
+
+export interface IAreaChartData {
+  chartData: {
+    [key: string]: ILendChartData[],
+    '1m': ILendChartData[],
+    '6m': ILendChartData[],
+    '1y': ILendChartData[],
+  },
+  poolChart: {
+    [key: string]: ILendChartData[],
+    '1m': ILendChartData[],
+    '6m': ILendChartData[],
+    '1y': ILendChartData[],
+  }
 }

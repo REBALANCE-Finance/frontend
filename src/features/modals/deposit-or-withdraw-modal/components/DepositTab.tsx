@@ -64,7 +64,6 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       const isApprovalNeeded = !allowance || allowance < depositValue;
       setNeedsApproval(isApprovalNeeded);
     };
-
     checkNeedsApproval();
   }, [allowance, formik.values.deposit]);
 

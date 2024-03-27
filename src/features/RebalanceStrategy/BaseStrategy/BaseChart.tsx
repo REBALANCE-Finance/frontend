@@ -1,5 +1,5 @@
 import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { Area } from "recharts";
 
 import { AreaChart } from "../../../components/charts/AreaChart";
@@ -10,6 +10,7 @@ import { areaLines, colorsArea, tickFormatter } from "../utils";
 import { LegendAreaChart } from "./components/LegendAreaChart";
 import { IAreaLineProps } from "./types";
 import { MEDIA_QUERY_MAX } from "../../../consts";
+import { ILendChartData } from "@/api/pools/types";
 
 const areaGradient = (
   <defs>
@@ -18,8 +19,8 @@ const areaGradient = (
       <stop offset="95%" stopColor={colorsArea.lending} stopOpacity={0} />
     </linearGradient>
     <linearGradient id="color-borrowing" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="5%" stopColor={colorsArea.borrowing} stopOpacity={0.8} />
-      <stop offset="95%" stopColor={colorsArea.borrowing} stopOpacity={0} />
+      <stop offset="5%" stopColor={"transparent"} stopOpacity={0.8} />
+      <stop offset="95%" stopColor={"transparent"} stopOpacity={0} />
     </linearGradient>
   </defs>
 );
@@ -78,9 +79,17 @@ const data = [
   // }
 ];
 
-export const BaseChart = () => {
+interface IChartData {
+  chartData: ILendChartData[],
+  poolChart: any[]
+}
+
+export const BaseChart = ({ chartData } : {
+  chartData: IChartData
+}) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
+
   return (
     <Flex w="100%" direction="column" position="relative">
       <Flex
@@ -103,7 +112,7 @@ export const BaseChart = () => {
       </Flex>
 
       <AreaChart
-        data={data}
+        data={chartData.poolChart[selectedDate.name as any]}
         lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}

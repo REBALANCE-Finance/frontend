@@ -1,13 +1,16 @@
+'use client'
+
 import { Button } from "@chakra-ui/button";
 import { Flex } from "@chakra-ui/layout";
 import React from "react";
-import { Outlet, useNavigate } from "react-router";
-
+import { useRouter } from 'next/navigation';
 import Icon from "../components/icon";
 import { ICON_NAMES } from "../consts";
 
-export const AssetLayout = () => {
-  const nanigate = useNavigate();
+export const AssetLayout = ({children} : {
+  children: React.ReactNode;
+}) => {
+  const router = useRouter();
   return (
     <Flex direction="column" w="100%" gap="44px" align="center" p={{ base: "16px", xl: 0 }}>
       <Flex
@@ -21,12 +24,12 @@ export const AssetLayout = () => {
       >
         <Button
           leftIcon={<Icon name={ICON_NAMES.arrowLeft} />}
-          onClick={() => nanigate(-1)}
+          onClick={() => router.back()}
           color="#626262"
         >
           Back
         </Button>
-        <Outlet />
+        { children }
       </Flex>
     </Flex>
   );

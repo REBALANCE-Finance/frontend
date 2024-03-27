@@ -1,16 +1,24 @@
-import { CloseButton, Flex, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+'use client'
 
-const WARNING_BANNER = "open-warning-banner";
-const InfoText = import.meta.env.VITE_WARNING_TEXT;
-const localStateWornBanner = localStorage.getItem(WARNING_BANNER);
-const isWarningBannerOpen = localStateWornBanner ? JSON.parse(localStateWornBanner) : true;
+import { CloseButton, Flex, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 
 export const AppWarning = () => {
-  const [isOpenWarn, setOpenWarn] = useState(isWarningBannerOpen);
+  const WARNING_BANNER = "open-warning-banner";
+  const InfoText = process.env.NEXT_PUBLIC_WARNING_TEXT;
+  const [isOpenWarn, setOpenWarn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const localStateWornBanner = localStorage.getItem(WARNING_BANNER);
+      setOpenWarn(localStateWornBanner ? JSON.parse(localStateWornBanner) : true);
+    }
+  },[])
 
   const handleClose = () => {
-    localStorage.setItem(WARNING_BANNER, "false");
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(WARNING_BANNER, "false");
+    }
     setOpenWarn(false);
   };
   return (
@@ -27,7 +35,16 @@ export const AppWarning = () => {
     >
       <Text>{InfoText ?? "Info"}</Text>
 
-      <CloseButton position="absolute" top="0" right="0" size="sm" onClick={handleClose} />
+      <Flex
+        position="absolute"
+        bottom="0"
+        right="0"
+        top="0"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CloseButton size="lg" onClick={handleClose} />
+      </Flex>
     </Flex>
   );
 };

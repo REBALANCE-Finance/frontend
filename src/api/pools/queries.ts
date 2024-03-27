@@ -1,4 +1,4 @@
-import { IPoolData, IPoolsData } from "./types";
+import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData } from "./types";
 
 const endpoint = "https://rebalancerfinanceapi.net/";
 
@@ -75,7 +75,7 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
       funds: item?.funds,
       avgApr: item?.avgApr30D,
       earned: item?.earned,
-      decimals: item?.tokeDecimals,
+      decimals: item?.tokenDecimals,
       deposit: 0,
       risk: 1,
       borrowRate: 12.5,
@@ -155,3 +155,83 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
 //     borrowed: 1000000
 //   }
 // ];
+
+
+export const getChartData = async (interval: number, intervalsCount: number): Promise<any> => {
+  const highestMarketResponse = await fetch(`${endpoint}lending/USDT/highest-market-apr-ticks/${interval}/${intervalsCount}`);
+  const rebalanceAprResponse = await fetch(`${endpoint}lending/USDT/apr-ticks/${interval}/${intervalsCount}`);
+
+
+  if (!highestMarketResponse.ok) {
+    throw new Error(`HTTP error! status: ${highestMarketResponse.status}`);
+  }
+
+  if (!rebalanceAprResponse.ok) {
+    throw new Error(`HTTP error! status: ${rebalanceAprResponse.status}`);
+  }
+
+  const highestMarketData = await highestMarketResponse.json();
+  const rebalanceAprData = await rebalanceAprResponse.json();
+
+  const marketAprChart = highestMarketData.map((el: any) => ({ lending: el.value || 0, date: el.from }));
+  const rebalanceAprChart = rebalanceAprData.map((el: any) => ({ lending: el.value || 0, date: el.from }));
+  const chartData: ILendChartData[] = rebalanceAprData.map((el: any) => ({ lending: el.value >= 0 && el.value ? el.value : 0, date: el.from }));
+  const poolChart: any[] = [];
+
+  for (let i = 0; i < marketAprChart.length; i++) {
+    const marketValue = marketAprChart[i];
+    const rebalanceValue = rebalanceAprChart[i];  
+    
+    const chartPoint = {
+      date: marketValue.date,
+      lending: rebalanceValue.lending,
+      borrowing: marketValue.lending
+    }
+
+    poolChart.push(chartPoint);
+  }
+
+  return {chartData: chartData, poolChart};
+};
+
+export const getAreaChartAllIntervals = async () => {
+  const monthData = await getChartData(1, 30);
+  const halfYearData = await getChartData(7, 26);
+  const yearData = await getChartData(7, 52);
+
+  const preparedChartData = {
+    chartData: {
+      '1m': monthData.chartData.reverse(),
+      '6m': halfYearData.chartData.reverse(),
+      '1y': yearData.chartData.reverse(),
+    },
+    poolChart: {
+      '1m': monthData.poolChart.reverse(),
+      '6m': halfYearData.poolChart.reverse(),
+      '1y': yearData.poolChart.reverse(),
+    }
+  };
+
+  return preparedChartData;
+}
+
+export const getPersonalEarnings = async (interval: number, intervalsCount: number, address: string, token: string) => {
+  const userEarningsResponse = await fetch(`${endpoint}lending/${token}/user-earned-ticks/${address}/${interval}/${intervalsCount}`);
+  const avgAPRTiksResponse = await fetch(`${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}`);
+
+  if (!userEarningsResponse.ok) {
+    throw new Error(`HTTP error! status: ${userEarningsResponse.status}`);
+  }
+
+  if (!avgAPRTiksResponse.ok) {
+    throw new Error(`HTTP error! status: ${avgAPRTiksResponse.status}`);
+  }
+
+  const userEarningsData: IIntervalResponse[] = await userEarningsResponse.json();
+  const avgAPRTicksData: IIntervalResponse[] = await avgAPRTiksResponse.json();  
+
+  const avgAPR = avgAPRTicksData.map(el => el.value || 0).reduce((acc, el) => (acc + el), 0) / intervalsCount;
+  const preparedUserEarnings = userEarningsData.map((el, index) => ({name: el.from, uv: el.value ? (el.value >= 0 ? el.value : 0) : 0, apr: avgAPRTicksData[index].value})).reverse()
+
+  return { userEarned: preparedUserEarnings, avgAPR };
+}

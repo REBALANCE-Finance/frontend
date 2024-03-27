@@ -1,4 +1,9 @@
-export type TDate = { name: string; value: number };
+export type TDate = {
+  intervals: number;
+  interval: number;
+  name: string;
+  value: number 
+};
 
 export interface IDateSwitcher {
   date: TDate[];

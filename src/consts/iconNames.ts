@@ -5,6 +5,7 @@ export const ICON_NAMES = {
   arbitrum: "arbitrum",
   arrowRight: "arrow-right",
   arrowLeft: "arrow-left",
+  assetFunction: "asset-function",
   attention: "attention",
   arb: "arb",
   bnbChain: "bnb-chain",
