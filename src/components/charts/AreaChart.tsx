@@ -50,6 +50,7 @@ export const AreaChart: FC<IAreaChartProps> = ({
           tickLine={false}
           fontSize={themes.fontSizes.sm}
           stroke={themes.colors.darkGray}
+          tickFormatter={(e: string) => `${e} %`}
         />
         {lines}
       </AreaChartDefault>

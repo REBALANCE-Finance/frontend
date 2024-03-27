@@ -33,29 +33,9 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
             {balance > 0 && <WithdrawLendingButton pool={pool} />}
           </SimpleGrid>
         </Flex>
-        <Flex position='relative'>
-          <EarningsChart token={pool?.token.toUpperCase()} address={address}/>
 
-          {!address ? (
-            <Flex
-              position='absolute'
-              inset='0'
-              margin="auto"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              background="000"
-              backdropFilter="blur(4px)"
-              zIndex="9"
-              fontSize="large"
-              fontWeight="500"
-            >
-              <Flex w={'50%'}>
-                <DepositLendingButton variant="primaryWhite" pool={pool} />
-              </Flex>
-            </Flex>
-          ) : null}
-        </Flex>
+        <EarningsChart token={pool?.token.toUpperCase()} address={address} pool={pool}/>
+
       </Flex>
 
       <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">

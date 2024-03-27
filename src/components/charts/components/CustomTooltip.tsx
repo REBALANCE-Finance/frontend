@@ -10,7 +10,7 @@ export const CustomTooltip = ({ active, payload }: TooltipProps<ValueType, NameT
           <Flex flexDirection="column" key={i}>
             <Flex alignItems="center" justifyContent="space-between">
               <Text variant="regular14">
-                {e.name} {Number(e?.value)?.toFixed(2)}
+                {e.name} {Number(e?.value)?.toFixed(2)} %
               </Text>
             </Flex>
           </Flex>

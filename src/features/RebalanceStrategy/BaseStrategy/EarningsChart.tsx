@@ -6,8 +6,9 @@ import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATESEarned } from "../../../components/data-switcher/utils";
 import { useEffect, useState } from "react";
 import { getPersonalEarnings } from "@/api/pools/queries";
-import { formatNumber } from "@/utils/formatNumber";
 import { CustomTooltipBarChart } from "./components/CustomToolTipBarChart";
+import { IPoolData } from "@/api/pools/types";
+import { DepositLendingButton } from "@/features/actions/deposit-or-withdraw-button/DepositLendingButton";
 
 const data = [
   {
@@ -129,9 +130,10 @@ interface IBarChartData {
   uv: number
 }
 
-const EarningsChart = ({ address, token } : {
+const EarningsChart = ({ address, token, pool } : {
   address: `0x${string}` | undefined,
-  token: string
+  token: string,
+  pool: IPoolData
 }) => {
   const { selectedDate, setSelectDate } = useDateSwitcher(DATESEarned[0]);
   const [userEarningsData, setUserEarningsData] = useState<IBarChartData[] | undefined>(undefined);
@@ -141,7 +143,7 @@ const EarningsChart = ({ address, token } : {
   useEffect(() => {
     if (address) {
       setError(false)
-      getPersonalEarnings(selectedDate.interval, selectedDate.intervals, '0x5B7Ca66e1e94Fb1800F750022Ae0c705Bf1A4AD4', token)
+      getPersonalEarnings(selectedDate.interval, selectedDate.intervals, address, token)
         .then(data => {
           setUserEarningsData(data.userEarned);
           setAvgApr(data.avgAPR);
@@ -162,7 +164,7 @@ const EarningsChart = ({ address, token } : {
             <Text fontSize="lg">My monthly earnings</Text>
             <DateSwitcher date={DATESEarned} selectDate={setSelectDate} selectedDate={selectedDate} />
           </Flex>
-          <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
+          <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px" position={'relative'}>
             <Flex flexDirection="column" width="25%" justifyContent="center">
               <Flex flexDirection="column">
                 <Text color="#B4B4B4">Earned</Text>
@@ -189,12 +191,30 @@ const EarningsChart = ({ address, token } : {
                 </BarChart>
               ) : (
                 <BarChart width={150} height={10} data={data}>
-                  <Bar barSize={6} dataKey="uv" fill="#4CFF94">
+                  <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}>
                   </Bar>
-                  <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltipBarChart />} />
                 </BarChart>
               )}
             </ResponsiveContainer>
+            {!address ? (
+              <Flex
+                position='absolute'
+                inset='0'
+                margin="auto"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                background="000"
+                backdropFilter="blur(4px)"
+                zIndex="9"
+                fontSize="large"
+                fontWeight="500"
+              >
+                <Flex w={'50%'}>
+                  <DepositLendingButton variant="primaryWhite" pool={pool} />
+                </Flex>
+              </Flex>
+            ) : null}
           </Flex>
         </Flex>
       ) : (
