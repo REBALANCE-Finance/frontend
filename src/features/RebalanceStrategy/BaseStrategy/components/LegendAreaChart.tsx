@@ -3,23 +3,29 @@ import React, { FC } from "react";
 
 import { MEDIA_QUERY_MAX } from "../../../../consts";
 import { ILegendAreaChart } from "../types";
+import { themes } from "@/themes";
 
-export const LegendAreaChart: FC<ILegendAreaChart> = ({ text, color }) => {
+export const LegendAreaChart: FC<ILegendAreaChart> = ({ text, color, subText }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   return (
+    <Flex direction={'column'}>
     <Flex
-      alignItems="inherit"
+      alignItems="center"
       _before={{
         position: "relative",
         content: '""',
         w: "12px",
         h: "2px",
         bg: color,
-        mr: "4px"
+        mr: "6px"
       }}
       margin={media ? "auto" : "inherit"}
     >
-      <Text color="white">{text}</Text>
+        <Text color="white" whiteSpace={'pre-wrap'} fontWeight={'500'}>{text}</Text>
+      </Flex>
+      {subText ? (
+        <Text color={themes.colors.darkGray} whiteSpace={'pre-wrap'} fontWeight={'500'} ml={'18px'}>{subText}</Text>
+      ) : null}
     </Flex>
   );
 };

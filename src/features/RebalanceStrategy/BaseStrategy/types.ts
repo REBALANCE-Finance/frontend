@@ -7,6 +7,7 @@ export interface IRebalancePerformanceProps {
 export interface ILegendAreaChart {
   text: string;
   color: string;
+  subText?: string;
 }
 
 export interface IAreaLineProps {

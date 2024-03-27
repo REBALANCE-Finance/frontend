@@ -116,6 +116,7 @@ export const BaseChart = ({ chartData } : {
         lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}
+        tooltipName
       />
 
       <Flex
@@ -126,7 +127,7 @@ export const BaseChart = ({ chartData } : {
         mr={media ? "auto" : "0"}
       >
         {areaLines.map(elem => (
-          <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
+          <LegendAreaChart key={elem.type} text={elem.name} subText={elem.subtext} color={colorsArea[elem.type]} />
         ))}
       </Flex>
     </Flex>

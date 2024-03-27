@@ -13,11 +13,13 @@ export const tickFormatter = (e: string) => {
 
 export const areaLines = [
   {
-    name: "Rebalance APR (14.26% monthly average)",
+    name: "Rebalance APR\n",
+    subtext: '(14.26% monthly average)',
     type: ROUTES_TYPE.lending
   },
   {
-    name: "Aave APR (10.33% monthly average)",
+    name: "Aave APR\n",
+    subtext: '(10.33% monthly average)',
     type: ROUTES_TYPE.borrowing
   }
 ];
