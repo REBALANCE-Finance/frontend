@@ -4,7 +4,7 @@ import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
 
 const LendingPage = async () => {
   const pools = await getPools('lending');
-  const chartData = await getAreaChartAllIntervals(); 
+  const chartData = await getAreaChartAllIntervals();
 
   return (
     <PoolLayout pools={pools} chartData={chartData}>

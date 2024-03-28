@@ -39,13 +39,29 @@ export interface IIntervalResponse {
 }
 
 export interface IAreaChartData {
-  chartData: {
-    [key: string]: ILendChartData[],
-    '1m': ILendChartData[],
-    '6m': ILendChartData[],
-    '1y': ILendChartData[],
-  },
   poolChart: {
+    [key: string]: {
+      data: ILendChartData[],
+      rebalanceAvg: number,
+      aaveAvg: number,
+    },
+    '1m': {
+      data: ILendChartData[],
+      rebalanceAvg: number,
+      aaveAvg: number,
+    },
+    '6m': {
+      data: ILendChartData[],
+      rebalanceAvg: number,
+      aaveAvg: number,
+    },
+    '1y': {
+      data: ILendChartData[],
+      rebalanceAvg: number,
+      aaveAvg: number,
+    },
+  },
+  chartData: {
     [key: string]: ILendChartData[],
     '1m': ILendChartData[],
     '6m': ILendChartData[],

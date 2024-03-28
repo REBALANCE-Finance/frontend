@@ -63,6 +63,7 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
   }
 
   const data: IPoolsData[] = await response.json();
+  
   const pools: IPoolData[] = data.map(item => {
     return {
       token: item?.token?.toString()?.toLowerCase(),
@@ -185,30 +186,46 @@ export const getChartData = async (interval: number, intervalsCount: number): Pr
     const chartPoint = {
       date: marketValue.date,
       lending: rebalanceValue.lending,
-      borrowing: marketValue.lending
+      borrowing: marketValue.lending,
     }
 
     poolChart.push(chartPoint);
   }
 
-  return {chartData: chartData, poolChart};
+  const rebalanceAvgApr = poolChart.reduce((acc, el) => acc + el.lending, 0) / intervalsCount;
+  const aaveAvgApr = poolChart.reduce((acc, el) => acc + el.borrowing, 0) / intervalsCount;
+
+  return {chartData: chartData, poolChart, rebalanceAvgApr, aaveAvgApr};
 };
 
 export const getAreaChartAllIntervals = async () => {
   const monthData = await getChartData(1, 30);
   const halfYearData = await getChartData(7, 26);
   const yearData = await getChartData(7, 52);
+  console.log(monthData);
 
   const preparedChartData = {
+    poolChart: {
+      '1m': {
+        data: monthData.poolChart.reverse(),
+        rebalanceAvg: monthData.rebalanceAvgApr,
+        aaveAvg: monthData.aaveAvgApr
+      },
+      '6m': {
+        data: halfYearData.poolChart.reverse(),
+        rebalanceAvg: halfYearData.rebalanceAvgApr,
+        aaveAvg: halfYearData.aaveAvgApr
+      },
+      '1y': {
+        data: yearData.poolChart.reverse(),
+        rebalanceAvg: yearData.rebalanceAvgApr,
+        aaveAvg: yearData.aaveAvgApr
+      },
+    },
     chartData: {
       '1m': monthData.chartData.reverse(),
       '6m': halfYearData.chartData.reverse(),
       '1y': yearData.chartData.reverse(),
-    },
-    poolChart: {
-      '1m': monthData.poolChart.reverse(),
-      '6m': halfYearData.poolChart.reverse(),
-      '1y': yearData.poolChart.reverse(),
     }
   };
 
