@@ -202,7 +202,6 @@ export const getAreaChartAllIntervals = async () => {
   const monthData = await getChartData(1, 30);
   const halfYearData = await getChartData(7, 26);
   const yearData = await getChartData(7, 52);
-  console.log(monthData);
 
   const preparedChartData = {
     poolChart: {

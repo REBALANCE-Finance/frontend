@@ -162,7 +162,7 @@ const EarningsChart = ({ address, token, pool } : {
         <Flex flexDirection="column" width="100%">
           <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
             <Text fontSize="lg">My monthly earnings</Text>
-            <DateSwitcher date={DATESEarned} selectDate={setSelectDate} selectedDate={selectedDate} />
+            {/* <DateSwitcher date={DATESEarned} selectDate={setSelectDate} selectedDate={selectedDate} /> */}
           </Flex>
           <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px" position={'relative'}>
             <Flex flexDirection="column" width="25%" justifyContent="center">
@@ -221,7 +221,6 @@ const EarningsChart = ({ address, token, pool } : {
         <Flex flexDirection="column" width="100%">
           <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
             <Text fontSize="lg">My monthly earnings</Text>
-            <DateSwitcher date={DATESEarned} selectDate={setSelectDate} selectedDate={selectedDate} />
           </Flex>
           <Flex align={'center'} justify={'center'} width="100%" mt="48px">
             <Text color="white">Error on loading data. Please try again later</Text>

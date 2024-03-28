@@ -19,12 +19,12 @@ export const LegendAreaChart: FC<ILegendAreaChart> = ({ text, color, subText }) 
         bg: color,
         mr: "6px"
       }}
-      margin={media ? "auto" : "inherit"}
+      margin={media ? "inherit" : "inherit"}
     >
         <Text color="white" whiteSpace={'pre-wrap'} fontWeight={'500'}>{text}</Text>
       </Flex>
       {subText ? (
-        <Text color={themes.colors.darkGray} whiteSpace={'pre-wrap'} fontWeight={'500'} ml={'18px'}>{subText}</Text>
+        <Text color={themes.colors.darkGray} whiteSpace={'pre-wrap'} fontWeight={'500'} ml={media ? 0 : '18px'}>{subText}</Text>
       ) : null}
     </Flex>
   );

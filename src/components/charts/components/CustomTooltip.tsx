@@ -9,7 +9,7 @@ interface CustomTooltipProps extends TooltipProps<ValueType, NameType> {
 export const CustomTooltip = ({ active, payload, name }: CustomTooltipProps) => {
   if (active) {
     return (
-      <Flex w="255px" p="10px" gap="10px" flexDirection="column" bg="black.60" borderRadius="4px">
+      <Flex w="max-content" p="10px" gap="10px" flexDirection="column" bg="black.60" borderRadius="4px">
         {payload?.map((e, i) => (
           <Flex flexDirection="column" key={i}>
             <Flex alignItems="center" justifyContent="space-between">
