@@ -61,7 +61,6 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-
   const data: IPoolsData[] = await response.json();
 
   const pools: IPoolData[] = data.map(item => {
