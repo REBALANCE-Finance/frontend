@@ -63,7 +63,7 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
   }
 
   const data: IPoolsData[] = await response.json();
-  
+
   const pools: IPoolData[] = data.map(item => {
     return {
       token: item?.token?.toString()?.toLowerCase(),
