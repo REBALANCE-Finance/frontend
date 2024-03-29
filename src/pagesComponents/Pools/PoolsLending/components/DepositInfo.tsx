@@ -7,9 +7,10 @@ import { formatNumber } from "../../../../utils/formatNumber";
 interface DepositInfoProps {
   contractAddress: `0x${string}`;
   ownerAddress: `0x${string}`;
+  tokenName: string;
 }
 
-const DepositInfo: React.FC<DepositInfoProps> = ({ contractAddress, ownerAddress }) => {
+const DepositInfo: React.FC<DepositInfoProps> = ({ contractAddress, ownerAddress, tokenName }) => {
   const { balance, isLoading } = useBalanceOfAsset(contractAddress, ownerAddress);
 
   if (isLoading) {
@@ -21,7 +22,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ contractAddress, ownerAddress
       <Text fontSize="md" fontWeight="500" color="whiteAlpha.70">
         My Deposit
       </Text>
-      <Text textStyle="textMono16">{formatNumber(balance.toFixed(2))} USDT</Text>
+      <Text textStyle="textMono16">{formatNumber(balance.toFixed(2))} {tokenName.toUpperCase()}</Text>
     </Flex>
   );
 };

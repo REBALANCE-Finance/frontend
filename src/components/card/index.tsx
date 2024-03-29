@@ -15,7 +15,7 @@ interface ICardProps {
 export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
   return (
     <ChakraCard cursor="pointer" variant="poolCard" position="relative">
-      {itemCard.token !== "usdt" ? (
+      {!itemCard.token ? (
         <Flex
           position="absolute"
           top="0"
