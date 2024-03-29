@@ -1,7 +1,6 @@
 import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData } from "./types";
 
 const endpoint = "https://rebalancerfinanceapi.net/";
-
 // const mockData: IPoolData[] = [
 //   {
 //     token: "usdc",
