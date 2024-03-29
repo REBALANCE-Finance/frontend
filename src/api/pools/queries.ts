@@ -158,9 +158,9 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
 // ];
 
 
-export const getChartData = async (interval: number, intervalsCount: number): Promise<any> => {
-  const highestMarketResponse = await fetch(`${endpoint}lending/USDT/highest-market-apr-ticks/${interval}/${intervalsCount}`);
-  const rebalanceAprResponse = await fetch(`${endpoint}lending/USDT/apr-ticks/${interval}/${intervalsCount}`);
+export const getChartData = async (interval: number, intervalsCount: number, token: string): Promise<any> => {
+  const highestMarketResponse = await fetch(`${endpoint}lending/${token.toUpperCase()}/highest-market-apr-ticks/${interval}/${intervalsCount}`);
+  const rebalanceAprResponse = await fetch(`${endpoint}lending/${token.toUpperCase()}/apr-ticks/${interval}/${intervalsCount}`);
 
 
   if (!highestMarketResponse.ok) {
@@ -198,10 +198,10 @@ export const getChartData = async (interval: number, intervalsCount: number): Pr
   return {chartData: chartData, poolChart, rebalanceAvgApr, aaveAvgApr};
 };
 
-export const getAreaChartAllIntervals = async () => {
-  const monthData = await getChartData(1, 30);
-  const halfYearData = await getChartData(7, 26);
-  const yearData = await getChartData(7, 52);
+export const getAreaChartAllIntervals = async (token: string = 'usdt') => {
+  const monthData = await getChartData(1, 30, token);
+  const halfYearData = await getChartData(7, 26, token);
+  const yearData = await getChartData(7, 52, token);
 
   const preparedChartData = {
     poolChart: {

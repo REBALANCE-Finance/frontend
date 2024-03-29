@@ -5,10 +5,9 @@ const BorrowingAssetPage = async ({ searchParams } : {
   searchParams: any
 }) => {
   const pools = await getPools('lending');
-  console.log(pools);
   
   const { interval, intervals} = searchParams;
-  const chartData = await getChartData(+interval || 1, +intervals || 30); 
+  const chartData = await getChartData(+interval || 1, +intervals || 30, 'usdt'); 
   
 
   return <BorrowAsset pools={pools} chartData={chartData}/>

@@ -164,7 +164,7 @@ const EarningsChart = ({ address, token, pool } : {
             <Text fontSize="lg">My monthly earnings</Text>
             {/* <DateSwitcher date={DATESEarned} selectDate={setSelectDate} selectedDate={selectedDate} /> */}
           </Flex>
-          <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px" position={'relative'}>
+          <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
             <Flex flexDirection="column" width="25%" justifyContent="center">
               <Flex flexDirection="column">
                 <Text color="#B4B4B4">Earned</Text>
@@ -176,45 +176,48 @@ const EarningsChart = ({ address, token, pool } : {
                 <Text textStyle="textMono16">{`${avgApr.toFixed(2)} %`}</Text>
               </Flex>
             </Flex>
-            <ResponsiveContainer width="90%" height="100%">
-              {address ? (
-                <BarChart width={150} height={10} data={userEarningsData}>
-                  <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5} >
-                    {
-                      userEarningsData?.map((entry, index) => {
-                        const color = entry.uv > 0 ? "#4CFF94" : '#1A3C28';
-                        return <Cell fill={color} />;
-                      })
-                    }
-                  </Bar>
-                  <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltipBarChart />} />
-                </BarChart>
-              ) : (
-                <BarChart width={150} height={10} data={data}>
-                  <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}>
-                  </Bar>
-                </BarChart>
-              )}
-            </ResponsiveContainer>
-            {!address ? (
-              <Flex
-                position='absolute'
-                inset='0'
-                margin="auto"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                background="000"
-                backdropFilter="blur(4px)"
-                zIndex="9"
-                fontSize="large"
-                fontWeight="500"
-              >
-                <Flex w={'50%'}>
-                  <DepositLendingButton variant="primaryWhite" pool={pool} />
+            <Flex position={'relative'} w={'100%'}>
+              <ResponsiveContainer width="90%" height="100%">
+                {address ? (
+                  <BarChart width={150} height={10} data={userEarningsData}>
+                    <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5} >
+                      {
+                        userEarningsData?.map((entry, index) => {
+                          const color = entry.uv > 0 ? "#4CFF94" : '#1A3C28';
+                          return <Cell fill={color} />;
+                        })
+                      }
+                    </Bar>
+                    <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltipBarChart />} />
+                  </BarChart>
+                ) : (
+                  <BarChart width={150} height={10} data={data}>
+                    <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}>
+                    </Bar>
+                  </BarChart>
+                )}
+              </ResponsiveContainer>
+              
+              {!address ? (
+                <Flex
+                  position='absolute'
+                  inset='0'
+                  margin="auto"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  background="000"
+                  backdropFilter="blur(4px)"
+                  zIndex="9"
+                  fontSize="large"
+                  fontWeight="500"
+                >
+                  <Flex w={'50%'}>
+                    <DepositLendingButton variant="primaryWhite" pool={pool} />
+                  </Flex>
                 </Flex>
-              </Flex>
-            ) : null}
+              ) : null}
+            </Flex>
           </Flex>
         </Flex>
       ) : (
