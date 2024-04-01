@@ -6,11 +6,12 @@ import { AreaChart } from "../../../components/charts/AreaChart";
 import { DateSwitcher } from "../../../components/data-switcher";
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES } from "../../../components/data-switcher/utils";
-import { areaLines, colorsArea, tickFormatter } from "../utils";
+import { colorsArea, tickFormatter } from "../utils";
 import { LegendAreaChart } from "./components/LegendAreaChart";
 import { IAreaLineProps } from "./types";
 import { MEDIA_QUERY_MAX } from "../../../consts";
 import { ILendChartData } from "@/api/pools/types";
+import { ROUTES_TYPE } from "@/consts/routes-type";
 
 const areaGradient = (
   <defs>
@@ -90,6 +91,19 @@ export const BaseChart = ({ chartData } : {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
 
+  const areaLines = [
+    {
+      name: "Rebalance APR\n",
+      subtext: `(${chartData.poolChart[selectedDate.name as any].rebalanceAvg.toFixed(2)}% average)`,
+      type: ROUTES_TYPE.lending,
+    },
+    {
+      name: "Aave APR\n",
+      subtext: `(${chartData.poolChart[selectedDate.name as any].aaveAvg.toFixed(2)}% average)`,
+      type: ROUTES_TYPE.borrowing
+    }
+  ];
+
   return (
     <Flex w="100%" direction="column" position="relative">
       <Flex
@@ -112,10 +126,11 @@ export const BaseChart = ({ chartData } : {
       </Flex>
 
       <AreaChart
-        data={chartData.poolChart[selectedDate.name as any]}
+        data={chartData.poolChart[selectedDate.name as any].data}
         lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}
+        tooltipName
       />
 
       <Flex
@@ -126,7 +141,7 @@ export const BaseChart = ({ chartData } : {
         mr={media ? "auto" : "0"}
       >
         {areaLines.map(elem => (
-          <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
+          <LegendAreaChart key={elem.type} text={elem.name} subText={elem.subtext} color={colorsArea[elem.type]} />
         ))}
       </Flex>
     </Flex>

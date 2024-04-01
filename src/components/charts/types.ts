@@ -9,6 +9,7 @@ export interface IAreaChartProps extends IChartProps {
   lines: JSX.Element[];
   tickFormatter?: XAxisProps["tickFormatter"];
   legend?: JSX.Element | null;
+  tooltipName?: boolean ;
 }
 
 export interface IBarChart extends IChartProps {

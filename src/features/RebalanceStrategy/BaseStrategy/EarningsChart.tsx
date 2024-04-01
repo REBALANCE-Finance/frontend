@@ -3,11 +3,12 @@ import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 import { DateSwitcher } from "../../../components/data-switcher";
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
-import { DATES } from "../../../components/data-switcher/utils";
+import { DATESEarned } from "../../../components/data-switcher/utils";
 import { useEffect, useState } from "react";
 import { getPersonalEarnings } from "@/api/pools/queries";
-import { formatNumber } from "@/utils/formatNumber";
 import { CustomTooltipBarChart } from "./components/CustomToolTipBarChart";
+import { IPoolData } from "@/api/pools/types";
+import { DepositLendingButton } from "@/features/actions/deposit-or-withdraw-button/DepositLendingButton";
 
 const data = [
   {
@@ -129,21 +130,20 @@ interface IBarChartData {
   uv: number
 }
 
-const EarningsChart = ({ address, token } : {
+const EarningsChart = ({ address, token, pool } : {
   address: `0x${string}` | undefined,
-  token: string
+  token: string,
+  pool: IPoolData
 }) => {
-  const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
+  const { selectedDate, setSelectDate } = useDateSwitcher(DATESEarned[0]);
   const [userEarningsData, setUserEarningsData] = useState<IBarChartData[] | undefined>(undefined);
   const [avgApr, setAvgApr] = useState<number>(0);
   const [error, setError] = useState(false);
-  console.log(userEarningsData);
-  
 
   useEffect(() => {
     if (address) {
       setError(false)
-      getPersonalEarnings(selectedDate.interval, selectedDate.intervals, '0x5B7Ca66e1e94Fb1800F750022Ae0c705Bf1A4AD4', token)
+      getPersonalEarnings(selectedDate.interval, selectedDate.intervals, address, token)
         .then(data => {
           setUserEarningsData(data.userEarned);
           setAvgApr(data.avgAPR);
@@ -161,8 +161,8 @@ const EarningsChart = ({ address, token } : {
       {!error ? (
         <Flex flexDirection="column" width="100%">
           <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
-            <Text fontSize="lg">My earnings</Text>
-            <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
+            <Text fontSize="lg">My monthly earnings</Text>
+            {/* <DateSwitcher date={DATESEarned} selectDate={setSelectDate} selectedDate={selectedDate} /> */}
           </Flex>
           <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
             <Flex flexDirection="column" width="25%" justifyContent="center">
@@ -176,41 +176,60 @@ const EarningsChart = ({ address, token } : {
                 <Text textStyle="textMono16">{`${avgApr.toFixed(2)} %`}</Text>
               </Flex>
             </Flex>
-            <ResponsiveContainer width="90%" height="100%">
-              {address ? (
-                <BarChart width={150} height={10} data={userEarningsData}>
-                  <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5} >
-                    {
-                      userEarningsData?.map((entry, index) => {
-                        const color = entry.uv > 0 ? "#4CFF94" : '#1A3C28';
-                        return <Cell fill={color} />;
-                      })
-                    }
-                  </Bar>
-                  <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltipBarChart />} />
-                </BarChart>
-              ) : (
-                <BarChart width={150} height={10} data={data}>
-                  <Bar barSize={6} dataKey="uv" fill="#4CFF94">
-                  </Bar>
-                  <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltipBarChart />} />
-                </BarChart>
-              )}
-            </ResponsiveContainer>
+            <Flex position={'relative'} w={'100%'}>
+              <ResponsiveContainer width="90%" height="100%">
+                {address ? (
+                  <BarChart width={150} height={10} data={userEarningsData}>
+                    <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5} >
+                      {
+                        userEarningsData?.map((entry, index) => {
+                          const color = entry.uv > 0 ? "#4CFF94" : '#1A3C28';
+                          return <Cell fill={color} />;
+                        })
+                      }
+                    </Bar>
+                    <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltipBarChart />} />
+                  </BarChart>
+                ) : (
+                  <BarChart width={150} height={10} data={data}>
+                    <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}>
+                    </Bar>
+                  </BarChart>
+                )}
+              </ResponsiveContainer>
+              
+              {!address ? (
+                <Flex
+                  position='absolute'
+                  inset='0'
+                  margin="auto"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  background="000"
+                  backdropFilter="blur(4px)"
+                  zIndex="9"
+                  fontSize="large"
+                  fontWeight="500"
+                >
+                  <Flex w={'50%'}>
+                    <DepositLendingButton variant="primaryWhite" pool={pool} />
+                  </Flex>
+                </Flex>
+              ) : null}
+            </Flex>
           </Flex>
         </Flex>
       ) : (
         <Flex flexDirection="column" width="100%">
           <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
-            <Text fontSize="lg">My earnings</Text>
-            <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
+            <Text fontSize="lg">My monthly earnings</Text>
           </Flex>
           <Flex align={'center'} justify={'center'} width="100%" mt="48px">
             <Text color="white">Error on loading data. Please try again later</Text>
           </Flex>
         </Flex>
       )}
-    
     </>
   );
 };

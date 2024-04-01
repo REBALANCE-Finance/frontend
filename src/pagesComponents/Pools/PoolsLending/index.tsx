@@ -81,10 +81,10 @@ export const PoolsLending = observer(({ pools } : {
           case RowCardProccessType.assets:
             return (
               <>
-                {!!address && item.token == "usdt" ? (
+                {!!address ? (
                   <>
                     <Divider borderColor="black.60" />
-                    <DepositInfo contractAddress={item.rebalancerAddress} ownerAddress={address} />
+                    <DepositInfo contractAddress={item.rebalancerAddress} ownerAddress={address} tokenName={item?.token} />
                   </>
                 ) : null}
               </>
@@ -114,7 +114,7 @@ export const PoolsLending = observer(({ pools } : {
           key={elem.token}
           rowCard={rowCard}
           itemCard={elem}
-          onClick={() => elem.token == "usdt" && handleLink(elem.rebalancerAddress)}
+          onClick={() => handleLink(elem.rebalancerAddress)}
         />
       ))}
     </SimpleGrid>

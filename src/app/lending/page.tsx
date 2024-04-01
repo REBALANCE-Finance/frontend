@@ -2,9 +2,12 @@ import { getAreaChartAllIntervals, getChartData, getPools } from "@/api/pools/qu
 import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
 
-const LendingPage = async () => {
+const LendingPage = async ({params} : {
+  params: { [key: string]: string }
+}) => {
   const pools = await getPools('lending');
-  const chartData = await getAreaChartAllIntervals(); 
+  const token = pools?.find(item => item.rebalancerAddress === params.poolAddress)?.token || pools[0].token;
+  const chartData = await getAreaChartAllIntervals(token);
 
   return (
     <PoolLayout pools={pools} chartData={chartData}>

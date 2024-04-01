@@ -1,68 +1,67 @@
 import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData } from "./types";
 
 const endpoint = "https://rebalancerfinanceapi.net/";
-
-const mockData: IPoolData[] = [
-  {
-    token: "usdc",
-    tokenAddress: "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
-    rebalancerAddress: "0xe97830116fD3f065696E4aDfb3a337f02AD233be",
-    tokenPriceInUsd: 1,
-    tokenPrice24HrChangeInPercentages: 1,
-    tokenPrice24HrChangeInUsd: 1,
-    apr: 1,
-    funds: 1020000,
-    avgApr: 1,
-    earned: 120,
-    decimals: 6,
-    deposit: 20000,
-    risk: 2,
-    borrowRate: 13.3,
-    borrowed: 532112
-  },
-  {
-    token: "weth",
-    tokenAddress: "",
-    rebalancerAddress: "",
-    tokenPriceInUsd: 1,
-    tokenPrice24HrChangeInPercentages: 1,
-    tokenPrice24HrChangeInUsd: 1,
-    apr: 1,
-    funds: 201010,
-    avgApr: 1,
-    earned: 1111,
-    decimals: 1,
-    deposit: 100,
-    risk: 3,
-    borrowRate: 9.22,
-    borrowed: 234320
-  },
-  {
-    token: "dai",
-    tokenAddress: "",
-    rebalancerAddress: "",
-    tokenPriceInUsd: 1,
-    tokenPrice24HrChangeInPercentages: 1,
-    tokenPrice24HrChangeInUsd: 1,
-    apr: -1,
-    funds: 2.45,
-    avgApr: 1,
-    earned: 1345,
-    decimals: 1,
-    deposit: 1200,
-    risk: 5,
-    borrowRate: 11.2,
-    borrowed: 1000000
-  }
-];
+// const mockData: IPoolData[] = [
+//   {
+//     token: "usdc",
+//     tokenAddress: "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
+//     rebalancerAddress: "0xe97830116fD3f065696E4aDfb3a337f02AD233be",
+//     tokenPriceInUsd: 1,
+//     tokenPrice24HrChangeInPercentages: 1,
+//     tokenPrice24HrChangeInUsd: 1,
+//     apr: 1,
+//     funds: 1020000,
+//     avgApr: 1,
+//     earned: 120,
+//     decimals: 6,
+//     deposit: 20000,
+//     risk: 2,
+//     borrowRate: 13.3,
+//     borrowed: 532112
+//   },
+//   {
+//     token: "weth",
+//     tokenAddress: "",
+//     rebalancerAddress: "",
+//     tokenPriceInUsd: 1,
+//     tokenPrice24HrChangeInPercentages: 1,
+//     tokenPrice24HrChangeInUsd: 1,
+//     apr: 1,
+//     funds: 201010,
+//     avgApr: 1,
+//     earned: 1111,
+//     decimals: 1,
+//     deposit: 100,
+//     risk: 3,
+//     borrowRate: 9.22,
+//     borrowed: 234320
+//   },
+//   {
+//     token: "dai",
+//     tokenAddress: "",
+//     rebalancerAddress: "",
+//     tokenPriceInUsd: 1,
+//     tokenPrice24HrChangeInPercentages: 1,
+//     tokenPrice24HrChangeInUsd: 1,
+//     apr: -1,
+//     funds: 2.45,
+//     avgApr: 1,
+//     earned: 1345,
+//     decimals: 1,
+//     deposit: 1200,
+//     risk: 5,
+//     borrowRate: 11.2,
+//     borrowed: 1000000
+//   }
+// ];
 
 export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData[]> => {
   const response = await fetch(`${endpoint}${type}`);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-
   const data: IPoolsData[] = await response.json();
+
   const pools: IPoolData[] = data.map(item => {
     return {
       token: item?.token?.toString()?.toLowerCase(),
@@ -82,7 +81,7 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
       borrowed: 1234334
     };
   });
-  return [...pools, ...mockData];
+  return [...pools];
 };
 
 // export const mockData: IMockData[] = [
@@ -157,10 +156,9 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
 // ];
 
 
-export const getChartData = async (interval: number, intervalsCount: number): Promise<any> => {
-  const highestMarketResponse = await fetch(`${endpoint}lending/USDT/highest-market-apr-ticks/${interval}/${intervalsCount}`);
-  const rebalanceAprResponse = await fetch(`${endpoint}lending/USDT/apr-ticks/${interval}/${intervalsCount}`);
-
+export const getChartData = async (interval: number, intervalsCount: number, token: string): Promise<any> => {
+  const highestMarketResponse = await fetch(`${endpoint}lending/${token.toUpperCase()}/highest-market-apr-ticks/${interval}/${intervalsCount}`);
+  const rebalanceAprResponse = await fetch(`${endpoint}lending/${token.toUpperCase()}/apr-ticks/${interval}/${intervalsCount}`);
 
   if (!highestMarketResponse.ok) {
     throw new Error(`HTTP error! status: ${highestMarketResponse.status}`);
@@ -180,35 +178,49 @@ export const getChartData = async (interval: number, intervalsCount: number): Pr
 
   for (let i = 0; i < marketAprChart.length; i++) {
     const marketValue = marketAprChart[i];
-    const rebalanceValue = rebalanceAprChart[i];  
-    
+    const rebalanceValue = rebalanceAprChart[i];
     const chartPoint = {
       date: marketValue.date,
       lending: rebalanceValue.lending,
-      borrowing: marketValue.lending
+      borrowing: marketValue.lending,
     }
 
     poolChart.push(chartPoint);
   }
 
-  return {chartData: chartData, poolChart};
+  const rebalanceAvgApr = poolChart.reduce((acc, el) => acc + el.lending, 0) / intervalsCount;
+  const aaveAvgApr = poolChart.reduce((acc, el) => acc + el.borrowing, 0) / intervalsCount;
+
+  return {chartData: chartData, poolChart, rebalanceAvgApr, aaveAvgApr};
 };
 
-export const getAreaChartAllIntervals = async () => {
-  const monthData = await getChartData(1, 30);
-  const halfYearData = await getChartData(7, 26);
-  const yearData = await getChartData(7, 52);
+export const getAreaChartAllIntervals = async (token: string = 'usdt') => {
+  const monthData = await getChartData(1, 30, token);
+  const halfYearData = await getChartData(7, 26, token);
+  const yearData = await getChartData(7, 52, token);
 
   const preparedChartData = {
+    poolChart: {
+      '1m': {
+        data: monthData.poolChart.reverse(),
+        rebalanceAvg: monthData.rebalanceAvgApr,
+        aaveAvg: monthData.aaveAvgApr
+      },
+      '6m': {
+        data: halfYearData.poolChart.reverse(),
+        rebalanceAvg: halfYearData.rebalanceAvgApr,
+        aaveAvg: halfYearData.aaveAvgApr
+      },
+      '1y': {
+        data: yearData.poolChart.reverse(),
+        rebalanceAvg: yearData.rebalanceAvgApr,
+        aaveAvg: yearData.aaveAvgApr
+      },
+    },
     chartData: {
       '1m': monthData.chartData.reverse(),
       '6m': halfYearData.chartData.reverse(),
       '1y': yearData.chartData.reverse(),
-    },
-    poolChart: {
-      '1m': monthData.poolChart.reverse(),
-      '6m': halfYearData.poolChart.reverse(),
-      '1y': yearData.poolChart.reverse(),
     }
   };
 
@@ -228,7 +240,7 @@ export const getPersonalEarnings = async (interval: number, intervalsCount: numb
   }
 
   const userEarningsData: IIntervalResponse[] = await userEarningsResponse.json();
-  const avgAPRTicksData: IIntervalResponse[] = await avgAPRTiksResponse.json();  
+  const avgAPRTicksData: IIntervalResponse[] = await avgAPRTiksResponse.json();
 
   const avgAPR = avgAPRTicksData.map(el => el.value || 0).reduce((acc, el) => (acc + el), 0) / intervalsCount;
   const preparedUserEarnings = userEarningsData.map((el, index) => ({name: el.from, uv: el.value ? (el.value >= 0 ? el.value : 0) : 0, apr: avgAPRTicksData[index].value})).reverse()
