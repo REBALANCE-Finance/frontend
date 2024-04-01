@@ -1,0 +1,51 @@
+.Toastify__toast-container {
+  width: 450px;
+  height: 92px;
+  padding: 0;
+}
+
+.Toastify__toast {
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+  border-radius: 5px;
+  color: #dedede;
+  padding: 0;
+
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+}
+
+.Toastify__toast-body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 100%;
+  height: 100%;
+  gap: 20px;
+  padding: 0;
+}
+
+.Toastify__toast-body > div:last-child {
+  height: 100%;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.Toastify__toast--success,
+.Toastify__toast--error,
+.Toastify__toast--info,
+.Toastify__toast--warning {
+  background: #272a30;
+}
+
+.Toastify__toast-icon {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.Toastify__close-button {
+  color: #626262;
+  outline: none;
+  padding: 12px 12px 0 0;
+}
