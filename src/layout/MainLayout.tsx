@@ -6,8 +6,8 @@ import { AppFooter } from "../widgets/AppFooter";
 import { AppHeader } from "../widgets/AppHeader";
 import { AppWarning } from "../widgets/AppWarning";
 
-export const MainLayout = ({ 
-  children 
+export const MainLayout = ({
+  children
 } : {
   children: React.ReactNode;
 }) => {
