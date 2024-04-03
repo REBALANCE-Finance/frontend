@@ -32,9 +32,9 @@ export const PoolsLending = observer(({ pools } : {
       proccess({ item }) {
         return (
           <Flex direction="column" alignItems="center">
-            <Text fontFamily="Roboto mono" fontSize="xs" color="gray.100">
-              RISK
-            </Text>
+            <Tooltip label={<span>Asset risk - 1<br />Protocols risk - 1</span>} color="white">
+              <Text textStyle="textMono12" letterSpacing="3px" color="gray.100">RISK</Text>
+            </Tooltip>
             <Risk risk={item.risk} />
           </Flex>
         );
@@ -50,20 +50,22 @@ export const PoolsLending = observer(({ pools } : {
                 <HStack justify="space-between">
                   <Text color="white">Funds in pool</Text>
                   <Tooltip label="Funds in pool" color="white">
-                    <Text variant="tooltip" textStyle="textMono16" color="white">
+                    <Text textStyle="textMono16" color="white">
                       {formatNumber(item.funds)} $
                     </Text>
                   </Tooltip>
                 </HStack>
 
                 <HStack justify="space-between">
-                  <Text color="white">Profit Earned</Text>
-                  <Text textStyle="textMono16">{formatNumber(item.earned)} $</Text>
+                <Tooltip label="Historical earnings of this vault" color="white">
+                  <Text borderBottom={"dashed 1px gray"} color="white">Profit Earned</Text>
+                </Tooltip>
+                <Text textStyle="textMono16">{formatNumber(item.earned)} $</Text>
                 </HStack>
 
                 <HStack justify="space-between">
-                  <Tooltip label="APR INFO">
-                    <Text color="white" variant="tooltip">
+                  <Tooltip label="Average profitability in last 30 days">
+                    <Text color="white" borderBottom={"dashed 1px gray"}>
                       30D avg. APR
                     </Text>
                   </Tooltip>
@@ -71,7 +73,9 @@ export const PoolsLending = observer(({ pools } : {
                 </HStack>
 
                 <HStack justify="space-between">
-                  <Text color="white">APR {">"} market avg.</Text>
+                  <Tooltip label="Rebalance APR  advantage over the market average APR in last 30 days">
+                    <Text borderBottom={"dashed 1px gray"} color="white">APR {">"} market avg.</Text>
+                  </Tooltip>
                   <Text color={item.apr > 0 ? "green.100" : "red"} textStyle="textMono16">
                     {formatPercent(item.apr)}
                   </Text>

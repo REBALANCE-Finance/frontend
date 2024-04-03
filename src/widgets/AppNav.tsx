@@ -61,6 +61,7 @@ export const AppNav = () => {
                   as={NextLink}
                   onClick={onClose}
                   fontSize="lg"
+                  target={route.target ? "_blank" : "_self"}
                 >
                   {route.name}
                 </Link>
@@ -75,7 +76,13 @@ export const AppNav = () => {
   return (
     <Flex gap="24px">
       {routesList.map(route => (
-        <Link variant="nav" key={route.name} as={NextLink} href={route.path} style={ pathname.includes(route.path) ? {color: "#fff"} : {}}>
+        <Link
+          variant="nav"
+          key={route.name}
+          as={NextLink}
+          href={route.path}
+          style={ pathname.includes(route.path) ? {color: "#fff"} : {}}
+          target={route.target ? "_blank" : "_self"}>
           {route.name}
         </Link>
       ))}

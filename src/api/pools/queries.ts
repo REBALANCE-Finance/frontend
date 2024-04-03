@@ -24,7 +24,7 @@ const endpoint = "https://rebalancerfinanceapi.net/";
 //     token: "weth",
 //     tokenAddress: "",
 //     rebalancerAddress: "",
-//     tokenPriceInUsd: 1,
+//     tokenPriceInUsd: 1,К
 //     tokenPrice24HrChangeInPercentages: 1,
 //     tokenPrice24HrChangeInUsd: 1,
 //     apr: 1,

@@ -35,7 +35,6 @@ export const AssetHeader: FC<any> = ({ pool }) => {
             >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={'center'}>
                 <Text textTransform="uppercase">{pool.token}</Text>
-                
                 <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
                   <Icon name={ICON_NAMES.assetFunction} size="sm"/>
                 </Link>
