@@ -6,7 +6,6 @@ const LendingAssetPage = async ({ params } : {
 }) => {
   const pools = await getPools('lending');
   const token = pools?.find(item => item.rebalancerAddress === params.poolAddress)?.token;
-  
   const chartData = await getAreaChartAllIntervals(token); 
 
   return <LendingAsset pools={pools} chartData={chartData}/>

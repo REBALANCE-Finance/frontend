@@ -36,7 +36,7 @@ export const LendingAsset = observer(({ pools, chartData } : {
   const { poolAddress } = useParams();
   const finalAddress = Array.isArray(poolAddress) ? poolAddress[0] : poolAddress;
   const searchParams = useSearchParams();
-
+  console.log('searchParams', pools)
   const pool = pools.find(item => item.rebalancerAddress === poolAddress);
   const strategic = searchParams.get("strategic") ?? STRATEGIES.based;
 
