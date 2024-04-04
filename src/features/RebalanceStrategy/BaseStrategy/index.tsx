@@ -14,14 +14,14 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
   const { address } = useAccount();
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x");
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  
+
   return (
     <SimpleGrid columns={media ? 1 : 2} gap="24px">
       <Flex direction="column" >
         <Flex direction="column" bg="#17191C" borderRadius="8px" padding="24px">
           <Text fontSize="lg">My deposit</Text>
           <Box mt="16px" mb="24px" display="flex" flexDirection="row" alignItems="baseline">
-            <Text fontWeight="400" fontSize="24px" lineHeight="24px" textTransform="uppercase">
+            <Text fontWeight="400" fontSize="24px" lineHeight="24px">
               {balance.toFixed(2)} {pool?.token}
             </Text>
             <Text textStyle="text14" color="#9FA2A8" ml="16px">
@@ -34,7 +34,7 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
           </SimpleGrid>
         </Flex>
 
-        <EarningsChart token={pool?.token.toUpperCase()} address={address} pool={pool}/>
+        <EarningsChart token={pool?.token} address={address} pool={pool}/>
 
       </Flex>
 

@@ -11,9 +11,9 @@ interface IWalletProfileBtnProps {
 
 export const WalletProfileBtn: FC<IWalletProfileBtnProps> = ({ onOpen, address }) => {
   return (
-    <Flex as={Button} gap="6px" align="center" onClick={onOpen}>
+    // <Flex as={Button} gap="6px" align="center" onClick={onOpen}>
+    <Flex as={Button} gap="6px" align="center">
       <JazzIcon address={address} />
-
       <Text>{ellipsis(String(address))}</Text>
     </Flex>
   );

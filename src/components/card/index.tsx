@@ -48,8 +48,8 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
                 onClick={onClick}
               >
                 <Flex alignItems="center" gap="12px">
-                  <TokenIcon name={TOKEN_ICONS[itemCard.token]} />
-                  <Text textStyle="h2" textTransform="uppercase">
+                  <TokenIcon name={TOKEN_ICONS[itemCard.token?.includes(".") ? "USDCe" : itemCard?.token]} />
+                  <Text textStyle="h2">
                     {itemCard?.token}
                   </Text>
                 </Flex>

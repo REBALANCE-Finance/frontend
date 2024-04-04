@@ -22,7 +22,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ contractAddress, ownerAddress
       <Text fontSize="md" fontWeight="500" color="whiteAlpha.70">
         My Deposit
       </Text>
-      <Text textStyle="textMono16">{formatNumber(balance.toFixed(2))} {tokenName.toUpperCase()}</Text>
+      <Text textStyle="textMono16">{formatNumber(balance.toFixed(2))} {tokenName}</Text>
     </Flex>
   );
 };

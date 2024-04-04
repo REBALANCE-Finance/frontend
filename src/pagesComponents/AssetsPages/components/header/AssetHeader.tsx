@@ -34,7 +34,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
               justifyContent="space-between"
             >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={'center'}>
-                <Text textTransform="uppercase">{pool.token}</Text>
+                <Text>{pool.token}</Text>
                 <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
                   <Icon name={ICON_NAMES.assetFunction} size="sm"/>
                 </Link>
@@ -117,11 +117,11 @@ export const AssetHeader: FC<any> = ({ pool }) => {
           <Flex direction="column" gap="8px">
             <Text>
               {/* {pool.token} ({CHAIN_NAMES[chain?.id ?? 0]}) */}
-              {pool.token?.toString().toUpperCase()} (Arbitrum)
+              {pool.token} (Arbitrum)
             </Text>
             <Flex gap='12px' align='center'>
               <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
-                <Text textTransform="uppercase">{pool.token}</Text>
+                <Text>{pool.token}</Text>
                 <Text>Coin</Text>
               </Flex>
               <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
