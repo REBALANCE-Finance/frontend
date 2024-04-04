@@ -8,11 +8,13 @@ interface DepositInfoProps {
   contractAddress: `0x${string}`;
   ownerAddress: `0x${string}`;
   tokenName: string;
+  decimals: number;
 }
 
-const DepositInfo: React.FC<DepositInfoProps> = ({ contractAddress, ownerAddress, tokenName }) => {
-  const { balance, isLoading } = useBalanceOfAsset(contractAddress, ownerAddress);
+const DepositInfo: React.FC<DepositInfoProps> = ({ contractAddress, ownerAddress, tokenName, decimals }) => {
+  const { balance, isLoading } = useBalanceOfAsset(contractAddress, ownerAddress, decimals);
 
+  console.log('pool', decimals);
   if (isLoading) {
     return <Spinner size="sm" />;
   }

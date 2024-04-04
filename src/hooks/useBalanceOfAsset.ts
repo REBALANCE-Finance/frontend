@@ -4,7 +4,7 @@ import { useReadContract } from "wagmi";
 
 import { ABI_REBALANCE } from "../abi/rebalance";
 
-export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: `0x${string}`) => {
+export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: `0x${string}`, decimals: number) => {
   const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -17,7 +17,8 @@ export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: 
 
   useEffect(() => {
     if (data) {
-      const formattedBalance = ethers.formatUnits(data, 6);
+      console.log(decimals, 'decimals');
+      const formattedBalance = ethers.formatUnits(data, decimals);
       setBalance(+formattedBalance);
     } else {
       setBalance(0);

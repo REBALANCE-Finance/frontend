@@ -20,9 +20,8 @@ import { useRouter } from 'next/navigation'
 export const PoolsLending = observer(({ pools } : {
   pools: IPoolData[]
 }) => {
-  const router = useRouter()
+  const router = useRouter();
   const { address } = useAccount();
-
   const handleLink = (poolAddress: string) => {
     router.push(generatePath(ROUTE_PATHS.lendingAsset, { poolAddress }));
   };
@@ -88,7 +87,7 @@ export const PoolsLending = observer(({ pools } : {
                 {!!address ? (
                   <>
                     <Divider borderColor="black.60" />
-                    <DepositInfo contractAddress={item.rebalancerAddress} ownerAddress={address} tokenName={item?.token} />
+                    <DepositInfo contractAddress={item.rebalancerAddress} ownerAddress={address} tokenName={item?.token} decimals={item.decimals} />
                   </>
                 ) : null}
               </>

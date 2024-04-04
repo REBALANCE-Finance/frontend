@@ -15,7 +15,7 @@ interface IWithdrawProps {
 export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool, variant, disabled }) => {
   const { openModal } = useStore("modalStore");
   const { address } = useAccount();
-  const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x");
+  const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x", pool.decimals);
   const handleOpenModal = () => {
     openModal({ type: ModalEnum.Withdraw, props: { pool, type: ModalEnum.Withdraw } });
   };
