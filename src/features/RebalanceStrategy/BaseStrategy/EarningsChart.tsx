@@ -177,7 +177,7 @@ const EarningsChart = ({ address, token, pool } : {
               </Flex>
             </Flex>
             <Flex position={'relative'} w={'100%'}>
-              <ResponsiveContainer width="90%" height="100%">
+              <ResponsiveContainer width="100%" height="100%">
                 {address ? (
                   <BarChart width={150} height={10} data={userEarningsData}>
                     <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5} >
