@@ -3,7 +3,7 @@ import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData } from "./type
 const endpoint = "https://rebalancerfinanceapi.net/";
 
 export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData[]> => {
-  const response = await fetch(`${endpoint}${type}`);
+  const response = await fetch(`${endpoint}${type}`, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -33,8 +33,8 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
 };
 
 export const getChartData = async (interval: number, intervalsCount: number, token: string): Promise<any> => {
-  const highestMarketResponse = await fetch(`${endpoint}lending/${token}/highest-market-apr-ticks/${interval}/${intervalsCount}`);
-  const rebalanceAprResponse = await fetch(`${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}`);
+  const highestMarketResponse = await fetch(`${endpoint}lending/${token}/highest-market-apr-ticks/${interval}/${intervalsCount}`, { cache: 'no-store' });
+  const rebalanceAprResponse = await fetch(`${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}`, { cache: 'no-store' });
 
   if (!highestMarketResponse.ok) {
     throw new Error(`HTTP error! status: ${highestMarketResponse.status}`);
@@ -104,8 +104,8 @@ export const getAreaChartAllIntervals = async (token: string = 'usdt') => {
 }
 
 export const getPersonalEarnings = async (interval: number, intervalsCount: number, address: string, token: string) => {
-  const userEarningsResponse = await fetch(`${endpoint}lending/${token}/user-earned-ticks/${address}/${interval}/${intervalsCount}`);
-  const avgAPRTiksResponse = await fetch(`${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}`);
+  const userEarningsResponse = await fetch(`${endpoint}lending/${token}/user-earned-ticks/${address}/${interval}/${intervalsCount}`, { cache: 'no-store' });
+  const avgAPRTiksResponse = await fetch(`${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}`, { cache: 'no-store' });
 
   if (!userEarningsResponse.ok) {
     throw new Error(`HTTP error! status: ${userEarningsResponse.status}`);

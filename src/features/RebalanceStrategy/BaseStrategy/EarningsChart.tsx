@@ -155,7 +155,7 @@ const EarningsChart = ({ address, token, pool } : {
   }, [address, selectedDate])
 
   const userTotalEarning = userEarningsData?.reduce((acc, el) => (acc + el.uv), 0) || 0;
-
+  console.log(avgApr, 'avgApr.toFixed(2)');
   return (
     <>
       {!error ? (

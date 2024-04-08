@@ -9,8 +9,8 @@ import { PerformanceChart } from "./RebalancePerformanceCharts";
 import { getCurrentPath, performanceInfo } from "./utils";
 import { usePathname } from "next/navigation";
 
-export const RebalancePerformance = ({ pools, chartData } : 
-{ 
+export const RebalancePerformance = ({ pools, chartData } :
+{
   pools: IPoolData[],
   chartData: IAreaChartData
 }) => {
