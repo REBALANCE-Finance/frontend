@@ -43,6 +43,7 @@ export const LendingAsset = observer(({ pools, chartData } : {
   // const handleLink = (type: string) => {
   //   setSearchParams({ strategic: type });
   // };
+
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
 
   if (!pool) return;
