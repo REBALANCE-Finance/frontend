@@ -6,7 +6,7 @@ export const FooterLink = [
 
 export const FooterMedia = [
   { name: "descord", path: "https://discord.gg/pgUBRSWkNY", icon: "" },
-  { name: "twitter", path: "https://x.com/rebalancefini", icon: "" },
+  { name: "twitter", path: "https://x.com/rebalancefin", icon: "" },
   { name: "telegram", path: "https://t.me/+sQu_wAoL_FtlNjgy", icon: "" }
   // { name: "linkedin", path: "", icon: "" }
 ];
