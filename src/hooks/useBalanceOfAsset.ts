@@ -11,7 +11,7 @@ export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: 
   const { data, isLoading: loading } = useReadContract({
     address: contractAddress,
     abi: ABI_REBALANCE,
-    functionName: "balanceOf",
+    functionName: "balanceOfAsset",
     args: [ownerAddress]
   });
 
