@@ -8,7 +8,7 @@ export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: 
   const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { data, isLoading: loading } = useReadContract({
+  const { data, isLoading: loading, refetch } = useReadContract({
     address: contractAddress,
     abi: ABI_REBALANCE,
     functionName: "balanceOf",
@@ -17,14 +17,21 @@ export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: 
 
   useEffect(() => {
     if (data) {
-      console.log(decimals, 'decimals');
       const formattedBalance = ethers.formatUnits(data, decimals);
       setBalance(+formattedBalance);
     } else {
       setBalance(0);
     }
     setIsLoading(loading);
-  }, [data, loading]);
+  }, [data, loading, decimals]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch(); // Эта функция вызывается для повторного получения данных контракта
+    }, 10000); // интервал в миллисекундах (10000 мс = 10 с)
+
+    return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
+  }, [refetch]);
 
   return { balance, isLoading };
 };
