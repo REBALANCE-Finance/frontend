@@ -12,7 +12,6 @@ export const TokenIcon = ({
   size?: string;
   sizeIcon?: string;
 }) => {
-  console.log('name', name);
   return (
     <Circle
       border="1px solid"

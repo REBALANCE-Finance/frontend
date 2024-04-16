@@ -73,7 +73,7 @@ export const PoolsLending = observer(({ pools } : {
 
                 <HStack justify="space-between">
                   <Tooltip label="Rebalance APR  advantage over the market average APR in last 30 days">
-                    <Text borderBottom={"dashed 1px gray"} color="white">APR {">"} market avg.</Text>
+                    <Text borderBottom={"dashed 1px gray"} color="white">APR {">"} market</Text>
                   </Tooltip>
                   <Text color={item.apr > 0 ? "green.100" : "red"} textStyle="textMono16">
                     {formatPercent(item.apr)}
