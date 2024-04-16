@@ -8,13 +8,13 @@ import { DepositLendingButton } from "../../actions/deposit-or-withdraw-button/D
 import { WithdrawLendingButton } from "../../actions/deposit-or-withdraw-button/WithdrawLendingButton";
 import { BaseChart } from "./BaseChart";
 import EarningsChart from "./EarningsChart";
+import { formatNumber } from "@/utils/formatNumber";
 
 
 const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
   const { address } = useAccount();
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x", pool.decimals);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-
   return (
     <SimpleGrid columns={media ? 1 : 2} gap="24px">
       <Flex direction="column" >
@@ -22,10 +22,10 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
           <Text fontSize="lg">My deposit</Text>
           <Box mt="16px" mb="24px" display="flex" flexDirection="row" alignItems="baseline">
             <Text fontWeight="400" fontSize="24px" lineHeight="24px">
-              {balance.toFixed(2)} {pool?.token}
+              {formatNumber(balance.toFixed(2))} {pool?.token}
             </Text>
             <Text textStyle="text14" color="#9FA2A8" ml="16px">
-              {balance.toFixed(2)} $
+              {formatNumber(balance.toFixed(2))} $
             </Text>
           </Box>
           <SimpleGrid columns={!media || balance > 0 ? 2 : 1} gap="8px">

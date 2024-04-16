@@ -19,6 +19,7 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
       tokenPrice24HrChangeInUsd: 1,
       apr: item?.highestMarket30DAvgAprDiffPercentage,
       funds: item?.funds,
+      // avgApr: item?.token == "USDT" ? item?.avgApr30D + 4 : item?.avgApr30D + 2,
       avgApr: item?.avgApr30D,
       earned: item?.earned,
       decimals: item?.tokenDecimals,
