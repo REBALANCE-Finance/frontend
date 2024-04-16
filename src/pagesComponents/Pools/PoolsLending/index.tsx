@@ -12,7 +12,7 @@ import { Tooltip } from "../../../components/tooltip";
 import { ROUTE_PATHS } from "../../../consts";
 import { DepositLendingButton } from "../../../features/actions/deposit-or-withdraw-button/DepositLendingButton";
 import { WithdrawLendingButton } from "../../../features/actions/deposit-or-withdraw-button/WithdrawLendingButton";
-import { formatNumber, formatPercent } from "../../../utils/formatNumber";
+import { formatNumber, formatPercent, formatNeutralPercent } from "../../../utils/formatNumber";
 import { IPoolData, IRowCard, RowCardNames, RowCardProccessType } from "../types";
 import DepositInfo from "./components/DepositInfo";
 import { useRouter } from 'next/navigation'
@@ -68,14 +68,14 @@ export const PoolsLending = observer(({ pools } : {
                       30D avg. APR
                     </Text>
                   </Tooltip>
-                  <Text textStyle="textMono16">{formatPercent(item.avgApr)}</Text>
+                  <Text textStyle="textMono16">{formatNeutralPercent(item.avgApr)}</Text>
                 </HStack>
 
                 <HStack justify="space-between">
                   <Tooltip label="Rebalance APR  advantage over the market average APR in last 30 days">
                     <Text borderBottom={"dashed 1px gray"} color="white">APR {">"} market</Text>
                   </Tooltip>
-                  <Text color={item.apr > 0 ? "green.100" : "red"} textStyle="textMono16">
+                  <Text color={item.apr > 0 ? "green.100" : "white"} textStyle="textMono16">
                     {formatPercent(item.apr)}
                   </Text>
                 </HStack>
