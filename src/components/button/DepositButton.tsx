@@ -5,11 +5,13 @@ const DepositButton = ({isDisabled, variant} : {isDisabled: boolean, variant: st
   return (
     <motion.div
       initial={{ backgroundColor: !isDisabled ? 'rgba(76, 255, 148, .3)' : 'rgb(21, 22, 25)' }}
-      animate={{ backgroundColor: !isDisabled ? 'rgba(76, 255, 148, .7)' : 'rgb(21, 22, 25)' }}
+      animate={{ backgroundColor: !isDisabled ? ['rgba(76, 255, 148, .7)', 'rgba(76, 255, 148, .3)'] : 'rgb(21, 22, 25)' }}
       transition={{
-        duration: .8,
+        duration: 1.2,
         repeat: !isDisabled ? Infinity : 0,
         repeatType: "reverse",
+        // repeatType: "loop",  // Циклическое повторение
+        ease: "linear"  // Равномерное изменение анимации
       }}
       style={{ borderRadius: "4px" }}
     >

@@ -29,7 +29,6 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
       borrowed: 1234334
     };
   });
-  console.log(pools, "pools");
   return [...pools];
 };
 
