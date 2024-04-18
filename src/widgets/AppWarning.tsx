@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 
 export const AppWarning = () => {
   const WARNING_BANNER = "open-warning-banner";
-  const InfoText = process.env.NEXT_PUBLIC_WARNING_TEXT;
   const [isOpenWarn, setOpenWarn] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -33,7 +32,7 @@ export const AppWarning = () => {
       position="relative"
       mb="20px"
     >
-      <Text>{InfoText ?? "Info"}</Text>
+      {/* <Text>{InfoText ?? "Info"}</Text> */}
 
       <Flex
         position="absolute"

@@ -28,7 +28,7 @@ export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: 
   useEffect(() => {
     const interval = setInterval(() => {
       refetch(); // Эта функция вызывается для повторного получения данных контракта
-    }, 10000); // интервал в миллисекундах (10000 мс = 10 с)
+    }, 3000); // интервал в миллисекундах (10000 мс = 10 с)
 
     return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
   }, [refetch]);
