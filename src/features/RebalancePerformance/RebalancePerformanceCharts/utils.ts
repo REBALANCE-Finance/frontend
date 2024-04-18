@@ -14,7 +14,7 @@ export const tickFormatter = (e: string) => {
 
 export const areaLines = [
   {
-    name: "REBALANCE APR",
+    name: "REBALANCE max. APR",
     type: ROUTES_TYPE.lending
   },
   // {

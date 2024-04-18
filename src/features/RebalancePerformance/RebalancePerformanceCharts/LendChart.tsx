@@ -1,4 +1,4 @@
-import { Flex, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { Area } from "recharts";
 
@@ -11,6 +11,8 @@ import { LegendAreaChart } from "./components/LegendAreaChart";
 import { IAreaLineProps } from "./types";
 import { areaLines, colorsArea, tickFormatter } from "./utils";
 import { IAreaChartData } from "@/api/pools/types";
+import UserProfit from "@/pagesComponents/Pools/PoolsLending/components/UserProfit";
+import { useAccount } from "wagmi";
 
 const areaGradient = (
   <defs>
@@ -41,52 +43,21 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
   return [...arr, areaGradient];
 };
 
-const data = [
-  {
-    date: "12.01.2024",
-    lending: 250,
-    borrowing: 170
-  },
-  {
-    date: "12.02.2024",
-    lending: 410,
-    borrowing: 218
-  },
-  {
-    date: "12.05.2024",
-    lending: 150,
-    borrowing: 55
-  },
-  {
-    date: "12.08.2024",
-    lending: 20,
-    borrowing: 178
-  },
-  {
-    date: "12.09.2024",
-    lending: 320,
-    borrowing: 188
-  },
-  {
-    date: "12.10.2024",
-    lending: 290,
-    borrowing: 230
-  }
-  // {
-  //   date: "12.11.2024",
-  //   lending: 3490,
-  //   borrowing: 4300
-  // }
-];
-
 export const LendChart = ({ chartData } : {
   chartData: IAreaChartData
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
-
+  const {address} = useAccount();
   return (
     <Flex w="100%" direction="column" position="relative">
+      {
+        address &&
+        <Text textStyle="h2" color="white" display="flex" justifyContent="space-between" alignItems="center" mb="14px">
+          <span>My Total Profit</span>
+          <UserProfit address={address} />
+        </Text>
+      }
       <Flex w="100%" alignItems="center" justify="space-between" mb={{ base: "0", md: "10px" }}>
         {!media && (
           <Flex alignItems="center" gap="12px">

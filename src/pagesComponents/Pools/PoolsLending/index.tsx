@@ -16,6 +16,7 @@ import { formatNumber, formatPercent, formatNeutralPercent } from "../../../util
 import { IPoolData, IRowCard, RowCardNames, RowCardProccessType } from "../types";
 import DepositInfo from "./components/DepositInfo";
 import { useRouter } from 'next/navigation'
+import UserProfitPool from "./components/UserProfitPool";
 
 export const PoolsLending = observer(({ pools } : {
   pools: IPoolData[]
@@ -25,6 +26,7 @@ export const PoolsLending = observer(({ pools } : {
   const handleLink = (poolAddress: string) => {
     router.push(generatePath(ROUTE_PATHS.lendingAsset, { poolAddress }));
   };
+
   const rowCard: IRowCard[] = [
     {
       name: RowCardNames.header,
@@ -57,9 +59,11 @@ export const PoolsLending = observer(({ pools } : {
 
                 <HStack justify="space-between">
                 <Tooltip label="Historical earnings of this vault" color="white">
-                  <Text borderBottom={"dashed 1px gray"} color="white">Profit Earned</Text>
+                  <Text borderBottom={"dashed 1px gray"} color="white">My Profit</Text>
                 </Tooltip>
-                <Text textStyle="textMono16">{formatNumber(item.earned)} $</Text>
+                <Text textStyle="textMono16">
+                  {address ? <UserProfitPool address={address} token={item.token} /> : "0.00"}
+                </Text>
                 </HStack>
 
                 <HStack justify="space-between">

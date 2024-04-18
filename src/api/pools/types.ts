@@ -68,3 +68,7 @@ export interface IAreaChartData {
     '1y': ILendChartData[],
   }
 }
+
+export interface ITotalProfit {
+  totalProfit: number
+}

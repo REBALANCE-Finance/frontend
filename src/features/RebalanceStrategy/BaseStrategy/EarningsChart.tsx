@@ -152,7 +152,7 @@ const EarningsChart = ({ address, token, pool } : {
           setError(true);
         })
     }
-  }, [address, selectedDate])
+  }, [address, selectedDate]);
 
   const userTotalEarning = userEarningsData?.reduce((acc, el) => (acc + el.uv), 0) || 0;
   return (
@@ -196,7 +196,6 @@ const EarningsChart = ({ address, token, pool } : {
                   </BarChart>
                 )}
               </ResponsiveContainer>
-              
               {!address ? (
                 <Flex
                   position='absolute'

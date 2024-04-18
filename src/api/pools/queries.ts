@@ -1,4 +1,4 @@
-import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData } from "./types";
+import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData, ITotalProfit } from "./types";
 
 const endpoint = "https://rebalancerfinanceapi.net/";
 
@@ -30,6 +30,24 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
     };
   });
   return [...pools];
+};
+
+export const getTotalProfit = async (type: "lending" | "borrowing", address: string) => {
+  const response = await fetch(`${endpoint}${type}/user-earned-overall/${address}`, { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data: number = await response.json();
+  return data;
+};
+
+export const getProfitPool = async (type: "lending" | "borrowing", address: string, token: string) => {
+  const response = await fetch(`${endpoint}${type}/${token}/user-earned/${address}`, { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data: number = await response.json();
+  return data;
 };
 
 export const getChartData = async (interval: number, intervalsCount: number, token: string): Promise<any> => {
