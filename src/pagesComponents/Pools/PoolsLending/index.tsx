@@ -58,9 +58,9 @@ export const PoolsLending = observer(({ pools } : {
                 </HStack>
 
                 <HStack justify="space-between">
-                <Tooltip label="Historical earnings of this vault" color="white">
-                  <Text borderBottom={"dashed 1px gray"} color="white">My Profit</Text>
-                </Tooltip>
+                {/* <Tooltip label="Historical earnings of this vault" color="white"> */}
+                  <Text color="white">My Profit</Text>
+                {/* </Tooltip> */}
                 <Text textStyle="textMono16">
                   {address ? <UserProfitPool address={address} token={item.token} /> : "0.00"}
                 </Text>
