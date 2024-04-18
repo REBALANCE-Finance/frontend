@@ -1,6 +1,6 @@
 'use client'
 
-import { CloseButton, Flex, Text } from "@chakra-ui/react";
+import { CloseButton, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 export const AppWarning = () => {
@@ -32,8 +32,6 @@ export const AppWarning = () => {
       position="relative"
       mb="20px"
     >
-      {/* <Text>{InfoText ?? "Info"}</Text> */}
-
       <Flex
         position="absolute"
         bottom="0"

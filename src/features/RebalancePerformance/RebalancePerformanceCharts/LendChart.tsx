@@ -53,7 +53,13 @@ export const LendChart = ({ chartData } : {
     <Flex w="100%" direction="column" position="relative">
       {
         address &&
-        <Text textStyle="h2" color="white" display="flex" justifyContent="space-between" alignItems="center" mb="14px">
+        <Text
+          textStyle="h2"
+          color="white"
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={media ? "24px" : "14px"}>
           <span>My Total Profit</span>
           <UserProfit address={address} />
         </Text>
