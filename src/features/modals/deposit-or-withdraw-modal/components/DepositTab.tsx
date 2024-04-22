@@ -59,12 +59,14 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   };
 
   useEffect(() => {
-    const checkNeedsApproval = () => {
-      const depositValue = parseBigNumber(formik.values.deposit, pool.decimals);
-      const isApprovalNeeded = !allowance || allowance < depositValue;
-      setNeedsApproval(isApprovalNeeded);
-    };
-    checkNeedsApproval();
+    if (formik.values.deposit) {
+      const checkNeedsApproval = () => {
+        const depositValue = parseBigNumber(formik.values.deposit, pool.decimals);
+        const isApprovalNeeded = !allowance || allowance < depositValue;
+        setNeedsApproval(isApprovalNeeded);
+      };
+      checkNeedsApproval();
+    }
   }, [allowance, formik.values.deposit, pool.decimals]);
 
   return (
