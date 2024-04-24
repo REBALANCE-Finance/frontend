@@ -1,6 +1,6 @@
 'use client'
 
-import { Divider, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
@@ -17,6 +17,9 @@ import { IPoolData, IRowCard, RowCardNames, RowCardProccessType } from "../types
 import DepositInfo from "./components/DepositInfo";
 import { useRouter } from 'next/navigation'
 import UserProfitPool from "./components/UserProfitPool";
+import Icon from "@/components/icon";
+import { TokenIcon } from "@/components/token-icon";
+import Image from "next/image";
 
 export const PoolsLending = observer(({ pools } : {
   pools: IPoolData[]
@@ -56,24 +59,73 @@ export const PoolsLending = observer(({ pools } : {
                     </Text>
                   </Tooltip>
                 </HStack>
+                <Divider borderColor="black.60" />
 
-                <HStack justify="space-between">
-                  <Tooltip label="Average profitability in last 30 days">
-                    <Text color="white" borderBottom={"dashed 1px gray"}>
-                      30D avg. APR
-                    </Text>
-                  </Tooltip>
-                  <Text textStyle="textMono16">{formatNeutralPercent(item.avgApr)}</Text>
-                </HStack>
+                {
+                  item.token === "USDC.e" ?
+                  <>
+                    <HStack justify="space-between">
+                      <Tooltip label={<>
+                                        <span>USDT Low-Risk Yield Strategy
+                                        Higher APR is achieved by automatic rebalance between following pools:</span>
+                                        <span><br/>- AAVE v3</span>
+                                        <span><br/>- Compound</span>
+                                        <span><br/>- dForce</span>
+                                        <span><br/>- Radiant v2</span>
+                                        <span>- Lodestar</span>
+                                      </>
+                                      }>
+                        <Text color="white" borderBottom={"dashed 1px gray"}>
+                          APR
+                        </Text>
+                      </Tooltip>
+                      <Box ml="auto" display="flex">
+                        <Box mr="-4px" zIndex={5}>
+                          <Icon name="AAVE" width="14px" height="14px" />
+                        </Box>
+                        <Box mr="-4px" zIndex={4}>
+                          <Icon name="DFORCE" width="14px" height="14px" />
+                        </Box>
+                        <Box mr="-4px" zIndex={3}>
+                          <Icon name="RADIANT" width="14px" height="14px" />
+                        </Box>
+                        <Icon name="COMPOUND" width="14px" height="14px" />
+                      </Box>
+                      <Text textStyle="textMono16">
+                        {formatNeutralPercent(item.avgApr)}
+                      </Text>
+                    </HStack>
 
-                <HStack justify="space-between">
-                  <Tooltip label="Rebalance APR  advantage over the lending market highest APR in last 30 days">
-                    <Text borderBottom={"dashed 1px gray"} color="white">APR {">"} market</Text>
-                  </Tooltip>
-                  <Text color={item.apr > 0 ? "green.100" : "white"} textStyle="textMono16">
-                    {formatPercent(item.apr)}
-                  </Text>
-                </HStack>
+                    <HStack justify="space-between">
+                      <Tooltip label="Rebalance APR  advantage over the lending market highest APR in last 30 days">
+                        <Text borderBottom={"dashed 1px gray"} color="white">{">"} market max.</Text>
+                      </Tooltip>
+                      <Text color={item.apr > 0 ? "green.100" : "white"} textStyle="textMono16">
+                        {formatPercent(item.apr)}
+                      </Text>
+                    </HStack>
+                  </>
+                  :
+                  <>
+                    <HStack justify="space-between">
+                      <Tooltip label="Average profitability in last 30 days">
+                        <Text color="white" borderBottom={"dashed 1px gray"}>
+                          30D avg. APR
+                        </Text>
+                      </Tooltip>
+                      <Text textStyle="textMono16">{formatNeutralPercent(item.avgApr)}</Text>
+                    </HStack>
+
+                    <HStack justify="space-between">
+                      <Tooltip label="Rebalance APR  advantage over the lending market highest APR in last 30 days">
+                        <Text borderBottom={"dashed 1px gray"} color="white">APR {">"} market</Text>
+                      </Tooltip>
+                      <Text color={item.apr > 0 ? "green.100" : "white"} textStyle="textMono16">
+                        {formatPercent(item.apr)}
+                      </Text>
+                    </HStack>
+                  </>
+                }
               </>
             );
           case RowCardProccessType.assets:
