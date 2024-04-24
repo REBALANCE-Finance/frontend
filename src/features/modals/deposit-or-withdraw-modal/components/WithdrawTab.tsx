@@ -29,7 +29,7 @@ const withdrawSchema = yup.object({
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
     const instantWithdraw = useWithdraw(pool.rebalancerAddress, () => onClose());
-
+    console.log('balance', balance < 0.01 ? true : false)
     const formik = useFormik({
       initialValues: {
         withdraw: ""

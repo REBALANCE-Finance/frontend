@@ -58,15 +58,6 @@ export const PoolsLending = observer(({ pools } : {
                 </HStack>
 
                 <HStack justify="space-between">
-                {/* <Tooltip label="Historical earnings of this vault" color="white"> */}
-                  <Text color="white">My Profit</Text>
-                {/* </Tooltip> */}
-                <Text textStyle="textMono16">
-                  {address ? <UserProfitPool address={address} token={item.token} /> : "0.00"}
-                </Text>
-                </HStack>
-
-                <HStack justify="space-between">
                   <Tooltip label="Average profitability in last 30 days">
                     <Text color="white" borderBottom={"dashed 1px gray"}>
                       30D avg. APR
@@ -91,6 +82,12 @@ export const PoolsLending = observer(({ pools } : {
                 {!!address ? (
                   <>
                     <Divider borderColor="black.60" />
+                    <HStack justify="space-between">
+                      <Text color="white">My Profit</Text>
+                      <Text textStyle="textMono16">
+                        {address ? <UserProfitPool address={address} token={item.token} /> : "0.00"}
+                      </Text>
+                    </HStack>
                     <DepositInfo contractAddress={item.rebalancerAddress} ownerAddress={address} tokenName={item?.token} decimals={item.decimals} />
                   </>
                 ) : null}

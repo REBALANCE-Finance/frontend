@@ -19,7 +19,7 @@ export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool, variant, disab
   const handleOpenModal = () => {
     openModal({ type: ModalEnum.Withdraw, props: { pool, type: ModalEnum.Withdraw } });
   };
-  if (!balance) return;
+  if (balance < 0.01) return;
 
   return (
     <Button

@@ -21,6 +21,8 @@ import { IDefaultModalProps } from "../types";
 import { TABS_DEPOSIT_AND_WITHDRAW } from "../utils";
 import { DepositTab } from "./components/DepositTab";
 import { WithdrawTab } from "./components/WithdrawTab";
+import { formatBigNumber } from "@/utils/formatBigNumber";
+import { formatNumber } from "@/utils/formatNumber";
 
 export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose, pool, type }) => {
   const defaultIndex = TABS_DEPOSIT_AND_WITHDRAW.indexOf(type);
@@ -54,7 +56,7 @@ export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose
                 <DepositTab pool={pool} onClose={onClose} />
               </TabPanel>
               <TabPanel p="0">
-                <WithdrawTab pool={pool} balance={balance} onClose={onClose} address={address} />
+                <WithdrawTab pool={pool} balance={+formatNumber(balance)} onClose={onClose} address={address} />
               </TabPanel>
             </TabPanels>
           )}
