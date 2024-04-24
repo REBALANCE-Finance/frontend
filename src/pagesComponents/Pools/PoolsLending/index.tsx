@@ -72,7 +72,6 @@ export const PoolsLending = observer(({ pools } : {
                                         <span><br/>- Compound</span>
                                         <span><br/>- dForce</span>
                                         <span><br/>- Radiant v2</span>
-                                        <span>- Lodestar</span>
                                       </>
                                       }>
                         <Text color="white" borderBottom={"dashed 1px gray"}>
