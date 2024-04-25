@@ -79,9 +79,11 @@ export const PoolsLending = observer(({ pools } : {
                       <Box mr="-4px" zIndex={4}>
                         <Icon name="DFORCE" width="14px" height="14px" />
                       </Box>
-                      <Box mr="-4px" zIndex={3}>
+                      {
+                        item.token !== "FRAX" ? <Box mr="-4px" zIndex={3}>
                         <Icon name="RADIANT" width="14px" height="14px" />
-                      </Box>
+                      </Box> : null
+                      }
                       <Icon name="COMPOUND" width="14px" height="14px" />
                     </Box>
                     <Text textStyle="textMono16">
