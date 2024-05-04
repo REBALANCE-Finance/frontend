@@ -29,7 +29,6 @@ const withdrawSchema = yup.object({
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
     const instantWithdraw = useWithdraw(pool.rebalancerAddress, () => onClose());
-    console.log('balance', balance < 0.01 ? true : false)
     const formik = useFormik({
       initialValues: {
         withdraw: ""
@@ -42,7 +41,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
           const assets = parseBigNumber(values.withdraw || "0", pool.decimals);
           await instantWithdraw({ address, assets });
         } catch (error) {
-          console.error("Ошибка при выводе средств: ", error);
+          console.error("", error);
         }
       }
     });
@@ -51,7 +50,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
       formik.setFieldValue("withdraw", balance.toString());
       formik.validateField("withdraw");
     };
-
+    console.log('formik', balance);
     return (
       <form onSubmit={formik.handleSubmit}>
         <Flex direction="column" gap="24px">
@@ -76,7 +75,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
           <HStack justify="space-between">
             <Text color="black.0">Available to withdraw</Text>
             <Flex align="inherit">
-              <Text textStyle="textMono16">${formatNumber(balance)}</Text>
+              <Text textStyle="textMono16">${formatNumber(+balance)}</Text>
               <Button color="greenAlpha.100" onClick={() => setMax()}>
                 Max
               </Button>
