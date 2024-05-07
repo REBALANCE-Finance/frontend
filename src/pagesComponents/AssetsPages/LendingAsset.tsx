@@ -125,7 +125,7 @@ export const LendingAsset = observer(({ pools, chartData } : {
       </Flex>
     );
   }
-
+  console.log('chartData', chain)
   return (
     <Flex h="100%" w="100%" direction="column" gap="24px">
       <AssetHeader pool={pool} />
@@ -135,17 +135,19 @@ export const LendingAsset = observer(({ pools, chartData } : {
             <Text fontWeight="500">Pool</Text>
             <Flex align="center" gap="5px">
               <Icon name={CHAIN_ICONS[chain?.id ?? 0]} size="18px" />
-              <Text textStyle="text14" color="black.5">
-                {poolAddress}
-              </Text>
               <Link
                 href={getFinalExplorerUrl({
-                  url: chain?.blockExplorers?.default.url,
+                  url: "https://arbiscan.io",
                   address: finalAddress,
                   type: "address"
                 })}
+                display="flex"
+                justifyContent={"space-between"}
                 isExternal
               >
+                <Text textStyle="text14" color="black.5" mr="6px">
+                  {poolAddress}
+                </Text>
                 <Icon name={ICON_NAMES.link} size="sm" />
               </Link>
             </Flex>
