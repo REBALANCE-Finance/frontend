@@ -78,6 +78,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           errorMessage={formik.errors.deposit}
           value={formik.values.deposit}
           handleChange={formik.handleChange}
+          tokenName={pool.token}
         />
 
         <HStack justify="space-between">

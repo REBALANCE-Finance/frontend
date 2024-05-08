@@ -77,6 +77,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
             errorMessage={formik.errors.withdraw}
             value={formik.values.withdraw}
             handleChange={formik.handleChange}
+            tokenName={pool.token}
           />
           <HStack justify="space-between">
             <Text color="black.0">Your deposit</Text>

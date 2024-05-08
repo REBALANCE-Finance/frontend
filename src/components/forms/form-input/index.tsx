@@ -17,12 +17,14 @@ interface IFormInputProps extends InputProps {
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   isValid: boolean;
   errorMessage: string | undefined;
+  tokenName?: string;
 }
 
 export const FormInput: FC<IFormInputProps> = ({
   handleChange,
   isValid,
   errorMessage,
+  tokenName,
   ...rest
 }) => {
   return (
@@ -38,7 +40,7 @@ export const FormInput: FC<IFormInputProps> = ({
           borderRight="1px solid"
           borderColor="black.90"
         >
-          <Text>USDT</Text>
+          <Text>{tokenName ? tokenName : "USDT"}</Text>
         </Flex>
 
         <Input

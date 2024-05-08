@@ -29,6 +29,7 @@ export const BorrowTab = () => {
           isValid={!errors.collateral || isValid}
           value={values.collateral}
           handleChange={handleChange}
+          tokenName="USDT"
         />
 
         <HStack justify="space-between">
