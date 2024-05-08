@@ -1,7 +1,6 @@
 import { Divider, Flex, Text } from "@chakra-ui/react";
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
-import { DateSwitcher } from "../../../components/data-switcher";
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATESEarned } from "../../../components/data-switcher/utils";
 import { useEffect, useState } from "react";

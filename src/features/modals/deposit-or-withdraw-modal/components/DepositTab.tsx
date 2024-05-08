@@ -10,7 +10,6 @@ import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumb
 import { formatNumber, formatPercent } from "../../../../utils/formatNumber";
 import ApproveBtn from "./ApproveBtn";
 import DepositButton from "@/components/button/DepositButton";
-
 interface IDepositTabProps {
   pool: any;
   onClose: () => void;

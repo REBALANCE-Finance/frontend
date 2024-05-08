@@ -3,13 +3,14 @@
 import { Button, Divider, Flex, HStack, Text } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { observer } from "mobx-react-lite";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import * as yup from "yup"; // Импорт Yup для схемы валидации
 
 import { FormInput } from "../../../../components/forms/form-input";
 import { useWithdraw } from "../../../../hooks/useWithdraw";
 import { parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber } from "../../../../utils/formatNumber";
+import { getPersonalEarnings } from "@/api/pools/queries";
 
 interface IWithdrawTabProps {
   pool: any;
@@ -28,6 +29,7 @@ const withdrawSchema = yup.object({
 
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
+    const [profit, setProfit] = useState(0);
     const instantWithdraw = useWithdraw(pool.rebalancerAddress, () => onClose());
     const formik = useFormik({
       initialValues: {
@@ -51,6 +53,20 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
       formik.validateField("withdraw");
     };
     console.log('formik', balance);
+
+
+  useEffect(() => {
+    if (address) {
+      getPersonalEarnings(1, 30, address, pool.token)
+        .then(data => {
+          console.log(data.userEarned.reduce((acc, el) => (acc + el.uv), 0) || 0, 'data');
+          setProfit(data.userEarned.reduce((acc, el) => (acc + el.uv), 0) || 0);
+        }).catch((e) => {
+          console.log(e, 'error');
+        })
+    }
+  }, [address, pool.rebalancerAddress]);
+
     return (
       <form onSubmit={formik.handleSubmit}>
         <Flex direction="column" gap="24px">
@@ -86,7 +102,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
 
           <HStack justify="space-between">
             <Text color="black.0">30D profit</Text>
-            <Text textStyle="textMono16">${formatNumber(30)}</Text>
+            <Text textStyle="textMono16">${formatNumber(profit)}</Text>
           </HStack>
 
           <HStack justify="space-between">

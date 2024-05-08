@@ -2,8 +2,7 @@
 
 import { Box, Divider, Flex, HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect } from "react";
-import { generatePath, useNavigate } from "react-router-dom";
+import { generatePath } from "react-router-dom";
 import { useAccount } from "wagmi";
 
 import { CardPool } from "../../../components/card";
