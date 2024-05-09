@@ -14,7 +14,7 @@ export const MainLayout = ({
   return (
     <Flex direction="column" minH="100vh" alignItems="center" w="100%">
       <AppHeader />
-      {/* <AppWarning /> */}
+      <AppWarning />
       <Flex flex="1 0" w="100%">
         {children}
       </Flex>

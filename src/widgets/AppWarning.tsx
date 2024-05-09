@@ -33,13 +33,17 @@ export const AppWarning = () => {
       mb="20px"
     >
       <Flex
-        position="absolute"
-        bottom="0"
-        right="0"
-        top="0"
+        // position="absolute"
+        // bottom="0"
+        // right="0"
+        // top="0"
         justifyContent="center"
         alignItems="center"
+        // padding="14px 0px 14px 0px"
       >
+        <Text fontSize="medium">
+          Rebalance is under temporary maintenance. Some displayed data may be outdated. Your funds remain safe.
+        </Text>
         <CloseButton size="lg" onClick={handleClose} />
       </Flex>
     </Flex>
