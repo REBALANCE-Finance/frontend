@@ -30,7 +30,11 @@ export const PoolsHeader = () => {
           <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" />
         </Link>
       </Flex>
-
+      <HStack
+        fontSize="sm"
+        color="rgba(92, 100, 112, 1)"
+        divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}
+      />
         <Flex gap="20px" align="center">
           <HStack
             fontSize="sm"
@@ -38,10 +42,13 @@ export const PoolsHeader = () => {
             divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}
           >
            {!media && (
-            <>
+            <HStack
+            fontSize="sm"
+            color="rgba(92, 100, 112, 1)"
+            divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}>
               <Text mr={2} color="darkGray">Running since 19 Jan 2024</Text>
-              <Text color="darkGray">DAO governed</Text>
-            </>
+              <Text color="darkGray">Non-upgradable, no-admin contracts</Text>
+            </HStack>
           )}
             <Link as={NextLink}
               display={"flex"}
