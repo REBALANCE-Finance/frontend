@@ -27,10 +27,8 @@ export default function RootLayout({
           <MainLayout>
             {children}
           </MainLayout>
-
           <ModalContextController />
           <ModalController />
-
           <ToastContainer
             position="top-right"
             autoClose={false}

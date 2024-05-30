@@ -23,6 +23,7 @@ export const PoolsLending = observer(({ pools } : {
 }) => {
   const router = useRouter();
   const { address } = useAccount();
+
   const handleLink = (poolAddress: string) => {
     router.push(generatePath(ROUTE_PATHS.lendingAsset, { poolAddress }));
   };
@@ -139,7 +140,7 @@ export const PoolsLending = observer(({ pools } : {
 
   return (
     <SimpleGrid columns={{ base: 1, md: 3, xl: 4 }} spacing="24px">
-      {pools.map(elem => (
+      {pools?.map(elem => (
         <CardPool
           key={elem.token}
           rowCard={rowCard}

@@ -17,7 +17,7 @@ export const RebalancePerformance = ({ pools, chartData } :
   const location = usePathname();
   const pathName = getCurrentPath(location || '');
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  const infoMock = {
+  const info = {
     lending: [
       { label: "Total value locked", value: pools[0]?.funds.toFixed(2) },
       { label: "Total earned", value: pools[0]?.earned.toFixed(2) }
@@ -39,7 +39,7 @@ export const RebalancePerformance = ({ pools, chartData } :
   return (
     <Flex gap="24px">
       <Flex direction="column" gap="12px">
-        {performanceInfo.map(elem => (
+        {performanceInfo?.map(elem => (
           <Flex
             // as={NavLink}
             // to={`/${elem.type}`}
@@ -56,7 +56,7 @@ export const RebalancePerformance = ({ pools, chartData } :
               title={elem.title}
               subtitle={elem.subtitle}
               image={elem.image}
-              info={infoMock[elem.type]}
+              info={info[elem.type]}
               isActive={elem.type === pathName}
             />
           </Flex>
@@ -73,16 +73,6 @@ export const RebalancePerformance = ({ pools, chartData } :
 export const RebalancePerformanceMob = () => {
   const location = usePathname();
   const pathName = getCurrentPath(location || '');
-  // const infoMock = {
-  //   lending: [
-  //     { label: "Total value locked", value: pools[0]?.funds.toFixed(2) },
-  //     { label: "Total earned", value: pools[0]?.earned.toFixed(2) }
-  //   ],
-  //   borrowing: [
-  //     { label: "Total borrowed", value: "-" },
-  //     { label: "Total money saved", value: "-" }
-  //   ]
-  // };
 
   return (
     <VStack

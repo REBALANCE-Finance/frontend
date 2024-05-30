@@ -2,13 +2,13 @@
 
 import { Flex, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
-
-import { MEDIA_QUERY_MAX } from "../consts";
-import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
-import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
+import { MEDIA_QUERY_MAX } from "@/consts";
+import { RebalancePerformance, RebalancePerformanceMob } from "@/features/RebalancePerformance";
+import { PoolsHeader } from "@/pagesComponents/Pools/PoolsHeader";
+import { getAreaChartAllIntervals, getChartData, getPools } from "@/api/pools/queries";
 
-export const PoolLayout = ({ children, pools, chartData } : {
+const Layout = ({ children, pools, chartData } : {
   children: React.ReactNode,
   pools: IPoolData[],
   chartData: IAreaChartData
@@ -62,3 +62,5 @@ export const PoolLayout = ({ children, pools, chartData } : {
     </Flex>
   );
 };
+
+export default Layout;

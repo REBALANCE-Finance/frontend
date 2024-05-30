@@ -10,9 +10,9 @@ const LendingPage = async ({params} : {
   const chartData = await getAreaChartAllIntervals(token);
 
   return (
-    <PoolLayout pools={pools} chartData={chartData}>
+    <Layout pools={pools} chartData={chartData}>
       <PoolsLending pools={pools} />
-    </PoolLayout>
+    </Layout>
   );
 };
 

@@ -1,7 +1,7 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import numeral from "numeral";
 import React, { FC } from "react";
-
+import { Skeleton } from '@chakra-ui/react'
 interface RebalncePerformanceCardProps {
   image: string;
   title: string;
@@ -18,6 +18,9 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
   isActive
 }) => {
   return (
+
+
+
     <Flex
       bg={isActive ? "black.80" : undefined}
       w="631px"
