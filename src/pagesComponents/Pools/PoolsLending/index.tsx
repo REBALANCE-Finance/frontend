@@ -64,7 +64,7 @@ export const PoolsLending = observer(({ pools } : {
                       Higher APR is achieved by automatic rebalance between following pools:</span>
                       <span><br/>- AAVE v3</span>
                       <span><br/>- Compound</span>
-                      <span><br/>- dForce</span>
+                      {/* <span><br/>- dForce</span> */}
                       <span><br/>- Radiant v2</span>
                     </>
                     }>
@@ -76,9 +76,9 @@ export const PoolsLending = observer(({ pools } : {
                       <Box mr="-4px" zIndex={5}>
                         <Icon name="AAVE" width="14px" height="14px" />
                       </Box>
-                      <Box mr="-4px" zIndex={4}>
+                      {/* <Box mr="-4px" zIndex={4}>
                         <Icon name="DFORCE" width="14px" height="14px" />
-                      </Box>
+                      </Box> */}
                       {
                         item.token !== "FRAX" ? <Box mr="-4px" zIndex={3}>
                         <Icon name="RADIANT" width="14px" height="14px" />

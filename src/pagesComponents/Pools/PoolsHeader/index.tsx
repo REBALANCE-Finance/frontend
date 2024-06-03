@@ -30,19 +30,32 @@ export const PoolsHeader = () => {
           <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" />
         </Link>
       </Flex>
-
-      {!media && (
+      <HStack
+        fontSize="sm"
+        color="rgba(92, 100, 112, 1)"
+        divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}
+      />
         <Flex gap="20px" align="center">
           <HStack
             fontSize="sm"
             color="rgba(92, 100, 112, 1)"
             divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}
           >
-            <Text color="darkGray">Running since 19 Jan 2024</Text>
-
-            <Text color="darkGray">DAO governed</Text>
-
-            <Link as={Flex} alignItems="center" gap="8px" color="darkGray">
+           {!media && (
+            <HStack
+            fontSize="sm"
+            color="rgba(92, 100, 112, 1)"
+            divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}>
+              <Text mr={2} color="darkGray">Running since 19 Jan 2024</Text>
+              <Text color="darkGray">Non-upgradable, no-admin contracts</Text>
+            </HStack>
+          )}
+            <Link as={NextLink}
+              display={"flex"}
+              href="/RebalanceContractsAudit.pdf"
+              rel="noreferrer"
+              target="_blank"
+              alignItems="center" gap="8px" color="darkGray">
               Audited
               <Icon name={ICON_NAMES.link} size="sm" />
             </Link>
@@ -50,9 +63,9 @@ export const PoolsHeader = () => {
 
           {/* <Menu /> */}
 
-          <CircularProgress />
+          {!media && (<CircularProgress />)}
         </Flex>
-      )}
+
     </Flex>
   );
 };
