@@ -1,4 +1,4 @@
-export const ICON_NAMES = {
+export const ICON_NAMES: { [key: string]: string } = {
   add: "add",
   alarmWarning: "alarm-warning",
   alert: "alert",
@@ -17,6 +17,7 @@ export const ICON_NAMES = {
   checkboxMultipleBlank: "checkbox-multiple-blank",
   close: "close",
   coinBase: "coin-base",
+  copy: "copy",
   deleteBin: "delete-bin",
   descord: "descord",
   DAI: "DAI",
@@ -43,11 +44,13 @@ export const ICON_NAMES = {
   settings: "settings",
   sun: "sun",
   switch: "switch",
+  swap: "swap",
   success: "success",
   trxSuccess: "trx-success",
   trxRejected: "trx-rejected",
   telegram: "telegram",
   twitter: "twitter",
+  update: "update",
   USDCe: "USDCe",
   USDT: "USDT",
   AAVE: "AAVE",
