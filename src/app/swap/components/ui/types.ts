@@ -1,10 +1,15 @@
+// types.ts
 
-interface Options {
-  [key: string]: string;
+export interface IToken {
+  address: string;
+  symbol: string;
+  name: string;
+  decimals: number;
+  logoURI?: string;
 }
 
-interface SelectProps {
-  options: Options;
-  value: string;
-  setSelected: (value: string) => void;
+export interface SelectProps {
+  options: IToken[];
+  value: IToken | null;
+  setSelected: (token: IToken) => void;
 }

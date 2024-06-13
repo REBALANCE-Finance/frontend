@@ -1,11 +1,63 @@
 "use client";
-import { TOKEN_ICONS } from "@/consts";
-import { Box, Text } from "@chakra-ui/react";
-import { useState } from "react";
-import Select from "../ui/Select";
 
-const Receive = () => {
-  const [selected, setSelected] = useState<string>(Object.keys(TOKEN_ICONS)[1]);
+import { Box, Text } from "@chakra-ui/react";
+import Select from "../ui/Select";
+import AmountInput from "../ui/AmountInput";
+import { useEffect, useMemo } from "react";
+import { useAccount, useReadContracts } from "wagmi";
+import { useGetTokenList } from "@/api/tokens";
+import { IToken } from "@/api/tokens/types";
+import { ABI_REBALANCE } from "@/abi/rebalance";
+import { formatUnits } from "ethers";
+
+const contracts = (tokens: IToken[], address: `0x${string}` | undefined) => {
+  return tokens?.map((token) => ({
+    address: token.address as `0x${string}`,
+    abi: ABI_REBALANCE,
+    functionName: "balanceOf",
+    args: [address]
+  }));
+};
+
+const Receive = ({ selected, setSelected, amount, setAmount, price, excludeToken } : any) => {
+  const { address, chainId } = useAccount();
+  const tokenListQuery = useGetTokenList(chainId || 42161);
+
+  const contractsData = useReadContracts({
+    contracts: contracts(tokenListQuery.data || [], address),
+  });
+
+  const tokensInMyWallet = useMemo(() => {
+    if (!contractsData.data || !tokenListQuery.data) return [];
+    return tokenListQuery.data
+      .map((token, i) => ({
+        ...token,
+        value: formatUnits(contractsData.data[i].result as bigint, token.decimals),
+      }))
+      .filter((token) => Number(token.value) > 0);
+  }, [contractsData.data, tokenListQuery.data]);
+
+  const availableTokens = useMemo(() => {
+    if (!tokenListQuery.data) return [];
+    const tokensInWalletSymbols = new Set(tokensInMyWallet.map(token => token.symbol));
+    const filteredTokens = tokenListQuery.data.filter(token => !tokensInWalletSymbols.has(token.symbol));
+    if (excludeToken) {
+      return filteredTokens.filter(token => token.symbol !== excludeToken.symbol);
+    }
+    return filteredTokens;
+  }, [tokenListQuery.data, tokensInMyWallet, excludeToken]);
+
+  useEffect(() => {
+    if (availableTokens.length > 0 && (!selected || !availableTokens.find(token => token.symbol === selected?.symbol))) {
+      setSelected(availableTokens[0]);
+    }
+  }, [availableTokens]);
+
+  const selectedTokenBalance = useMemo(() => {
+    const token = tokensInMyWallet.find(token => token.symbol === selected?.symbol);
+    return token ? Number(token.value).toFixed(6) : "0.000000";
+  }, [tokensInMyWallet, selected]);
+
   return (
     <Box
       background="#09090B"
@@ -18,8 +70,12 @@ const Receive = () => {
         display="flex"
         alignItems="center"
         justifyContent="space-between">
-        <Select options={TOKEN_ICONS} value={selected} setSelected={setSelected} />
-        <Text textStyle="textMono16" color="white">0.40000</Text>
+        <Select options={availableTokens} value={selected} setSelected={setSelected} />
+        <AmountInput
+          amount={amount}
+          setAmount={setAmount}
+          maxAmount={Number(selectedTokenBalance)}
+        />
       </Box>
 
       <Box
@@ -27,9 +83,11 @@ const Receive = () => {
         display="flex"
         alignItems="center"
         justifyContent="space-between">
-        <Text textStyle="textMono16" ml="auto" color="white">$0.4</Text>
+        <Text>Balance: {selectedTokenBalance || "0"}</Text>
+        <Text textStyle="textMono16" color="white">${price}</Text>
       </Box>
     </Box>
-  )
+  );
 };
+
 export default Receive;
