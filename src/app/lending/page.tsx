@@ -42,7 +42,7 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
   }
 
   if (error) {
-    return <div>{error}</div>;
+    // return <div>{error}</div>;
   }
 
   return (
