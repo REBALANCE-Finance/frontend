@@ -44,7 +44,9 @@ export const LendingAsset = observer(({ pools, chartData, loading, error }: {
       )}
       <Flex direction="column">
         <Flex align="center" justify="space-between">
-          <Flex gap="8px">
+          {
+            !media &&
+            <Flex gap="8px">
             <Text fontWeight="500">{loading || error ? renderSkeleton("20px", "60px") : "Pool"}</Text>
             <Flex align="center" gap="5px">
               {loading || error ? (
@@ -74,6 +76,7 @@ export const LendingAsset = observer(({ pools, chartData, loading, error }: {
               )}
             </Flex>
           </Flex>
+          }
 
           <HStack divider={<Divider orientation="vertical" />} h="100%" color="black.5">
             {loading || error ? renderSkeleton("20px", "100px") : (
