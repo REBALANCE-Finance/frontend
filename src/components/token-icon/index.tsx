@@ -19,7 +19,7 @@ export const TokenIcon = ({
       borderRadius="full"
       size={size ? size : "64px"}
     >
-      <Icon name={name.includes(".") ? "USDCe" : name} size={sizeIcon ? sizeIcon : "35px"} />
+      <Icon name={name?.includes(".") ? "USDCe" : name} size={sizeIcon ? sizeIcon : "35px"} />
     </Circle>
   );
 };

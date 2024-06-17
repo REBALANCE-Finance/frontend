@@ -25,7 +25,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
       <Flex w="100%" h="fit-content" flexDirection="column">
         <Flex gap="24px" flexDirection="column">
           <Flex gap="8px" align="inherit">
-            <TokenIcon name={pool.token} size="32px" sizeIcon="22px" />
+            <TokenIcon name={pool?.token} size="32px" sizeIcon="22px" />
             <Flex
               direction="row"
               gap="8px"
@@ -34,9 +34,9 @@ export const AssetHeader: FC<any> = ({ pool }) => {
               justifyContent="space-between"
             >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={'center'}>
-                <Text>{pool.token}</Text>
+                <Text>{pool?.token}</Text>
                 <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
-                  <Icon name={ICON_NAMES.assetFunction} size="sm"/>
+                  <Icon name={ICON_NAMES?.assetFunction} size="sm"/>
                 </Link>
                 {/* <Text>Coin</Text> */}
               </Flex>
@@ -100,8 +100,8 @@ export const AssetHeader: FC<any> = ({ pool }) => {
             <Risk risk={pool.risk} w="12px" h="50px" gap="12px" />
 
             <Flex direction="column" gap="8px" color="#D2D2D2" justify="center" lineHeight="14px">
-              <Text textStyle="text12">Asset risk - {pool.risk}</Text>
-              <Text textStyle="text12">Protocols risk - {pool.risk}</Text>
+              <Text textStyle="text12">Asset risk - {pool?.risk}</Text>
+              <Text textStyle="text12">Protocols risk - {pool?.risk}</Text>
             </Flex>
           </Flex>
         )}
@@ -113,15 +113,15 @@ export const AssetHeader: FC<any> = ({ pool }) => {
     <Flex w="100%" h="fit-content" align="center" justify="space-between">
       <Flex align="center" gap="48px" flexDirection={media ? "column" : "row"}>
         <Flex gap="8px" align="inherit">
-          <TokenIcon name={pool.token} />
+          <TokenIcon name={pool?.token} />
           <Flex direction="column" gap="8px">
             <Text>
               {/* {pool.token} ({CHAIN_NAMES[chain?.id ?? 0]}) */}
-              {pool.token} (Arbitrum)
+              {pool?.token} (Arbitrum)
             </Text>
             <Flex gap='12px' align='center'>
               <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
-                <Text>{pool.token}</Text>
+                <Text>{pool?.token}</Text>
                 <Text>Coin</Text>
               </Flex>
               <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
@@ -133,12 +133,12 @@ export const AssetHeader: FC<any> = ({ pool }) => {
 
         <Flex direction="column" gap="8px">
           <Text>Average 30D APR</Text>
-          <Text variant="t22">{pool.avgApr.toFixed(2)} %</Text>
+          <Text variant="t22">{pool?.avgApr?.toFixed(2)} %</Text>
         </Flex>
 
         <Flex direction="column" gap="8px">
           <Text>Total supply</Text>
-          <Text variant="t22">$ {formatNumber(pool.funds.toFixed(2))}</Text>
+          <Text variant="t22">$ {formatNumber(pool?.funds?.toFixed(2))}</Text>
         </Flex>
       </Flex>
 
@@ -148,21 +148,21 @@ export const AssetHeader: FC<any> = ({ pool }) => {
             <Text>Risk Factor</Text>
             <Text
               p="0 10px"
-              bg={riskBgColor[pool.risk]}
+              bg={riskBgColor[pool?.risk]}
               w="fit-content"
               fontSize="xl"
               fontWeight="500"
-              color={riskColor[pool.risk]}
+              color={riskColor[pool?.risk]}
               borderRadius="4px"
             >
-              {pool.risk}/5
+              {pool?.risk}/5
             </Text>
           </Flex>
-          <Risk risk={pool.risk} w="12px" h="50px" gap="12px" />
+          <Risk risk={pool?.risk} w="12px" h="50px" gap="12px" />
 
           <Flex direction="column" gap="8px" color="#D2D2D2" justify="center">
-            <Text textStyle="text12">Asset risk - {pool.risk}</Text>
-            <Text textStyle="text12">Protocols risk - {pool.risk}</Text>
+            <Text textStyle="text12">Asset risk - {pool?.risk}</Text>
+            <Text textStyle="text12">Protocols risk - {pool?.risk}</Text>
           </Flex>
         </Flex>
       )}
