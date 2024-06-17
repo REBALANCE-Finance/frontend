@@ -41,9 +41,6 @@ export const AppWarning = () => {
         alignItems="center"
         // padding="14px 0px 14px 0px"
       >
-        <Text fontSize="medium">
-          Rebalance is under temporary maintenance. Some displayed data may be outdated. Your funds remain safe.
-        </Text>
         <CloseButton size="lg" onClick={handleClose} />
       </Flex>
     </Flex>
