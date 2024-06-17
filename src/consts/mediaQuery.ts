@@ -1,1 +1,1 @@
-export const MEDIA_QUERY_MAX = "(max-width: 960px)";
+export const MEDIA_QUERY_MAX = ["(max-width: 960px)", '(display-mode: browser)'];

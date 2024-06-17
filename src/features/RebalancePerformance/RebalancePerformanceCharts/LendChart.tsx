@@ -83,7 +83,7 @@ export const LendChart = ({ chartData } : {
       </Flex>
 
       <AreaChart
-        data={chartData.chartData[selectedDate.name]}
+        data={chartData?.chartData[selectedDate.name]}
         lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}

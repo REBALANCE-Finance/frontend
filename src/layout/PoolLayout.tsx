@@ -1,25 +1,26 @@
-'use client'
+'use client';
 
 import { Flex, useMediaQuery } from "@chakra-ui/react";
-import React from "react";
-
+import React, { useEffect } from "react";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
 
-export const PoolLayout = ({ children, pools, chartData } : {
+export const PoolLayout = ({ children, pools, chartData, loading, error } : {
   children: React.ReactNode,
   pools: IPoolData[],
-  chartData: IAreaChartData
+  chartData: IAreaChartData,
+  loading: boolean,
+  error: string | null
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
 
+  if (media === undefined) return null;
   if (media) {
     return (
       <Flex direction="column" w="100%" align="center">
-        {/* <AppBanner /> */}
-        <RebalancePerformanceMob />
+        <RebalancePerformanceMob loading={loading} />
         <Flex direction="column" gap="24px" p={{ base: "16px", xl: 0 }} w="100%">
           <PoolsHeader />
           {children}
@@ -33,7 +34,7 @@ export const PoolLayout = ({ children, pools, chartData } : {
           p={{ base: "16px", xl: 0 }}
           order={{ base: 3 }}
         >
-          {pools ? <RebalancePerformance pools={pools} chartData={chartData}/> : null}
+          <RebalancePerformance pools={pools} chartData={chartData} loading={loading} />
         </Flex>
       </Flex>
     );
@@ -41,8 +42,7 @@ export const PoolLayout = ({ children, pools, chartData } : {
 
   return (
     <Flex direction="column" w="100%" gap="44px" align="center">
-      {/* <AppBanner /> */}
-      {media ? <RebalancePerformanceMob /> : null}
+      {media ? <RebalancePerformanceMob loading={loading} /> : null}
 
       <Flex
         direction="column"
@@ -53,7 +53,7 @@ export const PoolLayout = ({ children, pools, chartData } : {
         p={{ base: "16px", xl: 0 }}
         order={{ base: 3 }}
       >
-       <RebalancePerformance pools={pools} chartData={chartData}/>
+        <RebalancePerformance pools={pools} chartData={chartData} loading={loading} />
         <Flex direction="column" gap="24px">
           <PoolsHeader />
           {children}

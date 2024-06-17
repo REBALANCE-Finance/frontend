@@ -1,18 +1,17 @@
-import { Flex, StackDivider, useMediaQuery, VStack } from "@chakra-ui/react";
+'use client';
 
+import { Box, Flex, Skeleton, StackDivider, useMediaQuery, VStack } from "@chakra-ui/react";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
-
 import { MEDIA_QUERY_MAX } from "../../consts";
-// import { ROUTES_TYPE } from "../../consts/routes-type";
 import { RebalancePerformanceCard } from "./RebalancePerformanceCard";
 import { PerformanceChart } from "./RebalancePerformanceCharts";
 import { getCurrentPath, performanceInfo } from "./utils";
 import { usePathname } from "next/navigation";
 
-export const RebalancePerformance = ({ pools, chartData } :
-{
+export const RebalancePerformance = ({ pools, chartData, loading } : {
   pools: IPoolData[],
-  chartData: IAreaChartData
+  chartData: IAreaChartData,
+  loading: boolean
 }) => {
   const location = usePathname();
   const pathName = getCurrentPath(location || '');
@@ -31,7 +30,11 @@ export const RebalancePerformance = ({ pools, chartData } :
   if (media) {
     return (
       <Flex w="100%" minH="319px">
-        <PerformanceChart activeType={pathName} chartData={chartData}/>
+        {loading ? (
+          <Skeleton height="319px" width="100%" />
+        ) : (
+          <PerformanceChart activeType={pathName} chartData={chartData}/>
+        )}
       </Flex>
     );
   }
@@ -41,8 +44,6 @@ export const RebalancePerformance = ({ pools, chartData } :
       <Flex direction="column" gap="12px">
         {performanceInfo?.map(elem => (
           <Flex
-            // as={NavLink}
-            // to={`/${elem.type}`}
             key={elem.title}
             textAlign="center"
             borderRadius="3px"
@@ -51,26 +52,34 @@ export const RebalancePerformance = ({ pools, chartData } :
             color={elem.type === pathName ? "" : "black.0"}
             borderColor={elem.type === pathName ? "greenAlpha.100" : "#1F1F1F"}
           >
-            <RebalancePerformanceCard
-              key={elem.title}
-              title={elem.title}
-              subtitle={elem.subtitle}
-              image={elem.image}
-              info={info[elem.type]}
-              isActive={elem.type === pathName}
-            />
+            {loading ? (
+              <Skeleton height="100px" width="100%" />
+            ) : (
+              <RebalancePerformanceCard
+                key={elem.title}
+                title={elem.title}
+                subtitle={elem.subtitle}
+                image={elem.image}
+                info={info[elem.type]}
+                isActive={elem.type === pathName}
+              />
+            )}
           </Flex>
         ))}
       </Flex>
 
       <Flex w="100%">
-        <PerformanceChart activeType={pathName} chartData={chartData}/>
+        {loading ? (
+          <Skeleton height="319px" width="100%" />
+        ) : (
+          <PerformanceChart activeType={pathName} chartData={chartData}/>
+        )}
       </Flex>
     </Flex>
   );
 };
 
-export const RebalancePerformanceMob = () => {
+export const RebalancePerformanceMob = ({ loading } : { loading: boolean }) => {
   const location = usePathname();
   const pathName = getCurrentPath(location || '');
 
@@ -82,35 +91,20 @@ export const RebalancePerformanceMob = () => {
       w="100%"
       order={{ base: 0, md: 1 }}
     >
-      {/* <StackDivider /> */}
-
-      {/* <Flex justify="space-between" w="100%" gap="10px" color="black.5" p="16px">
-        {infoMock[pathName as ROUTES_TYPE]?.map((elem, i) => (
-          <Flex key={i}>
-            <Text>{elem.label}:</Text>
-            <Text>{elem.value}</Text>
-          </Flex>
-        ))}
-      </Flex> */}
-
       <Flex w="100%" px="16px" gap="8px">
         {performanceInfo.map(elem => (
           <Flex
-            // as={NavLink}
-            // to={`/${elem.type}`}
             key={elem.title}
             textAlign="center"
             borderRadius="3px"
-            // border="1px solid"
             p="8px 12px"
             w="100%"
             color={elem.type !== pathName ? "" : "black"}
-            // borderColor={elem.type === pathName ? "greenAlpha.100" : "#1F1F1F"}
             justifyContent="center"
             alignItems="center"
             bg={elem.type === pathName ? "greenAlpha.100" : "#282a31"}
           >
-            {elem.title}
+            {loading ? <Skeleton height="20px" width="100%" /> : elem.title}
           </Flex>
         ))}
       </Flex>

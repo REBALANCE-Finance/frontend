@@ -1,11 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { getAreaChartAllIntervals, getPools } from "@/api/pools/queries";
 import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
 import { IPoolData } from '@/api/pools/types';
 
 const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
+  const router = useRouter();
   const [pools, setPools] = useState<IPoolData[]>([]);
   const [chartData, setChartData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -20,6 +22,8 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
         if (token) {
           const fetchedChartData = await getAreaChartAllIntervals(token);
           setChartData(fetchedChartData);
+        } else {
+          throw new Error("Invalid pool address or token not found");
         }
         setLoading(false);
       } catch (err) {
@@ -37,17 +41,9 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
     fetchData();
   }, [params.poolAddress]);
 
-  if (loading) {
-    return <div></div>;
-  }
-
-  if (error) {
-    // return <div>{error}</div>;
-  }
-
   return (
-    <PoolLayout pools={pools} chartData={chartData}>
-      <PoolsLending pools={pools} />
+    <PoolLayout pools={pools} chartData={chartData} loading={loading} error={error}>
+      <PoolsLending pools={pools} loading={loading} error={error} />
     </PoolLayout>
   );
 };
