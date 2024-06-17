@@ -9,7 +9,7 @@ const UserProfit = ({address} : {address: `0x${string}`}) => {
       .then((data) => {
         setUserProfit(data);
       });
-  }, [])
+  }, [address])
   return (
     <div>
       {formatNumber(userProfit)} $

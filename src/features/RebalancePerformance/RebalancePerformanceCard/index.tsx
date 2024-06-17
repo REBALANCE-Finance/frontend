@@ -1,26 +1,28 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
-import numeral from "numeral";
+import { Box, Flex, Text, Image } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { Skeleton } from '@chakra-ui/react'
+import Img from "./Images";
+import protokol from "/public/assets/image/Protocols.svg";
 interface RebalncePerformanceCardProps {
   image: string;
   title: string;
   subtitle: string;
-  info: Record<string, string>[];
+  info: string;
   isActive: boolean;
+  logo: string;
+  type: string;
+  logos: { src: string; w: number; h: number }[]
 }
 
 export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
   image,
-  title,
-  subtitle,
   info,
-  isActive
+  isActive,
+  logo,
+  type,
+  logos
 }) => {
   return (
-
-
-
     <Flex
       bg={isActive ? "black.80" : undefined}
       w="631px"
@@ -28,52 +30,82 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
       position="relative"
       _before={
         isActive
-          ? {
-              content: `""`,
-              borderLeftRadius: "4px",
-              w: "4px",
-              h: "100%",
-              position: "absolute",
-              bg: "greenAlpha.100",
-              zIndex: 5
-            }
-          : {}
+        ? {
+            content: `""`,
+            borderLeftRadius: "4px",
+            w: "4px",
+            h: "100%",
+            position: "absolute",
+            bg: "greenAlpha.100",
+            zIndex: 5
+          }
+        : {}
       }
     >
-      <Image src={image} filter={`grayscale(${isActive ? 0 : 1})`} borderLeftRadius="4px" />
-
-      <Flex direction="column" p="24px" gap="8px" w="100%">
+      {
+        type !== "lending" ?
+        <Flex
+        position="absolute"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        margin="auto"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        background="000"
+        backdropFilter="blur(4px)"
+        zIndex="9"
+        fontSize="large"
+        fontWeight="500"
+      >
+        Coming Soon
+      </Flex> : null
+      }
+      <Box borderLeftRadius="4px"><Image boxSize="200px" objectFit="fill" src={image}/></Box>
+      <Flex direction="column" p="16px" gap="8px" flex="1">
         <Flex justify="space-between" alignItems="center">
-          <Text fontSize="lg" fontWeight="500">
-            {title}
-          </Text>
-
-          <Box
-            borderRadius="2px"
-            border="2px solid"
-            borderColor={`${isActive ? "greenAlpha.100" : "black.40"}`}
-            transform="rotate(135deg)"
-            boxShadow={`${isActive ? "inset 2px 2px 10px #0B4121" : undefined} `}
-            w="18px"
-            h="18px"
-          ></Box>
+          <Image src={logo} w="116px" h="29px" />
+          <Text
+            fontWeight="300"
+            color="#DEDEDE"
+            fontSize="16px"
+            textStyle="textMono16"
+            display="flex"
+            alignItems="center">TVL: ${info ? info : <Skeleton ml={2} height="20px" width="60px" />}</Text>
         </Flex>
-
-        <Text fontSize="sm" fontWeight="500" textAlign="left">
-          {subtitle}
-        </Text>
-
-        <Flex gap="12px">
-          {info.map(el => (
-            <Flex key={el.label} alignItems="center" fontSize="xs" color="black.20" gap="7px">
-              <Text fontWeight="400" color="darkGray">
-                {el.label}:
-              </Text>
-              <Text fontWeight="500" color="darkGray">
-                {el.value == "-" ? "-" : `$ ${numeral(el.value).format("0,0")}`}
-              </Text>
-            </Flex>
-          ))}
+        <Box mt="12px" textAlign="start" display="flex" flexDir="column" fontSize="13px" color="#DEDEDE">
+          {
+            type === "lending" ?
+            <>
+              <Text>Non-upgradable, trustless</Text>
+              <Text>Chainlink® decentralised computation</Text>
+              <Text>LP insurance</Text>
+              <Text>Lowest risk</Text>
+            </>
+            :
+            <>
+              <Text>DAO governed</Text>
+              <Text>Higher yield</Text>
+              <Text>+10% RBLN extra APY</Text>
+              <Text>Turtle Club® Incentives</Text>
+            </>
+          }
+        </Box>
+        <Flex alignItems="center" mt="auto">
+          {
+            type !== "lending" ?
+            <Box display="flex" alignItems="center">
+              <Text color="#DEDEDE" fontSize="12px">Extra-points</Text>
+              <Image ml="8px" src={protokol.src} w="24px" h="24px" />
+            </Box> : null
+          }
+          <Box ml="auto" display="flex" gap="12px" alignItems="center">
+            {logos.map((logo, index) => (
+              <Img key={index} src={logo.src} width={logo.w} height={logo.h} />
+            ))}
+          </Box>
         </Flex>
       </Flex>
     </Flex>

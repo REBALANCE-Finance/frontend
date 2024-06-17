@@ -2,6 +2,7 @@ import { HTMLAttributes } from "react";
 
 export enum EnumSizes {
   sm = "16px",
+  m = "20px",
   md = "24px"
 }
 

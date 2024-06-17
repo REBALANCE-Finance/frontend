@@ -1,9 +1,8 @@
 'use client';
 
 import { Flex, useMediaQuery } from "@chakra-ui/react";
-import React, { useEffect } from "react";
 import { MEDIA_QUERY_MAX } from "../consts";
-import { RebalancePerformance, RebalancePerformanceMob } from "../features/RebalancePerformance";
+import { RebalancePerformance } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
 
@@ -15,37 +14,11 @@ export const PoolLayout = ({ children, pools, chartData, loading, error } : {
   error: string | null
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-
   if (media === undefined) return null;
-  if (media) {
-    return (
-      <Flex direction="column" w="100%" align="center">
-        <RebalancePerformanceMob loading={loading} />
-        <Flex direction="column" gap="24px" p={{ base: "16px", xl: 0 }} w="100%">
-          <PoolsHeader />
-          {children}
-        </Flex>
-        <Flex
-          direction="column"
-          justify="center"
-          gap="44px"
-          maxW="1300px"
-          w="100%"
-          p={{ base: "16px", xl: 0 }}
-          order={{ base: 3 }}
-        >
-          <RebalancePerformance pools={pools} chartData={chartData} loading={loading} />
-        </Flex>
-      </Flex>
-    );
-  }
-
   return (
-    <Flex direction="column" w="100%" gap="44px" align="center">
-      {media ? <RebalancePerformanceMob loading={loading} /> : null}
-
+    <Flex direction="column"  w="100%" gap="44px" align="center">
       <Flex
-        direction="column"
+        direction={media ? "column-reverse" : "column"}
         justify="center"
         gap="44px"
         maxW="1300px"

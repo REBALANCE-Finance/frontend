@@ -1,7 +1,7 @@
 'use client'
 
 import { Flex, Link, Image, useMediaQuery } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React from "react";
 import NextLink from "next/link";
 import { useAccount } from "wagmi";
 
@@ -16,6 +16,7 @@ import { AppNotification } from "./AppNotification";
 export const AppHeader = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { isConnected } = useAccount();
+
   return (
     <Flex
       alignItems="center"

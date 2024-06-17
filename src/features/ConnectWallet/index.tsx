@@ -7,6 +7,7 @@ import {
   DrawerContent,
   DrawerHeader,
   Flex,
+  IconButton,
   Link,
   Modal,
   ModalBody,
@@ -27,6 +28,7 @@ import { MEDIA_QUERY_MAX } from "../../consts";
 import { ConnectorNames } from "../../consts/connectors";
 import { ICON_NAMES } from "../../consts/iconNames";
 import { useAuth } from "../../hooks/useAuth";
+import { useDisconnect } from "wagmi";
 
 const CONNECT_METHODS = [
   {
@@ -53,15 +55,12 @@ export const ConnectWallet = ({ title }: { title?: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { login } = useAuth();
-
   const activateProvider = useCallback(async (connectorId: ConnectorNames) => {
     try {
       if (connectorId === ConnectorNames.WalletConnect) {
         onClose();
       }
-
       await login(connectorId);
-
       // if (account && !chain.unsupported) {
       //   localStorage.setItem(STORAGE_WALLET_CONNECTION_KEY, connectorId);
       //   onConnect();

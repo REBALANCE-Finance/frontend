@@ -1,4 +1,4 @@
-import { Flex, HStack, Link, StackDivider, Text, useMediaQuery } from "@chakra-ui/react";
+import { Divider, Flex, HStack, Link, StackDivider, Text, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 
 import { CircularProgress } from "../../../components/circular-progress";
@@ -27,7 +27,8 @@ export const PoolsHeader = () => {
           isExternal
         >
           Bridge to Arbitrum
-          <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" />
+          {/* <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" /> */}
+          {!media && <Icon name={ICON_NAMES.link} size="sm" />}
         </Link>
       </Flex>
       <HStack
@@ -43,13 +44,14 @@ export const PoolsHeader = () => {
           >
            {!media && (
             <HStack
-            fontSize="sm"
-            color="rgba(92, 100, 112, 1)"
-            divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}>
+              fontSize="sm"
+              color="rgba(92, 100, 112, 1)"
+              divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}>
               <Text mr={2} color="darkGray">Running since 19 Jan 2024</Text>
               <Text color="darkGray">Non-upgradable, no-admin contracts</Text>
             </HStack>
           )}
+            {media && <Divider orientation="vertical" />}
             <Link as={NextLink}
               display={"flex"}
               href="/RebalanceContractsAudit.pdf"
@@ -57,7 +59,7 @@ export const PoolsHeader = () => {
               target="_blank"
               alignItems="center" gap="8px" color="darkGray">
               Audited
-              <Icon name={ICON_NAMES.link} size="sm" />
+              {!media && <Icon name={ICON_NAMES.link} size="sm" />}
             </Link>
           </HStack>
 

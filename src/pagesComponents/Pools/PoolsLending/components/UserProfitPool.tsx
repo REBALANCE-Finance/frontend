@@ -9,7 +9,7 @@ const UserProfitPool = ({address, token} : {address: `0x${string}`, token: strin
       .then((data) => {
         setUserProfit(data);
       });
-  }, [])
+  }, [address])
 
   return (
     <div>

@@ -25,7 +25,7 @@ export const Strategies = () => {
         </Flex>
       </MenuButton>
 
-      <MenuList as={Flex} direction="column" bg="black.60" border="none" p="24px 12px" gap="24px">
+      <MenuList zIndex={1000} as={Flex} direction="column" bg="black.60" border="none" p="24px 12px" gap="24px">
         <Text fontSize="sm">Select the Market</Text>
 
         {chains.map(({ id, name }) => {
