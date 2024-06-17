@@ -4,4 +4,5 @@ export interface IToken {
   name: string;
   decimals: number;
   logoURI?: string;
+  chainId: number;
 }

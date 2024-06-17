@@ -15,7 +15,7 @@ export const useGetTokenList = (chainId: number | undefined) => {
       return (
         data.tokens?.filter(
           (token: IToken) =>
-            token.chainId === chainId
+            token?.chainId === chainId
         ) ?? null
       );
     }
