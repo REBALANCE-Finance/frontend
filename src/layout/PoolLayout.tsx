@@ -18,7 +18,7 @@ export const PoolLayout = ({ children, pools, chartData, loading, error } : {
   return (
     <Flex direction="column"  w="100%" gap="44px" align="center">
       <Flex
-        direction={media ? "column-reverse" : "column"}
+        direction="column"
         justify="center"
         gap="44px"
         maxW="1300px"
