@@ -19,7 +19,7 @@ const contracts = (tokens: IToken[], address: `0x${string}` | undefined) => {
   }));
 };
 
-const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken } : any) => {
+const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken }: any) => {
   const { address, chainId } = useAccount();
   const tokenListQuery = useGetTokenList(chainId || 42161);
 
@@ -32,7 +32,9 @@ const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken } :
     return tokenListQuery.data
       .map((token, i) => ({
         ...token,
-        value: formatUnits(contractsData.data[i].result as bigint, token.decimals),
+        value: contractsData.data[i]?.result
+          ? formatUnits(contractsData.data[i].result as bigint, token.decimals)
+          : "0",
       }))
       .filter((token) => Number(token.value) > 0);
   }, [contractsData.data, tokenListQuery.data]);

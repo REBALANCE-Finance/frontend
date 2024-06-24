@@ -13,7 +13,7 @@ import { IToken } from "@/api/tokens/types";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
 import { usePublicClient } from "wagmi";
 import AggregatorV3InterfaceABI from "@/abi/AggregatorV3Interface.json";
-import { TokenAddresses, getTokenAddresses } from "@/utils/getTokenAddres";
+import { useGetTokenList } from "@/api/tokens";
 
 const Swap = () => {
   const { address, chainId } = useAccount();
@@ -22,18 +22,17 @@ const Swap = () => {
   const [receiveToken, setReceiveToken] = useState<IToken | null>(null);
   const [payAmount, setPayAmount] = useState("0.00");
   const [receiveAmount, setReceiveAmount] = useState("0.00");
-  const [tokenAddresses, setTokenAddresses] = useState<TokenAddresses>({});
 
   const provider = new BrowserProvider(publicClient as any);
 
-  useEffect(() => {
-    const fetchTokenAddresses = async () => {
-      const addresses = await getTokenAddresses();
-      setTokenAddresses(addresses);
-    };
+  const { data: tokenList } = useGetTokenList(chainId);
 
-    fetchTokenAddresses();
-  }, []);
+  useEffect(() => {
+    if (tokenList && tokenList.length > 1) {
+      setPayToken(tokenList[0]);
+      setReceiveToken(tokenList[1]);
+    }
+  }, [tokenList]);
 
   const getTokenPrice = async (address: string) => {
     try {
@@ -53,25 +52,19 @@ const Swap = () => {
 
   useEffect(() => {
     if (payToken) {
-      const payTokenAddress = tokenAddresses[payToken.symbol];
-      if (payTokenAddress) {
-        getTokenPrice(payTokenAddress).then(price => {
-          setPayTokenPrice(price);
-        });
-      }
+      getTokenPrice(payToken.address).then(price => {
+        setPayTokenPrice(price);
+      });
     }
-  }, [payToken, tokenAddresses]);
+  }, [payToken]);
 
   useEffect(() => {
     if (receiveToken) {
-      const receiveTokenAddress = tokenAddresses[receiveToken.symbol];
-      if (receiveTokenAddress) {
-        getTokenPrice(receiveTokenAddress).then(price => {
-          setReceiveTokenPrice(price);
-        });
-      }
+      getTokenPrice(receiveToken.address).then(price => {
+        setReceiveTokenPrice(price);
+      });
     }
-  }, [receiveToken, tokenAddresses]);
+  }, [receiveToken]);
 
   const updateReceiveAmount = (amount: string) => {
     if (payTokenPrice && receiveTokenPrice) {
@@ -131,7 +124,6 @@ const Swap = () => {
           amount={payAmount}
           setAmount={setPayAmount}
           price={payTokenPrice}
-          tokenAddresses={tokenAddresses}
           excludeToken={receiveToken}
         />
         <Receive
@@ -140,7 +132,6 @@ const Swap = () => {
           amount={receiveAmount}
           setAmount={setReceiveAmount}
           price={receiveTokenPrice}
-          tokenAddresses={tokenAddresses}
           excludeToken={payToken}
         />
       </Box>

@@ -1,26 +1,19 @@
-// utils/getTokenAddresses.ts
-import axios from 'axios';
+import axios from "axios";
+import { IToken } from "@/api/tokens/types";
 
 export interface TokenAddresses {
-  [symbol: string]: string;
+  [key: string]: IToken;
 }
 
 export const getTokenAddresses = async (): Promise<TokenAddresses> => {
-  const url = "https://apiv5.paraswap.io/v2/tokens/arbitrum";
-  try {
-    const response = await axios.get(url);
-    const data = response.data;
-    const tokenAddresses: TokenAddresses = {};
+  const response = await axios.get("https://api.example.com/tokens");
+  const data = response.data.tokens;
 
-    data.tokens.forEach((token: any) => {
-      const symbol = token.symbol;
-      const address = token.address;
-      tokenAddresses[symbol] = address;
-    });
+  const tokenAddresses: TokenAddresses = {};
 
-    return tokenAddresses;
-  } catch (error) {
-    console.error(`Error fetching token addresses: ${error}`);
-    return {};
-  }
+  data.forEach((token: IToken) => {
+    tokenAddresses[token.symbol] = token;
+  });
+
+  return tokenAddresses;
 };
