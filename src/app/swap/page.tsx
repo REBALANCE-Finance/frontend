@@ -10,20 +10,15 @@ import { useAccount } from "wagmi";
 import { ConnectWallet } from "@/features/ConnectWallet";
 import { useState, useEffect } from "react";
 import { IToken } from "@/api/tokens/types";
-import { BrowserProvider, Contract, formatUnits } from "ethers";
-import { usePublicClient } from "wagmi";
-import AggregatorV3InterfaceABI from "@/abi/AggregatorV3Interface.json";
 import { useGetTokenList } from "@/api/tokens";
+import { useGetPrice } from "@/api/swap";
 
 const Swap = () => {
   const { address, chainId } = useAccount();
-  const publicClient = usePublicClient();
   const [payToken, setPayToken] = useState<IToken | null>(null);
   const [receiveToken, setReceiveToken] = useState<IToken | null>(null);
   const [payAmount, setPayAmount] = useState("0.00");
   const [receiveAmount, setReceiveAmount] = useState("0.00");
-
-  const provider = new BrowserProvider(publicClient as any);
 
   const { data: tokenList } = useGetTokenList(chainId);
 
@@ -34,37 +29,11 @@ const Swap = () => {
     }
   }, [tokenList]);
 
-  const getTokenPrice = async (address: string) => {
-    try {
-      const priceFeed = new Contract(address, AggregatorV3InterfaceABI, provider);
-      const roundData = await priceFeed.latestRoundData();
-      const decimals = await priceFeed.decimals();
-      const price = parseFloat(formatUnits(roundData.answer, decimals));
-      return price;
-    } catch (error) {
-      console.error(`Error fetching price for ${address}:`, error);
-      return null;
-    }
-  };
+  const { data: payTokenPriceData } = useGetPrice(payToken?.address, 1, 1);
+  const { data: receiveTokenPriceData } = useGetPrice(receiveToken?.address, 1, 1);
 
-  const [payTokenPrice, setPayTokenPrice] = useState<number | null>(null);
-  const [receiveTokenPrice, setReceiveTokenPrice] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (payToken) {
-      getTokenPrice(payToken.address).then(price => {
-        setPayTokenPrice(price);
-      });
-    }
-  }, [payToken]);
-
-  useEffect(() => {
-    if (receiveToken) {
-      getTokenPrice(receiveToken.address).then(price => {
-        setReceiveTokenPrice(price);
-      });
-    }
-  }, [receiveToken]);
+  const payTokenPrice = payTokenPriceData?.prices[0][1] || null;
+  const receiveTokenPrice = receiveTokenPriceData?.prices[0][1] || null;
 
   const updateReceiveAmount = (amount: string) => {
     if (payTokenPrice && receiveTokenPrice) {

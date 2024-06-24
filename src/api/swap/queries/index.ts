@@ -1,12 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { getPrices, IPrices } from "../swap-api";
+import axios from "axios";
 
-export const useGetPrice = (address: string | undefined, from: number, to: number) => {
-  return useQuery<IPrices>({
-    queryKey: ["prices", address, from, to],
-    queryFn: () => getPrices(address, from, to),
-    enabled: !!address,
-    staleTime: 60000,
-    refetchInterval: 60000,
-  });
+export const getPrices = async (address, from, to) => {
+  const srcToken = address; // Исходный токен
+  const destToken = address; // Целевой токен
+  const amount = from.toString(); // Сумма исходного токена
+  const url = `https://apiv5.paraswap.io/prices/?srcToken=${srcToken}&destToken=${destToken}&amount=${amount}&side=SELL&network=${to}`;
+
+  try {
+    const { data } = await axios.get(url);
+    return data;
+  } catch (error) {
+    console.error('Error fetching swap rates:', error);
+    throw error;
+  }
 };

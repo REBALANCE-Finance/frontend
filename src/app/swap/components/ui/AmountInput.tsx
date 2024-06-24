@@ -22,6 +22,7 @@ const AmountInput: React.FC<AmountInputProps> = ({ amount, setAmount, maxAmount 
         value={amount}
         onChange={handleAmountChange}
         textAlign="right"
+        padding="0"
       />
     </InputGroup>
   );
