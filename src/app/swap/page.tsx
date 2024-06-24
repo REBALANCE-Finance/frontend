@@ -8,10 +8,11 @@ import { ICON_NAMES } from "@/consts";
 import Icon from "@/components/icon";
 import { useAccount } from "wagmi";
 import { ConnectWallet } from "@/features/ConnectWallet";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { IToken } from "@/api/tokens/types";
 import { useGetTokenList } from "@/api/tokens";
 import { useGetPrice } from "@/api/swap";
+import { formatBigNumber } from "@/utils/formatBigNumber";
 
 const MIN_AMOUNT = 0.01;
 
@@ -27,13 +28,13 @@ const Swap = () => {
 
   useEffect(() => {
     if (tokenList && tokenList.length > 1) {
-      setPayToken(tokenList[0]);
-      setReceiveToken(tokenList[1]);
+      setPayToken(tokenList.find(token => token.symbol === "ARB") || tokenList[0]);
+      setReceiveToken(tokenList.find(token => token.symbol === "USDT") || tokenList[1]);
     }
   }, [tokenList]);
 
-  const payTokenDecimals = payToken?.decimals ?? 18; // Убедитесь, что это правильное количество десятичных знаков
-  const receiveTokenDecimals = receiveToken?.decimals ?? 18; // Убедитесь, что это правильное количество десятичных знаков
+  const payTokenDecimals = payToken?.decimals ?? 18;
+  const receiveTokenDecimals = receiveToken?.decimals ?? 18;
 
   const { data: payTokenPriceData, error: payTokenPriceError } = useGetPrice(
     payToken?.address,
@@ -54,6 +55,19 @@ const Swap = () => {
   );
 
   useEffect(() => {
+    if (payTokenPriceData) {
+      setReceiveAmount(
+        formatBigNumber(
+          // @ts-ignore
+          BigInt(payTokenPriceData.priceRoute.destAmount),
+          // @ts-ignore
+          payTokenPriceData.priceRoute.destDecimals
+        )
+      );
+    }
+  }, [payTokenPriceData]);
+
+  useEffect(() => {
     if (payTokenPriceError || receiveTokenPriceError) {
       setError("No routes found with enough liquidity.");
     } else {
@@ -61,36 +75,61 @@ const Swap = () => {
     }
   }, [payTokenPriceError, receiveTokenPriceError]);
 
-  const payTokenPrice = Number(payAmount) > 0 ? payTokenPriceData?.prices[0][1] || 0 : 0;
-  const receiveTokenPrice = Number(receiveAmount) > 0 ? receiveTokenPriceData?.prices[0][1] || 0 : 0;
+  const payTokenPrice =
+    Number(payAmount) > 0 && payTokenPriceData
+      ? // @ts-ignore
+        Number(payTokenPriceData?.priceRoute?.srcUSD).toFixed(6) || 0
+      : 0;
+  const receiveTokenPrice =
+    Number(receiveAmount) > 0 && receiveTokenPriceData
+      ? // @ts-ignore
+        Number(receiveTokenPriceData?.priceRoute?.destUSD).toFixed(6) || 0
+      : 0;
 
-  const updateReceiveAmount = (amount: string) => {
-    if (payTokenPrice && receiveTokenPrice) {
-      const newReceiveAmount = (Number(amount) * payTokenPrice / receiveTokenPrice).toFixed(6);
-      setReceiveAmount(newReceiveAmount);
-    } else {
-      setReceiveAmount("0.00");
-    }
-  };
+  const updateReceiveAmount = useCallback(
+    (amount: string) => {
+      if (payTokenPrice && receiveTokenPrice) {
+        const newReceiveAmount = (
+          (Number(amount) * Number(payTokenPrice)) /
+          Number(receiveTokenPrice)
+        ).toFixed(6);
+        setReceiveAmount(newReceiveAmount);
+      } else {
+        setReceiveAmount("0.00");
+      }
+    },
+    [payTokenPrice, receiveTokenPrice]
+  );
 
-  const updatePayAmount = (amount: string) => {
-    if (payTokenPrice && receiveTokenPrice) {
-      const newPayAmount = (Number(amount) * receiveTokenPrice / payTokenPrice).toFixed(6);
-      setPayAmount(newPayAmount);
-    } else {
-      setPayAmount("0.00");
-    }
-  };
+  const updatePayAmount = useCallback(
+    (amount: string) => {
+      if (payTokenPrice && receiveTokenPrice) {
+        const newPayAmount = (
+          (Number(amount) * Number(receiveTokenPrice)) /
+          Number(receiveTokenPrice)
+        ).toFixed(6);
+        setPayAmount(newPayAmount);
+      } else {
+        setPayAmount("0.00");
+      }
+    },
+    [payTokenPrice, receiveTokenPrice]
+  );
 
-  useEffect(() => {
-    updateReceiveAmount(payAmount);
-  }, [payAmount, payTokenPrice, receiveTokenPrice]);
+  // useEffect(() => {
+  //   updateReceiveAmount(payAmount);
+  // }, [payAmount, payTokenPrice, receiveTokenPrice]);
 
-  useEffect(() => {
-    updatePayAmount(receiveAmount);
-  }, [receiveAmount, payTokenPrice, receiveTokenPrice]);
+  // useEffect(() => {
+  //   updatePayAmount(receiveAmount);
+  // }, [receiveAmount, payTokenPrice, receiveTokenPrice]);
 
-  if (!address || !chainId) return <Box display="flex" m="auto"><ConnectWallet /></Box>;
+  if (!address || !chainId)
+    return (
+      <Box display="flex" m="auto">
+        <ConnectWallet />
+      </Box>
+    );
 
   const handleSwapTokens = () => {
     const tempToken = payToken;
@@ -102,12 +141,7 @@ const Swap = () => {
   };
 
   return (
-    <Box
-      borderRadius="4px"
-      w="540px"
-      m="60px auto auto"
-      background="#151619"
-      p="24px 20px">
+    <Box borderRadius="4px" w="540px" m="60px auto auto" background="#151619" p="24px 20px">
       <Header />
       <Box position="relative">
         <Box
@@ -116,8 +150,11 @@ const Swap = () => {
           borderRadius="8px"
           padding="4px"
           position="absolute"
-          top="50%" left="50%" transform="translate(-50%, -50%)"
-          onClick={handleSwapTokens}>
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          onClick={handleSwapTokens}
+        >
           <Icon name={ICON_NAMES.swap} />
         </Box>
         <Pay
