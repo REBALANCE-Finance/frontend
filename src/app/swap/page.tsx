@@ -1,5 +1,5 @@
 "use client";
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import Header from "./components/Header/Header";
 import Pay from "./components/Pay/Pay";
 import Receive from "./components/Receive/Receive";
@@ -13,12 +13,15 @@ import { IToken } from "@/api/tokens/types";
 import { useGetTokenList } from "@/api/tokens";
 import { useGetPrice } from "@/api/swap";
 
+const MIN_AMOUNT = 0.01;
+
 const Swap = () => {
   const { address, chainId } = useAccount();
   const [payToken, setPayToken] = useState<IToken | null>(null);
   const [receiveToken, setReceiveToken] = useState<IToken | null>(null);
   const [payAmount, setPayAmount] = useState("0.00");
   const [receiveAmount, setReceiveAmount] = useState("0.00");
+  const [error, setError] = useState<string | null>(null);
 
   const { data: tokenList } = useGetTokenList(chainId);
 
@@ -29,16 +32,44 @@ const Swap = () => {
     }
   }, [tokenList]);
 
-  const { data: payTokenPriceData } = useGetPrice(payToken?.address, 1, 1);
-  const { data: receiveTokenPriceData } = useGetPrice(receiveToken?.address, 1, 1);
+  const payTokenDecimals = payToken?.decimals ?? 18; // Убедитесь, что это правильное количество десятичных знаков
+  const receiveTokenDecimals = receiveToken?.decimals ?? 18; // Убедитесь, что это правильное количество десятичных знаков
 
-  const payTokenPrice = payTokenPriceData?.prices[0][1] || null;
-  const receiveTokenPrice = receiveTokenPriceData?.prices[0][1] || null;
+  const { data: payTokenPriceData, error: payTokenPriceError } = useGetPrice(
+    payToken?.address,
+    receiveToken?.address,
+    Number(payAmount),
+    chainId ?? 1,
+    payTokenDecimals,
+    receiveTokenDecimals
+  );
+
+  const { data: receiveTokenPriceData, error: receiveTokenPriceError } = useGetPrice(
+    receiveToken?.address,
+    payToken?.address,
+    Number(receiveAmount),
+    chainId ?? 1,
+    receiveTokenDecimals,
+    payTokenDecimals
+  );
+
+  useEffect(() => {
+    if (payTokenPriceError || receiveTokenPriceError) {
+      setError("No routes found with enough liquidity.");
+    } else {
+      setError(null);
+    }
+  }, [payTokenPriceError, receiveTokenPriceError]);
+
+  const payTokenPrice = Number(payAmount) > 0 ? payTokenPriceData?.prices[0][1] || 0 : 0;
+  const receiveTokenPrice = Number(receiveAmount) > 0 ? receiveTokenPriceData?.prices[0][1] || 0 : 0;
 
   const updateReceiveAmount = (amount: string) => {
     if (payTokenPrice && receiveTokenPrice) {
       const newReceiveAmount = (Number(amount) * payTokenPrice / receiveTokenPrice).toFixed(6);
       setReceiveAmount(newReceiveAmount);
+    } else {
+      setReceiveAmount("0.00");
     }
   };
 
@@ -46,6 +77,8 @@ const Swap = () => {
     if (payTokenPrice && receiveTokenPrice) {
       const newPayAmount = (Number(amount) * receiveTokenPrice / payTokenPrice).toFixed(6);
       setPayAmount(newPayAmount);
+    } else {
+      setPayAmount("0.00");
     }
   };
 
@@ -104,6 +137,11 @@ const Swap = () => {
           excludeToken={payToken}
         />
       </Box>
+      {error && (
+        <Text color="red.500" mt={4} textAlign="center">
+          {error}
+        </Text>
+      )}
       <Fee />
     </Box>
   );

@@ -1,10 +1,8 @@
 import axios from "axios";
 
-export const getPrices = async (address, from, to) => {
-  const srcToken = address; // Исходный токен
-  const destToken = address; // Целевой токен
-  const amount = from.toString(); // Сумма исходного токена
-  const url = `https://apiv5.paraswap.io/prices/?srcToken=${srcToken}&destToken=${destToken}&amount=${amount}&side=SELL&network=${to}`;
+export const getPrices = async (srcToken: string, destToken: string, amount: number, network: number, srcDecimals: number, destDecimals: number) => {
+  const amountInSrcTokenUnits = (amount * Math.pow(10, srcDecimals)).toFixed(0); // Преобразование суммы в минимальные единицы токена
+  const url = `https://apiv5.paraswap.io/prices/?srcToken=${srcToken}&destToken=${destToken}&amount=${amountInSrcTokenUnits}&side=SELL&network=${network}&srcDecimals=${srcDecimals}&destDecimals=${destDecimals}`;
 
   try {
     const { data } = await axios.get(url);

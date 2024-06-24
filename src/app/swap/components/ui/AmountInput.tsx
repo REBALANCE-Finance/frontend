@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, InputGroup } from "@chakra-ui/react";
+import { Box, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 
 interface AmountInputProps {
   amount: string;
@@ -10,10 +10,12 @@ interface AmountInputProps {
 const AmountInput: React.FC<AmountInputProps> = ({ amount, setAmount, maxAmount }) => {
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (!isNaN(Number(value)) && Number(value) <= maxAmount) {
+    if (!isNaN(Number(value))) {
       setAmount(value);
     }
   };
+
+  const isExceedingBalance = Number(amount) > maxAmount;
 
   return (
     <InputGroup maxW="220px" border="none">
@@ -22,8 +24,14 @@ const AmountInput: React.FC<AmountInputProps> = ({ amount, setAmount, maxAmount 
         value={amount}
         onChange={handleAmountChange}
         textAlign="right"
-        padding="0"
+        padding="2px"
+        borderColor={isExceedingBalance ? "red.500" : undefined}
       />
+      {/* {isExceedingBalance && (
+        <InputRightElement>
+          <Box color="red.500" fontSize="sm">Exceeds Balance</Box>
+        </InputRightElement>
+      )} */}
     </InputGroup>
   );
 };

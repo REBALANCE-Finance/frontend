@@ -1,20 +1,13 @@
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { IPrices } from "./types";
+import { getPrices } from "./queries";
 
-export interface IPrices {
-  prices: number[][];
-  market_caps: number[][];
-  total_volumes: number[][];
-}
-
-const getPrices = async (address: string | undefined, from: number, to: number): Promise<IPrices> => {
-  if (!address) throw new Error("Address is required");
-  const response = await axios.get(`https://apiv5.paraswap.io/prices/`, {
-    params: {
-      from: address,
-      to: address, // заменить на адрес токена, с которым вы хотите обменять
-      amount: from, // количество, которое вы хотите обменять
-      side: 'SELL'
-    }
+export const useGetPrice = (srcToken: string | undefined, destToken: string | undefined, amount: number, network: number, srcDecimals: number, destDecimals: number) => {
+  return useQuery<IPrices>({
+    queryKey: ["prices", srcToken, destToken, amount, network, srcDecimals, destDecimals],
+    queryFn: () => getPrices(srcToken!, destToken!, amount, network, srcDecimals, destDecimals),
+    enabled: !!srcToken && !!destToken && amount > 0,
+    staleTime: 60000,
+    refetchInterval: 60000,
   });
-  return response.data;
 };
