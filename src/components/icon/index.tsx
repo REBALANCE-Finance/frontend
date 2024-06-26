@@ -4,11 +4,17 @@ import { ICON_NAMES } from "../../consts";
 import { EnumSizes, Sizes, TIconProps } from "./types";
 
 const Icon: FC<TIconProps> = ({ name, size = "md", width, height, ...props }) => {
-  const currentSize = EnumSizes[size as Sizes] ?? size;
+  // const currentSize = EnumSizes[size as Sizes] ?? size;
 
   if (Object.values(ICON_NAMES).includes(name)) {
     return (
-      <img src={`/assets/icons/${name}-icon.svg`} alt={name} width={width} height={height} {...props} style={currentSize ? {width: currentSize, height: currentSize} : {}}/>
+      <img
+        src={`/assets/icons/${name}-icon.svg`}
+        alt={name}
+        width={width}
+        height={height}
+        {...props}
+      />
     );
   }
 

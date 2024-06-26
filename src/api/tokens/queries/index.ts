@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getTokenList } from "../token-api";
 import { IToken } from "../types";
 
-export const useGetTokenList = (chainId: number | undefined) => {
+export const useGetTokenList = (chainId: number | undefined, needRefetch?: boolean) => {
   return useQuery({
-    queryKey: ["token-list"],
+    queryKey: ["token-list", needRefetch],
     queryFn: getTokenList,
     enabled: !!chainId,
     staleTime: Infinity,
@@ -12,12 +12,7 @@ export const useGetTokenList = (chainId: number | undefined) => {
     //   console.log(err);
     // },
     select: (data): IToken[] => {
-      return (
-        data.tokens?.filter(
-          (token: IToken) =>
-            token?.chainId === chainId
-        ) ?? null
-      );
+      return data.tokens?.filter((token: IToken) => token?.chainId === chainId) ?? null;
     }
   });
 };

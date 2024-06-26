@@ -19,9 +19,9 @@ const contracts = (tokens: IToken[], address: `0x${string}` | undefined) => {
   }));
 };
 
-const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken }: any) => {
+const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken, isSuccessSwap }: any) => {
   const { address, chainId } = useAccount();
-  const tokenListQuery = useGetTokenList(chainId || 42161);
+  const tokenListQuery = useGetTokenList(chainId || 42161, isSuccessSwap);
 
   const contractsData = useReadContracts({
     contracts: contracts(tokenListQuery.data || [], address),
@@ -37,7 +37,7 @@ const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken }: 
           : "0",
       }))
       .filter((token) => Number(token.value) > 0);
-  }, [contractsData.data, tokenListQuery.data]);
+  }, [contractsData.data, tokenListQuery.data, isSuccessSwap]);
 
   const allTokensSorted = useMemo(() => {
     if (!tokenListQuery.data) return [];
@@ -61,7 +61,7 @@ const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken }: 
   const selectedTokenBalance = useMemo(() => {
     const token = tokensInMyWallet.find(token => token.symbol === selected?.symbol);
     return token ? Number(token.value).toFixed(6) : "0.000000";
-  }, [tokensInMyWallet, selected]);
+  }, [tokensInMyWallet, selected, isSuccessSwap]);
 
   return (
     <Box
