@@ -20,6 +20,7 @@ type ApproveButtonProps = {
   ownerAddress: string;
   spenderAddress: string;
   amount: number; // Amount to approve, as a string to handle large numbers
+  isDisabled?: boolean;
 };
 
 const ApproveButton = ({
@@ -27,7 +28,8 @@ const ApproveButton = ({
   tokenDecimals,
   ownerAddress,
   spenderAddress,
-  amount
+  amount,
+  isDisabled
 }: ApproveButtonProps) => {
   const toast = useToast();
   const { chainId } = useAccount();
@@ -92,6 +94,7 @@ const ApproveButton = ({
       w="100%"
       mt={3}
       isLoading={isLoadingApproveContract || waitingApprove || isLoading}
+      isDisabled={isDisabled}
       onClick={handleClick}
     >
       Approve Tokens

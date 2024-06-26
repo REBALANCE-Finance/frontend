@@ -6,12 +6,7 @@ import Receive from "./components/Receive/Receive";
 import Fee from "./components/Fee/Fee";
 import { ICON_NAMES, PARASWAP_SPENDER_ADDRESS } from "@/consts";
 import Icon from "@/components/icon";
-import {
-  useAccount,
-  useReadContract,
-  useSendTransaction,
-  useWalletClient
-} from "wagmi";
+import { useAccount, useReadContract, useSendTransaction, useWalletClient } from "wagmi";
 import { ConnectWallet } from "@/features/ConnectWallet";
 import { useState, useEffect } from "react";
 import { IToken } from "@/api/tokens/types";
@@ -23,6 +18,7 @@ import ApproveButton from "@/components/button/ApproveButton";
 import { performApprovedAmountValue } from "@/utils";
 import SwapButton from "@/components/button/SwapButton";
 import { AddressType } from "@/types";
+import { getApiError } from "@/utils/handlers";
 const MIN_AMOUNT = 0.01;
 
 const Swap = () => {
@@ -95,10 +91,13 @@ const Swap = () => {
   }, [isSuccessSwap]);
 
   useEffect(() => {
-    if (payTokenPriceError) {
-      setError(payTokenPriceError.message);
+    const newError = payTokenPriceError || receiveTokenPriceError;
+    if (newError) {
+      setError(getApiError(newError));
+    } else if (!newError && error) {
+      setError(null);
     }
-  }, [payTokenPriceError]);
+  }, [payTokenPriceError, receiveTokenPriceError]);
 
   useEffect(() => {
     if (payTokenPriceData) {
@@ -113,13 +112,6 @@ const Swap = () => {
     }
   }, [payTokenPriceData]);
 
-  useEffect(() => {
-    if (payTokenPriceError || receiveTokenPriceError) {
-      setError("No routes found with enough liquidity.");
-    } else {
-      setError(null);
-    }
-  }, [payTokenPriceError, receiveTokenPriceError]);
 
   const payTokenPrice =
     Number(payAmount) > 0 && payTokenPriceData
@@ -132,6 +124,27 @@ const Swap = () => {
       ? // @ts-ignore
         Number(receiveTokenPriceData?.priceRoute?.destUSD).toFixed(6)
       : 0;
+
+  const handlePayInputChange = (value: string) => {
+    setError("");
+    setPayAmount(value);
+  };
+
+  const handleReceiveInputChange = (value: string) => {
+    setError("");
+    setReceiveAmount(value);
+  };
+
+  const handleSelectPayToken = (token: IToken) => {
+    setPayToken(token);
+    setPayAmount("0.00");
+    setReceiveAmount("0.00");
+  };
+  const handleSelectReceiveToken = (token: IToken) => {
+    setReceiveToken(token);
+    setPayAmount("0.00");
+    setReceiveAmount("0.00");
+  };
 
   const handleSwapTokens = () => {
     const tempToken = payToken;
@@ -176,18 +189,18 @@ const Swap = () => {
         </Box>
         <Pay
           selected={payToken}
-          setSelected={setPayToken}
+          setSelected={handleSelectPayToken}
           amount={payAmount}
-          setAmount={setPayAmount}
+          setAmount={handlePayInputChange}
           price={payTokenPrice}
           excludeToken={receiveToken}
           isSuccessSwap={isSuccessSwap}
         />
         <Receive
           selected={receiveToken}
-          setSelected={setReceiveToken}
+          setSelected={handleSelectReceiveToken}
           amount={receiveAmount}
-          setAmount={setReceiveAmount}
+          setAmount={handleReceiveInputChange}
           price={receiveTokenPrice}
           excludeToken={payToken}
           isSuccessSwap={isSuccessSwap}
@@ -205,6 +218,7 @@ const Swap = () => {
         spenderAddress={PARASWAP_SPENDER_ADDRESS}
         tokenAddress={payToken?.address || ""}
         tokenDecimals={payTokenDecimals}
+        isDisabled={!payTokenPriceData || !receiveTokenPriceData}
       />
       <SwapButton
         payToken={{
@@ -216,7 +230,7 @@ const Swap = () => {
           address: (receiveToken?.address as AddressType) || ("" as AddressType),
           decimals: receiveTokenDecimals
         }}
-        isDisabled={isSwapDisabled}
+        isDisabled={isSwapDisabled || !payTokenPriceData || !receiveTokenPriceData}
         onError={setError}
         onSuccess={setIsSuccessSwap}
       />
