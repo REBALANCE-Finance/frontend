@@ -11,7 +11,7 @@ import { ABI_REBALANCE } from "@/abi/rebalance";
 import { formatUnits } from "ethers";
 
 const contracts = (tokens: IToken[], address: `0x${string}` | undefined) => {
-  return tokens?.map((token) => ({
+  return tokens?.map(token => ({
     address: token.address as `0x${string}`,
     abi: ABI_REBALANCE,
     functionName: "balanceOf",
@@ -19,12 +19,20 @@ const contracts = (tokens: IToken[], address: `0x${string}` | undefined) => {
   }));
 };
 
-const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken, isSuccessSwap }: any) => {
+const Pay = ({
+  selected,
+  setSelected,
+  amount,
+  setAmount,
+  price,
+  excludeToken,
+  isSuccessSwap
+}: any) => {
   const { address, chainId } = useAccount();
   const tokenListQuery = useGetTokenList(chainId || 42161, isSuccessSwap);
 
   const contractsData = useReadContracts({
-    contracts: contracts(tokenListQuery.data || [], address),
+    contracts: contracts(tokenListQuery.data || [], address)
   });
 
   const tokensInMyWallet = useMemo(() => {
@@ -34,9 +42,9 @@ const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken, is
         ...token,
         value: contractsData.data[i]?.result
           ? formatUnits(contractsData.data[i].result as bigint, token.decimals)
-          : "0",
+          : "0"
       }))
-      .filter((token) => Number(token.value) > 0);
+      .filter(token => Number(token.value) > 0);
   }, [contractsData.data, tokenListQuery.data, isSuccessSwap]);
 
   const allTokensSorted = useMemo(() => {
@@ -53,7 +61,10 @@ const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken, is
   }, [tokenListQuery.data, tokensInMyWallet, excludeToken]);
 
   useEffect(() => {
-    if (allTokensSorted.length > 0 && (!selected || !allTokensSorted.find(token => token.symbol === selected.symbol))) {
+    if (
+      allTokensSorted.length > 0 &&
+      (!selected || !allTokensSorted.find(token => token.symbol === selected.symbol))
+    ) {
       setSelected(allTokensSorted[0]);
     }
   }, [allTokensSorted]);
@@ -64,17 +75,9 @@ const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken, is
   }, [tokensInMyWallet, selected, isSuccessSwap]);
 
   return (
-    <Box
-      background="#09090B"
-      p="20px 24px"
-      borderRadius="4px"
-      mt="12px">
+    <Box background="#09090B" p="20px 24px" borderRadius="4px" mt="12px">
       <Text color="gray">You pay</Text>
-      <Box
-        mt="12px"
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between">
+      <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
         <Select options={allTokensSorted} value={selected} setSelected={setSelected} />
         <AmountInput
           amount={amount}
@@ -82,14 +85,11 @@ const Pay = ({ selected, setSelected, amount, setAmount, price, excludeToken, is
           maxAmount={Number(selectedTokenBalance)}
         />
       </Box>
-
-      <Box
-        mt="12px"
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between">
+      <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
         <Text>Balance: {selectedTokenBalance || "0"}</Text>
-        <Text textStyle="textMono16" color="white">${price}</Text>
+        <Text textStyle="textMono16" color="white">
+          ${price}
+        </Text>
       </Box>
     </Box>
   );

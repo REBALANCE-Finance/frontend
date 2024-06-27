@@ -7,6 +7,7 @@ import { AddressType } from "@/types";
 import { ARB_CONFIRMATIONS_COUNT } from "@/consts";
 import { handlerToast } from "../toasty/utils";
 import { ToastyTypes } from "../toasty/types";
+import { defChainIdArbitrum } from "@/hooks/useAuth";
 
 type SwapButtonProps = {
   payToken: {
@@ -61,7 +62,7 @@ const SwapButton = ({
         payToken.address,
         receiveToken.address,
         Number(payToken.amount),
-        chainId || 1,
+        chainId || defChainIdArbitrum,
         payToken.decimals || 18,
         receiveToken.decimals || 18,
         userAddress as string

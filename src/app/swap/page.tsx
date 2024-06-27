@@ -6,7 +6,7 @@ import Receive from "./components/Receive/Receive";
 import Fee from "./components/Fee/Fee";
 import { ICON_NAMES, PARASWAP_SPENDER_ADDRESS } from "@/consts";
 import Icon from "@/components/icon";
-import { useAccount, useReadContract, useSendTransaction, useWalletClient } from "wagmi";
+import { useAccount, useEstimateGas, useReadContract } from "wagmi";
 import { ConnectWallet } from "@/features/ConnectWallet";
 import { useState, useEffect } from "react";
 import { IToken } from "@/api/tokens/types";
@@ -19,18 +19,17 @@ import { performApprovedAmountValue } from "@/utils";
 import SwapButton from "@/components/button/SwapButton";
 import { AddressType } from "@/types";
 import { getApiError } from "@/utils/handlers";
-const MIN_AMOUNT = 0.01;
 
 const Swap = () => {
   const { address, chainId, connector } = useAccount();
   const [payToken, setPayToken] = useState<IToken | null>(null);
   const [receiveToken, setReceiveToken] = useState<IToken | null>(null);
-  const [payAmount, setPayAmount] = useState("0.00");
+  const [payAmount, setPayAmount] = useState("1.00");
   const [receiveAmount, setReceiveAmount] = useState("0.00");
   const [error, setError] = useState<string | null>(null);
   const [isSuccessSwap, setIsSuccessSwap] = useState(false);
-  const { data: walletClient } = useWalletClient();
-  const { sendTransaction } = useSendTransaction();
+  const [exchangeRate, setExchangeRate] = useState<string>("");
+  const [gasFee, setGasFee] = useState<string>("");
 
   const { data: tokenList } = useGetTokenList(chainId);
 
@@ -76,6 +75,27 @@ const Swap = () => {
   }, [tokenList, payToken, receiveToken]);
 
   useEffect(() => {
+    if (payTokenPriceData) {
+      // @ts-ignore
+      const srcAmount = BigInt(payTokenPriceData.priceRoute.srcAmount);
+      // @ts-ignore
+      const destAmount = BigInt(payTokenPriceData.priceRoute.destAmount);
+      const rate =
+        (Number(destAmount) * 10 ** payTokenDecimals) /
+        (Number(srcAmount) * 10 ** receiveTokenDecimals);
+      setExchangeRate(`1 ${payToken?.symbol} = ${rate.toFixed(6)} ${receiveToken?.symbol}`);
+      // @ts-ignore
+      const gasCostInWei = BigInt(payTokenPriceData.priceRoute.gasCost);
+      const gasCostInEth = Number(gasCostInWei) / 1e18;
+      setGasFee(
+        gasCostInEth > 0 && gasCostInEth < 0.000001
+          ? "<0.000001 ETH"
+          : `${gasCostInEth.toFixed(6)} ETH`
+      );
+    }
+  }, [payTokenPriceData, payToken, receiveToken, payTokenDecimals, receiveTokenDecimals]);
+
+  useEffect(() => {
     let timer: NodeJS.Timeout;
 
     if (isSuccessSwap) {
@@ -112,7 +132,6 @@ const Swap = () => {
     }
   }, [payTokenPriceData]);
 
-
   const payTokenPrice =
     Number(payAmount) > 0 && payTokenPriceData
       ? // @ts-ignore
@@ -133,17 +152,24 @@ const Swap = () => {
   const handleReceiveInputChange = (value: string) => {
     setError("");
     setReceiveAmount(value);
+    setGasFee("");
+    setExchangeRate("");
   };
 
   const handleSelectPayToken = (token: IToken) => {
     setPayToken(token);
-    setPayAmount("0.00");
+    setPayAmount("1.00");
     setReceiveAmount("0.00");
+    setGasFee("");
+    setExchangeRate("");
   };
+
   const handleSelectReceiveToken = (token: IToken) => {
     setReceiveToken(token);
-    setPayAmount("0.00");
+    setPayAmount("1.00");
     setReceiveAmount("0.00");
+    setGasFee("");
+    setExchangeRate("");
   };
 
   const handleSwapTokens = () => {
@@ -153,6 +179,8 @@ const Swap = () => {
     setReceiveToken(tempToken);
     setPayAmount(receiveAmount);
     setReceiveAmount(tempAmount);
+    setGasFee("");
+    setExchangeRate("");
   };
 
   const handleResetInputs = () => {
@@ -168,7 +196,8 @@ const Swap = () => {
     );
 
   const isNeedApprove = Number(payAmount) > approvedAmountValue;
-  const isSwapDisabled = isNeedApprove || Number(payAmount) < MIN_AMOUNT;
+  const isSwapDisabled = isNeedApprove;
+  const isLoadingFee = !gasFee || !exchangeRate;
 
   return (
     <Box borderRadius="4px" w="540px" m="60px auto auto" background="#151619" p="24px 20px">
@@ -211,7 +240,7 @@ const Swap = () => {
           {error}
         </Text>
       )}
-      <Fee />
+      <Fee exchangeRate={exchangeRate} gasFee={gasFee} isLoading={isLoadingFee} />
       <ApproveButton
         amount={Number(payAmount)}
         ownerAddress={address}
