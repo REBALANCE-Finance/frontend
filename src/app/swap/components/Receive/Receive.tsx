@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Text } from "@chakra-ui/react";
+import { Box, InputGroup, Skeleton, Text } from "@chakra-ui/react";
 import Select from "../ui/Select";
 import AmountInput from "../ui/AmountInput";
 import { useEffect, useMemo } from "react";
@@ -26,7 +26,8 @@ const Receive = ({
   setAmount,
   price,
   excludeToken,
-  isSuccessSwap
+  isSuccessSwap,
+  isLoading
 }: any) => {
   const { address, chainId } = useAccount();
   const tokenListQuery = useGetTokenList(chainId || 42161, isSuccessSwap);
@@ -73,24 +74,65 @@ const Receive = ({
   }, [tokensInMyWallet, selected, isSuccessSwap]);
 
   return (
-    <Box background="#09090B" p="20px 24px" borderRadius="4px" mt="12px">
-      <Text color="gray">You receive</Text>
-      <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
-        <Select options={availableTokens} value={selected} setSelected={setSelected} />
-        <AmountInput
-          amount={amount}
-          setAmount={setAmount}
-          maxAmount={Number(selectedTokenBalance)}
-        />
-      </Box>
-
-      <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
-        <Text>Balance: {selectedTokenBalance || "0"}</Text>
-        <Text textStyle="textMono16" color="white">
-          ${price}
+    <InputGroup borderColor="transparent" data-group zIndex={1} isolation="unset">
+      <Box
+        background="#09090B"
+        p="20px 24px"
+        width="100%"
+        borderRadius="8px"
+        mt={2}
+        border="1px solid"
+        borderColor="transparent"
+        transition="all .3s ease-in-out"
+        _groupFocusWithin={{
+          border: "1px solid",
+          borderColor: "rgba(76, 255, 148, 0.6)"
+        }}
+      >
+        <Text fontSize="12px" color="gray">
+          You receive
         </Text>
+        <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
+          {isLoading ? (
+            <Skeleton height={10} width="80px" borderRadius="8px" />
+          ) : (
+            <AmountInput
+              amount={amount}
+              setAmount={setAmount}
+              maxAmount={Number(selectedTokenBalance)}
+              textAlign="left"
+              fontSize="24px"
+              fontWeight={500}
+              flex={1}
+            />
+          )}
+          <Select
+            options={availableTokens}
+            value={selected}
+            setSelected={setSelected}
+            ButtonProps={{
+              borderRadius: "20px",
+              minWidth: "max-content"
+            }}
+          />
+        </Box>
+
+        <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
+          {isLoading ? (
+            <Skeleton height="15px" width="40px" borderRadius="8px" />
+          ) : (
+            <Text textStyle="textMono10" color="darkgrey">
+              ~${price}
+            </Text>
+          )}
+          {!contractsData.isLoading && (
+            <Text textStyle="textMono10">
+              Balance: {selectedTokenBalance || "0"} {selected?.symbol}
+            </Text>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </InputGroup>
   );
 };
 

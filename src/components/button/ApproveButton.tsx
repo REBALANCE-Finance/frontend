@@ -91,8 +91,9 @@ const ApproveButton = ({
   return (
     <Button
       variant="primaryFilled"
+      minH={8}
       w="100%"
-      mt={3}
+      mt={4}
       isLoading={isLoadingApproveContract || waitingApprove || isLoading}
       isDisabled={isDisabled}
       onClick={handleClick}

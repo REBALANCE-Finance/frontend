@@ -49,7 +49,12 @@ const Swap = () => {
 
   const approvedAmountValue = performApprovedAmountValue(approvedAmount, payTokenDecimals);
 
-  const { data: payTokenPriceData, error: payTokenPriceError } = useGetPrice(
+  const {
+    data: payTokenPriceData,
+    error: payTokenPriceError,
+    refetch,
+    isLoading: isLoadingPayTokenPrice
+  } = useGetPrice(
     payToken?.address,
     receiveToken?.address,
     Number(payAmount),
@@ -157,16 +162,20 @@ const Swap = () => {
   };
 
   const handleSelectPayToken = (token: IToken) => {
+    if (!payAmount || payAmount === "0.00") {
+      setPayAmount("1.00");
+    }
     setPayToken(token);
-    setPayAmount("1.00");
     setReceiveAmount("0.00");
     setGasFee("");
     setExchangeRate("");
   };
 
   const handleSelectReceiveToken = (token: IToken) => {
+    if (!payAmount || payAmount === "0.00") {
+      setPayAmount("1.00");
+    }
     setReceiveToken(token);
-    setPayAmount("1.00");
     setReceiveAmount("0.00");
     setGasFee("");
     setExchangeRate("");
@@ -184,7 +193,7 @@ const Swap = () => {
   };
 
   const handleResetInputs = () => {
-    setPayAmount("0.00");
+    setPayAmount("1.00");
     setReceiveAmount("0.00");
   };
 
@@ -200,18 +209,19 @@ const Swap = () => {
   const isLoadingFee = !gasFee || !exchangeRate;
 
   return (
-    <Box borderRadius="4px" w="540px" m="60px auto auto" background="#151619" p="24px 20px">
-      <Header />
-      <Box position="relative">
+    <Box borderRadius="12px" w="540px" m="60px auto auto" background="#151619" p="24px 20px">
+      <Header onRefetch={refetch} />
+      <Box position="relative" mt={6}>
         <Box
           cursor="pointer"
-          border="6px solid #151619"
-          borderRadius="8px"
-          padding="4px"
+          backgroundColor="#151619"
+          borderRadius="12px"
+          padding="16px"
           position="absolute"
-          top="50%"
+          top="52%"
           left="50%"
           transform="translate(-50%, -50%)"
+          zIndex={3}
           onClick={handleSwapTokens}
         >
           <Icon name={ICON_NAMES.swap} />
@@ -233,6 +243,7 @@ const Swap = () => {
           price={receiveTokenPrice}
           excludeToken={payToken}
           isSuccessSwap={isSuccessSwap}
+          isLoading={isLoadingPayTokenPrice}
         />
       </Box>
       {error && (
@@ -240,7 +251,7 @@ const Swap = () => {
           {error}
         </Text>
       )}
-      <Fee exchangeRate={exchangeRate} gasFee={gasFee} isLoading={isLoadingFee} />
+      {!error && <Fee exchangeRate={exchangeRate} gasFee={gasFee} isLoading={isLoadingFee} />}
       <ApproveButton
         amount={Number(payAmount)}
         ownerAddress={address}
@@ -249,20 +260,22 @@ const Swap = () => {
         tokenDecimals={payTokenDecimals}
         isDisabled={!payTokenPriceData || !receiveTokenPriceData}
       />
-      <SwapButton
-        payToken={{
-          address: (payToken?.address as AddressType) || ("" as AddressType),
-          amount: Number(payAmount),
-          decimals: payTokenDecimals
-        }}
-        receiveToken={{
-          address: (receiveToken?.address as AddressType) || ("" as AddressType),
-          decimals: receiveTokenDecimals
-        }}
-        isDisabled={isSwapDisabled || !payTokenPriceData || !receiveTokenPriceData}
-        onError={setError}
-        onSuccess={setIsSuccessSwap}
-      />
+      {!isNeedApprove && (
+        <SwapButton
+          payToken={{
+            address: (payToken?.address as AddressType) || ("" as AddressType),
+            amount: Number(payAmount),
+            decimals: payTokenDecimals
+          }}
+          receiveToken={{
+            address: (receiveToken?.address as AddressType) || ("" as AddressType),
+            decimals: receiveTokenDecimals
+          }}
+          isDisabled={isSwapDisabled || !payTokenPriceData || !receiveTokenPriceData}
+          onError={setError}
+          onSuccess={setIsSuccessSwap}
+        />
+      )}
     </Box>
   );
 };

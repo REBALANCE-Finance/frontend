@@ -89,7 +89,7 @@ const SwapButton = ({
       isLoading={isPending || isLoading}
       isDisabled={isDisabled}
       w="100%"
-      mt={3}
+      mt={4}
       sx={{
         "&:hover": {
           opacity: 0.8,

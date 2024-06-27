@@ -39,5 +39,10 @@ export const textStyles = {
     fontFamily: roboto_mono.style.fontFamily,
     fontSize: "12px",
     fontWeight: "500"
+  },
+  textMono10: {
+    fontFamily: roboto_mono.style.fontFamily,
+    fontSize: "10px",
+    fontWeight: "500"
   }
 };

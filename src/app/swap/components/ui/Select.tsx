@@ -1,25 +1,39 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Box, Button, Text, Image, Skeleton, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Box,
+  Button,
+  Text,
+  Image,
+  Skeleton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  SelectProps as ChakraSelectProps,
+  Flex,
+  ButtonProps
+} from "@chakra-ui/react";
+import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import { IToken } from "@/api/tokens/types";
 
-export interface SelectProps {
+export type SelectProps = {
   options: IToken[];
   value: IToken | null;
   setSelected: (token: IToken) => void;
-}
+  ButtonProps?: ButtonProps;
+};
 
-const Select: React.FC<SelectProps> = ({ options = [], value, setSelected }) => {
+const Select: React.FC<SelectProps> = ({ options = [], value, setSelected, ButtonProps }) => {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const filteredOptions = options.filter(option => 
-    option.symbol.toLowerCase().includes(search.toLowerCase()) || 
-    option.name.toLowerCase().includes(search.toLowerCase())
+  const filteredOptions = options.filter(
+    option =>
+      option.symbol.toLowerCase().includes(search.toLowerCase()) ||
+      option.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const selectedToken = options.find(option => option.symbol === value?.symbol);
@@ -51,20 +65,28 @@ const Select: React.FC<SelectProps> = ({ options = [], value, setSelected }) => 
   }, [isOpen]);
 
   return (
-    <Box ref={containerRef} position="relative">
+    <Box ref={containerRef} position="relative" zIndex={999}>
       <Button
         border="1px solid #202327"
+        backgroundColor="#202327"
         padding="6px 12px"
         borderRadius="4px"
         onClick={() => setIsOpen(!isOpen)}
         rightIcon={<ChevronDownIcon />}
         width="100%"
+        {...ButtonProps}
         textAlign="left"
       >
-        <Box display="flex" alignItems="center">
+        <Flex alignItems="center">
           {selectedToken ? (
             selectedToken.logoURI ? (
-              <Image borderRadius={100} src={selectedToken.logoURI} alt={selectedToken.symbol} boxSize="20px" mr="4px" />
+              <Image
+                borderRadius={100}
+                src={selectedToken.logoURI}
+                alt={selectedToken.symbol}
+                boxSize="20px"
+                mr="4px"
+              />
             ) : (
               <Box boxSize="20px" bg="gray.200" mr="4px" />
             )
@@ -72,10 +94,19 @@ const Select: React.FC<SelectProps> = ({ options = [], value, setSelected }) => 
             <Skeleton boxSize="20px" mr="4px" />
           )}
           <Text ml="4px">{selectedToken?.symbol || <Skeleton width="30px" />}</Text>
-        </Box>
+        </Flex>
       </Button>
       {isOpen && (
-        <Box position="absolute" mt="2" borderRadius="4px" bg="#151619" maxH="200px" overflowY="auto" zIndex="1" width="100%">
+        <Box
+          position="absolute"
+          mt="2"
+          borderRadius="4px"
+          bg="#151619"
+          maxH="200px"
+          overflowY="auto"
+          zIndex={9999}
+          width="100%"
+        >
           <InputGroup mb="4px" p="4px">
             <InputLeftElement pointerEvents="none">
               <SearchIcon color="gray.300" />
@@ -100,7 +131,13 @@ const Select: React.FC<SelectProps> = ({ options = [], value, setSelected }) => 
                 onClick={() => handleMenuItemClick(option)}
               >
                 {option.logoURI ? (
-                  <Image src={option.logoURI} borderRadius={100} alt={option.symbol} boxSize="20px" mr="4px" />
+                  <Image
+                    src={option.logoURI}
+                    borderRadius={100}
+                    alt={option.symbol}
+                    boxSize="20px"
+                    mr="4px"
+                  />
                 ) : (
                   <Box boxSize="20px" bg="gray.200" mr="4px" />
                 )}

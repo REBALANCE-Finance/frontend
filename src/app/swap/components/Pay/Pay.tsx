@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, InputGroup, Text } from "@chakra-ui/react";
 import Select from "../ui/Select";
 import AmountInput from "../ui/AmountInput";
 import { useEffect, useMemo } from "react";
@@ -74,24 +74,76 @@ const Pay = ({
     return token ? Number(token.value).toFixed(6) : "0.000000";
   }, [tokensInMyWallet, selected, isSuccessSwap]);
 
+  const handleMaxClick = () => {
+    setAmount(selectedTokenBalance);
+  };
+
   return (
-    <Box background="#09090B" p="20px 24px" borderRadius="4px" mt="12px">
-      <Text color="gray">You pay</Text>
-      <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
-        <Select options={allTokensSorted} value={selected} setSelected={setSelected} />
-        <AmountInput
-          amount={amount}
-          setAmount={setAmount}
-          maxAmount={Number(selectedTokenBalance)}
-        />
-      </Box>
-      <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
-        <Text>Balance: {selectedTokenBalance || "0"}</Text>
-        <Text textStyle="textMono16" color="white">
-          ${price}
+    <InputGroup borderColor="transparent" isolation="unset">
+      <Box
+        background="#09090B"
+        p={[5, 6]}
+        width="100%"
+        borderRadius="8px"
+        mt={3}
+        data-group
+        border="1px solid"
+        borderColor="transparent"
+        transition="all .3s ease-in-out"
+        _groupFocusWithin={{
+          border: "1px solid",
+          borderColor: "rgba(76, 255, 148, 0.6)"
+        }}
+      >
+        <Text fontSize="12px" color="gray">
+          You pay
         </Text>
+        <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
+          <AmountInput
+            amount={amount}
+            setAmount={setAmount}
+            maxAmount={Number(selectedTokenBalance)}
+            textAlign="left"
+            fontSize="24px"
+            fontWeight={500}
+            flex={1}
+          />
+          <Select
+            options={allTokensSorted}
+            value={selected}
+            setSelected={setSelected}
+            ButtonProps={{
+              borderRadius: "20px",
+              minWidth: "max-content"
+            }}
+          />
+        </Box>
+        <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
+          <Text textStyle="textMono10" color="darkgrey">
+            ~${price}
+          </Text>
+          {!contractsData.isLoading && (
+            <Flex gap={1.5} alignItems="center">
+              <Text textStyle="textMono10">
+                Balance: {selectedTokenBalance || "0"} {selected?.symbol}
+              </Text>
+              <Button
+                color="greenAlpha.100"
+                fontSize="10px"
+                lineHeight="18px"
+                minW={0}
+                w="max-content"
+                mt={0.5}
+                h="18px"
+                onClick={handleMaxClick}
+              >
+                MAX
+              </Button>
+            </Flex>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </InputGroup>
   );
 };
 

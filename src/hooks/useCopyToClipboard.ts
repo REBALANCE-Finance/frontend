@@ -7,7 +7,7 @@ export const useCopyToClipboard = () => {
   const copy: CopyFn = async text => {
     try {
       await navigator.clipboard.writeText(text);
-      handlerToast({ content: "Copy address", type: ToastyTypes.success });
+      handlerToast({ content: "Copied address", type: ToastyTypes.success });
     } catch (error) {
       handlerToast({ content: "Copy failed", type: ToastyTypes.error });
     }

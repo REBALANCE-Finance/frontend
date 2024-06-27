@@ -17,12 +17,12 @@ const Fee = ({ exchangeRate, gasFee, isLoading }: FeeProps) => {
       alignItems="center"
       justifyContent="space-between"
       background="#09090B"
-      p="20px 24px"
-      borderRadius="4px"
+      p={4}
+      borderRadius="8px"
       mt="12px"
     >
-      <Text fontSize="18px">{exchangeRate}</Text>
-      <Text fontSize="16px" color="grey">
+      <Text fontSize="12px">{exchangeRate}</Text>
+      <Text fontSize="12px" color="grey">
         Gas Fee: ~{gasFee}
       </Text>
     </Box>
