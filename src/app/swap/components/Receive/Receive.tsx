@@ -125,7 +125,7 @@ const Receive = ({
               ~${price}
             </Text>
           )}
-          {!contractsData.isLoading && (
+          {!contractsData.isLoading && address && (
             <Text textStyle="textMono10">
               Balance: {selectedTokenBalance || "0"} {selected?.symbol}
             </Text>

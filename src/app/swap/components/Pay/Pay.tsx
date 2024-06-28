@@ -122,7 +122,7 @@ const Pay = ({
           <Text textStyle="textMono10" color="darkgrey">
             ~${price}
           </Text>
-          {!contractsData.isLoading && (
+          {!contractsData.isLoading && address && (
             <Flex gap={1.5} alignItems="center">
               <Text textStyle="textMono10">
                 Balance: {selectedTokenBalance || "0"} {selected?.symbol}

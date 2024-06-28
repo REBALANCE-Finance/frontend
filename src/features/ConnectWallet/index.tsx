@@ -51,7 +51,7 @@ if (!isMobile) {
   });
 }
 
-export const ConnectWallet = ({ title }: { title?: string }) => {
+export const ConnectWallet = ({ title, variant }: { title?: string; variant?: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { login } = useAuth();
@@ -78,10 +78,11 @@ export const ConnectWallet = ({ title }: { title?: string }) => {
     return (
       <>
         <Button
-          p="0"
+          p={variant ? "16px 24px" : 0}
           onClick={onOpen}
-          variant={title === "Deposit" ? "primaryFilled" : ""}
+          variant={variant ? variant : title === "Deposit" ? "primaryFilled" : ""}
           flex="1 1 0"
+          width={variant ? "100%" : "auto"}
         >
           {title ? title : "Connect wallet"}
         </Button>
@@ -136,10 +137,14 @@ export const ConnectWallet = ({ title }: { title?: string }) => {
   return (
     <>
       <Button
-        p="0"
         onClick={onOpen}
-        variant={title === "Deposit" ? "primaryFilled" : ""}
+        variant={variant ? variant : title === "Deposit" ? "primaryFilled" : ""}
         flex="1 1 0"
+        width={variant ? "100%" : "auto"}
+        mt={variant ? 4 : 0}
+        _hover={{
+          opacity: 0.8
+        }}
       >
         {title ? title : "Connect wallet"}
       </Button>

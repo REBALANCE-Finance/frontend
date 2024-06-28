@@ -14,8 +14,6 @@ export const useGetPrice = (
     queryKey: ["prices", srcToken, destToken, amount, network, srcDecimals, destDecimals],
     queryFn: () => getPrices(srcToken!, destToken!, amount, network, srcDecimals, destDecimals),
     enabled: !!srcToken && !!destToken && amount > 0,
-    staleTime: 60000,
-    refetchInterval: 60000,
     retry: 1
   });
 };

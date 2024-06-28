@@ -4,7 +4,7 @@ import Header from "./components/Header/Header";
 import Pay from "./components/Pay/Pay";
 import Receive from "./components/Receive/Receive";
 import Fee from "./components/Fee/Fee";
-import { ICON_NAMES, PARASWAP_SPENDER_ADDRESS } from "@/consts";
+import { ARB_TOKEN, ICON_NAMES, PARASWAP_SPENDER_ADDRESS, USDT_TOKEN } from "@/consts";
 import Icon from "@/components/icon";
 import { useAccount, useEstimateGas, useReadContract } from "wagmi";
 import { ConnectWallet } from "@/features/ConnectWallet";
@@ -19,6 +19,7 @@ import { performApprovedAmountValue } from "@/utils";
 import SwapButton from "@/components/button/SwapButton";
 import { AddressType } from "@/types";
 import { getApiError } from "@/utils/handlers";
+import { defChainIdArbitrum } from "@/hooks/useAuth";
 
 const Swap = () => {
   const { address, chainId, connector } = useAccount();
@@ -31,7 +32,7 @@ const Swap = () => {
   const [exchangeRate, setExchangeRate] = useState<string>("");
   const [gasFee, setGasFee] = useState<string>("");
 
-  const { data: tokenList } = useGetTokenList(chainId);
+  const { data: tokenList } = useGetTokenList(chainId ?? defChainIdArbitrum);
 
   const payTokenDecimals = payToken?.decimals ?? 18;
   const receiveTokenDecimals = receiveToken?.decimals ?? 18;
@@ -58,7 +59,7 @@ const Swap = () => {
     payToken?.address,
     receiveToken?.address,
     Number(payAmount),
-    chainId ?? 1,
+    chainId ?? defChainIdArbitrum,
     payTokenDecimals,
     receiveTokenDecimals
   );
@@ -67,17 +68,17 @@ const Swap = () => {
     receiveToken?.address,
     payToken?.address,
     Number(receiveAmount),
-    chainId ?? 1,
+    chainId ?? defChainIdArbitrum,
     receiveTokenDecimals,
     payTokenDecimals
   );
 
   useEffect(() => {
     if (tokenList && tokenList.length > 1 && !payToken && !receiveToken) {
-      setPayToken(tokenList.find(token => token.symbol === "ARB") || tokenList[0]);
-      setReceiveToken(tokenList.find(token => token.symbol === "USDT") || tokenList[1]);
+      setPayToken(tokenList.find(token => token.symbol === "ARB") || ARB_TOKEN);
+      setReceiveToken(tokenList.find(token => token.symbol === "USDT") || USDT_TOKEN);
     }
-  }, [tokenList, payToken, receiveToken]);
+  }, [tokenList]);
 
   useEffect(() => {
     if (payTokenPriceData) {
@@ -197,12 +198,6 @@ const Swap = () => {
     setReceiveAmount("0.00");
   };
 
-  if (!address || !chainId)
-    return (
-      <Box display="flex" m="auto">
-        <ConnectWallet />
-      </Box>
-    );
 
   const isNeedApprove = Number(payAmount) > approvedAmountValue;
   const isSwapDisabled = isNeedApprove;
@@ -211,7 +206,7 @@ const Swap = () => {
   return (
     <Box borderRadius="12px" w="540px" m="60px auto auto" background="#151619" p="24px 20px">
       <Header onRefetch={refetch} />
-      <Box position="relative" mt={6}>
+      <Box position="relative" mt={3}>
         <Box
           cursor="pointer"
           backgroundColor="#151619"
@@ -252,14 +247,17 @@ const Swap = () => {
         </Text>
       )}
       {!error && <Fee exchangeRate={exchangeRate} gasFee={gasFee} isLoading={isLoadingFee} />}
-      <ApproveButton
-        amount={Number(payAmount)}
-        ownerAddress={address}
-        spenderAddress={PARASWAP_SPENDER_ADDRESS}
-        tokenAddress={payToken?.address || ""}
-        tokenDecimals={payTokenDecimals}
-        isDisabled={!payTokenPriceData || !receiveTokenPriceData}
-      />
+      {!address && <ConnectWallet variant="primaryFilled" />}
+      {address && chainId && (
+        <ApproveButton
+          amount={Number(payAmount)}
+          ownerAddress={address}
+          spenderAddress={PARASWAP_SPENDER_ADDRESS}
+          tokenAddress={payToken?.address || ""}
+          tokenDecimals={payTokenDecimals}
+          isDisabled={!payTokenPriceData || !receiveTokenPriceData}
+        />
+      )}
       {!isNeedApprove && (
         <SwapButton
           payToken={{

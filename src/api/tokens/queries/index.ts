@@ -4,7 +4,7 @@ import { IToken } from "../types";
 
 export const useGetTokenList = (chainId: number | undefined, needRefetch?: boolean) => {
   return useQuery({
-    queryKey: ["token-list", needRefetch],
+    queryKey: needRefetch ? ["token-list", needRefetch] : ["token-list"],
     queryFn: getTokenList,
     enabled: !!chainId,
     staleTime: Infinity,
