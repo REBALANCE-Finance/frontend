@@ -9,6 +9,7 @@ import { useGetTokenList } from "@/api/tokens";
 import { IToken } from "@/api/tokens/types";
 import { ABI_REBALANCE } from "@/abi/rebalance";
 import { formatUnits } from "ethers";
+import { formatNumber } from "@/utils/formatNumber";
 
 const contracts = (tokens: IToken[], address: `0x${string}` | undefined) => {
   return tokens?.map(token => ({
@@ -26,7 +27,8 @@ const Pay = ({
   setAmount,
   price,
   excludeToken,
-  isSuccessSwap
+  isSuccessSwap,
+  onError
 }: any) => {
   const { address, chainId } = useAccount();
   const tokenListQuery = useGetTokenList(chainId || 42161, isSuccessSwap);
@@ -60,6 +62,11 @@ const Pay = ({
     return sortedTokens;
   }, [tokenListQuery.data, tokensInMyWallet, excludeToken]);
 
+  const selectedTokenBalance = useMemo(() => {
+    const token = tokensInMyWallet.find(token => token.symbol === selected?.symbol);
+    return token ? Number(token.value).toFixed(6) : "0.000000";
+  }, [tokensInMyWallet, selected, isSuccessSwap]);
+
   useEffect(() => {
     if (
       allTokensSorted.length > 0 &&
@@ -69,10 +76,11 @@ const Pay = ({
     }
   }, [allTokensSorted]);
 
-  const selectedTokenBalance = useMemo(() => {
-    const token = tokensInMyWallet.find(token => token.symbol === selected?.symbol);
-    return token ? Number(token.value).toFixed(6) : "0.000000";
-  }, [tokensInMyWallet, selected, isSuccessSwap]);
+  useEffect(() => {
+    if (amount > selectedTokenBalance) {
+      onError("Insufficient balance");
+    }
+  }, [amount, selectedTokenBalance]);
 
   const handleMaxClick = () => {
     setAmount(selectedTokenBalance);
@@ -125,7 +133,7 @@ const Pay = ({
           {!contractsData.isLoading && address && (
             <Flex gap={1.5} alignItems="center">
               <Text textStyle="textMono10">
-                Balance: {selectedTokenBalance || "0"} {selected?.symbol}
+                Balance: {formatNumber(selectedTokenBalance)} {selected?.symbol}
               </Text>
               <Button
                 color="greenAlpha.100"

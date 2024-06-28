@@ -22,6 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import { IToken } from "@/api/tokens/types";
+import { formatNumber } from "@/utils/formatNumber";
 
 const preselectedSymbols = ["ARB", "WETH", "USDT", "USDC", "USDC.e"];
 
@@ -155,31 +156,39 @@ const Select: React.FC<SelectProps> = ({ options = [], value, setSelected, Butto
               {filteredOptions.length > 0 ? (
                 filteredOptions.map((option: IToken) => (
                   <>
-                    <Box
+                    <Flex
                       key={option.symbol}
-                      display="flex"
                       alignItems="center"
                       cursor="pointer"
+                      justify="space-between"
                       p="16px"
                       borderRadius="8px"
-                      _hover={{ background: "gray.700" }}
+                      _hover={{ background: "gray.800" }}
                       onClick={() => handleMenuItemClick(option)}
                     >
-                      {option.logoURI ? (
-                        <Image
-                          src={option.logoURI}
-                          borderRadius={100}
-                          alt={option.symbol}
-                          boxSize="20px"
-                          mr="4px"
-                        />
-                      ) : (
-                        <Box boxSize="20px" bg="gray.200" mr="4px" />
-                      )}
-                      <Text textStyle="textMono14" ml="4px">
-                        {option.symbol}
-                      </Text>
-                    </Box>
+                      <Flex gap={2} alignItems="center">
+                        {option.logoURI ? (
+                          <Image
+                            src={option.logoURI}
+                            borderRadius={100}
+                            alt={option.symbol}
+                            boxSize="20px"
+                            mr="4px"
+                          />
+                        ) : (
+                          <Box boxSize="20px" bg="gray.200" mr="4px" />
+                        )}
+                        <Flex flexDir="column">
+                          <Text textStyle="textMono14" ml="4px">
+                            {option.symbol}
+                          </Text>
+                          <Text textStyle="textMono10" ml="4px" color="darkgrey">
+                            {option.name}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                      <Text textStyle="textMono14">{formatNumber(option?.value ?? 0)}</Text>
+                    </Flex>
                     <Divider />
                   </>
                 ))

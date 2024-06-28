@@ -142,6 +142,7 @@ export const ConnectWallet = ({ title, variant }: { title?: string; variant?: st
         flex="1 1 0"
         width={variant ? "100%" : "auto"}
         mt={variant ? 4 : 0}
+        h={variant ? "52px" : "auto"}
         _hover={{
           opacity: 0.8
         }}

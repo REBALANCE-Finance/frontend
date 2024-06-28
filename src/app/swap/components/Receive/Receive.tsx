@@ -9,6 +9,7 @@ import { useGetTokenList } from "@/api/tokens";
 import { IToken } from "@/api/tokens/types";
 import { ABI_REBALANCE } from "@/abi/rebalance";
 import { formatUnits } from "ethers";
+import { formatNumber } from "@/utils/formatNumber";
 
 const contracts = (tokens: IToken[], address: `0x${string}` | undefined) => {
   return tokens?.map(token => ({
@@ -127,7 +128,7 @@ const Receive = ({
           )}
           {!contractsData.isLoading && address && (
             <Text textStyle="textMono10">
-              Balance: {selectedTokenBalance || "0"} {selected?.symbol}
+              Balance: {formatNumber(selectedTokenBalance)} {selected?.symbol}
             </Text>
           )}
         </Box>

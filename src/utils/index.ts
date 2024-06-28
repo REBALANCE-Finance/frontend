@@ -37,3 +37,7 @@ export const performApprovedAmountValue = (value: bigint | undefined, decimals: 
 export const convertNumberToBigInt = (value: number = 0, decimals: number): bigint => {
   return BigInt(Math.round(value * Math.pow(10, decimals)));
 };
+
+export const getExplorerTxLink = (txHash: string) => {
+  return `https://arbiscan.io/tx/${txHash}`;
+};

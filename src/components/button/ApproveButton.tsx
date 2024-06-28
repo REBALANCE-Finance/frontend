@@ -72,8 +72,7 @@ const ApproveButton = ({
       refetchAllowance();
       handlerToast({
         content: "Approval successful",
-        type: ToastyTypes.success,
-        option: { autoClose: 5000 }
+        type: ToastyTypes.success
       });
     }
   }, [isSuccessWaitingApprove]);
@@ -91,11 +90,17 @@ const ApproveButton = ({
   return (
     <Button
       variant="primaryFilled"
-      minH={8}
+      h="52px"
       w="100%"
       mt={4}
       isLoading={isLoadingApproveContract || waitingApprove || isLoading}
       isDisabled={isDisabled}
+      transition="all .3s"
+      _hover={{
+        opacity: 0.8,
+        background: "transparent",
+        color: "white"
+      }}
       onClick={handleClick}
     >
       Approve Tokens

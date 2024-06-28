@@ -153,6 +153,7 @@ const Swap = () => {
   const handlePayInputChange = (value: string) => {
     setError("");
     setPayAmount(value);
+    refetchAllowance();
   };
 
   const handleReceiveInputChange = (value: string) => {
@@ -198,13 +199,12 @@ const Swap = () => {
     setReceiveAmount("0.00");
   };
 
-
   const isNeedApprove = Number(payAmount) > approvedAmountValue;
   const isSwapDisabled = isNeedApprove;
   const isLoadingFee = !gasFee || !exchangeRate;
 
   return (
-    <Box borderRadius="12px" w="540px" m="60px auto auto" background="#151619" p="24px 20px">
+    <Box borderRadius="12px" w="460px" m="60px auto auto" background="#151619" p="24px 20px">
       <Header onRefetch={refetch} />
       <Box position="relative" mt={3}>
         <Box
@@ -229,6 +229,7 @@ const Swap = () => {
           price={payTokenPrice}
           excludeToken={receiveToken}
           isSuccessSwap={isSuccessSwap}
+          onError={setError}
         />
         <Receive
           selected={receiveToken}
@@ -255,7 +256,7 @@ const Swap = () => {
           spenderAddress={PARASWAP_SPENDER_ADDRESS}
           tokenAddress={payToken?.address || ""}
           tokenDecimals={payTokenDecimals}
-          isDisabled={!payTokenPriceData || !receiveTokenPriceData}
+          isDisabled={!payTokenPriceData || !receiveTokenPriceData || !!error}
         />
       )}
       {!isNeedApprove && (

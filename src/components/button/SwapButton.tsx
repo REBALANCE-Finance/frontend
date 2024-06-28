@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Flex, Link, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { parseEther } from "viem";
 import { useAccount, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
@@ -8,6 +8,7 @@ import { ARB_CONFIRMATIONS_COUNT } from "@/consts";
 import { handlerToast } from "../toasty/utils";
 import { ToastyTypes } from "../toasty/types";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
+import { getExplorerTxLink } from "@/utils";
 
 type SwapButtonProps = {
   payToken: {
@@ -32,7 +33,7 @@ const SwapButton = ({
   onSuccess
 }: SwapButtonProps) => {
   const [txHash, setTxHash] = useState("");
-  const { isIdle, isPending, sendTransactionAsync } = useSendTransaction();
+  const { isIdle, isPending, sendTransactionAsync, data: hash } = useSendTransaction();
   const { data, isSuccess, isError, error, isLoading } = useWaitForTransactionReceipt({
     hash: txHash as AddressType,
     confirmations: ARB_CONFIRMATIONS_COUNT
@@ -43,11 +44,21 @@ const SwapButton = ({
     if (isSuccess && txHash) {
       onSuccess(true);
       handlerToast({
-        content: "Swap successful",
-        type: ToastyTypes.success,
-        option: {
-          autoClose: 5000
-        }
+        content: (
+          <Flex flexDir="column" gap={1}>
+            <Text fontSize="20px">Swap successful</Text>
+            <Link
+              href={getExplorerTxLink(txHash)}
+              target="_blank"
+              color="greenAlpha.100"
+              fontSize="14px"
+              textDecoration="underline"
+            >
+              View on Arbiscan
+            </Link>
+          </Flex>
+        ),
+        type: ToastyTypes.success
       });
     } else if (isError) {
       onError(error.message);
@@ -89,7 +100,9 @@ const SwapButton = ({
       isLoading={isPending || isLoading}
       isDisabled={isDisabled}
       w="100%"
+      h="52px"
       mt={4}
+      transition="all .3s"
       sx={{
         "&:hover": {
           opacity: 0.8,
