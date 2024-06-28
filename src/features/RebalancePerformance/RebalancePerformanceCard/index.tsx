@@ -3,6 +3,7 @@ import React, { FC } from "react";
 import { Skeleton } from '@chakra-ui/react'
 import Img from "./Images";
 import protokol from "/public/assets/image/Protocols.svg";
+import { formatNumber } from "@/utils/formatNumber";
 interface RebalncePerformanceCardProps {
   image: string;
   title: string;
@@ -73,7 +74,7 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
             fontSize="16px"
             textStyle="textMono16"
             display="flex"
-            alignItems="center">TVL: ${info ? info : <Skeleton ml={2} height="20px" width="60px" />}</Text>
+            alignItems="center">TVL: ${formatNumber(info) ? formatNumber(info) : <Skeleton ml={2} height="20px" width="60px" />}</Text>
         </Flex>
         <Box mt="12px" textAlign="start" display="flex" flexDir="column" fontSize="13px" color="#DEDEDE">
           {
