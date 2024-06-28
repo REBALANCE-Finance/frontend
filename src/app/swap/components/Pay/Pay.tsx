@@ -10,6 +10,7 @@ import { IToken } from "@/api/tokens/types";
 import { ABI_REBALANCE } from "@/abi/rebalance";
 import { formatUnits } from "ethers";
 import { formatNumber } from "@/utils/formatNumber";
+import { BALANCE_ERROR } from "@/consts";
 
 const contracts = (tokens: IToken[], address: `0x${string}` | undefined) => {
   return tokens?.map(token => ({
@@ -78,7 +79,7 @@ const Pay = ({
 
   useEffect(() => {
     if (amount > selectedTokenBalance) {
-      onError("Insufficient balance");
+      onError(BALANCE_ERROR);
     }
   }, [amount, selectedTokenBalance]);
 

@@ -10,6 +10,9 @@ import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumb
 import { formatNumber, formatPercent } from "../../../../utils/formatNumber";
 import ApproveBtn from "./ApproveBtn";
 import DepositButton from "@/components/button/DepositButton";
+import { handlerToast } from "@/components/toasty/utils";
+import { DEPOSIT_SUCESS } from "@/consts";
+import { ToastyTypes } from "@/components/toasty/types";
 interface IDepositTabProps {
   pool: any;
   onClose: () => void;
@@ -68,6 +71,13 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     }
   }, [allowance, formik.values.deposit, pool.decimals]);
 
+  const onSuccessDeposit = () => {
+    handlerToast({
+      content: DEPOSIT_SUCESS,
+      type: ToastyTypes.success
+    });
+  };
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Flex direction="column" gap="24px">
@@ -122,6 +132,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           <DepositButton
             variant="primaryFilled"
             isDisabled={!formik.values.deposit || !formik.isValid || isLoading}
+            onDeposit={onSuccessDeposit}
           />
         )}
       </Flex>

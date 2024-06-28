@@ -38,3 +38,9 @@ export const ARB_TOKEN: IToken = {
   chainId: defChainIdArbitrum,
   logoURI: "https://arbitrum.foundation/logo.png"
 };
+
+export const BALANCE_ERROR = "Insufficient funds";
+
+export const DEPOSIT_SUCESS = "Deposit successful";
+
+export const WITHDRAW_SUCESS = "Withdraw successful";

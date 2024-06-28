@@ -1,10 +1,16 @@
 "use client";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import Header from "./components/Header/Header";
 import Pay from "./components/Pay/Pay";
 import Receive from "./components/Receive/Receive";
 import Fee from "./components/Fee/Fee";
-import { ARB_TOKEN, ICON_NAMES, PARASWAP_SPENDER_ADDRESS, USDT_TOKEN } from "@/consts";
+import {
+  ARB_TOKEN,
+  BALANCE_ERROR,
+  ICON_NAMES,
+  PARASWAP_SPENDER_ADDRESS,
+  USDT_TOKEN
+} from "@/consts";
 import Icon from "@/components/icon";
 import { useAccount, useEstimateGas, useReadContract } from "wagmi";
 import { ConnectWallet } from "@/features/ConnectWallet";
@@ -27,7 +33,7 @@ const Swap = () => {
   const [receiveToken, setReceiveToken] = useState<IToken | null>(null);
   const [payAmount, setPayAmount] = useState("1.00");
   const [receiveAmount, setReceiveAmount] = useState("0.00");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
   const [isSuccessSwap, setIsSuccessSwap] = useState(false);
   const [exchangeRate, setExchangeRate] = useState<string>("");
   const [gasFee, setGasFee] = useState<string>("");
@@ -121,7 +127,7 @@ const Swap = () => {
     if (newError) {
       setError(getApiError(newError));
     } else if (!newError && error) {
-      setError(null);
+      setError("");
     }
   }, [payTokenPriceError, receiveTokenPriceError]);
 
@@ -242,7 +248,7 @@ const Swap = () => {
           isLoading={isLoadingPayTokenPrice}
         />
       </Box>
-      {error && (
+      {error && error !== BALANCE_ERROR && (
         <Text color="red.500" mt={4} textAlign="center">
           {error}
         </Text>
@@ -257,6 +263,7 @@ const Swap = () => {
           tokenAddress={payToken?.address || ""}
           tokenDecimals={payTokenDecimals}
           isDisabled={!payTokenPriceData || !receiveTokenPriceData || !!error}
+          error={error}
         />
       )}
       {!isNeedApprove && (

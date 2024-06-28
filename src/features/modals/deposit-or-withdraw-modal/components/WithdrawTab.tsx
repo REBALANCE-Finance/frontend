@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Button, Divider, Flex, HStack, Text } from "@chakra-ui/react";
 import { useFormik } from "formik";
@@ -11,6 +11,9 @@ import { useWithdraw } from "../../../../hooks/useWithdraw";
 import { parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber } from "../../../../utils/formatNumber";
 import { getPersonalEarnings } from "@/api/pools/queries";
+import { handlerToast } from "@/components/toasty/utils";
+import { WITHDRAW_SUCESS } from "@/consts";
+import { ToastyTypes } from "@/components/toasty/types";
 
 interface IWithdrawTabProps {
   pool: any;
@@ -52,20 +55,27 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
       formik.setFieldValue("withdraw", balance.toString());
       formik.validateField("withdraw");
     };
-    console.log('formik', balance);
+    console.log("formik", balance);
 
+    useEffect(() => {
+      if (address) {
+        getPersonalEarnings(1, 30, address, pool.token)
+          .then(data => {
+            console.log(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0, "data");
+            setProfit(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0);
+          })
+          .catch(e => {
+            console.log(e, "error");
+          });
+      }
+    }, [address, pool.rebalancerAddress]);
 
-  useEffect(() => {
-    if (address) {
-      getPersonalEarnings(1, 30, address, pool.token)
-        .then(data => {
-          console.log(data.userEarned.reduce((acc, el) => (acc + el.uv), 0) || 0, 'data');
-          setProfit(data.userEarned.reduce((acc, el) => (acc + el.uv), 0) || 0);
-        }).catch((e) => {
-          console.log(e, 'error');
-        })
-    }
-  }, [address, pool.rebalancerAddress]);
+    const onSuccessWithdraw = () => {
+      handlerToast({
+        content: WITHDRAW_SUCESS,
+        type: ToastyTypes.success
+      });
+    };
 
     return (
       <form onSubmit={formik.handleSubmit}>
@@ -115,6 +125,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
             variant="primaryFilled"
             type="submit"
             isDisabled={!formik.values.withdraw || !formik.isValid}
+            onClick={onSuccessWithdraw}
           >
             Withdraw
           </Button>

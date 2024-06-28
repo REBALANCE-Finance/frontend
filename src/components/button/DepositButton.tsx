@@ -1,25 +1,38 @@
 import { motion } from "framer-motion";
 import { Button } from "@chakra-ui/react";
 
-const DepositButton = ({isDisabled, variant} : {isDisabled: boolean, variant: string}) => {
+const DepositButton = ({
+  isDisabled,
+  variant,
+  onDeposit
+}: {
+  isDisabled: boolean;
+  variant: string;
+  onDeposit: VoidFunction;
+}) => {
   return (
     <motion.div
-      initial={{ backgroundColor: !isDisabled ? 'rgba(76, 255, 148, .3)' : 'rgb(21, 22, 25)' }}
-      animate={{ backgroundColor: !isDisabled ? ['rgba(76, 255, 148, .7)', 'rgba(76, 255, 148, .3)'] : 'rgb(21, 22, 25)' }}
+      initial={{ backgroundColor: !isDisabled ? "rgba(76, 255, 148, .3)" : "rgb(21, 22, 25)" }}
+      animate={{
+        backgroundColor: !isDisabled
+          ? ["rgba(76, 255, 148, .7)", "rgba(76, 255, 148, .3)"]
+          : "rgb(21, 22, 25)"
+      }}
       transition={{
         duration: 1.2,
         repeat: !isDisabled ? Infinity : 0,
         repeatType: "reverse",
         // repeatType: "loop",  // Циклическое повторение
-        ease: "linear"  // Равномерное изменение анимации
+        ease: "linear" // Равномерное изменение анимации
       }}
       style={{ borderRadius: "4px" }}
     >
       <Button
         width={"100%"}
-        variant={'#4CFF94'}
+        variant={"#4CFF94"}
         type="submit"
         isDisabled={isDisabled}
+        onClick={onDeposit}
       >
         Deposit
       </Button>
