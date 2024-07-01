@@ -1,10 +1,10 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getAreaChartAllIntervals, getPools } from "@/api/pools/queries";
 import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
-import { IPoolData } from '@/api/pools/types';
+import { IPoolData, IAreaChartData } from "@/api/pools/types";
 
 const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
   const router = useRouter();
@@ -16,11 +16,25 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedPools = await getPools('lending');
+        const fetchedPools = await getPools("lending");
         setPools(fetchedPools);
-        const token = fetchedPools?.find(item => item.rebalancerAddress === params.poolAddress)?.token || fetchedPools[0]?.token;
+        const token =
+          fetchedPools?.find(item => item.rebalancerAddress === params.poolAddress)?.token ||
+          fetchedPools[0]?.token;
         if (token) {
-          const fetchedChartData = await getAreaChartAllIntervals(token);
+          let fetchedChartData = await getAreaChartAllIntervals(token);
+
+          const intervals = ["1m", "6m", "1y"];
+          intervals.forEach(interval => {
+            // @ts-ignore
+            fetchedChartData.chartData[interval] = fetchedChartData.chartData[interval].map(
+              (dataPoint: any, index: number) => ({
+                ...dataPoint,
+                hardcodedLine: index * 1.1
+              })
+            );
+          });
+
           setChartData(fetchedChartData);
         } else {
           throw new Error("Invalid pool address or token not found");

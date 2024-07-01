@@ -1,5 +1,5 @@
 import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React from "react";
 import { Area } from "recharts";
 
 import { AreaChart } from "../../../components/charts/AreaChart";
@@ -8,11 +8,12 @@ import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES } from "../../../components/data-switcher/utils";
 import { MEDIA_QUERY_MAX } from "../../../consts";
 import { LegendAreaChart } from "./components/LegendAreaChart";
-import { IAreaLineProps } from "./types";
 import { areaLines, colorsArea, tickFormatter } from "./utils";
 import { IAreaChartData } from "@/api/pools/types";
 import UserProfit from "@/pagesComponents/Pools/PoolsLending/components/UserProfit";
 import { useAccount } from "wagmi";
+import { IAreaLineProps } from "./types";
+import { ROUTES_TYPE } from "@/consts/routes-type";
 
 const areaGradient = (
   <defs>
@@ -40,30 +41,41 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
     />
   ));
 
+  arr.push(
+    <Area
+      key="hardcodedLine"
+      name={areaLines[1].name}
+      type="linear"
+      dataKey="hardcodedLine"
+      stroke="#8884d8"
+      fillOpacity={1}
+      fill={`url(#color-${ROUTES_TYPE.borrowing})`}
+    />
+  );
+
   return [...arr, areaGradient];
 };
 
-export const LendChart = ({ chartData } : {
-  chartData: IAreaChartData
-}) => {
+export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
-  const {address} = useAccount();
+  const { address } = useAccount();
+
   return (
     <Flex w="100%" direction="column" position="relative">
-      {
-        address &&
+      {address && (
         <Text
           textStyle="h2"
           color="white"
           display="flex"
           justifyContent="space-between"
           alignItems="center"
-          mb={media ? "24px" : "14px"}>
+          mb={media ? "24px" : "14px"}
+        >
           <span>My Total Profit</span>
           <UserProfit address={address} />
         </Text>
-      }
+      )}
       <Flex w="100%" alignItems="center" justify="space-between" mb={{ base: "0", md: "10px" }}>
         {!media && (
           <Flex alignItems="center" gap="12px">
@@ -87,6 +99,7 @@ export const LendChart = ({ chartData } : {
         lines={getAreaLines(areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}
+        isLending
       />
 
       {media && (

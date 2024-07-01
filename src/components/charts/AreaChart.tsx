@@ -18,7 +18,8 @@ export const AreaChart: FC<IAreaChartProps> = ({
   lines,
   tickFormatter,
   legend,
-  tooltipName
+  tooltipName,
+  isLending
 }) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -34,7 +35,10 @@ export const AreaChart: FC<IAreaChartProps> = ({
         {gradient}
         <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.2} />
         {legend}
-        <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltip name={tooltipName}/>} />
+        <Tooltip
+          cursor={{ opacity: 0.1, strokeWidth: 1 }}
+          content={<CustomTooltip name={tooltipName} isLending={isLending} />}
+        />
         <XAxis
           dataKey="date"
           tickLine={false}
@@ -47,11 +51,24 @@ export const AreaChart: FC<IAreaChartProps> = ({
         />
         <YAxis
           axisLine={false}
+          yAxisId={0}
           tickSize={5}
           tickLine={false}
           fontSize={themes.fontSizes.sm}
           stroke={themes.colors.darkGray}
           tickFormatter={(e: string) => `${e} %`}
+        />
+        <YAxis
+          yAxisId={1}
+          orientation="right"
+          dataKey="hardcodedLine"
+          axisLine={false}
+          tickLine={false}
+          axisType="yAxis"
+          fontSize={themes.fontSizes.sm}
+          stroke={themes.colors.darkGray}
+          tickFormatter={(e: string) => `$${e}`}
+          allowDataOverflow
         />
         {lines}
       </AreaChartDefault>
