@@ -143,12 +143,14 @@ const Swap = () => {
   useEffect(() => {
     if (payTokenPriceData) {
       setReceiveAmount(
-        formatBigNumber(
-          // @ts-ignore
-          BigInt(payTokenPriceData.priceRoute.destAmount),
-          // @ts-ignore
-          payTokenPriceData.priceRoute.destDecimals
-        )
+        Number(
+          formatBigNumber(
+            // @ts-ignore
+            BigInt(payTokenPriceData.priceRoute.destAmount),
+            // @ts-ignore
+            payTokenPriceData.priceRoute.destDecimals
+          )
+        ).toFixed(6)
       );
     }
   }, [payTokenPriceData]);
@@ -156,12 +158,14 @@ const Swap = () => {
   useEffect(() => {
     if (receiveTokenPriceData) {
       setPayAmount(
-        formatBigNumber(
-          // @ts-ignore
-          BigInt(receiveTokenPriceData.priceRoute.destAmount),
-          // @ts-ignore
-          receiveTokenPriceData.priceRoute.destDecimals
-        )
+        Number(
+          formatBigNumber(
+            // @ts-ignore
+            BigInt(receiveTokenPriceData.priceRoute.destAmount),
+            // @ts-ignore
+            receiveTokenPriceData.priceRoute.destDecimals
+          )
+        ).toFixed(6)
       );
     }
   }, [receiveTokenPriceData]);
