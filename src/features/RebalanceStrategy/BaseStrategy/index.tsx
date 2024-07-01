@@ -10,14 +10,13 @@ import { BaseChart } from "./BaseChart";
 import EarningsChart from "./EarningsChart";
 import { formatNumber } from "@/utils/formatNumber";
 
-
 const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
   const { address } = useAccount();
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x", pool.decimals);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   return (
     <SimpleGrid columns={media ? 1 : 2} gap="24px">
-      <Flex direction="column" >
+      <Flex direction="column">
         <Flex direction="column" bg="#17191C" borderRadius="8px" padding="24px">
           <Text fontSize="lg">My deposit</Text>
           <Box mt="16px" mb="24px" display="flex" flexDirection="row" alignItems="baseline">
@@ -29,17 +28,16 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
             </Text>
           </Box>
           <SimpleGrid columns={!media || balance > 0 ? 2 : 1} gap="8px">
-            <DepositLendingButton variant="primaryWhite" pool={pool} />
-            {balance > 0 && <WithdrawLendingButton pool={pool} />}
+            <DepositLendingButton variant="primaryWhite" pool={pool} minHeight="40px" />
+            {balance > 0 && <WithdrawLendingButton pool={pool} minHeight="40px" />}
           </SimpleGrid>
         </Flex>
 
-        <EarningsChart token={pool?.token} address={address} pool={pool}/>
-
+        <EarningsChart token={pool?.token} address={address} pool={pool} />
       </Flex>
 
       <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
-        <BaseChart chartData={chartData}/>
+        <BaseChart chartData={chartData} />
       </Flex>
     </SimpleGrid>
   );

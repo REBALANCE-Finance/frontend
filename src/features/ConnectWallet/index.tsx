@@ -51,7 +51,15 @@ if (!isMobile) {
   });
 }
 
-export const ConnectWallet = ({ title, variant }: { title?: string; variant?: string }) => {
+export const ConnectWallet = ({
+  title,
+  variant,
+  minHeight
+}: {
+  title?: string;
+  variant?: string;
+  minHeight?: string;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { login } = useAuth();
@@ -143,6 +151,7 @@ export const ConnectWallet = ({ title, variant }: { title?: string; variant?: st
         width={variant ? "100%" : "auto"}
         mt={variant ? 4 : 0}
         h={variant ? "52px" : "auto"}
+        minH={minHeight}
         _hover={{
           opacity: 0.8
         }}

@@ -125,14 +125,18 @@ const data = [
 ];
 
 interface IBarChartData {
-  name: Date | string,
-  uv: number
+  name: Date | string;
+  uv: number;
 }
 
-const EarningsChart = ({ address, token, pool } : {
-  address: `0x${string}` | undefined,
-  token: string,
-  pool: IPoolData
+const EarningsChart = ({
+  address,
+  token,
+  pool
+}: {
+  address: `0x${string}` | undefined;
+  token: string;
+  pool: IPoolData;
 }) => {
   const { selectedDate, setSelectDate } = useDateSwitcher(DATESEarned[0]);
   const [userEarningsData, setUserEarningsData] = useState<IBarChartData[] | undefined>(undefined);
@@ -141,19 +145,19 @@ const EarningsChart = ({ address, token, pool } : {
 
   useEffect(() => {
     if (address) {
-      setError(false)
+      setError(false);
       getPersonalEarnings(selectedDate.interval, selectedDate.intervals, address, token)
         .then(data => {
           setUserEarningsData(data.userEarned);
           setAvgApr(data.avgAPR);
         })
-        .catch((e) => {
+        .catch(e => {
           setError(true);
-        })
+        });
     }
   }, [address, selectedDate]);
 
-  const userTotalEarning = userEarningsData?.reduce((acc, el) => (acc + el.uv), 0) || 0;
+  const userTotalEarning = userEarningsData?.reduce((acc, el) => acc + el.uv, 0) || 0;
   return (
     <>
       {!error ? (
@@ -174,31 +178,31 @@ const EarningsChart = ({ address, token, pool } : {
                 <Text textStyle="textMono16">{`${avgApr.toFixed(2)} %`}</Text>
               </Flex>
             </Flex>
-            <Flex position={'relative'} w={'100%'}>
+            <Flex position={"relative"} w={"100%"}>
               <ResponsiveContainer width="100%" height="100%">
                 {address ? (
                   <BarChart width={150} height={10} data={userEarningsData}>
-                    <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5} >
-                      {
-                        userEarningsData?.map((entry, index) => {
-                          const color = entry.uv > 0 ? "#4CFF94" : '#1A3C28';
-                          return <Cell fill={color} />;
-                        })
-                      }
+                    <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}>
+                      {userEarningsData?.map((entry, index) => {
+                        const color = entry.uv > 0 ? "#4CFF94" : "#1A3C28";
+                        return <Cell fill={color} />;
+                      })}
                     </Bar>
-                    <Tooltip cursor={{ opacity: 0.1, strokeWidth: 1 }} content={<CustomTooltipBarChart />} />
+                    <Tooltip
+                      cursor={{ opacity: 0.1, strokeWidth: 1 }}
+                      content={<CustomTooltipBarChart />}
+                    />
                   </BarChart>
                 ) : (
                   <BarChart width={150} height={10} data={data}>
-                    <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}>
-                    </Bar>
+                    <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}></Bar>
                   </BarChart>
                 )}
               </ResponsiveContainer>
               {!address ? (
                 <Flex
-                  position='absolute'
-                  inset='0'
+                  position="absolute"
+                  inset="0"
                   margin="auto"
                   display="flex"
                   justifyContent="center"
@@ -209,8 +213,8 @@ const EarningsChart = ({ address, token, pool } : {
                   fontSize="large"
                   fontWeight="500"
                 >
-                  <Flex w={'50%'}>
-                    <DepositLendingButton variant="primaryWhite" pool={pool} />
+                  <Flex w={"50%"}>
+                    <DepositLendingButton variant="primaryWhite" pool={pool} minHeight="40px" />
                   </Flex>
                 </Flex>
               ) : null}
@@ -222,7 +226,7 @@ const EarningsChart = ({ address, token, pool } : {
           <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
             <Text fontSize="lg">My monthly earnings</Text>
           </Flex>
-          <Flex align={'center'} justify={'center'} width="100%" mt="48px">
+          <Flex align={"center"} justify={"center"} width="100%" mt="48px">
             <Text color="white">Error on loading data. Please try again later</Text>
           </Flex>
         </Flex>
