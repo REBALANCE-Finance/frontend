@@ -37,6 +37,8 @@ const Swap = () => {
   const [isSuccessSwap, setIsSuccessSwap] = useState(false);
   const [exchangeRate, setExchangeRate] = useState<string>("");
   const [gasFee, setGasFee] = useState<string>("");
+  const [isPayInputChanged, setIsPayInputChanged] = useState(true);
+  const [isReceiveInputChanged, setIsReceiveInputChanged] = useState(false);
 
   const { data: tokenList } = useGetTokenList(chainId ?? defChainIdArbitrum);
 
@@ -57,6 +59,21 @@ const Swap = () => {
   const approvedAmountValue = performApprovedAmountValue(approvedAmount, payTokenDecimals);
 
   const {
+    data: receiveTokenPriceData,
+    error: receiveTokenPriceError,
+    isLoading: isLoadingReceiveTokenPrice,
+    isFetched: isReceiveTokenPriceFetched
+  } = useGetPrice(
+    receiveToken?.address,
+    payToken?.address,
+    Number(receiveAmount),
+    chainId ?? defChainIdArbitrum,
+    receiveTokenDecimals,
+    payTokenDecimals,
+    isReceiveInputChanged
+  );
+
+  const {
     data: payTokenPriceData,
     error: payTokenPriceError,
     refetch,
@@ -67,16 +84,8 @@ const Swap = () => {
     Number(payAmount),
     chainId ?? defChainIdArbitrum,
     payTokenDecimals,
-    receiveTokenDecimals
-  );
-
-  const { data: receiveTokenPriceData, error: receiveTokenPriceError } = useGetPrice(
-    receiveToken?.address,
-    payToken?.address,
-    Number(receiveAmount),
-    chainId ?? defChainIdArbitrum,
     receiveTokenDecimals,
-    payTokenDecimals
+    isPayInputChanged
   );
 
   useEffect(() => {
@@ -144,29 +153,74 @@ const Swap = () => {
     }
   }, [payTokenPriceData]);
 
+  useEffect(() => {
+    if (receiveTokenPriceData) {
+      setPayAmount(
+        formatBigNumber(
+          // @ts-ignore
+          BigInt(receiveTokenPriceData.priceRoute.destAmount),
+          // @ts-ignore
+          receiveTokenPriceData.priceRoute.destDecimals
+        )
+      );
+    }
+  }, [receiveTokenPriceData]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isPayInputChanged) {
+      timer = setTimeout(() => {
+        setIsPayInputChanged(false);
+      }, 1000);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isPayInputChanged]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isReceiveInputChanged) {
+      timer = setTimeout(() => {
+        setIsReceiveInputChanged(false);
+      }, 1000);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isReceiveInputChanged]);
+
   const payTokenPrice =
     Number(payAmount) > 0 && payTokenPriceData
       ? // @ts-ignore
         Number(payTokenPriceData?.priceRoute?.srcUSD).toFixed(6) || 0
+      : Number(payAmount) > 0 && receiveTokenPriceData
+      ? // @ts-ignore
+        Number(receiveTokenPriceData?.priceRoute?.srcUSD).toFixed(6) || 0
       : 0;
 
   const receiveTokenPrice =
-    Number(receiveAmount) > 0 && receiveTokenPriceData
+    Number(receiveAmount) > 0 && payTokenPriceData
+      ? // @ts-ignore
+        Number(payTokenPriceData?.priceRoute?.destUSD).toFixed(6)
+      : Number(receiveAmount) > 0 && receiveTokenPriceData
       ? // @ts-ignore
         Number(receiveTokenPriceData?.priceRoute?.destUSD).toFixed(6)
       : 0;
 
   const handlePayInputChange = (value: string) => {
+    setIsPayInputChanged(true);
     setError("");
     setPayAmount(value);
     refetchAllowance();
   };
 
   const handleReceiveInputChange = (value: string) => {
+    setIsReceiveInputChanged(true);
     setError("");
     setReceiveAmount(value);
-    setGasFee("");
-    setExchangeRate("");
   };
 
   const handleSelectPayToken = (token: IToken) => {
@@ -236,6 +290,7 @@ const Swap = () => {
           excludeToken={receiveToken}
           isSuccessSwap={isSuccessSwap}
           onError={setError}
+          isLoading={isLoadingReceiveTokenPrice}
         />
         <Receive
           selected={receiveToken}
@@ -262,11 +317,11 @@ const Swap = () => {
           spenderAddress={PARASWAP_SPENDER_ADDRESS}
           tokenAddress={payToken?.address || ""}
           tokenDecimals={payTokenDecimals}
-          isDisabled={!payTokenPriceData || !receiveTokenPriceData || !!error}
+          isDisabled={(!payTokenPriceData && !receiveTokenPriceData) || !!error}
           error={error}
         />
       )}
-      {!isNeedApprove && (
+      {!isNeedApprove && !isLoadingPayTokenPrice && !isLoadingReceiveTokenPrice && (
         <SwapButton
           payToken={{
             address: (payToken?.address as AddressType) || ("" as AddressType),
@@ -277,7 +332,7 @@ const Swap = () => {
             address: (receiveToken?.address as AddressType) || ("" as AddressType),
             decimals: receiveTokenDecimals
           }}
-          isDisabled={isSwapDisabled || !payTokenPriceData || !receiveTokenPriceData}
+          isDisabled={isSwapDisabled}
           onError={setError}
           onSuccess={setIsSuccessSwap}
         />

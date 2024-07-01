@@ -8,12 +8,13 @@ export const useGetPrice = (
   amount: number,
   network: number,
   srcDecimals: number,
-  destDecimals: number
+  destDecimals: number,
+  needRefetch?: boolean,
 ) => {
   return useQuery<IPrices>({
     queryKey: ["prices", srcToken, destToken, amount, network, srcDecimals, destDecimals],
     queryFn: () => getPrices(srcToken!, destToken!, amount, network, srcDecimals, destDecimals),
-    enabled: !!srcToken && !!destToken && amount > 0,
+    enabled: !!srcToken && !!destToken && amount > 0 && needRefetch,
     retry: 1
   });
 };

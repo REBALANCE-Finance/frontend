@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Flex, InputGroup, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, InputGroup, Skeleton, Text } from "@chakra-ui/react";
 import Select from "../ui/Select";
 import AmountInput from "../ui/AmountInput";
 import { useEffect, useMemo } from "react";
@@ -29,7 +29,8 @@ const Pay = ({
   price,
   excludeToken,
   isSuccessSwap,
-  onError
+  onError,
+  isLoading
 }: any) => {
   const { address, chainId } = useAccount();
   const tokenListQuery = useGetTokenList(chainId || 42161, isSuccessSwap);
@@ -110,15 +111,19 @@ const Pay = ({
           You pay
         </Text>
         <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between" gap={2}>
-          <AmountInput
-            amount={amount}
-            setAmount={setAmount}
-            maxAmount={Number(selectedTokenBalance)}
-            textAlign="left"
-            fontSize="24px"
-            fontWeight={500}
-            flex={1}
-          />
+          {isLoading ? (
+            <Skeleton height={10} width="80px" borderRadius="8px" />
+          ) : (
+            <AmountInput
+              amount={amount}
+              setAmount={setAmount}
+              maxAmount={Number(selectedTokenBalance)}
+              textAlign="left"
+              fontSize="24px"
+              fontWeight={500}
+              flex={1}
+            />
+          )}
           <Select
             options={allTokensSorted}
             value={selected}
@@ -130,9 +135,13 @@ const Pay = ({
           />
         </Box>
         <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
-          <Text textStyle="textMono10" color="darkgrey">
-            ~${price}
-          </Text>
+          {isLoading ? (
+            <Skeleton height="15px" width="40px" borderRadius="8px" />
+          ) : (
+            <Text textStyle="textMono10" color="darkgrey">
+              ~${price}
+            </Text>
+          )}
           {!contractsData.isLoading && address && (
             <Flex gap={1.5} alignItems="center">
               <Text textStyle="textMono10">
