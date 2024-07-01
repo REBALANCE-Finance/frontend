@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import Header from "./components/Header/Header";
 import Pay from "./components/Pay/Pay";
 import Receive from "./components/Receive/Receive";
@@ -12,7 +12,7 @@ import {
   USDT_TOKEN
 } from "@/consts";
 import Icon from "@/components/icon";
-import { useAccount, useEstimateGas, useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import { ConnectWallet } from "@/features/ConnectWallet";
 import { useState, useEffect } from "react";
 import { IToken } from "@/api/tokens/types";

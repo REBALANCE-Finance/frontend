@@ -93,7 +93,7 @@ const Receive = ({
         <Text fontSize="12px" color="gray">
           You receive
         </Text>
-        <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
+        <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between" gap={2}>
           {isLoading ? (
             <Skeleton height={10} width="80px" borderRadius="8px" />
           ) : (

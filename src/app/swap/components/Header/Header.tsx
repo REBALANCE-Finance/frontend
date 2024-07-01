@@ -38,13 +38,20 @@ const Header = ({ onRefetch }: HeaderProps) => {
           icon={<Icon name={ICON_NAMES.copy} />}
           onClick={handleCopyAddress}
           isDisabled={!address}
+          minW={0}
         />
         <IconButton
           aria-label="update"
           icon={<Icon name={ICON_NAMES.update} />}
           onClick={onRefetch}
+          minW={0}
         />
-        <IconButton aria-label="settings" icon={<Icon name={ICON_NAMES.settings} />} isDisabled />
+        <IconButton
+          aria-label="settings"
+          icon={<Icon name={ICON_NAMES.settings} />}
+          isDisabled
+          minW={0}
+        />
       </Box>
     </Flex>
   );

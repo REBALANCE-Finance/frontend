@@ -80,6 +80,8 @@ const Pay = ({
   useEffect(() => {
     if (amount > selectedTokenBalance) {
       onError(BALANCE_ERROR);
+    } else {
+      onError("");
     }
   }, [amount, selectedTokenBalance]);
 
@@ -107,7 +109,7 @@ const Pay = ({
         <Text fontSize="12px" color="gray">
           You pay
         </Text>
-        <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
+        <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between" gap={2}>
           <AmountInput
             amount={amount}
             setAmount={setAmount}

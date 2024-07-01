@@ -8,7 +8,7 @@ type FeeProps = {
 
 const Fee = ({ exchangeRate, gasFee, isLoading }: FeeProps) => {
   if (isLoading) {
-    return <Skeleton height={16} mt={3} />;
+    return <Skeleton height={12} mt={3} />;
   }
 
   return (
