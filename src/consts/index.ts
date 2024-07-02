@@ -44,3 +44,7 @@ export const BALANCE_ERROR = "Insufficient funds";
 export const DEPOSIT_SUCESS = "Deposit successful";
 
 export const WITHDRAW_SUCESS = "Withdraw successful";
+
+export const FIRELABS_AUDIT_LINK = "https://4irelabs.com/smart-contract-audit/";
+
+export const HACKEN_AUDIT_LINK = "https://hacken.io/audits/rebalance/";

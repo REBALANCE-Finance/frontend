@@ -1,9 +1,11 @@
 import { Box, Flex, Text, Image } from "@chakra-ui/react";
 import React, { FC } from "react";
-import { Skeleton } from '@chakra-ui/react'
+import { Skeleton } from "@chakra-ui/react";
 import Img from "./Images";
 import protokol from "/public/assets/image/Protocols.svg";
 import { formatNumber } from "@/utils/formatNumber";
+import Link from "next/link";
+import { FIRELABS_AUDIT_LINK, HACKEN_AUDIT_LINK } from "@/consts";
 interface RebalncePerformanceCardProps {
   image: string;
   title: string;
@@ -12,7 +14,7 @@ interface RebalncePerformanceCardProps {
   isActive: boolean;
   logo: string;
   type: string;
-  logos: { src: string; w: number; h: number }[]
+  logos: { src: string; w: number; h: number }[];
 }
 
 export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
@@ -31,40 +33,41 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
       position="relative"
       _before={
         isActive
-        ? {
-            content: `""`,
-            borderLeftRadius: "4px",
-            w: "4px",
-            h: "100%",
-            position: "absolute",
-            bg: "greenAlpha.100",
-            zIndex: 5
-          }
-        : {}
+          ? {
+              content: `""`,
+              borderLeftRadius: "4px",
+              w: "4px",
+              h: "100%",
+              position: "absolute",
+              bg: "greenAlpha.100",
+              zIndex: 5
+            }
+          : {}
       }
     >
-      {
-        type !== "lending" ?
+      {type !== "lending" ? (
         <Flex
-        position="absolute"
-        top="0"
-        left="0"
-        right="0"
-        bottom="0"
-        margin="auto"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        background="000"
-        backdropFilter="blur(4px)"
-        zIndex="9"
-        fontSize="large"
-        fontWeight="500"
-      >
-        Coming Soon
-      </Flex> : null
-      }
-      <Box borderLeftRadius="4px"><Image boxSize="200px" objectFit="fill" src={image}/></Box>
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          margin="auto"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          background="000"
+          backdropFilter="blur(4px)"
+          zIndex="9"
+          fontSize="large"
+          fontWeight="500"
+        >
+          Coming Soon
+        </Flex>
+      ) : null}
+      <Box borderLeftRadius="4px">
+        <Image boxSize="200px" objectFit="fill" src={image} />
+      </Box>
       <Flex direction="column" p="16px" gap="8px" flex="1">
         <Flex justify="space-between" alignItems="center">
           <Image src={logo} w="116px" h="29px" />
@@ -74,34 +77,65 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
             fontSize="16px"
             textStyle="textMono16"
             display="flex"
-            alignItems="center">TVL: ${formatNumber(info) ? formatNumber(info) : <Skeleton ml={2} height="20px" width="60px" />}</Text>
+            alignItems="center"
+          >
+            TVL: $
+            {formatNumber(info) ? (
+              formatNumber(info)
+            ) : (
+              <Skeleton ml={2} height="20px" width="60px" />
+            )}
+          </Text>
         </Flex>
-        <Box mt="12px" textAlign="start" display="flex" flexDir="column" fontSize="13px" color="#DEDEDE">
-          {
-            type === "lending" ?
+        <Box
+          mt="12px"
+          textAlign="start"
+          display="flex"
+          flexDir="column"
+          fontSize="13px"
+          color="#DEDEDE"
+        >
+          {type === "lending" ? (
             <>
-              <Text>Non-upgradable, trustless</Text>
-              <Text>Chainlink® decentralised computation</Text>
-              <Text>LP insurance</Text>
-              <Text>Lowest risk</Text>
+              <Text>Computations by Chainlink Automation ® </Text>
+              <Text>
+                Audited by{" "}
+                <Link
+                  href={HACKEN_AUDIT_LINK}
+                  target="_blank"
+                  style={{ textDecoration: "underline" }}
+                >
+                  Hacken
+                </Link>
+                ,{" "}
+                <Link
+                  href={FIRELABS_AUDIT_LINK}
+                  target="_blank"
+                  style={{ textDecoration: "underline" }}
+                >
+                  4ire Labs
+                </Link>
+              </Text>
+              <Text>Protected by Hacken Extractor ® </Text>
             </>
-            :
+          ) : (
             <>
               <Text>DAO governed</Text>
               <Text>Higher yield</Text>
               <Text>+10% RBLN extra APY</Text>
               <Text>Turtle Club® Incentives</Text>
             </>
-          }
+          )}
         </Box>
         <Flex alignItems="center" mt="auto">
-          {
-            type !== "lending" ?
+          {type !== "lending" ? (
             <Box display="flex" alignItems="center">
-              <Text color="#DEDEDE" fontSize="12px">Extra-points</Text>
+              <Text color="#DEDEDE" fontSize="12px">
+                Extra-points
+              </Text>
               <Image ml="8px" src={protokol.src} w="24px" h="24px" />
-            </Box> : null
-          }
+            </Box>
+          ) : null}
           <Box ml="auto" display="flex" gap="12px" alignItems="center">
             {logos.map((logo, index) => (
               <Img key={index} src={logo.src} width={logo.w} height={logo.h} />
