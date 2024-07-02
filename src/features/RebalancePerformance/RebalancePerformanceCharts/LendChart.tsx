@@ -1,5 +1,6 @@
+"use client";
 import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
-import React from "react";
+import React, { useMemo } from "react";
 import { Area } from "recharts";
 
 import { AreaChart } from "../../../components/charts/AreaChart";
@@ -29,6 +30,7 @@ const areaGradient = (
 );
 
 const getAreaLines = (areas: IAreaLineProps[]) => {
+  console.log("here ar", areas);
   const arr = areas.map((area, i) => (
     <Area
       key={i}
@@ -41,17 +43,19 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
     />
   ));
 
-  arr.push(
-    <Area
-      key="hardcodedLine"
-      name={areaLines[1].name}
-      type="linear"
-      dataKey="hardcodedLine"
-      stroke="#8884d8"
-      fillOpacity={1}
-      fill={`url(#color-${ROUTES_TYPE.borrowing})`}
-    />
-  );
+  if (areas.length !== 1) {
+    arr.push(
+      <Area
+        key="hardcodedLine"
+        name={areaLines[1].name}
+        type="linear"
+        dataKey="hardcodedLine"
+        stroke="#8884d8"
+        fillOpacity={1}
+        fill={`url(#color-${ROUTES_TYPE.borrowing})`}
+      />
+    );
+  }
 
   return [...arr, areaGradient];
 };
@@ -59,7 +63,25 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
 export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
+
+  console.log("is", isConnected, getAreaLines(areaLines));
+
+  const _areaLines = useMemo(() => {
+    if (isConnected) {
+      return areaLines;
+    }
+    return [areaLines[0]];
+  }, [isConnected]);
+
+  console.log("lines", _areaLines);
+
+  const getLines = () => {
+    if (isConnected) {
+      return areaLines;
+    }
+    return [areaLines[0]];
+  };
 
   return (
     <Flex w="100%" direction="column" position="relative">
@@ -79,7 +101,7 @@ export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
       <Flex w="100%" alignItems="center" justify="space-between" mb={{ base: "0", md: "10px" }}>
         {!media && (
           <Flex alignItems="center" gap="12px">
-            {areaLines.map(elem => (
+            {_areaLines.map(elem => (
               <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
             ))}
           </Flex>
@@ -96,10 +118,11 @@ export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
 
       <AreaChart
         data={chartData?.chartData[selectedDate.name]}
-        lines={getAreaLines(areaLines)}
+        lines={getAreaLines(getLines())}
         gradient={areaGradient}
         tickFormatter={tickFormatter}
         isLending
+        isConnected={isConnected}
       />
 
       {media && (

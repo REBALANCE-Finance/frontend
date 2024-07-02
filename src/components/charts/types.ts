@@ -11,6 +11,7 @@ export interface IAreaChartProps extends IChartProps {
   legend?: JSX.Element | null;
   tooltipName?: boolean;
   isLending?: boolean;
+  isConnected?: boolean;
 }
 
 export interface IBarChart extends IChartProps {

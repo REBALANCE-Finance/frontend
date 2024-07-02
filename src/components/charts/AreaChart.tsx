@@ -1,3 +1,4 @@
+"use client";
 import React, { FC } from "react";
 import {
   AreaChart as AreaChartDefault,
@@ -19,7 +20,8 @@ export const AreaChart: FC<IAreaChartProps> = ({
   tickFormatter,
   legend,
   tooltipName,
-  isLending
+  isLending,
+  isConnected
 }) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -58,18 +60,20 @@ export const AreaChart: FC<IAreaChartProps> = ({
           stroke={themes.colors.darkGray}
           tickFormatter={(e: string) => `${e} %`}
         />
-        <YAxis
-          yAxisId={1}
-          orientation="right"
-          dataKey="hardcodedLine"
-          axisLine={false}
-          tickLine={false}
-          axisType="yAxis"
-          fontSize={themes.fontSizes.sm}
-          stroke={themes.colors.darkGray}
-          tickFormatter={(e: string) => `$${e}`}
-          allowDataOverflow
-        />
+        {isConnected && (
+          <YAxis
+            yAxisId={1}
+            orientation="right"
+            dataKey="hardcodedLine"
+            axisLine={false}
+            tickLine={false}
+            axisType="yAxis"
+            fontSize={themes.fontSizes.sm}
+            stroke={themes.colors.darkGray}
+            tickFormatter={(e: string) => `$${e}`}
+            allowDataOverflow
+          />
+        )}
         {lines}
       </AreaChartDefault>
     </ResponsiveContainer>
