@@ -26,6 +26,7 @@ import SwapButton from "@/components/button/SwapButton";
 import { AddressType } from "@/types";
 import { getApiError } from "@/utils/handlers";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
+import useDebounce from "@/hooks/useDebounce";
 
 const Swap = () => {
   const { address, chainId, connector } = useAccount();
@@ -44,6 +45,9 @@ const Swap = () => {
 
   const payTokenDecimals = payToken?.decimals ?? 18;
   const receiveTokenDecimals = receiveToken?.decimals ?? 18;
+
+  const debouncedPayAmount = useDebounce(Number(payAmount), 300);
+  const debouncedReceiveAmount = useDebounce(Number(receiveAmount), 300);
 
   const { data: approvedAmount, refetch: refetchAllowance } = useReadContract({
     address: (payToken?.address as `0x${string}`) || "",
@@ -66,7 +70,7 @@ const Swap = () => {
   } = useGetPrice(
     receiveToken?.address,
     payToken?.address,
-    Number(receiveAmount),
+    debouncedReceiveAmount,
     chainId ?? defChainIdArbitrum,
     receiveTokenDecimals,
     payTokenDecimals,
@@ -81,7 +85,7 @@ const Swap = () => {
   } = useGetPrice(
     payToken?.address,
     receiveToken?.address,
-    Number(payAmount),
+    debouncedPayAmount,
     chainId ?? defChainIdArbitrum,
     payTokenDecimals,
     receiveTokenDecimals,
