@@ -1,4 +1,13 @@
-import { Button, Divider, Flex, HStack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Divider,
+  Flex,
+  FormControl,
+  FormLabel,
+  HStack,
+  Switch,
+  Text
+} from "@chakra-ui/react";
 import { useFormik } from "formik";
 import React, { FC, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
@@ -13,6 +22,8 @@ import DepositButton from "@/components/button/DepositButton";
 import { handlerToast } from "@/components/toasty/utils";
 import { DEPOSIT_SUCESS } from "@/consts";
 import { ToastyTypes } from "@/components/toasty/types";
+import { DataSwitcher } from "@/components/data-switcher/DataSwitcher";
+import { FREEZE_DATES } from "@/components/data-switcher/utils";
 interface IDepositTabProps {
   pool: any;
   onClose: () => void;
@@ -35,7 +46,9 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
 
   const formik = useFormik({
     initialValues: {
-      deposit: ""
+      deposit: "",
+      freeze: true,
+      freezePeriod: FREEZE_DATES[0]
     },
     validationSchema: depositSchema(
       formatBigNumber(balanceToken?.value, balanceToken?.decimals),
@@ -56,10 +69,6 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     }
   });
 
-  const setMax = () => {
-    formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
-  };
-
   useEffect(() => {
     if (formik.values.deposit) {
       const checkNeedsApproval = () => {
@@ -71,12 +80,22 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     }
   }, [allowance, formik.values.deposit, pool.decimals]);
 
+  const setMax = () => {
+    formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
+  };
+
   const onSuccessDeposit = () => {
     handlerToast({
       content: DEPOSIT_SUCESS,
       type: ToastyTypes.success
     });
   };
+
+  const getPointsString = (points: number) => {
+    return `+ ${formatNumber(points)} points`;
+  };
+
+  console.log("is", formik.values.freezePeriod);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -97,7 +116,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
             <Text textStyle="textMono16">
               ${formatNumber(formatBigNumber(balanceToken?.value, balanceToken?.decimals))}
             </Text>
-            <Button color="greenAlpha.100" onClick={setMax} isDisabled={isLoading}>
+            <Button color="green.100" onClick={setMax} isDisabled={isLoading}>
               Max
             </Button>
           </Flex>
@@ -105,10 +124,33 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
 
         <Divider borderColor="black.90" />
 
-        {/* <HStack justify="space-between">
-          <Text color="black.0">Use as collateral</Text>
-          <Switch />
-        </HStack> */}
+        <FormControl display="flex" alignItems="center" justifyContent="space-between">
+          <FormLabel htmlFor="freeze" mb="0" borderBottom="1px dashed #fff">
+            Freeze ✨
+          </FormLabel>
+          <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
+        </FormControl>
+
+        <Flex justify="space-between" gap={4} alignItems="center">
+          <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>Choose freeze period</Text>
+          <DataSwitcher
+            data={FREEZE_DATES}
+            value={formik.values.freezePeriod}
+            onChange={value => formik.setFieldValue("freezePeriod", value)}
+            isDisabled={!formik.values.freeze}
+          />
+        </Flex>
+
+        <Flex justify="space-between" gap={4} alignItems="center">
+          <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
+            Projected point earnings
+          </Text>
+          <Text color={!formik.values.freeze ? "darkgray" : "greenAlpha.100"}>
+            {getPointsString(1234)}
+          </Text>
+        </Flex>
+
+        <Divider borderColor="black.90" />
 
         <HStack justify="space-between">
           <Text color="black.0">30D average APR</Text>
