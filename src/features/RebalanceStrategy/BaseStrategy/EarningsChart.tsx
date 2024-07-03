@@ -1,13 +1,16 @@
 import { Divider, Flex, Text } from "@chakra-ui/react";
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
-import { DATESEarned } from "../../../components/data-switcher/utils";
+import { DATES, DATESEarned } from "../../../components/data-switcher/utils";
 import { useEffect, useState } from "react";
 import { getPersonalEarnings } from "@/api/pools/queries";
 import { CustomTooltipBarChart } from "./components/CustomToolTipBarChart";
 import { IPoolData } from "@/api/pools/types";
 import { DepositLendingButton } from "@/features/actions/deposit-or-withdraw-button/DepositLendingButton";
+import { themes } from "../../../themes";
+import { tickFormatter } from "../utils";
+import { DateSwitcher } from "@/components/data-switcher";
 
 const data = [
   {
@@ -127,6 +130,7 @@ const data = [
 interface IBarChartData {
   name: Date | string;
   uv: number;
+  apr: number | null;
 }
 
 const EarningsChart = ({
@@ -155,26 +159,33 @@ const EarningsChart = ({
           setError(true);
         });
     }
-  }, [address, selectedDate]);
+    // TODO: bring back when api is ready with date
+    // }, [address, selectedDate]);
+  }, [address]);
 
   const userTotalEarning = userEarningsData?.reduce((acc, el) => acc + el.uv, 0) || 0;
+
   return (
     <>
       {!error ? (
         <Flex flexDirection="column" width="100%">
           <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
-            <Text fontSize="lg">My monthly earnings</Text>
-            {/* <DateSwitcher date={DATESEarned} selectDate={setSelectDate} selectedDate={selectedDate} /> */}
+            <Text fontSize="lg">My Earnings</Text>
+            <DateSwitcher
+              date={DATESEarned}
+              selectDate={setSelectDate}
+              selectedDate={selectedDate}
+            />
           </Flex>
           <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
-            <Flex flexDirection="column" width="25%" justifyContent="center">
+            <Flex flexDirection="column" width="27%" justifyContent="center">
               <Flex flexDirection="column">
-                <Text color="#B4B4B4">Earned</Text>
-                <Text textStyle="textMono16">{`${userTotalEarning.toFixed(2)} $`}</Text>
+                <Text color="#B4B4B4">Earned in 30D</Text>
+                <Text textStyle="textMono16">{`$ ${userTotalEarning.toFixed(2)}`}</Text>
               </Flex>
               <Divider mt="22px" mb="22px" borderColor="#0F1113" height="2px" width="82px" />
               <Flex flexDirection="column">
-                <Text color="#B4B4B4">APR</Text>
+                <Text color="#B4B4B4">Av. 30D APY</Text>
                 <Text textStyle="textMono16">{`${avgApr.toFixed(2)} %`}</Text>
               </Flex>
             </Flex>
@@ -191,6 +202,16 @@ const EarningsChart = ({
                     <Tooltip
                       cursor={{ opacity: 0.1, strokeWidth: 1 }}
                       content={<CustomTooltipBarChart />}
+                    />
+                    <XAxis
+                      dataKey="name"
+                      tickLine={false}
+                      tickSize={10}
+                      interval="preserveStartEnd"
+                      tickFormatter={tickFormatter}
+                      axisLine={false}
+                      stroke={themes.colors.darkGray}
+                      fontSize={themes.fontSizes.sm}
                     />
                   </BarChart>
                 ) : (

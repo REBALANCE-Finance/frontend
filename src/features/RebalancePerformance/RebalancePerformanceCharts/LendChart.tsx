@@ -65,16 +65,12 @@ export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
   const { address, isConnected } = useAccount();
 
-  console.log("is", isConnected, getAreaLines(areaLines));
-
   const _areaLines = useMemo(() => {
     if (isConnected) {
       return areaLines;
     }
     return [areaLines[0]];
   }, [isConnected]);
-
-  console.log("lines", _areaLines);
 
   const getLines = () => {
     if (isConnected) {
