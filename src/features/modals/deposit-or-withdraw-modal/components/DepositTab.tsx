@@ -9,11 +9,11 @@ import {
   Text
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 import React, { FC, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
-import { depositSchema } from "../../../../components/forms/schemas";
 import { useDeposit } from "../../../../hooks/useDeposit";
 import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber, formatPercent } from "../../../../utils/formatNumber";
@@ -24,6 +24,7 @@ import { DEPOSIT_SUCESS } from "@/consts";
 import { ToastyTypes } from "@/components/toasty/types";
 import { DataSwitcher } from "@/components/data-switcher/DataSwitcher";
 import { FREEZE_DATES } from "@/components/data-switcher/utils";
+
 interface IDepositTabProps {
   pool: any;
   onClose: () => void;
@@ -38,11 +39,30 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     token: pool.tokenAddress
   });
 
+  const onDeposit = () => {
+    if (address) {
+      deposit({
+        value: parseBigNumber(formik.values.deposit, pool.decimals),
+        address
+      });
+    }
+  };
+
   const { allowance, deposit, isLoading } = useDeposit(
     pool.rebalancerAddress,
     pool.tokenAddress,
-    onClose
+    onClose,
+    onDeposit
   );
+
+  const depositSchema = Yup.object().shape({
+    deposit: Yup.string().test("min-amount", "Amount must be at least 1.", value => {
+      const depositValue = BigInt(parseBigNumber(value || "0", pool.decimals));
+      return Number(value) >= 1;
+    }),
+    freeze: Yup.boolean(),
+    freezePeriod: Yup.string().required("Required")
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -50,20 +70,13 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       freeze: true,
       freezePeriod: FREEZE_DATES[0]
     },
-    validationSchema: depositSchema(
-      formatBigNumber(balanceToken?.value, balanceToken?.decimals),
-      "100000000000"
-    ),
+    validationSchema: depositSchema,
     onSubmit: async values => {
       const depositValue = parseBigNumber(values.deposit, pool.decimals);
       if (address) {
         await deposit({
           value: depositValue,
-          address,
-          onSuccess: () => {
-            setConfirmedApprove(false);
-            onClose();
-          }
+          address
         });
       }
     }
@@ -72,8 +85,8 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   useEffect(() => {
     if (formik.values.deposit) {
       const checkNeedsApproval = () => {
-        const depositValue = parseBigNumber(formik.values.deposit, pool.decimals);
-        const isApprovalNeeded = !allowance || allowance < depositValue;
+        const depositValue = BigInt(parseBigNumber(formik.values.deposit, pool.decimals));
+        const isApprovalNeeded = !allowance || BigInt(allowance) < depositValue;
         setNeedsApproval(isApprovalNeeded);
       };
       checkNeedsApproval();
@@ -84,18 +97,9 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
   };
 
-  const onSuccessDeposit = () => {
-    handlerToast({
-      content: DEPOSIT_SUCESS,
-      type: ToastyTypes.success
-    });
-  };
-
   const getPointsString = (points: number) => {
     return `+ ${formatNumber(points)} points`;
   };
-
-  console.log("is", formik.values.freezePeriod);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -174,7 +178,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           <DepositButton
             variant="primaryFilled"
             isDisabled={!formik.values.deposit || !formik.isValid || isLoading}
-            onDeposit={onSuccessDeposit}
+            onDeposit={onDeposit}
           />
         )}
       </Flex>

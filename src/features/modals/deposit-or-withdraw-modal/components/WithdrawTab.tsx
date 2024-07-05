@@ -11,9 +11,6 @@ import { useWithdraw } from "../../../../hooks/useWithdraw";
 import { parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber } from "../../../../utils/formatNumber";
 import { getPersonalEarnings } from "@/api/pools/queries";
-import { handlerToast } from "@/components/toasty/utils";
-import { WITHDRAW_SUCESS } from "@/consts";
-import { ToastyTypes } from "@/components/toasty/types";
 
 interface IWithdrawTabProps {
   pool: any;
@@ -33,7 +30,7 @@ const withdrawSchema = yup.object({
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
     const [profit, setProfit] = useState(0);
-    const instantWithdraw = useWithdraw(pool.rebalancerAddress, () => onClose());
+
     const formik = useFormik({
       initialValues: {
         withdraw: ""
@@ -51,11 +48,16 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
       }
     });
 
+    const { instantWithdraw, isLoading } = useWithdraw(
+      pool.rebalancerAddress,
+      () => onClose(),
+      formik.handleSubmit
+    );
+
     const setMax = () => {
       formik.setFieldValue("withdraw", balance.toString());
       formik.validateField("withdraw");
     };
-    console.log("formik", balance);
 
     useEffect(() => {
       if (address) {
@@ -69,13 +71,6 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
           });
       }
     }, [address, pool.rebalancerAddress]);
-
-    const onSuccessWithdraw = () => {
-      handlerToast({
-        content: WITHDRAW_SUCESS,
-        type: ToastyTypes.success
-      });
-    };
 
     return (
       <form onSubmit={formik.handleSubmit}>
@@ -125,7 +120,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
             variant="primaryFilled"
             type="submit"
             isDisabled={!formik.values.withdraw || !formik.isValid}
-            onClick={onSuccessWithdraw}
+            isLoading={isLoading}
           >
             Withdraw
           </Button>

@@ -9,6 +9,8 @@ import { handlerToast } from "../toasty/utils";
 import { ToastyTypes } from "../toasty/types";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
 import { getExplorerTxLink } from "@/utils";
+import { useStore } from "@/hooks/useStoreContext";
+import { ModalContextEnum } from "@/store/modal/types";
 
 type SwapButtonProps = {
   payToken: {
@@ -32,6 +34,7 @@ const SwapButton = ({
   onError,
   onSuccess
 }: SwapButtonProps) => {
+  const { openModal } = useStore("modalContextStore");
   const [txHash, setTxHash] = useState("");
   const { isIdle, isPending, sendTransactionAsync, data: hash } = useSendTransaction();
   const { data, isSuccess, isError, error, isLoading } = useWaitForTransactionReceipt({
@@ -43,25 +46,21 @@ const SwapButton = ({
   useEffect(() => {
     if (isSuccess && txHash) {
       onSuccess(true);
-      handlerToast({
-        content: (
-          <Flex flexDir="column" gap={1}>
-            <Text fontSize="20px">Swap successful</Text>
-            <Link
-              href={getExplorerTxLink(txHash)}
-              target="_blank"
-              color="greenAlpha.100"
-              fontSize="14px"
-              textDecoration="underline"
-            >
-              View on Arbiscan
-            </Link>
-          </Flex>
-        ),
-        type: ToastyTypes.success
+      openModal({
+        type: ModalContextEnum.Success,
+        props: {
+          txHash
+        }
       });
     } else if (isError) {
-      onError(error.message);
+      openModal({
+        type: ModalContextEnum.Reject,
+        props: {
+          title: "Transaction error",
+          content: error.message,
+          onRetry: handleSwap
+        }
+      });
     }
   }, [isSuccess, isError, error, onSuccess, onError, txHash]);
 

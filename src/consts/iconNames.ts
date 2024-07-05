@@ -48,6 +48,7 @@ export const ICON_NAMES: { [key: string]: string } = {
   success: "success",
   trxSuccess: "trx-success",
   trxRejected: "trx-rejected",
+  trxFreeze: "trx-freeze",
   telegram: "telegram",
   twitter: "twitter",
   update: "update",

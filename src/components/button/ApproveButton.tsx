@@ -13,6 +13,8 @@ import { AddressType } from "@/types";
 import { ARB_CONFIRMATIONS_COUNT, PARASWAP_SPENDER_ADDRESS } from "@/consts";
 import { handlerToast } from "../toasty/utils";
 import { ToastyTypes } from "../toasty/types";
+import { useStore } from "@/hooks/useStoreContext";
+import { ModalContextEnum } from "@/store/modal/types";
 
 type ApproveButtonProps = {
   tokenAddress: string;
@@ -35,6 +37,7 @@ const ApproveButton = ({
 }: ApproveButtonProps) => {
   const toast = useToast();
   const { chainId } = useAccount();
+  const { openModal } = useStore("modalContextStore");
 
   const { data } = useSimulateContract({
     address: tokenAddress as AddressType,
@@ -49,11 +52,15 @@ const ApproveButton = ({
     isPending: isLoadingApproveContract
   } = useWriteContract();
 
-  const { isLoading: waitingApprove, isSuccess: isSuccessWaitingApprove } =
-    useWaitForTransactionReceipt({
-      hash: approveContractData as AddressType,
-      confirmations: ARB_CONFIRMATIONS_COUNT
-    });
+  const {
+    isLoading: waitingApprove,
+    isSuccess: isSuccessWaitingApprove,
+    isError: isErrorWaitingApprove,
+    error: waitingApproveError
+  } = useWaitForTransactionReceipt({
+    hash: approveContractData as AddressType,
+    confirmations: ARB_CONFIRMATIONS_COUNT
+  });
 
   const {
     data: approvedAmount,
@@ -72,9 +79,20 @@ const ApproveButton = ({
   useEffect(() => {
     if (isSuccessWaitingApprove) {
       refetchAllowance();
-      handlerToast({
-        content: "Approval successful",
-        type: ToastyTypes.success
+      openModal({
+        type: ModalContextEnum.Success,
+        props: {
+          txHash: approveContractData as string
+        }
+      });
+    } else if (isErrorWaitingApprove && waitingApproveError) {
+      openModal({
+        type: ModalContextEnum.Reject,
+        props: {
+          title: "Approve failed",
+          content: waitingApproveError.message,
+          onRetry: handleClick
+        }
       });
     }
   }, [isSuccessWaitingApprove]);

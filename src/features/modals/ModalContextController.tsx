@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { observer } from "mobx-react-lite";
 import React from "react";
@@ -7,6 +7,7 @@ import { useStore } from "../../hooks/useStoreContext";
 import { ModalContextEnum } from "../../store/modal/types";
 import { RejectModal } from "./reject-modal";
 import { SuccessModal } from "./success-modal";
+import { FreezeModal } from "./freeze-modal";
 
 export const ModalContextController = observer(() => {
   const { type, isOpen, closeModal, props } = useStore("modalContextStore");
@@ -17,6 +18,8 @@ export const ModalContextController = observer(() => {
         return <SuccessModal isOpen={isOpen} onClose={closeModal} {...props} />;
       case ModalContextEnum.Reject:
         return <RejectModal isOpen={isOpen} onClose={closeModal} {...props} />;
+      case ModalContextEnum.Freeze:
+        return <FreezeModal isOpen={isOpen} onClose={closeModal} {...props} />;
     }
   };
 
