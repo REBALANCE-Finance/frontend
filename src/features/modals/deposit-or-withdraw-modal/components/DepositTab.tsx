@@ -19,9 +19,6 @@ import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumb
 import { formatNumber, formatPercent } from "../../../../utils/formatNumber";
 import ApproveBtn from "./ApproveBtn";
 import DepositButton from "@/components/button/DepositButton";
-import { handlerToast } from "@/components/toasty/utils";
-import { DEPOSIT_SUCESS } from "@/consts";
-import { ToastyTypes } from "@/components/toasty/types";
 import { DataSwitcher } from "@/components/data-switcher/DataSwitcher";
 import { FREEZE_DATES } from "@/components/data-switcher/utils";
 
@@ -56,9 +53,10 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   );
 
   const depositSchema = Yup.object().shape({
-    deposit: Yup.string().test("min-amount", "Amount must be at least 1.", value => {
+    deposit: Yup.string().test("min-amount", `Amount must be at least 1e6`, value => {
       const depositValue = BigInt(parseBigNumber(value || "0", pool.decimals));
-      return Number(value) >= 1;
+      const minAmount = BigInt(1e6) * BigInt(Math.pow(10, pool.decimals));
+      return depositValue >= 1e6;
     }),
     freeze: Yup.boolean(),
     freezePeriod: Yup.string().required("Required")
