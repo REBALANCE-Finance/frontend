@@ -15,7 +15,7 @@ const connectors = [
 export const wagmiConfig = createConfig({
   chains: [arbitrum, bsc, optimism],
   connectors,
-  ssr: true,
+  // ssr: true,
   transports: {
     // [sepolia.id]: http(),
     [arbitrum.id]: http(),
