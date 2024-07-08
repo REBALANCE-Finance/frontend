@@ -48,3 +48,7 @@ export const WITHDRAW_SUCESS = "Withdraw successful";
 export const FIRELABS_AUDIT_LINK = "https://4irelabs.com/smart-contract-audit/";
 
 export const HACKEN_AUDIT_LINK = "https://hacken.io/audits/rebalance/";
+
+export const LOCAL_STORAGE_KEYS = {
+  isShownTutorial: "isShownTutorial"
+};

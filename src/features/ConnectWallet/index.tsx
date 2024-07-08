@@ -54,11 +54,13 @@ if (!isMobile) {
 export const ConnectWallet = ({
   title,
   variant,
-  minHeight
+  minHeight,
+  className
 }: {
   title?: string;
   variant?: string;
   minHeight?: string;
+  className?: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -91,6 +93,7 @@ export const ConnectWallet = ({
           variant={variant ? variant : title === "Deposit" ? "primaryFilled" : ""}
           flex="1 1 0"
           width={variant ? "100%" : "auto"}
+          className={className}
         >
           {title ? title : "Connect wallet"}
         </Button>
@@ -152,6 +155,7 @@ export const ConnectWallet = ({
         mt={variant ? 4 : 0}
         h={variant ? "52px" : "auto"}
         minH={minHeight}
+        className={className}
         _hover={{
           opacity: 0.8
         }}

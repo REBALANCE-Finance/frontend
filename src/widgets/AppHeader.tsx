@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Flex, Link, Image, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
@@ -38,7 +38,7 @@ export const AppHeader = () => {
 
       <Flex gap="12px" alignItems="center">
         {/* {isConnected && <AppNotification />} */}
-        {isConnected ? <WalletProfile /> : <ConnectWallet />}
+        {isConnected ? <WalletProfile /> : <ConnectWallet className="step-1" />}
         {media && <AppNav />}
       </Flex>
     </Flex>

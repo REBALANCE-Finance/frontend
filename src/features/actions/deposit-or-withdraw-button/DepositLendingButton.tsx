@@ -10,9 +10,15 @@ interface IDepositProps {
   pool: any;
   variant?: string;
   minHeight?: string;
+  className?: string;
 }
 
-export const DepositLendingButton: FC<IDepositProps> = ({ pool, variant, minHeight }) => {
+export const DepositLendingButton: FC<IDepositProps> = ({
+  pool,
+  variant,
+  minHeight,
+  className
+}) => {
   const { openModal } = useStore("modalStore");
   const { address } = useAccount();
   const handleOpenModal = () => {
@@ -28,6 +34,7 @@ export const DepositLendingButton: FC<IDepositProps> = ({ pool, variant, minHeig
       variant={variant ?? "primaryFilled"}
       flex="1 1 0"
       minHeight={minHeight}
+      className={className}
       onClick={e => {
         e.stopPropagation();
         handleOpenModal();
