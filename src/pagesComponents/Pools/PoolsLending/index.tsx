@@ -95,6 +95,7 @@ export const PoolsLending = observer(
                         justifyContent="space-between"
                         w="100%"
                         alignItems="center"
+                        className="step-3"
                       >
                         <Text color="white" borderBottom={"dashed 1px gray"}>
                           APR

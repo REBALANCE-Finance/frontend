@@ -8,6 +8,7 @@ import { AppHeader } from "../widgets/AppHeader";
 import { AppWarning } from "../widgets/AppWarning";
 import { useEffect } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
+import Tutorial from "@/features/Tutorial";
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   // const [client] = useMediaQuery("(display-mode: browser)");
@@ -27,6 +28,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
     <Flex direction="column" minH="100vh" alignItems="center" w="100%">
       <AppHeader />
       {/* <AppWarning /> */}
+      <Tutorial />
       <Flex flex="1 0" w="100%">
         {children}
       </Flex>

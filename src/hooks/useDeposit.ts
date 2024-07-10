@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ABI_REBALANCE } from "../abi/rebalance";
-import { ARB_CONFIRMATIONS_COUNT } from "@/consts";
+import { ARB_CONFIRMATIONS_COUNT, LOCAL_STORAGE_KEYS } from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
+import localStore from "@/utils/localStore";
 
 export const useDeposit = (
   poolAddress: `0x${string}`,
@@ -15,6 +16,7 @@ export const useDeposit = (
   const [txHash, setTxHash] = useState<string | null>(null);
   const { address } = useAccount();
   const { openModal } = useStore("modalContextStore");
+  const isActiveTutorial = !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial) || false;
   const { writeContractAsync } = useWriteContract();
   const { data: allowance } = useReadContract({
     address: tokenAddress,
@@ -42,6 +44,9 @@ export const useDeposit = (
           txHash
         }
       });
+      if (isActiveTutorial) {
+        localStore.post(LOCAL_STORAGE_KEYS.isShownTutorial, true);
+      }
     } else if (isReceiptError && receiptError) {
       openModal({
         type: ModalContextEnum.Reject,
