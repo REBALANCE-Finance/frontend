@@ -196,7 +196,7 @@ const EarningsChart = ({
                     <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}>
                       {userEarningsData?.map((entry, index) => {
                         const color = entry.uv > 0 ? "#4CFF94" : "#1A3C28";
-                        return <Cell fill={color} />;
+                        return <Cell key={entry.name.toString()} fill={color} />;
                       })}
                     </Bar>
                     <Tooltip
