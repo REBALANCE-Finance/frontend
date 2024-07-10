@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Drawer,
@@ -23,7 +23,7 @@ export const AppNav = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const btnRef = React.useRef(null);
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const handleOpen = () => {
     if (isOpen) {
@@ -47,7 +47,7 @@ export const AppNav = () => {
         <Drawer isOpen={isOpen} onClose={onClose}>
           <DrawerContent
             position="absolute"
-            height="calc(100% - 56px) !important"
+            height="calc(100% - 100px) !important"
             marginTop="auto"
             bg="#09090B"
           >
@@ -81,8 +81,9 @@ export const AppNav = () => {
           key={route.name}
           as={NextLink}
           href={route.path}
-          style={ pathname.includes(route.path) ? {color: "#fff"} : {}}
-          target={route.target ? "_blank" : "_self"}>
+          style={pathname.includes(route.path) ? { color: "#fff" } : {}}
+          target={route.target ? "_blank" : "_self"}
+        >
           {route.name}
         </Link>
       ))}

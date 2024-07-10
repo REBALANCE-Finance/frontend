@@ -12,6 +12,7 @@ import { ConnectWallet } from "../features/ConnectWallet";
 import { WalletProfile } from "../features/WalletProfile";
 import { AppNav } from "./AppNav";
 import { AppNotification } from "./AppNotification";
+import WarningBlock from "@/components/warning-block";
 
 export const AppHeader = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -19,27 +20,33 @@ export const AppHeader = () => {
 
   return (
     <Flex
-      alignItems="center"
-      p={{ base: "6px 16px", xl: "24px 0px" }}
-      justifyContent="space-between"
-      maxW={"1300px"}
-      minH={{ base: "56px", md: "auto" }}
+      flexDir="column"
       w="100%"
+      maxW={"1300px"}
       position="sticky"
       top="0"
       zIndex={100}
       bg="black.100"
+      minH={{ base: "100px", md: "130px" }}
     >
-      <Link as={NextLink} href="/lending">
-        <Image src={media ? LogoMob.src : LogoDesc.src} w={{ base: "30px", md: "150px" }} />
-      </Link>
+      <WarningBlock />
+      <Flex
+        alignItems="center"
+        p={{ base: "6px 16px", xl: "24px 0px" }}
+        justifyContent="space-between"
+        w="100%"
+      >
+        <Link as={NextLink} href="/lending">
+          <Image src={media ? LogoMob.src : LogoDesc.src} w={{ base: "30px", md: "150px" }} />
+        </Link>
 
-      {!media && <AppNav />}
+        {!media && <AppNav />}
 
-      <Flex gap="12px" alignItems="center">
-        {/* {isConnected && <AppNotification />} */}
-        {isConnected ? <WalletProfile /> : <ConnectWallet className="step-1" />}
-        {media && <AppNav />}
+        <Flex gap="12px" alignItems="center">
+          {/* {isConnected && <AppNotification />} */}
+          {isConnected ? <WalletProfile /> : <ConnectWallet className="step-1" />}
+          {media && <AppNav />}
+        </Flex>
       </Flex>
     </Flex>
   );

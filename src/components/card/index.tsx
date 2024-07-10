@@ -18,6 +18,8 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
       cursor="pointer"
       variant="poolCard"
       position="relative"
+      display="flex"
+      flexDirection="column"
     >
       {!itemCard.token ? (
         <Flex
@@ -81,11 +83,13 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
             );
 
           case "footer":
-            return (
+            return elem.proccess && elem.proccess({ item: itemCard }) ? (
               <CardFooter mt="24px" gap="8px" key={elem.name}>
-                {elem.proccess && elem.proccess({ item: itemCard })}
+                {elem.proccess({ item: itemCard })}
               </CardFooter>
-            );
+            ) : null;
+          default:
+            return null;
         }
       })}
     </ChakraCard>

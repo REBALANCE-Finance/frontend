@@ -25,7 +25,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
 
   // if (!client) return null;
   return (
-    <Flex direction="column" minH="100vh" alignItems="center" w="100%">
+    <Flex direction="column" minH="100vh" alignItems="center" w="100%" overflow="clip">
       <AppHeader />
       {/* <AppWarning /> */}
       <Tutorial />

@@ -26,7 +26,7 @@ export const DepositLendingButton: FC<IDepositProps> = ({
   };
 
   if (!address) {
-    return <ConnectWallet title="Deposit" minHeight={minHeight} />;
+    return <ConnectWallet title="Connect wallet" minHeight={minHeight} variant="primaryFilled" />;
   }
 
   return (

@@ -28,12 +28,12 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
             </Text>
           </Box>
           <SimpleGrid columns={!media || balance > 0 ? 2 : 1} gap="8px">
-            <DepositLendingButton
+            {/* <DepositLendingButton
               variant="primaryWhite"
               pool={pool}
               minHeight="40px"
               className="step-5"
-            />
+            /> */}
             {balance > 0 && <WithdrawLendingButton pool={pool} minHeight="40px" />}
           </SimpleGrid>
         </Flex>

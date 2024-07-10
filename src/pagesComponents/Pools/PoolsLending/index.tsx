@@ -176,7 +176,7 @@ export const PoolsLending = observer(
         proccess({ item }) {
           return (
             <>
-              <DepositLendingButton pool={item} minHeight="40px" />
+              {/* <DepositLendingButton pool={item} minHeight="40px" /> */}
               <WithdrawLendingButton pool={item} minHeight="40px" />
             </>
           );

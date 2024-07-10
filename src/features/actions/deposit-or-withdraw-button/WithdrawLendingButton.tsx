@@ -13,14 +13,20 @@ interface IWithdrawProps {
   minHeight?: string;
 }
 
-export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool, variant, disabled, minHeight }) => {
+export const WithdrawLendingButton: FC<IWithdrawProps> = ({
+  pool,
+  variant,
+  disabled,
+  minHeight
+}) => {
   const { openModal } = useStore("modalStore");
   const { address } = useAccount();
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x", pool.decimals);
   const handleOpenModal = () => {
     openModal({ type: ModalEnum.Withdraw, props: { pool, type: ModalEnum.Withdraw } });
   };
-  if (balance < 0.01) return;
+
+  if (balance < 0.01) return null;
 
   return (
     <Button

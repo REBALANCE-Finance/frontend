@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Divider,
@@ -23,6 +23,7 @@ import { DepositTab } from "./components/DepositTab";
 import { WithdrawTab } from "./components/WithdrawTab";
 import { formatBigNumber } from "@/utils/formatBigNumber";
 import { formatNumber } from "@/utils/formatNumber";
+import { ModalEnum } from "@/store/modal/types";
 
 export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose, pool, type }) => {
   const defaultIndex = TABS_DEPOSIT_AND_WITHDRAW.indexOf(type);
@@ -41,7 +42,13 @@ export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose
             {TABS_DEPOSIT_AND_WITHDRAW.map((elem, i) => {
               const isActive = tabIndex === i;
               return (
-                <Tab key={elem} p="0" fontSize="xl" color={isActive ? "white" : "gray.100"}>
+                <Tab
+                  isDisabled={elem === ModalEnum.Deposit ? true : false}
+                  key={elem}
+                  p="0"
+                  fontSize="xl"
+                  color={isActive ? "white" : "gray.100"}
+                >
                   {elem}
                 </Tab>
               );
