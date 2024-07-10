@@ -9,12 +9,12 @@ const LendingAssetPage = async ({ params }: { params: { [key: string]: string } 
   let error: string | null = null;
 
   try {
-    pools = await getPools('lending');
+    pools = await getPools("lending");
     if (!pools) {
       throw new Error("Failed to fetch pools data");
     }
 
-    const token = pools.find(item => item.rebalancerAddress === params.poolAddress)?.token;
+    const token = pools.find(item => item.token === params.poolToken)?.token;
     if (!token) {
       throw new Error("Token not found for the provided pool address");
     }

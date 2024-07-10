@@ -22,8 +22,8 @@ export const PoolsLending = observer(
     const router = useRouter();
     const { address } = useAccount();
 
-    const handleLink = (poolAddress: string) => {
-      router.push(generatePath(ROUTE_PATHS.lendingAsset, { poolAddress }));
+    const handleLink = (poolToken: string) => {
+      router.push(generatePath(ROUTE_PATHS.lendingAsset, { poolToken }));
     };
 
     const rowCard: IRowCard[] = [
@@ -204,7 +204,7 @@ export const PoolsLending = observer(
                 key={elem.token}
                 rowCard={rowCard}
                 itemCard={elem}
-                onClick={() => handleLink(elem?.rebalancerAddress)}
+                onClick={() => handleLink(elem?.token)}
               />
             ))}
       </SimpleGrid>
