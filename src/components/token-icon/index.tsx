@@ -5,8 +5,8 @@ import Icon from "../icon";
 
 export const TokenIcon = ({
   name,
-  size,
-  sizeIcon
+  size = "64px",
+  sizeIcon = "35px"
 }: {
   name: string;
   size?: string;

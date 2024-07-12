@@ -6,6 +6,9 @@ import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
 import { IPoolData, IAreaChartData } from "@/api/pools/types";
 import { useAccount } from "wagmi";
+import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
+import PoolsLendingTable from "@/pagesComponents/Pools/PoolsLending/Table";
+import { MEDIA_QUERY_MAX } from "@/consts";
 
 const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
   const router = useRouter();
@@ -15,6 +18,7 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
   const [loading, setLoading] = useState(true);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isDesktop] = useMediaQuery("(min-width: 1130px)");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,7 +74,11 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
       loading={loading || isChartLoading}
       error={error}
     >
-      <PoolsLending pools={pools} loading={loading} error={error} />
+      {isDesktop ? (
+        <PoolsLendingTable pools={pools} isLoading={loading} error={error} />
+      ) : (
+        <PoolsLending pools={pools} loading={loading} error={error} />
+      )}
     </PoolLayout>
   );
 };

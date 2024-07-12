@@ -1,4 +1,4 @@
-import { Flex, Spinner, Text } from "@chakra-ui/react";
+import { Flex, Spinner, Text, TextProps } from "@chakra-ui/react";
 import React from "react";
 
 import { useBalanceOfAsset } from "../../../../hooks/useBalanceOfAsset";
@@ -9,9 +9,20 @@ interface DepositInfoProps {
   ownerAddress: `0x${string}`;
   tokenName: string;
   decimals: number;
+  noTitle?: boolean;
+  noSymbol?: boolean;
+  TextProps?: TextProps;
 }
 
-const DepositInfo: React.FC<DepositInfoProps> = ({ contractAddress, ownerAddress, tokenName, decimals }) => {
+const DepositInfo: React.FC<DepositInfoProps> = ({
+  contractAddress,
+  ownerAddress,
+  tokenName,
+  decimals,
+  noTitle,
+  noSymbol,
+  TextProps
+}) => {
   const { balance, isLoading } = useBalanceOfAsset(contractAddress, ownerAddress, decimals);
   if (isLoading) {
     return <Spinner size="sm" />;
@@ -19,10 +30,14 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ contractAddress, ownerAddress
 
   return (
     <Flex alignItems="center" justifyContent="space-between">
-      <Text fontSize="md" fontWeight="500" color="whiteAlpha.70">
-        My Deposit
+      {!noTitle && (
+        <Text fontSize="md" fontWeight="500" color="whiteAlpha.70">
+          My Deposit
+        </Text>
+      )}
+      <Text textStyle="textMono16" {...TextProps}>
+        {formatNumber(balance.toFixed(2))} {!noSymbol && tokenName}
       </Text>
-      <Text textStyle="textMono16">{formatNumber(balance.toFixed(2))} {tokenName}</Text>
     </Flex>
   );
 };
