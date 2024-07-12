@@ -12,7 +12,7 @@ import {
   USDT_TOKEN
 } from "@/consts";
 import Icon from "@/components/icon";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount, useEstimateFeesPerGas, useReadContract } from "wagmi";
 import { ConnectWallet } from "@/features/ConnectWallet";
 import { useState, useEffect } from "react";
 import { IToken } from "@/api/tokens/types";
@@ -27,6 +27,7 @@ import { AddressType } from "@/types";
 import { getApiError } from "@/utils/handlers";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
 import useDebounce from "@/hooks/useDebounce";
+import { parseUnits } from "ethers";
 
 const Swap = () => {
   const { address, chainId, connector } = useAccount();
@@ -92,6 +93,10 @@ const Swap = () => {
     isPayInputChanged
   );
 
+  const feePerGas = useEstimateFeesPerGas({
+    chainId: chainId ?? defChainIdArbitrum
+  });
+
   useEffect(() => {
     if (tokenList && tokenList.length > 1 && !payToken && !receiveToken) {
       setPayToken(tokenList.find(token => token.symbol === "ARB") || ARB_TOKEN);
@@ -110,7 +115,10 @@ const Swap = () => {
         (Number(srcAmount) * 10 ** receiveTokenDecimals);
       setExchangeRate(`1 ${payToken?.symbol} = ${rate.toFixed(6)} ${receiveToken?.symbol}`);
       // @ts-ignore
-      const gasCostInWei = BigInt(payTokenPriceData.priceRoute.gasCost);
+      const maxFeePerGasInWei = parseUnits(feePerGas.data.formatted.maxFeePerGas, "gwei");
+      // @ts-ignore
+      const gasCostInWei = BigInt(payTokenPriceData.priceRoute.gasCost) * maxFeePerGasInWei;
+
       const gasCostInEth = Number(gasCostInWei) / 1e18;
       setGasFee(
         gasCostInEth > 0 && gasCostInEth < 0.000001
