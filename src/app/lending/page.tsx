@@ -6,9 +6,8 @@ import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
 import { IPoolData, IAreaChartData } from "@/api/pools/types";
 import { useAccount } from "wagmi";
-import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
+import { useMediaQuery } from "@chakra-ui/react";
 import PoolsLendingTable from "@/pagesComponents/Pools/PoolsLending/Table";
-import { MEDIA_QUERY_MAX } from "@/consts";
 
 const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
   const router = useRouter();

@@ -42,11 +42,10 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
 
   if (isLoading || error) {
     return (
-      <Flex flexDir="column" gap={1}>
-        <Skeleton height="65px" />
-        <Skeleton height="90px" />
-        <Skeleton height="90px" />
-        <Skeleton height="90px" />
+      <Flex flexDir="column" gap={4}>
+        {Array.from({ length: 4 }).map((_, index) => (
+          <Skeleton key={index} height="65px" />
+        ))}
       </Flex>
     );
   }
