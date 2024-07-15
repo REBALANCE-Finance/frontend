@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: "/",
-        destination: "/lending",
+        destination: "/earn",
         permanent: true
       }
     ];

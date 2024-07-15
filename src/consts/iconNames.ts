@@ -51,7 +51,7 @@ export const ICON_NAMES: { [key: string]: string } = {
   telegram: "telegram",
   twitter: "twitter",
   update: "update",
-  USDCe: "USDCe",
+  USDC: "USDC",
   USDT: "USDT",
   AAVE: "AAVE",
   COMPOUND: "COMPOUND",

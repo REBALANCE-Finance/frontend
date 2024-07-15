@@ -1,10 +1,10 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getAreaChartAllIntervals, getPools } from "@/api/pools/queries";
 import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
-import { IPoolData } from '@/api/pools/types';
+import { IPoolData } from "@/api/pools/types";
 
 const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
   const router = useRouter();
@@ -16,9 +16,11 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedPools = await getPools('lending');
+        const fetchedPools = await getPools("lending");
         setPools(fetchedPools);
-        const token = fetchedPools?.find(item => item.rebalancerAddress === params.poolAddress)?.token || fetchedPools[0]?.token;
+        const token =
+          fetchedPools?.find(item => item.rebalancerAddress === params.poolAddress)?.token ||
+          fetchedPools[0]?.token;
         if (token) {
           const fetchedChartData = await getAreaChartAllIntervals(token);
           setChartData(fetchedChartData);
@@ -40,6 +42,8 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
 
     fetchData();
   }, [params.poolAddress]);
+
+  console.log("pools", pools);
 
   return (
     <PoolLayout pools={pools} chartData={chartData} loading={loading} error={error}>
