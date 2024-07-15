@@ -91,6 +91,7 @@ export const PoolsHeader = ({ isTable, onChangeView }: IPoolsHeaderProps) => {
         {isDesktop && (
           <IconButton
             aria-label="switch"
+            size="sm"
             icon={
               <Icon name={isTable ? ICON_NAMES.tiles : ICON_NAMES.menu} onClick={onChangeView} />
             }
