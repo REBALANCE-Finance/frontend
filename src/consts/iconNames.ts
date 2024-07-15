@@ -61,5 +61,6 @@ export const ICON_NAMES: { [key: string]: string } = {
   walletConnect: "wallet-connect",
   WBTC: "WBTC",
   WETH: "WETH",
-  worning: "worning"
+  worning: "worning",
+  tiles: "tiles"
 };

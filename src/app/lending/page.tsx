@@ -18,6 +18,7 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
+  const [isTableView, setIsTableView] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,14 +67,22 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
     fetchData();
   }, [params.poolAddress, isConnected]);
 
+  useEffect(() => {
+    if (!isDesktop) {
+      setIsTableView(false);
+    }
+  }, [isDesktop]);
+
   return (
     <PoolLayout
       pools={pools}
       chartData={chartData}
       loading={loading || isChartLoading}
       error={error}
+      isTable={isTableView}
+      onChangeView={() => setIsTableView(!isTableView)}
     >
-      {isDesktop ? (
+      {isTableView ? (
         <PoolsLendingTable pools={pools} isLoading={loading} error={error} />
       ) : (
         <PoolsLending pools={pools} loading={loading} error={error} />
