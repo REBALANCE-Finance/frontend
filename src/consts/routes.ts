@@ -1,6 +1,6 @@
 export const ROUTE_PATHS = {
-  lending: "/lending",
+  lending: "/earn",
   borrowing: "/borrowing",
-  lendingAsset: "/lending/:poolToken",
+  lendingAsset: "/earn/:poolToken",
   borrowingAsset: "/borrowing/:poolToken"
 };
