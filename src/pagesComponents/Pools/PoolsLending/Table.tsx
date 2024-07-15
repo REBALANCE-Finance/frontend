@@ -81,7 +81,7 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
                   textWrap: "balance"
                 }}
               >
-                GLIA APR {">"} market avg.
+                % APR {">"} market avg.
               </Text>
             </Th>
             <Th maxW="118px" p="16px 12px" textTransform="unset">
@@ -142,7 +142,7 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
                 </Text>
               </Th>
               <Th p="24px 12px">
-                {address && (
+                {address ? (
                   <DepositInfo
                     contractAddress={pool.rebalancerAddress as `0x${string}`}
                     ownerAddress={address}
@@ -154,17 +154,23 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
                       color: "white"
                     }}
                   />
+                ) : (
+                  <Text textStyle="textMono16" color="white">
+                    0
+                  </Text>
                 )}
               </Th>
               <Th minW="200px" p="24px 32px 24px 12px" display="flex" gap={2}>
                 <DepositLendingButton
                   pool={pool}
+                  minHeight="40px"
                   ButtonProps={{
                     flex: 1
                   }}
                 />
                 <WithdrawLendingButton
                   pool={pool}
+                  minHeight="40px"
                   ButtonProps={{
                     flex: 1
                   }}
