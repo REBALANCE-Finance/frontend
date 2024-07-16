@@ -6,8 +6,8 @@ import { LendChart } from "./LendChart";
 import { IRebalancePerformanceProps } from "./types";
 
 export const PerformanceChart: FC<IRebalancePerformanceProps> = ({ activeType, chartData }) => {
-  if (activeType === ROUTES_TYPE.lending) {
-    return <LendChart chartData={chartData}/>;
+  if (activeType === "earn") {
+    return <LendChart chartData={chartData} />;
   }
 
   if (activeType === ROUTES_TYPE.borrowing) {
