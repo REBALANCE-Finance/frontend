@@ -51,7 +51,7 @@ if (!isMobile) {
   });
 }
 
-export const ConnectWallet = ({ title }: { title?: string }) => {
+export const ConnectWallet = ({ title, className }: { title?: string; className?: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { login } = useAuth();
@@ -82,6 +82,7 @@ export const ConnectWallet = ({ title }: { title?: string }) => {
           onClick={onOpen}
           variant={title === "Deposit" ? "primaryFilled" : ""}
           flex="1 1 0"
+          className={className}
         >
           {title ? title : "Connect wallet"}
         </Button>
