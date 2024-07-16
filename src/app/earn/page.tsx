@@ -43,8 +43,6 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
     fetchData();
   }, [params.poolAddress]);
 
-  console.log("pools", pools);
-
   return (
     <PoolLayout pools={pools} chartData={chartData} loading={loading} error={error}>
       <PoolsLending pools={pools} loading={loading} error={error} />
