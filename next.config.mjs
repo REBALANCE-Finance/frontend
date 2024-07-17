@@ -6,6 +6,11 @@ const nextConfig = {
         source: "/",
         destination: "/earn",
         permanent: true
+      },
+      {
+        source: '/lending',
+        destination: '/earn',
+        permanent: true
       }
     ];
   }

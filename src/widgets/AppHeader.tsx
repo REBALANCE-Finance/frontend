@@ -27,7 +27,7 @@ export const AppHeader = () => {
       top={0}
       zIndex={100}
       bg="black.100"
-      minH={isUnderMaintenance ? { base: "120px", md: "160px" } : { base: "56px", md: "auto" }}
+      minH={isUnderMaintenance ? { base: "120px", md: "160px" } : { base: "56px", md: "56px" }}
     >
       {isUnderMaintenance && <MaintenanceBlock />}
       <Flex
@@ -37,7 +37,10 @@ export const AppHeader = () => {
         w="100%"
       >
         <Link as={NextLink} href={ROUTE_PATHS.lending}>
-          <Image src={media ? LogoMob.src : LogoDesc.src} w={{ base: "30px", md: "150px" }} />
+          <Image
+            src={media ? LogoMob.src : LogoDesc.src}
+            w={{ base: "30px", lg: media ? "30px" : "150px" }}
+          />
         </Link>
 
         {!media && <AppNav />}

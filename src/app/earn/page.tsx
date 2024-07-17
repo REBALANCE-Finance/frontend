@@ -17,7 +17,8 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
     const fetchData = async () => {
       try {
         const fetchedPools = await getPools("lending");
-        setPools(fetchedPools);
+        const sortedPools = fetchedPools.sort((a, b) => b.avgApr - a.avgApr);
+        setPools(sortedPools);
         const token =
           fetchedPools?.find(item => item.rebalancerAddress === params.poolAddress)?.token ||
           fetchedPools[0]?.token;
