@@ -16,6 +16,7 @@ import { LOCAL_STORAGE_KEYS, ROUTE_PATHS } from "@/consts";
 import { usePathname } from "next/navigation";
 import localStore from "@/utils/localStore";
 import GuideTooltip from "@/components/tooltip/GuideTooltip";
+import BeaconComponent from "@/components/tutorial/Beacon";
 
 const steps: TutorialStep[] = [
   {
@@ -101,7 +102,7 @@ const Tutorial = () => {
   }, [isActiveTutorial, pathname]);
 
   useEffect(() => {
-    if (isActiveTutorial && pathname.includes(ROUTE_PATHS.lendingAsset.slice(0, 9))) {
+    if (isActiveTutorial && pathname.includes(ROUTE_PATHS.lendingAsset.slice(0, 6))) {
       setStepIndex(3);
       setRunTutorial(true);
     }
@@ -175,6 +176,7 @@ const Tutorial = () => {
           {...props}
         />
       )}
+      beaconComponent={BeaconComponent}
       styles={{
         options: {
           backgroundColor: "#202327",

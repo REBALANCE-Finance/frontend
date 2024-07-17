@@ -1,4 +1,4 @@
-import { Flex, Spinner, Text, TextProps } from "@chakra-ui/react";
+import { Flex, Skeleton, Text, TextProps } from "@chakra-ui/react";
 import React from "react";
 
 import { useBalanceOfAsset } from "../../../../hooks/useBalanceOfAsset";
@@ -24,9 +24,6 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
   TextProps
 }) => {
   const { balance, isLoading } = useBalanceOfAsset(contractAddress, ownerAddress, decimals);
-  if (isLoading) {
-    return <Spinner size="sm" />;
-  }
 
   return (
     <Flex alignItems="center" justifyContent="space-between">
@@ -35,9 +32,13 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
           My Deposit
         </Text>
       )}
-      <Text textStyle="textMono16" {...TextProps}>
-        {formatNumber(balance.toFixed(2))} {!noSymbol && tokenName}
-      </Text>
+      {isLoading ? (
+        <Skeleton height="20px" width="50px" />
+      ) : (
+        <Text textStyle="textMono16" {...TextProps}>
+          {formatNumber(balance.toFixed(2))} {!noSymbol && tokenName}
+        </Text>
+      )}
     </Flex>
   );
 };

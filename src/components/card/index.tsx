@@ -10,9 +10,10 @@ interface ICardProps {
   rowCard: IRowCard[];
   itemCard: DefaultDataType;
   onClick: () => void;
+  isLoading?: boolean;
 }
 
-export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
+export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick, isLoading }) => {
   return (
     <ChakraCard cursor="pointer" variant="poolCard" position="relative" justifySelf="center">
       {!itemCard.token ? (
@@ -45,7 +46,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
                 as={Flex}
                 justifyContent="space-between"
                 alignItems="center"
-                className={itemCard?.token === "USDT" ? "step-2" : ""}
+                className={itemCard?.token === "USDT" && !isLoading ? "step-2" : ""}
                 onClick={onClick}
               >
                 <Flex alignItems="center" gap="12px">
