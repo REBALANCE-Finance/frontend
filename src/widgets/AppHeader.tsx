@@ -11,13 +11,12 @@ import { MEDIA_QUERY_MAX, ROUTE_PATHS } from "../consts";
 import { ConnectWallet } from "../features/ConnectWallet";
 import { WalletProfile } from "../features/WalletProfile";
 import { AppNav } from "./AppNav";
-import { AppNotification } from "./AppNotification";
 import MaintenanceBlock from "@/components/maintenance-block";
 
 export const AppHeader = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { isConnected } = useAccount();
-  const isUnderMaintenance = process.env.NEXT_PUBLIC_IS_UNDER_MAINTENANCE;
+  const isUnderMaintenance = process.env.NEXT_PUBLIC_IS_UNDER_MAINTENANCE === "true";
 
   return (
     <Flex
@@ -28,7 +27,7 @@ export const AppHeader = () => {
       top={0}
       zIndex={100}
       bg="black.100"
-      minH={{ base: "120px", md: "160px" }}
+      minH={isUnderMaintenance ? { base: "120px", md: "160px" } : { base: "56px", md: "56px" }}
     >
       {isUnderMaintenance && <MaintenanceBlock />}
       <Flex
@@ -38,7 +37,10 @@ export const AppHeader = () => {
         w="100%"
       >
         <Link as={NextLink} href={ROUTE_PATHS.lending}>
-          <Image src={media ? LogoMob.src : LogoDesc.src} w={{ base: "30px", md: "150px" }} />
+          <Image
+            src={media ? LogoMob.src : LogoDesc.src}
+            w={{ base: "30px", lg: media ? "30px" : "150px" }}
+          />
         </Link>
 
         {!media && <AppNav />}

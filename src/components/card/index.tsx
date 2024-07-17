@@ -14,11 +14,7 @@ interface ICardProps {
 
 export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
   return (
-    <ChakraCard
-      cursor="pointer"
-      variant="poolCard"
-      position="relative"
-    >
+    <ChakraCard cursor="pointer" variant="poolCard" position="relative" justifySelf="center">
       {!itemCard.token ? (
         <Flex
           position="absolute"

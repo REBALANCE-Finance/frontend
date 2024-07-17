@@ -185,7 +185,7 @@ export const PoolsLending = observer(
     ];
 
     return (
-      <SimpleGrid columns={{ base: 1, md: 3, xl: 4 }} spacing="24px">
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 4 }} spacing="24px" alignItems="center">
         {loading || error
           ? Array.from({ length: 4 }).map((_, index) => (
               <Box key={index} padding="6" bg="#151619">

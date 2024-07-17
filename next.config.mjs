@@ -5,7 +5,12 @@ const nextConfig = {
       {
         source: "/",
         destination: "/earn",
-        permanent: false
+        permanent: true
+      },
+      {
+        source: '/lending',
+        destination: '/earn',
+        permanent: true
       }
     ];
   }
