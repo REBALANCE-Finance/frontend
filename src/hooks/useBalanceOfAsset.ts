@@ -1,36 +1,42 @@
-import { ethers } from "ethers";
+import { formatUnits } from "ethers";
 import { useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
 
 import { ABI_REBALANCE } from "../abi/rebalance";
 
-export const useBalanceOfAsset = (contractAddress: `0x${string}`, ownerAddress: `0x${string}`, decimals: number) => {
+export const useBalanceOfAsset = (
+  contractAddress: `0x${string}`,
+  ownerAddress: `0x${string}`,
+  decimals: number
+) => {
   const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { data, isLoading: loading, refetch } = useReadContract({
+  const {
+    data,
+    isLoading: loading,
+    refetch,
+  } = useReadContract({
     address: contractAddress,
     abi: ABI_REBALANCE,
-    functionName: "balanceOfAsset",
+    functionName: "getBalanceOfAsset",
     args: [ownerAddress]
   });
 
   useEffect(() => {
     if (data) {
-      const formattedBalance = ethers.formatUnits(data, decimals);
+      const formattedBalance = formatUnits(data, decimals);
       setBalance(+formattedBalance);
-    } else {
-      setBalance(0);
     }
-    setIsLoading(loading);
+    setIsLoading(false);
   }, [data, loading, decimals]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      refetch(); // Эта функция вызывается для повторного получения данных контракта
-    }, 3000); // интервал в миллисекундах (10000 мс = 10 с)
+      refetch();
+    }, 3000);
 
-    return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
+    return () => clearInterval(interval);
   }, [refetch]);
 
   return { balance, isLoading };

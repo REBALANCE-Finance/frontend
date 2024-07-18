@@ -365,7 +365,7 @@ export const ABI_REBALANCE = [
         type: "address"
       }
     ],
-    name: "balanceOfAsset",
+    name: "getBalanceOfAsset",
     outputs: [
       {
         internalType: "uint256",
