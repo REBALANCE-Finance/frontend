@@ -86,6 +86,15 @@ export const PoolsLending = observer(
                           <span>
                             <br />- Dolomite
                           </span>
+                          <span>
+                            <br />- AAVE v3
+                          </span>
+                          <span>
+                            <br />- Compound
+                          </span>
+                          <span>
+                            <br />- Radiant v2
+                          </span>
                         </>
                       }
                     >
@@ -101,13 +110,22 @@ export const PoolsLending = observer(
                         </Text>
                         <Box ml="auto" display="flex">
                           {(item.token === "wETH" || item.token === "USDC.e") && (
-                            <Box borderRadius="50%" mr="-4px" zIndex={2}>
+                            <Box borderRadius="50%" mr="-4px" zIndex={5}>
                               <Icon name="SILO" width="14px" height="14px" />
                             </Box>
                           )}
-                          <Box borderRadius="50%">
+                          <Box borderRadius="50%" zIndex={4} mr="-4px">
                             <Icon name="DOLOMITE" width="14px" height="14px" />
                           </Box>
+                          <Box mr="-4px" zIndex={3}>
+                            <Icon name="AAVE" width="10px" height="10px" />
+                          </Box>
+                          {item.token !== "FRAX" ? (
+                            <Box mr="-4px" zIndex={2}>
+                              <Icon name="RADIANT" width="14px" height="14px" />
+                            </Box>
+                          ) : null}
+                          <Icon name="COMPOUND" width="14px" height="14px" />
                         </Box>
                         <Text textStyle="textMono16">
                           {loading || error ? (
