@@ -58,6 +58,8 @@ export const ICON_NAMES: { [key: string]: string } = {
   COMPOUND: "COMPOUND",
   DFORCE: "DFORCE",
   RADIANT: "RADIANT",
+  SILO: "SILO",
+  DOLOMITE: "DOLOMITE",
   walletConnect: "wallet-connect",
   WBTC: "WBTC",
   WETH: "WETH",

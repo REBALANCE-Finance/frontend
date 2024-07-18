@@ -63,7 +63,7 @@ export const LendingAsset = observer(
                     </>
                   ) : (
                     <>
-                      <Icon name={CHAIN_ICONS[chain?.id ?? 0]} size="18px" />
+                      <Icon name={CHAIN_ICONS[chain?.id ?? 42161]} size="18px" />
                       <Link
                         href={getFinalExplorerUrl({
                           url: "https://arbiscan.io",

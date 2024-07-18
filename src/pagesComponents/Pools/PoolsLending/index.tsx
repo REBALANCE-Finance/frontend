@@ -75,17 +75,16 @@ export const PoolsLending = observer(
                       label={
                         <>
                           <span>
-                            USDT Low-Risk Yield Strategy Higher APR is achieved by automatic
+                            {item.token} Low-Risk Yield Strategy Higher APR is achieved by automatic
                             rebalance between following pools:
                           </span>
+                          {(item.token === "wETH" || item.token === "USDC.e") && (
+                            <span>
+                              <br />- Silo
+                            </span>
+                          )}
                           <span>
-                            <br />- AAVE v3
-                          </span>
-                          <span>
-                            <br />- Compound
-                          </span>
-                          <span>
-                            <br />- Radiant v2
+                            <br />- Dolomite
                           </span>
                         </>
                       }
@@ -101,15 +100,14 @@ export const PoolsLending = observer(
                           APR
                         </Text>
                         <Box ml="auto" display="flex">
-                          <Box mr="-4px" zIndex={5}>
-                            <Icon name="AAVE" width="14px" height="14px" />
-                          </Box>
-                          {item.token !== "FRAX" ? (
-                            <Box mr="-4px" zIndex={3}>
-                              <Icon name="RADIANT" width="14px" height="14px" />
+                          {(item.token === "wETH" || item.token === "USDC.e") && (
+                            <Box borderRadius="50%" mr="-4px" zIndex={2}>
+                              <Icon name="SILO" width="14px" height="14px" />
                             </Box>
-                          ) : null}
-                          <Icon name="COMPOUND" width="14px" height="14px" />
+                          )}
+                          <Box borderRadius="50%">
+                            <Icon name="DOLOMITE" width="14px" height="14px" />
+                          </Box>
                         </Box>
                         <Text textStyle="textMono16">
                           {loading || error ? (
