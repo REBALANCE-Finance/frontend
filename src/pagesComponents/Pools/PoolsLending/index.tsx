@@ -13,7 +13,8 @@ import { IPoolData, IRowCard, RowCardNames, RowCardProccessType } from "../types
 import DepositInfo from "./components/DepositInfo";
 import UserProfitPool from "./components/UserProfitPool";
 import Icon from "@/components/icon";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useStore } from "@/hooks/useStoreContext";
 
 export const PoolsLending = ({
   pools,
@@ -25,6 +26,13 @@ export const PoolsLending = ({
   error: string | null;
 }) => {
   const { address } = useAccount();
+  const router = useRouter();
+  const poolStore = useStore("poolStore");
+
+  const handleCardClick = (pool: IPoolData) => {
+    poolStore.setActivePool(pool);
+    router.push(ROUTE_PATHS.lendingAssetPage(pool.token), { scroll: false });
+  };
 
   const rowCard: IRowCard[] = [
     {
@@ -216,9 +224,9 @@ export const PoolsLending = ({
             </Box>
           ))
         : pools?.map(elem => (
-            <Link key={elem.token} href={ROUTE_PATHS.lendingAssetPage(elem.token)} passHref>
+            <Box key={elem.token} onClick={() => handleCardClick(elem)} cursor="pointer">
               <CardPool key={elem.token} rowCard={rowCard} itemCard={elem} />
-            </Link>
+            </Box>
           ))}
     </SimpleGrid>
   );

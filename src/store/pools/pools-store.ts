@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { getPools } from "../../api/pools/queries";
 import { IPoolData } from "./types";
 
@@ -14,8 +14,10 @@ class PoolsStore {
       isLoading: observable,
       error: observable,
       fetchPools: action,
+      startPolling: action,
+      stopPolling: action
     });
-    this.startPolling("lending");  // Explicitly pass "lending" or "borrowing"
+    this.startPolling("lending"); // Explicitly pass "lending" or "borrowing"
   }
 
   async fetchPools(type: "lending" | "borrowing"): Promise<void> {
@@ -24,17 +26,23 @@ class PoolsStore {
     this.error = null;
     try {
       const data: IPoolData[] = await getPools(type);
-      this.pools = data;
+      runInAction(() => {
+        this.pools = data;
+      });
     } catch (error) {
-      this.error = error as Error;
+      runInAction(() => {
+        this.error = error as Error;
+      });
     } finally {
-      this.isLoading = false;
+      runInAction(() => {
+        this.isLoading = false;
+      });
     }
   }
 
   startPolling(type: "lending" | "borrowing" = "lending") {
-    this.stopPolling();  // Stop any existing polling first
-    this.interval = setInterval(() => this.fetchPools(type), 10000);  // Set the interval for 10 seconds
+    this.fetchPools(type);
+    this.interval = setInterval(() => this.fetchPools(type), 60000); // Poll every 60 seconds
   }
 
   stopPolling() {
@@ -42,10 +50,6 @@ class PoolsStore {
       clearInterval(this.interval);
       this.interval = null;
     }
-  }
-
-  dispose() {  // Cleanup method to clear the interval when the store is no longer needed
-    this.stopPolling();
   }
 }
 

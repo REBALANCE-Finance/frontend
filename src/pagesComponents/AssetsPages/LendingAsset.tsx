@@ -13,21 +13,22 @@ import { AssetHeader } from "./components/header/AssetHeader";
 import { IPoolData, IAreaChartData } from "@/api/pools/types";
 
 export const LendingAsset = ({
-  pools,
+  pool,
   chartData,
   loading,
-  error
+  error,
+  isChartLoading
 }: {
-  pools: IPoolData[];
+  pool: IPoolData | null;
   chartData: IAreaChartData | null;
   loading: boolean;
+  isChartLoading: boolean;
   error: string | null;
 }) => {
   const { chain } = useAccount();
   const { poolToken } = useParams();
   // const finalAddress = Array.isArray(poolAddress) ? poolAddress[0] : poolAddress;
   const searchParams = useSearchParams();
-  const pool = pools.find(item => item.token === poolToken);
   const strategic = searchParams.get("strategic") ?? STRATEGIES.based;
 
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -38,7 +39,7 @@ export const LendingAsset = ({
 
   return (
     <Flex h="100%" w="100%" direction="column" gap="24px">
-      {loading || error ? (
+      {loading || error || pool === null ? (
         <>
           {renderSkeleton("40px")}
           {renderSkeleton("20px", "150px")}
@@ -102,10 +103,10 @@ export const LendingAsset = ({
       </Flex>
       <Flex direction="column">
         {strategic === STRATEGIES.based ? (
-          loading || error ? (
+          isChartLoading || error ? (
             renderSkeleton("200px")
           ) : (
-            <BaseStrategy pool={pool} chartData={chartData} />
+            <BaseStrategy pool={pool} chartData={chartData} isLoadingChart={isChartLoading} />
           )
         ) : null}
       </Flex>
