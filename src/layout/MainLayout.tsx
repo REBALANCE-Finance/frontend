@@ -28,7 +28,6 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
     <Flex direction="column" minH="100vh" alignItems="center" w="100%">
       <AppHeader />
       {/* <AppWarning /> */}
-      <Tutorial />
       <Flex flex="1 0" w="100%">
         {children}
       </Flex>
