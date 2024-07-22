@@ -4,7 +4,7 @@ import { IPoolData } from "./types";
 
 class PoolsStore {
   pools: IPoolData[] = [];
-  isLoading: boolean = false;
+  isLoading = false;
   error: Error | null = null;
   interval: ReturnType<typeof setInterval> | null = null;
 
@@ -15,15 +15,21 @@ class PoolsStore {
       error: observable,
       fetchPools: action,
       startPolling: action,
-      stopPolling: action
+      stopPolling: action,
+      setError: action
     });
-    this.startPolling("lending"); // Explicitly pass "lending" or "borrowing"
   }
 
-  async fetchPools(type: "lending" | "borrowing"): Promise<void> {
+  setError = (error: Error | null) => {
+    this.error = error;
+  };
+
+  fetchPools = async (type: "lending" | "borrowing"): Promise<void> => {
     if (this.isLoading) return;
+
     this.isLoading = true;
-    this.error = null;
+    this.setError(null);
+
     try {
       const data: IPoolData[] = await getPools(type);
       runInAction(() => {
@@ -31,26 +37,26 @@ class PoolsStore {
       });
     } catch (error) {
       runInAction(() => {
-        this.error = error as Error;
+        this.setError(error as Error);
       });
     } finally {
       runInAction(() => {
         this.isLoading = false;
       });
     }
-  }
+  };
 
-  startPolling(type: "lending" | "borrowing" = "lending") {
+  startPolling = (type: "lending" | "borrowing" = "lending") => {
     this.fetchPools(type);
-    this.interval = setInterval(() => this.fetchPools(type), 60000); // Poll every 60 seconds
-  }
+    this.interval = setInterval(() => this.fetchPools(type), 60000);
+  };
 
-  stopPolling() {
+  stopPolling = () => {
     if (this.interval) {
       clearInterval(this.interval);
       this.interval = null;
     }
-  }
+  };
 }
 
 export default PoolsStore;

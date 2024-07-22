@@ -2,22 +2,22 @@
 import { observer } from "mobx-react-lite";
 import { getAreaChartAllIntervals, getPools } from "@/api/pools/queries";
 import { LendingAsset } from "@/pagesComponents/AssetsPages/LendingAsset";
-import { IPoolData, IAreaChartData } from "@/api/pools/types";
+import { IAreaChartData } from "@/api/pools/types";
 import { useEffect, useState } from "react";
-import { useStore } from "@/hooks/useStoreContext";import { toJS } from "mobx";
+import { useStore } from "@/hooks/useStoreContext";
 
 const LendingAssetPage = observer(({ params }: { params: { [key: string]: string } }) => {
-  const { activePool, setActivePool } = useStore("poolStore");
-  const { fetchPools, pools, isLoading } = useStore("poolsStore");
+  const { activePool, setActivePool, fetchAndSetActivePool } = useStore("poolStore");
+  const { pools, isLoading } = useStore("poolsStore");
   const [chartData, setChartData] = useState<IAreaChartData | null>(null);
   const [isChartLoading, setIsChartLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!activePool) {
-      fetchPools("lending");
+      fetchAndSetActivePool("lending", params.poolToken);
     }
-  }, [activePool, pools]);
+  }, [activePool]);
 
   useEffect(() => {
     if (!activePool && pools.length > 0 && !isLoading) {
@@ -70,7 +70,7 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
     <LendingAsset
       pool={activePool}
       chartData={chartData}
-      loading={isLoading}
+      loading={!activePool}
       error={error}
       isChartLoading={isChartLoading}
     />

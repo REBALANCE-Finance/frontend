@@ -18,11 +18,23 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
   const [error, setError] = useState<string | null>(null);
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
   const [isTableView, setIsTableView] = useState(false);
-  const { pools, isLoading: loading, error: poolsError, fetchPools } = useStore("poolsStore");
+  const {
+    pools,
+    isLoading: loading,
+    error: poolsError,
+    fetchPools,
+    startPolling,
+    stopPolling
+  } = useStore("poolsStore");
 
   useEffect(() => {
     fetchPools("lending");
-  }, []);
+    startPolling("lending");
+
+    return () => {
+      stopPolling();
+    };
+  }, [fetchPools, startPolling, stopPolling]);
 
   useEffect(() => {
     const fetchData = async () => {
