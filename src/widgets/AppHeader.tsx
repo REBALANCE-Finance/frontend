@@ -24,7 +24,7 @@ export const AppHeader = () => {
       w="100%"
       maxW={"1300px"}
       position="sticky"
-      top="0"
+      top={0}
       zIndex={100}
       bg="black.100"
       minH={{ base: "100px", md: "130px" }}

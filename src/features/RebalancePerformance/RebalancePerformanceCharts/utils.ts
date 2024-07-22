@@ -16,11 +16,11 @@ export const areaLines = [
   {
     name: "My APY, %",
     type: ROUTES_TYPE.lending
-  },
-  {
-    name: "My earnings, $",
-    type: ROUTES_TYPE.borrowing
   }
+  // {
+  //   name: "My earnings, $",
+  //   type: ROUTES_TYPE.borrowing
+  // }
   // {
   //   name: "Spent on borrowing",
   //   type: ROUTES_TYPE.borrowing

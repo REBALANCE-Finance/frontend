@@ -30,7 +30,6 @@ const areaGradient = (
 );
 
 const getAreaLines = (areas: IAreaLineProps[]) => {
-  console.log("here ar", areas);
   const arr = areas.map((area, i) => (
     <Area
       key={i}
@@ -42,20 +41,6 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
       fill={`url(#color-${area.type})`}
     />
   ));
-
-  if (areas.length !== 1) {
-    arr.push(
-      <Area
-        key="hardcodedLine"
-        name={areaLines[1].name}
-        type="linear"
-        dataKey="hardcodedLine"
-        stroke="#8884d8"
-        fillOpacity={1}
-        fill={`url(#color-${ROUTES_TYPE.borrowing})`}
-      />
-    );
-  }
 
   return [...arr, areaGradient];
 };
