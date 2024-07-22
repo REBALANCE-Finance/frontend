@@ -43,7 +43,6 @@ export const AppHeader = () => {
         {!media && <AppNav />}
 
         <Flex gap="12px" alignItems="center">
-          {/* {isConnected && <AppNotification />} */}
           {isConnected ? <WalletProfile /> : <ConnectWallet className="step-1" />}
           {media && <AppNav />}
         </Flex>
