@@ -7,6 +7,7 @@ import { RebalancePerformanceCard } from "./RebalancePerformanceCard";
 import { PerformanceChart } from "./RebalancePerformanceCharts";
 import { getCurrentPath, performanceInfo } from "./utils";
 import { usePathname } from "next/navigation";
+import { formatNumber } from "@/utils/formatNumber";
 
 export const RebalancePerformance = ({ pools, chartData, loading } : {
   pools: IPoolData[],
@@ -16,8 +17,9 @@ export const RebalancePerformance = ({ pools, chartData, loading } : {
   const location = usePathname();
   const pathName = getCurrentPath(location || '');
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
+  const totalLending = pools.reduce((acc, pool) => acc + (pool?.funds || 0), 0);
   const info = {
-    lending: { value: pools[0]?.funds.toFixed(2) },
+    lending: { value: formatNumber(totalLending) },
     borrowing: { value: pools[0]?.funds.toFixed(2) }
   };
 

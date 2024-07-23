@@ -21,7 +21,7 @@ const LendingPage = ({ params }: { params: { [key: string]: string } }) => {
         setPools(sortedPools);
         const token =
           fetchedPools?.find(item => item.rebalancerAddress === params.poolAddress)?.token ||
-          fetchedPools[0]?.token;
+          fetchedPools?.find(item => item.token === "USDC.e")?.token;
         if (token) {
           const fetchedChartData = await getAreaChartAllIntervals(token);
           setChartData(fetchedChartData);
