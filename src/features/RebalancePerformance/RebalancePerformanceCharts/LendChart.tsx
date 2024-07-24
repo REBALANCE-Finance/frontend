@@ -30,7 +30,6 @@ const areaGradient = (
 );
 
 const getAreaLines = (areas: IAreaLineProps[]) => {
-  console.log("here ar", areas);
   const arr = areas.map((area, i) => (
     <Area
       key={i}

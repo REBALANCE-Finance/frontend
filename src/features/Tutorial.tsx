@@ -225,7 +225,7 @@ const Tutorial = observer(() => {
       run={runTutorial}
       callback={handleJoyrideCallback}
       showProgress
-      debug={true}
+      debug={false}
       hideCloseButton
       continuous
       disableScrollParentFix

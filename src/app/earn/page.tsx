@@ -78,7 +78,7 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     };
 
     fetchData();
-  }, [params.poolAddress, isConnected]);
+  }, [params.poolAddress, isConnected, pools]);
 
   useEffect(() => {
     if (!isDesktop) {
