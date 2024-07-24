@@ -1,22 +1,28 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { getPools } from "../../api/pools/queries";
+import { getAreaChartAllIntervals, getChartData, getPools } from "../../api/pools/queries";
 import { IPoolData } from "../pools/types";
 
 class PoolStore {
   activePool: IPoolData | null = null;
+  chartData: any = null;
   isLoading: boolean = false;
+  isChartLoading: boolean = true;
   error: Error | null = null;
 
   constructor() {
     makeObservable(this, {
       activePool: observable,
+      chartData: observable,
       isLoading: observable,
+      isChartLoading: observable,
       error: observable,
       setActivePool: action.bound,
       resetActivePool: action,
       setError: action,
       setLoading: action,
-      fetchAndSetActivePool: action.bound
+      setChartLoading: action,
+      fetchAndSetActivePool: action.bound,
+      fetchChartData: action.bound
     });
   }
 
@@ -34,6 +40,10 @@ class PoolStore {
 
   setLoading(isLoading: boolean) {
     this.isLoading = isLoading;
+  }
+
+  setChartLoading(isLoading: boolean) {
+    this.isChartLoading = isLoading;
   }
 
   async fetchAndSetActivePool(type: "lending" | "borrowing", poolName: string) {
@@ -56,6 +66,26 @@ class PoolStore {
     } finally {
       runInAction(() => {
         this.setLoading(false);
+      });
+    }
+  }
+
+  async fetchChartData(token: string) {
+    this.setChartLoading(true);
+    this.setError(null);
+
+    try {
+      const chartData = await getAreaChartAllIntervals(token);
+      runInAction(() => {
+        this.chartData = chartData;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.setError(error as Error);
+      });
+    } finally {
+      runInAction(() => {
+        this.setChartLoading(false);
       });
     }
   }

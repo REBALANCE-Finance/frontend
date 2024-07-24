@@ -6,6 +6,7 @@ interface GuideTooltipProps extends TooltipRenderProps {
   stepsLength: number;
   showNextButton?: boolean;
   showBackButton?: boolean;
+  isDisabledNextButton?: boolean;
 }
 
 const GuideTooltip = ({
@@ -14,6 +15,7 @@ const GuideTooltip = ({
   stepsLength,
   showNextButton,
   showBackButton,
+  isDisabledNextButton,
   primaryProps,
   tooltipProps,
   closeProps,
@@ -54,6 +56,7 @@ const GuideTooltip = ({
           )}
           {showNextButton && (
             <Button
+              isLoading={isDisabledNextButton}
               backgroundColor="rgb(63, 63, 63)"
               width="fit-content"
               p="8px"

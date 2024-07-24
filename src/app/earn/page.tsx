@@ -46,6 +46,7 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
         if (token) {
           let fetchedChartData = await getAreaChartAllIntervals(token);
 
+          // TODO: bring back this when api will be ready
           // const intervals = ["1m", "6m", "1y"];
           // if (isConnected) {
           //   intervals.forEach(interval => {

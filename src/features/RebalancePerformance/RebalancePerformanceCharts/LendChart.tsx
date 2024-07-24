@@ -43,6 +43,7 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
     />
   ));
 
+  // TODO: bring back this when api will be ready
   // if (areas.length !== 1) {
   //   arr.push(
   //     <Area

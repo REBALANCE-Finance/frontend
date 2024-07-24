@@ -7,10 +7,15 @@ import { useEffect, useState } from "react";
 import { useStore } from "@/hooks/useStoreContext";
 
 const LendingAssetPage = observer(({ params }: { params: { [key: string]: string } }) => {
-  const { activePool, setActivePool, fetchAndSetActivePool } = useStore("poolStore");
+  const {
+    activePool,
+    setActivePool,
+    fetchAndSetActivePool,
+    fetchChartData,
+    chartData,
+    isChartLoading
+  } = useStore("poolStore");
   const { pools, isLoading } = useStore("poolsStore");
-  const [chartData, setChartData] = useState<IAreaChartData | null>(null);
-  const [isChartLoading, setIsChartLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,41 +33,11 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
     }
   }, [activePool, pools.length, isLoading]);
 
-  const fetchChartData = async (token: string) => {
-    try {
-      setIsChartLoading(true);
-      const chartData = await getAreaChartAllIntervals(token);
-      if (!chartData) {
-        throw new Error("Failed to fetch chart data");
-      }
-      return chartData;
-    } catch (err) {
-      throw new Error(
-        "Failed to fetch chart data: " + (err instanceof Error ? err.message : "Unknown error")
-      );
-    } finally {
-      setIsChartLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (activePool) {
-      const fetchData = async () => {
-        try {
-          const token = activePool.token;
-          if (!token) {
-            throw new Error("Token not found for the provided pool address");
-          }
-
-          const chartData = await fetchChartData(token);
-          setChartData(chartData);
-        } catch (err) {
-          console.error("Error loading lending asset page:", err);
-          setError(err instanceof Error ? err.message : "An unknown error occurred");
-        }
-      };
-
-      fetchData();
+      const token = activePool.token;
+      fetchChartData(token);
     }
   }, [params.poolToken, activePool]);
 

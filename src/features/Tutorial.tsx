@@ -83,6 +83,7 @@ const Tutorial = observer(() => {
     isFetched: isFetchedPools,
     setIsFetched: setIsFetchedPools
   } = useStore("poolsStore");
+  const { isChartLoading, isLoading: isPoolLoading } = useStore("poolStore");
 
   const _steps = useMemo(() => {
     return isConnected ? connectedSteps : steps;
@@ -207,6 +208,16 @@ const Tutorial = observer(() => {
     }
   };
 
+  const getDisabledNextButtonState = () => {
+    if (stepIndex === 3 && (isChartLoading || isPoolLoading)) {
+      return true;
+    }
+    if (stepIndex === 0 && isLoadingPools) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Joyride
       steps={_steps}
@@ -228,6 +239,7 @@ const Tutorial = observer(() => {
           stepsLength={steps.length}
           showNextButton
           showBackButton={stepIndex !== 0}
+          isDisabledNextButton={getDisabledNextButtonState()}
           {...props}
         />
       )}
