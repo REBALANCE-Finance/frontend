@@ -13,10 +13,12 @@ import { TutorialStep } from "@/types";
 import { useAccount } from "wagmi";
 import { useEffect, useMemo, useState } from "react";
 import { LOCAL_STORAGE_KEYS, ROUTE_PATHS } from "@/consts";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import localStore from "@/utils/localStore";
 import GuideTooltip from "@/components/tooltip/GuideTooltip";
 import BeaconComponent from "@/components/tutorial/Beacon";
+import { useStore } from "@/hooks/useStoreContext";
+import { observer } from "mobx-react-lite";
 
 const steps: TutorialStep[] = [
   {
@@ -41,33 +43,49 @@ const steps: TutorialStep[] = [
   },
   {
     target: ".step-4",
-    content: "Here you can see the actual state and average Promethium APYs",
+    content: "Here you can see the actual state and average Rebalance APYs",
     disableBeacon: true
   },
   {
     target: ".step-5",
-    content: "Start earning with Promethium now.\nMake your first deposit",
+    content: "Start earning with Rebalance now.\nMake your first deposit",
     disableBeacon: true,
     spotlightClicks: true
   }
+];
+
+const connectedSteps = [
+  {
+    target: ".step-1",
+    content: "Wallet is already connected"
+  },
+  ...steps.slice(1)
 ];
 
 const spotlight = {
   borderRadius: 4
 };
 
-const Tutorial = () => {
+const Tutorial = observer(() => {
   const { address } = useAccount();
   const pathname = usePathname();
+  const router = useRouter();
   const isConnected = !!address;
   const [isActiveTutorial, setIsActiveTutorial] = useState(
     !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial)
   );
   const [stepIndex, setStepIndex] = useState(0);
   const [runTutorial, setRunTutorial] = useState(isActiveTutorial);
+  const [shouldUpdateStep, setShouldUpdateStep] = useState(true);
+  const {
+    pools,
+    isLoading: isLoadingPools,
+    isFetched: isFetchedPools,
+    setIsFetched: setIsFetchedPools
+  } = useStore("poolsStore");
 
   const _steps = useMemo(() => {
-    return isConnected ? steps : [steps[0]];
+    return isConnected ? connectedSteps : steps;
   }, [isConnected]);
 
   useEffect(() => {
@@ -77,36 +95,41 @@ const Tutorial = () => {
   }, [isActiveTutorial]);
 
   useEffect(() => {
-    if (isConnected) {
-      setStepIndex(1);
-    }
-  }, [isConnected]);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (stepIndex === 3) {
-      timer = setTimeout(() => {
-        setStepIndex(4);
-      }, 5000);
-    }
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [stepIndex]);
-
-  useEffect(() => {
     if (isActiveTutorial && pathname !== ROUTE_PATHS.lending) {
       setRunTutorial(false);
     }
   }, [isActiveTutorial, pathname]);
 
   useEffect(() => {
-    if (isActiveTutorial && pathname.includes(ROUTE_PATHS.lendingAsset.slice(0, 6))) {
-      setStepIndex(3);
+    if (stepIndex === 2 && !pools.length) {
+      setRunTutorial(false);
+    }
+  }, [stepIndex, pools.length]);
+
+  useEffect(() => {
+    if (stepIndex === 2 && pools.length && isFetchedPools) {
       setRunTutorial(true);
     }
-  }, [isActiveTutorial, pathname]);
+  }, [stepIndex, pools.length, isFetchedPools]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (
+      isActiveTutorial &&
+      pathname.includes(ROUTE_PATHS.lendingAsset.slice(0, 6)) &&
+      isFetchedPools
+    ) {
+      setStepIndex(3);
+      setShouldUpdateStep(false);
+      timer = setTimeout(() => {
+        setRunTutorial(true);
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isActiveTutorial, pathname, isFetchedPools]);
 
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
@@ -145,11 +168,42 @@ const Tutorial = () => {
       localStore.post(LOCAL_STORAGE_KEYS.isShownTutorial, true);
     }
 
-    if (
-      ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND] as Events[]).includes(type) &&
-      pathname === ROUTE_PATHS.lending
-    ) {
-      setStepIndex(index + (action === ACTIONS.PREV ? -1 : action === ACTIONS.NEXT ? 1 : 0));
+    if (!shouldUpdateStep) {
+      setShouldUpdateStep(true);
+      return;
+    }
+
+    if (action === ACTIONS.NEXT) {
+      setStepIndex(prev => prev + 1);
+      setShouldUpdateStep(false);
+    }
+
+    if (action === ACTIONS.PREV) {
+      setStepIndex(prev => prev - 1);
+      setShouldUpdateStep(false);
+    }
+
+    if (action === ACTIONS.PREV) {
+      switch (stepIndex) {
+        case 3:
+          router.prefetch(ROUTE_PATHS.lending);
+          router.push(ROUTE_PATHS.lending, { scroll: false });
+          setIsFetchedPools(false);
+          setShouldUpdateStep(false);
+          setRunTutorial(false);
+          setStepIndex(2);
+          break;
+      }
+    }
+
+    if (action === ACTIONS.NEXT) {
+      switch (stepIndex) {
+        case 2:
+          router.push(ROUTE_PATHS.lendingAssetPage("USDT"), { scroll: false });
+          setStepIndex(3);
+          setShouldUpdateStep(false);
+          break;
+      }
     }
   };
 
@@ -159,20 +213,21 @@ const Tutorial = () => {
       stepIndex={stepIndex}
       run={runTutorial}
       callback={handleJoyrideCallback}
-      continuous
       showProgress
-      debug={false}
+      debug={true}
       hideCloseButton
-      hideBackButton
+      continuous
+      disableScrollParentFix
+      disableOverlay
       scrollOffset={140}
       scrollDuration={500}
       disableOverlayClose
       tooltipComponent={(props: TooltipRenderProps) => (
         <GuideTooltip
           stepIndex={stepIndex}
-          stepsLength={5}
-          showNextButton={stepIndex === 1}
-          showBackButton={stepIndex === 2}
+          stepsLength={steps.length}
+          showNextButton
+          showBackButton={stepIndex !== 0}
           {...props}
         />
       )}
@@ -206,6 +261,6 @@ const Tutorial = () => {
       }}
     />
   );
-};
+});
 
 export default Tutorial;

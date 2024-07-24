@@ -17,7 +17,8 @@ const GuideTooltip = ({
   primaryProps,
   tooltipProps,
   closeProps,
-  backProps
+  backProps,
+  isLastStep
 }: GuideTooltipProps) => {
   return (
     <Flex
@@ -32,6 +33,7 @@ const GuideTooltip = ({
       <Text whiteSpace="break-spaces" textAlign="center" fontWeight={500}>
         {step.content}
       </Text>
+
       <Flex justify="space-between" alignItems="center">
         <Text fontSize="14px" color="greenAlpha.80" fontWeight={700}>
           {stepIndex + 1} / {stepsLength}
@@ -60,20 +62,9 @@ const GuideTooltip = ({
               height="max-content"
               {...primaryProps}
             >
-              Next
+              {isLastStep ? "Finish" : "Next"}
             </Button>
           )}
-          <Button
-            backgroundColor="rgb(63, 63, 63)"
-            width="fit-content"
-            p="8px"
-            fontSize="14px"
-            minH={0}
-            height="max-content"
-            {...closeProps}
-          >
-            Close
-          </Button>
         </Flex>
       </Flex>
     </Flex>

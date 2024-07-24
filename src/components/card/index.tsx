@@ -45,7 +45,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading }) => {
                 as={Flex}
                 justifyContent="space-between"
                 alignItems="center"
-                className={itemCard?.token === "USDT" && !isLoading ? "step-2" : ""}
+                className={itemCard?.token === "USDT" ? "step-2" : ""}
               >
                 <Flex alignItems="center" gap="12px">
                   <TokenIcon name={itemCard?.token} />

@@ -16,18 +16,17 @@ export const WalletProfileBtn: FC<IWalletProfileBtnProps> = ({ onOpen, address }
   const { disconnect } = useDisconnect();
   return (
     // <Flex as={Button} gap="6px" align="center" onClick={onOpen}>
-    <Flex as={Button} gap="6px" align="center">
+    <Flex as={Button} gap="6px" align="center" className="step-1">
       <JazzIcon address={address} />
       <Text mr={4}>{ellipsis(String(address))}</Text>
-      <Center height='20px'>
-        <Divider orientation='vertical' />
+      <Center height="20px">
+        <Divider orientation="vertical" />
       </Center>
       <IconButton
         ml={0}
         aria-label="logout"
         onClick={() => disconnect()}
-        icon={<Icon
-          size="m" name={ICON_NAMES.logoutSquare} />}
+        icon={<Icon size="m" name={ICON_NAMES.logoutSquare} />}
       />
     </Flex>
   );
