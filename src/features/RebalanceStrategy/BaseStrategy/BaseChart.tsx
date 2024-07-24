@@ -93,12 +93,12 @@ export const BaseChart = ({ chartData } : {
 
   const areaLines = [
     {
-      name: "Rebalance APR\n",
+      name: "Rebalance APY\n",
       subtext: `(${chartData.poolChart[selectedDate.name as any].rebalanceAvg.toFixed(2)}% average)`,
       type: ROUTES_TYPE.lending,
     },
     {
-      name: "Aave APR\n",
+      name: "Aave APY\n",
       subtext: `(${chartData.poolChart[selectedDate.name as any].aaveAvg.toFixed(2)}% average)`,
       type: ROUTES_TYPE.borrowing
     }

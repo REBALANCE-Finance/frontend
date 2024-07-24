@@ -17,7 +17,7 @@ export const CustomTooltipBarChart = ({ active, payload }: TooltipProps<ValueTyp
               <Text variant="regular14">$ {Number(e?.value)?.toFixed(2)}</Text>
             </Flex>
             <Flex alignItems="center" justifyContent="space-between">
-              <Text variant="regular14">APR</Text>
+              <Text variant="regular14">APY</Text>
               <Text variant="regular14">{Number(e?.payload.apr)?.toFixed(2)} %</Text>
             </Flex>
           </Flex>

@@ -72,7 +72,7 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
               </Text>
             </Th>
             <Th maxW="118px" p="16px 12px" textTransform="unset">
-              <Text textStyle="text14">30D avg. APR</Text>
+              <Text textStyle="text14">30D avg. APY</Text>
             </Th>
             <Th maxW="118px" p="16px 12px" textTransform="unset">
               <Text
@@ -81,7 +81,7 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
                   textWrap: "balance"
                 }}
               >
-                % APR {">"} market avg.
+                % APY {">"} market avg.
               </Text>
             </Th>
             <Th maxW="118px" p="16px 12px" textTransform="unset">

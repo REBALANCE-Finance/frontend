@@ -83,7 +83,7 @@ export const PoolsLending = ({
                     label={
                       <>
                         <span>
-                          {item.token} Low-Risk Yield Strategy Higher APR is achieved by automatic
+                          {item.token} Low-Risk Yield Strategy Higher APY is achieved by automatic
                           rebalance between following pools:
                         </span>
                         {(item.token === "wETH" || item.token === "USDC.e") && (
@@ -114,7 +114,7 @@ export const PoolsLending = ({
                       className={item.token === "USDT" ? "step-3" : ""}
                     >
                       <Text color="white" borderBottom={"dashed 1px gray"}>
-                        APR
+                        APY
                       </Text>
                       <Box ml="auto" display="flex">
                         {(item.token === "wETH" || item.token === "USDC.e") && (
@@ -147,7 +147,7 @@ export const PoolsLending = ({
                 </HStack>
 
                 <HStack justify="space-between">
-                  <Tooltip label="Rebalance APR  advantage over the lending market highest APR in last 30 days">
+                  <Tooltip label="Rebalance APY  advantage over the lending market highest APY in last 30 days">
                     <Text borderBottom={"dashed 1px gray"} color="white">
                       {">"} market max.
                     </Text>

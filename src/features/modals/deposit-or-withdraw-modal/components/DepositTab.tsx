@@ -157,7 +157,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
         {/* <Divider borderColor="black.90" /> */}
 
         <HStack justify="space-between">
-          <Text color="black.0">30D average APR</Text>
+          <Text color="black.0">30D average APY</Text>
           <Text textStyle="textMono16">{formatPercent(pool.avgApr)}</Text>
         </HStack>
 

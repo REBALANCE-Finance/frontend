@@ -71,7 +71,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
 
           <Flex flexDirection="column" fontWeight="500">
             <Flex justifyContent="space-between" alignItems="center">
-              <Text>Average 30D APR</Text>
+              <Text>Average 30D APY</Text>
               <Text variant="t22">{pool.avgApr.toFixed(2)} %</Text>
             </Flex>
             <Flex justifyContent="space-between" alignItems="center">
@@ -132,7 +132,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
         </Flex>
 
         <Flex direction="column" gap="8px">
-          <Text>Average 30D APR</Text>
+          <Text>Average 30D APY</Text>
           <Text variant="t22">{pool?.avgApr?.toFixed(2)} %</Text>
         </Flex>
 

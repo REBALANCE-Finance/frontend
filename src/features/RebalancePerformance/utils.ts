@@ -16,7 +16,7 @@ export const getCurrentPath = (path: string) => {
 export const performanceInfo = [
   {
     title: "I want to Lend",
-    subtitle: "Low-risk investments. Up to 16% APR in stablecoins.",
+    subtitle: "Low-risk investments. Up to 16% APY in stablecoins.",
     image: chillImage.src,
     logo: chillLogo.src,
     type: ROUTES_TYPE.lending,
