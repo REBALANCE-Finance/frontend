@@ -57,7 +57,8 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
   //   );
   // }
 
-  return [...arr, areaGradient];
+  // return [...arr, areaGradient];
+  return arr;
 };
 
 export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
@@ -73,9 +74,10 @@ export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
   }, [isConnected]);
 
   const getLines = () => {
-    if (isConnected) {
-      return areaLines;
-    }
+    // TODO: bring back when api will be ready
+    // if (isConnected) {
+    //   return areaLines;
+    // }
     return [areaLines[0]];
   };
 
