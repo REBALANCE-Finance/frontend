@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Flex, useMediaQuery } from "@chakra-ui/react";
 import { MEDIA_QUERY_MAX } from "../consts";
@@ -6,17 +6,27 @@ import { RebalancePerformance } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
 
-export const PoolLayout = ({ children, pools, chartData, loading, error } : {
-  children: React.ReactNode,
-  pools: IPoolData[],
-  chartData: IAreaChartData,
-  loading: boolean,
-  error: string | null
+export const PoolLayout = ({
+  children,
+  pools,
+  chartData,
+  loading,
+  error,
+  isTable,
+  onChangeView
+}: {
+  children: React.ReactNode;
+  pools: IPoolData[];
+  chartData: IAreaChartData;
+  loading: boolean;
+  error: string | null;
+  isTable: boolean;
+  onChangeView: VoidFunction;
 }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   if (media === undefined) return null;
   return (
-    <Flex direction="column"  w="100%" gap="44px" align="center">
+    <Flex direction="column" w="100%" gap="44px" align="center">
       <Flex
         direction="column"
         justify="center"
@@ -28,7 +38,7 @@ export const PoolLayout = ({ children, pools, chartData, loading, error } : {
       >
         <RebalancePerformance pools={pools} chartData={chartData} loading={loading} />
         <Flex direction="column" gap="24px">
-          <PoolsHeader />
+          <PoolsHeader isTable={isTable} onChangeView={onChangeView} />
           {children}
         </Flex>
       </Flex>

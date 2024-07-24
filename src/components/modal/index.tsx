@@ -9,6 +9,7 @@ import React, { FC } from "react";
 
 interface IModalProps extends ModalProps {
   isCloseBtn?: boolean;
+  maxWidth?: string;
 }
 
 export const Modal: FC<IModalProps> = ({
@@ -16,12 +17,13 @@ export const Modal: FC<IModalProps> = ({
   onClose,
   children,
   isCloseBtn = true,
+  maxWidth,
   ...rest
 }) => {
   return (
     <DefaultModal isOpen={isOpen} onClose={onClose} {...rest} isCentered>
       <ModalOverlay backdropFilter="auto" backdropBlur="5px" />
-      <ModalContent bg="black.100" p="24px" borderRadius="4px" gap="24px">
+      <ModalContent bg="black.100" p="24px" borderRadius="4px" gap="24px" maxW={maxWidth}>
         {isCloseBtn && <ModalCloseButton color="#626262" zIndex={10} />}
         {children}
       </ModalContent>

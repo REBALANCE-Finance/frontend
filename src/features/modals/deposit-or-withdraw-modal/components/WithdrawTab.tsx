@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Button, Divider, Flex, HStack, Text } from "@chakra-ui/react";
 import { useFormik } from "formik";
@@ -30,7 +30,7 @@ const withdrawSchema = yup.object({
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
     const [profit, setProfit] = useState(0);
-    const instantWithdraw = useWithdraw(pool.rebalancerAddress, () => onClose());
+
     const formik = useFormik({
       initialValues: {
         withdraw: ""
@@ -48,24 +48,29 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
       }
     });
 
+    const { instantWithdraw, isLoading } = useWithdraw(
+      pool.rebalancerAddress,
+      () => onClose(),
+      formik.handleSubmit
+    );
+
     const setMax = () => {
       formik.setFieldValue("withdraw", balance.toString());
       formik.validateField("withdraw");
     };
-    console.log('formik', balance);
 
-
-  useEffect(() => {
-    if (address) {
-      getPersonalEarnings(1, 30, address, pool.token)
-        .then(data => {
-          console.log(data.userEarned.reduce((acc, el) => (acc + el.uv), 0) || 0, 'data');
-          setProfit(data.userEarned.reduce((acc, el) => (acc + el.uv), 0) || 0);
-        }).catch((e) => {
-          console.log(e, 'error');
-        })
-    }
-  }, [address, pool.rebalancerAddress]);
+    useEffect(() => {
+      if (address) {
+        getPersonalEarnings(1, 30, address, pool.token)
+          .then(data => {
+            console.log(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0, "data");
+            setProfit(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0);
+          })
+          .catch(e => {
+            console.log(e, "error");
+          });
+      }
+    }, [address, pool.rebalancerAddress]);
 
     return (
       <form onSubmit={formik.handleSubmit}>
@@ -115,6 +120,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
             variant="primaryFilled"
             type="submit"
             isDisabled={!formik.values.withdraw || !formik.isValid}
+            isLoading={isLoading}
           >
             Withdraw
           </Button>

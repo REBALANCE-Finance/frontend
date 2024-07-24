@@ -1,15 +1,27 @@
-import { Button, Divider, Flex, HStack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Divider,
+  Flex,
+  FormControl,
+  FormLabel,
+  HStack,
+  Switch,
+  Text
+} from "@chakra-ui/react";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 import React, { FC, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
-import { depositSchema } from "../../../../components/forms/schemas";
 import { useDeposit } from "../../../../hooks/useDeposit";
 import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber, formatPercent } from "../../../../utils/formatNumber";
 import ApproveBtn from "./ApproveBtn";
 import DepositButton from "@/components/button/DepositButton";
+import { DataSwitcher } from "@/components/data-switcher/DataSwitcher";
+import { FREEZE_DATES } from "@/components/data-switcher/utils";
+
 interface IDepositTabProps {
   pool: any;
   onClose: () => void;
@@ -24,49 +36,68 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     token: pool.tokenAddress
   });
 
+  const onDeposit = () => {
+    if (address) {
+      deposit({
+        value: parseBigNumber(formik.values.deposit, pool.decimals),
+        address
+      });
+    }
+  };
+
   const { allowance, deposit, isLoading } = useDeposit(
     pool.rebalancerAddress,
     pool.tokenAddress,
-    onClose
+    onClose,
+    onDeposit
   );
+
+  const depositSchema = Yup.object().shape({
+    deposit: Yup.string().test("min-amount", `Amount must be at least 1e6`, value => {
+      const depositValue = BigInt(parseBigNumber(value || "0", pool.decimals));
+      const minAmount = BigInt(1e6) * BigInt(Math.pow(10, pool.decimals));
+      return depositValue >= 1e6;
+    }),
+    freeze: Yup.boolean(),
+    freezePeriod: Yup.string().required("Required")
+  });
 
   const formik = useFormik({
     initialValues: {
-      deposit: ""
+      deposit: "",
+      freeze: true,
+      freezePeriod: FREEZE_DATES[0]
     },
-    validationSchema: depositSchema(
-      formatBigNumber(balanceToken?.value, balanceToken?.decimals),
-      "100000000000"
-    ),
+    validationSchema: depositSchema,
     onSubmit: async values => {
       const depositValue = parseBigNumber(values.deposit, pool.decimals);
       if (address) {
         await deposit({
           value: depositValue,
-          address,
-          onSuccess: () => {
-            setConfirmedApprove(false);
-            onClose();
-          }
+          address
         });
       }
     }
   });
 
-  const setMax = () => {
-    formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
-  };
-
   useEffect(() => {
     if (formik.values.deposit) {
       const checkNeedsApproval = () => {
-        const depositValue = parseBigNumber(formik.values.deposit, pool.decimals);
-        const isApprovalNeeded = !allowance || allowance < depositValue;
+        const depositValue = BigInt(parseBigNumber(formik.values.deposit, pool.decimals));
+        const isApprovalNeeded = !allowance || BigInt(allowance) < depositValue;
         setNeedsApproval(isApprovalNeeded);
       };
       checkNeedsApproval();
     }
   }, [allowance, formik.values.deposit, pool.decimals]);
+
+  const setMax = () => {
+    formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
+  };
+
+  const getPointsString = (points: number) => {
+    return `+ ${formatNumber(points)} points`;
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -87,7 +118,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
             <Text textStyle="textMono16">
               ${formatNumber(formatBigNumber(balanceToken?.value, balanceToken?.decimals))}
             </Text>
-            <Button color="greenAlpha.100" onClick={setMax} isDisabled={isLoading}>
+            <Button color="green.100" onClick={setMax} isDisabled={isLoading}>
               Max
             </Button>
           </Flex>
@@ -95,10 +126,35 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
 
         <Divider borderColor="black.90" />
 
-        {/* <HStack justify="space-between">
-          <Text color="black.0">Use as collateral</Text>
-          <Switch />
-        </HStack> */}
+        {/* TODO: bring back when api will be ready */}
+
+        {/* <FormControl display="flex" alignItems="center" justifyContent="space-between">
+          <FormLabel htmlFor="freeze" mb="0" borderBottom="1px dashed #fff">
+            Freeze ✨
+          </FormLabel>
+          <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
+        </FormControl>
+
+        <Flex justify="space-between" gap={4} alignItems="center">
+          <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>Choose freeze period</Text>
+          <DataSwitcher
+            data={FREEZE_DATES}
+            value={formik.values.freezePeriod}
+            onChange={value => formik.setFieldValue("freezePeriod", value)}
+            isDisabled={!formik.values.freeze}
+          />
+        </Flex> */}
+
+        {/* <Flex justify="space-between" gap={4} alignItems="center">
+          <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
+            Projected point earnings
+          </Text>
+          <Text color={!formik.values.freeze ? "darkgray" : "greenAlpha.100"}>
+            {getPointsString(1234)}
+          </Text>
+        </Flex> */}
+
+        {/* <Divider borderColor="black.90" /> */}
 
         <HStack justify="space-between">
           <Text color="black.0">30D average APR</Text>
@@ -122,6 +178,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           <DepositButton
             variant="primaryFilled"
             isDisabled={!formik.values.deposit || !formik.isValid || isLoading}
+            onDeposit={onDeposit}
           />
         )}
       </Flex>

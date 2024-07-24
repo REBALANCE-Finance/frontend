@@ -9,10 +9,10 @@ import { TokenIcon } from "../token-icon";
 interface ICardProps {
   rowCard: IRowCard[];
   itemCard: DefaultDataType;
-  onClick: () => void;
+  isLoading?: boolean;
 }
 
-export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
+export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading }) => {
   return (
     <ChakraCard cursor="pointer" variant="poolCard" position="relative" justifySelf="center">
       {!itemCard.token ? (
@@ -45,7 +45,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
                 as={Flex}
                 justifyContent="space-between"
                 alignItems="center"
-                onClick={onClick}
+                className={itemCard?.token === "USDT" ? "step-2" : ""}
               >
                 <Flex alignItems="center" gap="12px">
                   <TokenIcon name={itemCard?.token} />
@@ -57,7 +57,6 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, onClick }) => {
           case "body":
             return (
               <CardBody
-                onClick={onClick}
                 key={elem.name}
                 as={Flex}
                 direction="column"

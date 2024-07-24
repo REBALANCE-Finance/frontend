@@ -4,6 +4,9 @@ import React, { FC } from "react";
 import { Skeleton } from "@chakra-ui/react";
 import Img from "./Images";
 import protokol from "/public/assets/image/Protocols.svg";
+import { formatNumber } from "@/utils/formatNumber";
+import Link from "next/link";
+import { FIRELABS_AUDIT_LINK, HACKEN_AUDIT_LINK } from "@/consts";
 interface RebalncePerformanceCardProps {
   image: string;
   title: string;
@@ -93,10 +96,26 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
         >
           {type === "lending" ? (
             <>
-              <Text>Non-upgradable, trustless</Text>
-              <Text>Chainlink® decentralised computation</Text>
-              <Text>LP insurance</Text>
-              <Text>Lowest risk</Text>
+              <Text>Computations by Chainlink Automation ® </Text>
+              <Text>
+                Audited by{" "}
+                <Link
+                  href={HACKEN_AUDIT_LINK}
+                  target="_blank"
+                  style={{ textDecoration: "underline" }}
+                >
+                  Hacken
+                </Link>
+                ,{" "}
+                <Link
+                  href={FIRELABS_AUDIT_LINK}
+                  target="_blank"
+                  style={{ textDecoration: "underline" }}
+                >
+                  4ire Labs
+                </Link>
+              </Text>
+              <Text>Protected by Hacken Extractor ® </Text>
             </>
           ) : (
             <>

@@ -5,4 +5,5 @@ export interface IToken {
   decimals: number;
   logoURI?: string;
   chainId: number;
+  value?: string;
 }

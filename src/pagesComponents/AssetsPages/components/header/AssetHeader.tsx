@@ -1,4 +1,4 @@
-import { Flex, Link,Text } from "@chakra-ui/layout";
+import { Flex, Link, Text } from "@chakra-ui/layout";
 import { useMediaQuery } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useAccount } from "wagmi";
@@ -23,7 +23,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
   if (media) {
     return (
       <Flex w="100%" h="fit-content" flexDirection="column">
-        <Flex gap="24px" flexDirection="column">
+        <Flex gap="24px" flexDirection="column" className="step-4">
           <Flex gap="8px" align="inherit">
             <TokenIcon name={pool?.token} size="32px" sizeIcon="22px" />
             <Flex
@@ -33,10 +33,10 @@ export const AssetHeader: FC<any> = ({ pool }) => {
               w="100%"
               justifyContent="space-between"
             >
-              <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={'center'}>
+              <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={"center"}>
                 <Text>{pool?.token}</Text>
                 <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
-                  <Icon name={ICON_NAMES?.assetFunction} size="sm"/>
+                  <Icon name={ICON_NAMES?.assetFunction} size="sm" />
                 </Link>
                 {/* <Text>Coin</Text> */}
               </Flex>
@@ -111,7 +111,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
 
   return (
     <Flex w="100%" h="fit-content" align="center" justify="space-between">
-      <Flex align="center" gap="48px" flexDirection={media ? "column" : "row"}>
+      <Flex align="center" gap="48px" flexDirection={media ? "column" : "row"} className="step-4">
         <Flex gap="8px" align="inherit">
           <TokenIcon name={pool?.token} />
           <Flex direction="column" gap="8px">
@@ -119,13 +119,13 @@ export const AssetHeader: FC<any> = ({ pool }) => {
               {/* {pool.token} ({CHAIN_NAMES[chain?.id ?? 0]}) */}
               {pool?.token} (Arbitrum)
             </Text>
-            <Flex gap='12px' align='center'>
+            <Flex gap="12px" align="center">
               <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
                 <Text>{pool?.token}</Text>
                 <Text>Coin</Text>
               </Flex>
               <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
-                <Icon name={ICON_NAMES.assetFunction} size="sm"/>
+                <Icon name={ICON_NAMES.assetFunction} size="sm" />
               </Link>
             </Flex>
           </Flex>

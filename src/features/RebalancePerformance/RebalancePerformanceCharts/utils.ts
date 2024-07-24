@@ -14,9 +14,14 @@ export const tickFormatter = (e: string) => {
 
 export const areaLines = [
   {
-    name: "REBALANCE max. APR",
+    name: "My APY, %",
     type: ROUTES_TYPE.lending
   },
+  // TODO: Bring back when api will be ready
+  // {
+  //   name: "My earnings, $",
+  //   type: ROUTES_TYPE.borrowing
+  // }
   // {
   //   name: "Spent on borrowing",
   //   type: ROUTES_TYPE.borrowing

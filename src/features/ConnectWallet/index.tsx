@@ -51,7 +51,17 @@ if (!isMobile) {
   });
 }
 
-export const ConnectWallet = ({ title, className }: { title?: string; className?: string }) => {
+export const ConnectWallet = ({
+  title,
+  variant,
+  minHeight,
+  className
+}: {
+  title?: string;
+  variant?: string;
+  minHeight?: string;
+  className?: string;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { login } = useAuth();
@@ -78,10 +88,11 @@ export const ConnectWallet = ({ title, className }: { title?: string; className?
     return (
       <>
         <Button
-          p="0"
+          p={variant ? "16px 24px" : 0}
           onClick={onOpen}
-          variant={title === "Deposit" ? "primaryFilled" : ""}
+          variant={variant ? variant : title === "Deposit" ? "primaryFilled" : ""}
           flex="1 1 0"
+          width={variant ? "100%" : "auto"}
           className={className}
         >
           {title ? title : "Connect wallet"}
@@ -137,10 +148,17 @@ export const ConnectWallet = ({ title, className }: { title?: string; className?
   return (
     <>
       <Button
-        p="0"
         onClick={onOpen}
-        variant={title === "Deposit" ? "primaryFilled" : ""}
+        variant={variant ? variant : title === "Deposit" ? "primaryFilled" : ""}
         flex="1 1 0"
+        width={variant ? "100%" : "auto"}
+        mt={variant ? 4 : 0}
+        h={variant ? "52px" : "auto"}
+        minH={minHeight}
+        className={className}
+        _hover={{
+          opacity: 0.8
+        }}
       >
         {title ? title : "Connect wallet"}
       </Button>

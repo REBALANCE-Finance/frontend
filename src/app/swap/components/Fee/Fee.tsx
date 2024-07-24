@@ -1,22 +1,32 @@
-"use client";
-import { Box, Text } from "@chakra-ui/react"
-import { useState } from "react";
+import { Box, Skeleton, Text } from "@chakra-ui/react";
 
-const Fee = () => {
-  const [selected, setSelected] = useState();
+type FeeProps = {
+  exchangeRate: string;
+  gasFee: string;
+  isLoading: boolean;
+};
+
+const Fee = ({ exchangeRate, gasFee, isLoading }: FeeProps) => {
+  if (isLoading) {
+    return <Skeleton height={12} mt={3} />;
+  }
+
   return (
     <Box
       display="flex"
       alignItems="center"
       justifyContent="space-between"
       background="#09090B"
-      p="20px 24px"
-      borderRadius="4px"
-      mt="12px">
-      <Text fontSize="18px">1 Eth = 1,999999 ARB</Text>
-      <Text fontSize="16px" color="grey">Gaz Fee 0.04</Text>
+      p={4}
+      borderRadius="8px"
+      mt="12px"
+    >
+      <Text fontSize="12px">{exchangeRate}</Text>
+      <Text fontSize="12px" color="grey">
+        Gas Fee: ~{gasFee}
+      </Text>
     </Box>
-  )
-}
+  );
+};
 
 export default Fee;

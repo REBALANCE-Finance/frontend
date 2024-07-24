@@ -1,23 +1,75 @@
-import { useEffect } from "react";
-import { useWriteContract } from "wagmi";
-
+import { useState, useEffect } from "react";
+import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ABI_REBALANCE } from "../abi/rebalance";
+import { ARB_CONFIRMATIONS_COUNT } from "@/consts";
+import { useStore } from "./useStoreContext";
+import { ModalContextEnum } from "@/store/modal/types";
 
-export const useWithdraw = (poolAddress: `0x${string}`, onSuccess: () => void) => {
-  const { writeContract, isSuccess } = useWriteContract();
+export const useWithdraw = (
+  poolAddress: `0x${string}`,
+  onClose: () => void,
+  onRetry: () => void
+) => {
+  const [isLoading, setLoading] = useState(false);
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const { openModal } = useStore("modalContextStore");
+  const { writeContractAsync } = useWriteContract();
 
-  const instantWithdraw = ({ address, assets }: { address: `0x${string}`; assets: bigint }) => {
-    writeContract({
-      address: poolAddress,
-      abi: ABI_REBALANCE,
-      functionName: "withdraw",
-      args: [assets, address, address]
-    });
-  };
+  const {
+    isLoading: waitingReceipt,
+    isSuccess: isReceiptSuccess,
+    isError: isReceiptError,
+    error: receiptError
+  } = useWaitForTransactionReceipt({
+    hash: txHash as `0x${string}`,
+    confirmations: ARB_CONFIRMATIONS_COUNT
+  });
 
   useEffect(() => {
-    if (isSuccess) onSuccess();
-  }, [isSuccess, onSuccess]);
+    if (isReceiptSuccess && txHash) {
+      onClose();
+      openModal({
+        type: ModalContextEnum.Success,
+        props: {
+          txHash
+        }
+      });
+    } else if (isReceiptError && receiptError) {
+      openModal({
+        type: ModalContextEnum.Reject,
+        props: {
+          title: "Transaction error",
+          content: receiptError.message,
+          onRetry
+        }
+      });
+    }
+  }, [isReceiptSuccess, isReceiptError, txHash, receiptError, onClose, onRetry]);
 
-  return instantWithdraw;
+  const instantWithdraw = async ({
+    address,
+    assets
+  }: {
+    address: `0x${string}`;
+    assets: bigint;
+  }) => {
+    try {
+      setLoading(true);
+      const tx = await writeContractAsync({
+        address: poolAddress,
+        abi: ABI_REBALANCE,
+        functionName: "withdraw",
+        args: [assets, address, address]
+      });
+      setTxHash(tx);
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
+  };
+
+  return {
+    instantWithdraw,
+    isLoading: isLoading || waitingReceipt
+  };
 };

@@ -1,0 +1,52 @@
+type LocalStore = {
+  post: (id: string, value: unknown) => void;
+  getData: (id: string) => unknown | null;
+  delete: (id: string) => void;
+};
+
+const localStore: LocalStore = {
+  post(id, value) {
+    const data = {
+      id,
+      data: value,
+      time: new Date()
+    };
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem(String(id), JSON.stringify(data));
+
+      window.dispatchEvent(
+        new CustomEvent("localStorageChange", {
+          detail: { key: id, value }
+        })
+      );
+    }
+  },
+
+  getData(id) {
+    if (typeof window !== "undefined") {
+      const data = localStorage.getItem(id);
+
+      if (data) {
+        return JSON.parse(data).data;
+      }
+    }
+
+    return null;
+  },
+
+  delete(id) {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(String(id));
+
+      // Dispatch custom event
+      window.dispatchEvent(
+        new CustomEvent("localStorageChange", {
+          detail: { key: id, value: null }
+        })
+      );
+    }
+  }
+};
+
+export default localStore;

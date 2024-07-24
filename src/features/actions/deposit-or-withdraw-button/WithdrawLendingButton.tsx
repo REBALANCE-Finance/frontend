@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useAccount } from "wagmi";
 
@@ -10,9 +10,17 @@ interface IWithdrawProps {
   pool: any;
   variant?: string;
   disabled?: boolean;
+  minHeight?: string;
+  ButtonProps?: ButtonProps;
 }
 
-export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool, variant, disabled }) => {
+export const WithdrawLendingButton: FC<IWithdrawProps> = ({
+  pool,
+  variant,
+  disabled,
+  minHeight,
+  ButtonProps
+}) => {
   const { openModal } = useStore("modalStore");
   const { address } = useAccount();
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x", pool.decimals);
@@ -26,6 +34,8 @@ export const WithdrawLendingButton: FC<IWithdrawProps> = ({ pool, variant, disab
       variant={variant ?? "secondaryOutline"}
       disabled={true}
       flex="1 1 0"
+      minH={minHeight}
+      {...ButtonProps}
       onClick={e => {
         if (disabled) return;
         e.stopPropagation();

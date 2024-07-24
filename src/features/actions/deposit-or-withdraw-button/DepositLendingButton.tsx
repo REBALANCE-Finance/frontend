@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useAccount } from "wagmi";
 
@@ -9,9 +9,18 @@ import { ConnectWallet } from "../../ConnectWallet";
 interface IDepositProps {
   pool: any;
   variant?: string;
+  minHeight?: string;
+  className?: string;
+  ButtonProps?: ButtonProps;
 }
 
-export const DepositLendingButton: FC<IDepositProps> = ({ pool, variant }) => {
+export const DepositLendingButton: FC<IDepositProps> = ({
+  pool,
+  variant,
+  minHeight,
+  className,
+  ButtonProps
+}) => {
   const { openModal } = useStore("modalStore");
   const { address } = useAccount();
   const handleOpenModal = () => {
@@ -19,13 +28,16 @@ export const DepositLendingButton: FC<IDepositProps> = ({ pool, variant }) => {
   };
 
   if (!address) {
-    return <ConnectWallet title="Deposit" />;
+    return <ConnectWallet title="Deposit" minHeight={minHeight} />;
   }
 
   return (
     <Button
       variant={variant ?? "primaryFilled"}
       flex="1 1 0"
+      minHeight={minHeight}
+      className={className}
+      {...ButtonProps}
       onClick={e => {
         e.stopPropagation();
         handleOpenModal();

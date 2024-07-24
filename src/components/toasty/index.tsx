@@ -16,10 +16,7 @@ interface IToastWrapper extends PropsWithChildren {
 
 export const ToastWrapper: FC<IToastWrapper> = ({ children, type }) => {
   return (
-    <Flex flexDirection="column" gap="10px">
-      <Text fontSize="lg" fontWeight="500">
-        {titles[type]}
-      </Text>
+    <Flex flexDirection="column" gap="8px" h="100%" justify="center">
       {children}
     </Flex>
   );

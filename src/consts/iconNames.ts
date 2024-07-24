@@ -48,6 +48,7 @@ export const ICON_NAMES: { [key: string]: string } = {
   success: "success",
   trxSuccess: "trx-success",
   trxRejected: "trx-rejected",
+  trxFreeze: "trx-freeze",
   telegram: "telegram",
   twitter: "twitter",
   update: "update",
@@ -62,5 +63,6 @@ export const ICON_NAMES: { [key: string]: string } = {
   walletConnect: "wallet-connect",
   WBTC: "WBTC",
   WETH: "WETH",
-  worning: "worning"
+  worning: "worning",
+  tiles: "tiles"
 };

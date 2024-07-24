@@ -1,0 +1,266 @@
+"use client";
+import Joyride, {
+  Placement,
+  CallBackProps,
+  STATUS,
+  EVENTS,
+  Status,
+  ACTIONS,
+  TooltipRenderProps,
+  Events
+} from "react-joyride";
+import { TutorialStep } from "@/types";
+import { useAccount } from "wagmi";
+import { useEffect, useMemo, useState } from "react";
+import { LOCAL_STORAGE_KEYS, ROUTE_PATHS } from "@/consts";
+import { usePathname, useRouter } from "next/navigation";
+import localStore from "@/utils/localStore";
+import GuideTooltip from "@/components/tooltip/GuideTooltip";
+import BeaconComponent from "@/components/tutorial/Beacon";
+import { useStore } from "@/hooks/useStoreContext";
+import { observer } from "mobx-react-lite";
+
+const steps: TutorialStep[] = [
+  {
+    target: ".step-1",
+    content: "Connect your wallet here",
+    spotlightClicks: true
+  },
+  {
+    target: ".step-2",
+    content: "Click on the money market to reveal details",
+    spotlightClicks: true,
+    disableBeacon: true,
+    placement: "top" as Placement
+  },
+  {
+    target: ".step-3",
+    content:
+      "This is an APY of the asset at this moment.\nIt is constantly changing. Click to see details",
+    spotlightClicks: true,
+    disableBeacon: true,
+    placement: "top" as Placement
+  },
+  {
+    target: ".step-4",
+    content: "Here you can see the actual state and average Rebalance APYs",
+    disableBeacon: true
+  },
+  {
+    target: ".step-5",
+    content: "Start earning with Rebalance now.\nMake your first deposit",
+    disableBeacon: true,
+    spotlightClicks: true
+  }
+];
+
+const connectedSteps = [
+  {
+    target: ".step-1",
+    content: "Wallet is already connected"
+  },
+  ...steps.slice(1)
+];
+
+const spotlight = {
+  borderRadius: 4
+};
+
+const Tutorial = observer(() => {
+  const { address } = useAccount();
+  const pathname = usePathname();
+  const router = useRouter();
+  const isConnected = !!address;
+  const [isActiveTutorial, setIsActiveTutorial] = useState(
+    !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial)
+  );
+  const [stepIndex, setStepIndex] = useState(0);
+  const [runTutorial, setRunTutorial] = useState(isActiveTutorial);
+  const [shouldUpdateStep, setShouldUpdateStep] = useState(true);
+  const {
+    pools,
+    isLoading: isLoadingPools,
+    isFetched: isFetchedPools,
+    setIsFetched: setIsFetchedPools
+  } = useStore("poolsStore");
+
+  const _steps = useMemo(() => {
+    return isConnected ? connectedSteps : steps;
+  }, [isConnected]);
+
+  useEffect(() => {
+    if (!isActiveTutorial) {
+      setRunTutorial(false);
+    }
+  }, [isActiveTutorial]);
+
+  useEffect(() => {
+    if (isActiveTutorial && pathname !== ROUTE_PATHS.lending) {
+      setRunTutorial(false);
+    }
+  }, [isActiveTutorial, pathname]);
+
+  useEffect(() => {
+    if (stepIndex === 2 && !pools.length) {
+      setRunTutorial(false);
+    }
+  }, [stepIndex, pools.length]);
+
+  useEffect(() => {
+    if (stepIndex === 2 && pools.length && isFetchedPools) {
+      setRunTutorial(true);
+    }
+  }, [stepIndex, pools.length, isFetchedPools]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (
+      isActiveTutorial &&
+      pathname.includes(ROUTE_PATHS.lendingAsset.slice(0, 6)) &&
+      isFetchedPools
+    ) {
+      setStepIndex(3);
+      setShouldUpdateStep(false);
+      timer = setTimeout(() => {
+        setRunTutorial(true);
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isActiveTutorial, pathname, isFetchedPools]);
+
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === LOCAL_STORAGE_KEYS.isShownTutorial) {
+        const tutorialShown = localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial);
+        console.log("Storage change detected:", tutorialShown);
+        setIsActiveTutorial(!tutorialShown);
+        setRunTutorial(!tutorialShown);
+      }
+    };
+
+    const handleCustomStorageChange = (event: CustomEvent<{ key: string; value: any }>) => {
+      if (event.detail.key === LOCAL_STORAGE_KEYS.isShownTutorial) {
+        const tutorialShown = localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial);
+        console.log("Custom storage change detected:", tutorialShown);
+        setIsActiveTutorial(!tutorialShown);
+        setRunTutorial(!tutorialShown);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("localStorageChange", handleCustomStorageChange as EventListener);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("localStorageChange", handleCustomStorageChange as EventListener);
+    };
+  }, []);
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status, index, type, action } = data;
+    const finishedStatuses: Status[] = [STATUS.FINISHED, STATUS.SKIPPED];
+
+    if (finishedStatuses.includes(status) || action === ACTIONS.CLOSE) {
+      setRunTutorial(false);
+      localStore.post(LOCAL_STORAGE_KEYS.isShownTutorial, true);
+    }
+
+    if (!shouldUpdateStep) {
+      setShouldUpdateStep(true);
+      return;
+    }
+
+    if (action === ACTIONS.NEXT) {
+      setStepIndex(prev => prev + 1);
+      setShouldUpdateStep(false);
+    }
+
+    if (action === ACTIONS.PREV) {
+      setStepIndex(prev => prev - 1);
+      setShouldUpdateStep(false);
+    }
+
+    if (action === ACTIONS.PREV) {
+      switch (stepIndex) {
+        case 3:
+          router.prefetch(ROUTE_PATHS.lending);
+          router.push(ROUTE_PATHS.lending, { scroll: false });
+          setIsFetchedPools(false);
+          setShouldUpdateStep(false);
+          setRunTutorial(false);
+          setStepIndex(2);
+          break;
+      }
+    }
+
+    if (action === ACTIONS.NEXT) {
+      switch (stepIndex) {
+        case 2:
+          router.push(ROUTE_PATHS.lendingAssetPage("USDT"), { scroll: false });
+          setStepIndex(3);
+          setShouldUpdateStep(false);
+          break;
+      }
+    }
+  };
+
+  return (
+    <Joyride
+      steps={_steps}
+      stepIndex={stepIndex}
+      run={runTutorial}
+      callback={handleJoyrideCallback}
+      showProgress
+      debug={true}
+      hideCloseButton
+      continuous
+      disableScrollParentFix
+      disableOverlay
+      scrollOffset={140}
+      scrollDuration={500}
+      disableOverlayClose
+      tooltipComponent={(props: TooltipRenderProps) => (
+        <GuideTooltip
+          stepIndex={stepIndex}
+          stepsLength={steps.length}
+          showNextButton
+          showBackButton={stepIndex !== 0}
+          {...props}
+        />
+      )}
+      beaconComponent={BeaconComponent}
+      styles={{
+        options: {
+          backgroundColor: "#202327",
+          textColor: "#fff",
+          arrowColor: "#202327",
+          primaryColor: "rgb(63, 63, 63)",
+          spotlightShadow:
+            "0 0 20px 10px rgba(0, 0, 0, 0.5), 0 0 40px 20px rgba(0, 0, 0, 0.3), 0 0 60px 30px rgba(0, 0, 0, 0.1)"
+        },
+        beaconInner: {
+          backgroundColor: "rgb(76, 255, 148)"
+        },
+        beaconOuter: {
+          border: "2px solid rgb(76, 255, 148)"
+        },
+        tooltip: {
+          borderRadius: "12px",
+          fontSize: "18px",
+          width: "fit-content"
+        },
+        spotlight: {
+          ...spotlight,
+          zIndex: 9999,
+          backdropFilter: "none",
+          transform: "translateZ(0)"
+        }
+      }}
+    />
+  );
+});
+
+export default Tutorial;

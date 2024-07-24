@@ -12,12 +12,15 @@ export const DateSwitcher: FC<IDateSwitcher> = ({ date, selectDate, selectedDate
           justify="center"
           alignItems="center"
           px="5px"
-          onClick={() => selectDate(elem)}
-          cursor="pointer"
+          onClick={elem?.isDisabled ? undefined : () => selectDate(elem)}
           p="4px 12px 4px 12px"
           borderRadius="2px"
-          bg={elem.intervals === +selectedDate.intervals ? "black.40" : undefined}
+          bg={
+            elem.intervals === +selectedDate.intervals && !elem?.isDisabled ? "black.40" : undefined
+          }
           w="41px"
+          opacity={elem?.isDisabled ? 0.7 : 1}
+          cursor={elem?.isDisabled ? "not-allowed" : "pointer"}
         >
           <Text fontSize="sm" color="lightGray">
             {elem.name}

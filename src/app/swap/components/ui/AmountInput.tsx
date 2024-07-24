@@ -1,29 +1,33 @@
-import React from 'react';
-import { Input, InputGroup } from "@chakra-ui/react";
+import React from "react";
+import { Box, Input, InputGroup, InputProps, InputRightElement } from "@chakra-ui/react";
 
-interface AmountInputProps {
+type AmountInputProps = {
   amount: string;
   setAmount: (value: string) => void;
   maxAmount: number;
-}
+} & InputProps;
 
-const AmountInput: React.FC<AmountInputProps> = ({ amount, setAmount, maxAmount }) => {
+const AmountInput: React.FC<AmountInputProps> = ({ amount, setAmount, maxAmount, ...props }) => {
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (!isNaN(Number(value)) && Number(value) <= maxAmount) {
+    if (!isNaN(Number(value))) {
       setAmount(value);
     }
   };
 
+  const isExceedingBalance = Number(amount) > maxAmount;
+
   return (
-    <InputGroup maxW="220px" border="none">
-      <Input
-        placeholder="0.00"
-        value={amount}
-        onChange={handleAmountChange}
-        textAlign="right"
-      />
-    </InputGroup>
+    <Input
+      data-group
+      placeholder="0.00"
+      value={amount}
+      onChange={handleAmountChange}
+      textAlign="right"
+      padding="2px"
+      borderColor={isExceedingBalance ? "red.500" : undefined}
+      {...props}
+    />
   );
 };
 

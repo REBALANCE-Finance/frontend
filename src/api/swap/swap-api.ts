@@ -1,14 +1,20 @@
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import { IPrices } from "./types";
+import { getPrices } from "./queries";
 
-export const getPrices = async (
-  address: string | undefined,
-  from: number,
-  to: number
+export const useGetPrice = (
+  srcToken: string | undefined,
+  destToken: string | undefined,
+  amount: number,
+  network: number,
+  srcDecimals: number,
+  destDecimals: number,
+  needRefetch?: boolean,
 ) => {
-  const { data } = await axios.get<IPrices>(
-    `https://api.coingecko.com/api/v3/coins/arbitrum-one/contract/${address}/market_chart/range?vs_currency=usd&from=${from}&to=${to}`
-  );
-
-  return data;
+  return useQuery<IPrices>({
+    queryKey: ["prices", srcToken, destToken, amount, network, srcDecimals, destDecimals],
+    queryFn: () => getPrices(srcToken!, destToken!, amount, network, srcDecimals, destDecimals),
+    enabled: !!srcToken && !!destToken && amount > 0 && needRefetch,
+    retry: 1
+  });
 };

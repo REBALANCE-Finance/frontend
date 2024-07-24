@@ -19,10 +19,6 @@ export const PoolsBorrow = observer(({ pools } : {
 }) => {
   const router = useRouter();
 
-  const handleLink = (poolAddress: string) => {
-    router.push(generatePath(ROUTE_PATHS.borrowingAsset, { poolAddress }));
-  };
-
   if (!pools) {
     return (
       <Flex justifyContent="center" alignItems="center" h="100vh">
@@ -98,7 +94,6 @@ export const PoolsBorrow = observer(({ pools } : {
           key={pool.token}
           itemCard={pool}
           rowCard={rowCard}
-          onClick={() => handleLink(pool.rebalancerAddress)}
         />
       ))}
     </SimpleGrid>

@@ -1,70 +1,86 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Box, Button, Text, Image, Skeleton, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
+import React, { useState, useRef } from "react";
+import {
+  Box,
+  Button,
+  Text,
+  Image,
+  Skeleton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Flex,
+  ButtonProps,
+  Modal,
+  useDisclosure,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  CloseButton,
+  Divider
+} from "@chakra-ui/react";
+import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import { IToken } from "@/api/tokens/types";
+import { formatNumber } from "@/utils/formatNumber";
 
-export interface SelectProps {
+const preselectedSymbols = ["ARB", "WETH", "USDT", "USDC", "USDC.e"];
+
+export type SelectProps = {
   options: IToken[];
   value: IToken | null;
   setSelected: (token: IToken) => void;
-}
+  ButtonProps?: ButtonProps;
+};
 
-const Select: React.FC<SelectProps> = ({ options = [], value, setSelected }) => {
+const Select: React.FC<SelectProps> = ({ options = [], value, setSelected, ButtonProps }) => {
   const [search, setSearch] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const filteredOptions = options.filter(option => 
-    option.symbol.toLowerCase().includes(search.toLowerCase()) || 
-    option.name.toLowerCase().includes(search.toLowerCase())
+  const filteredOptions = options.filter(
+    option =>
+      option.symbol.toLowerCase().includes(search.toLowerCase()) ||
+      option.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const commonlyUsedTokens = options.filter(option => preselectedSymbols.includes(option.symbol));
 
   const selectedToken = options.find(option => option.symbol === value?.symbol);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-    setIsOpen(true);
   };
 
   const handleMenuItemClick = (option: IToken) => {
     setSelected(option);
-    setIsOpen(false);
+    onClose();
   };
-
-  const handleOutsideClick = (e: MouseEvent) => {
-    if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
-    }
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [isOpen]);
 
   return (
-    <Box ref={containerRef} position="relative">
+    <Box ref={containerRef} position="relative" zIndex={999}>
       <Button
         border="1px solid #202327"
+        backgroundColor="#202327"
         padding="6px 12px"
         borderRadius="4px"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={onOpen}
         rightIcon={<ChevronDownIcon />}
         width="100%"
+        {...ButtonProps}
         textAlign="left"
       >
-        <Box display="flex" alignItems="center">
+        <Flex alignItems="center">
           {selectedToken ? (
             selectedToken.logoURI ? (
-              <Image borderRadius={100} src={selectedToken.logoURI} alt={selectedToken.symbol} boxSize="20px" mr="4px" />
+              <Image
+                borderRadius={100}
+                src={selectedToken.logoURI}
+                alt={selectedToken.symbol}
+                boxSize="20px"
+                mr="4px"
+              />
             ) : (
               <Box boxSize="20px" bg="gray.200" mr="4px" />
             )
@@ -72,48 +88,119 @@ const Select: React.FC<SelectProps> = ({ options = [], value, setSelected }) => 
             <Skeleton boxSize="20px" mr="4px" />
           )}
           <Text ml="4px">{selectedToken?.symbol || <Skeleton width="30px" />}</Text>
-        </Box>
+        </Flex>
       </Button>
-      {isOpen && (
-        <Box position="absolute" mt="2" borderRadius="4px" bg="#151619" maxH="200px" overflowY="auto" zIndex="1" width="100%">
-          <InputGroup mb="4px" p="4px">
-            <InputLeftElement pointerEvents="none">
-              <SearchIcon color="gray.300" />
-            </InputLeftElement>
-            <Input
-              placeholder="Search token..."
-              value={search}
-              onChange={handleInputChange}
-              size="sm"
-              ref={inputRef}
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent h="545px" bg="#151619" maxW="400px" pb={6}>
+          <Flex justify="space-between" alignItems="center" p="24px 24px 12px 24px">
+            <ModalHeader flexGrow={1} p={0}>
+              <Text>Select a token</Text>
+            </ModalHeader>
+            <CloseButton
+              onClick={onClose}
+              _hover={{
+                opacity: 0.8
+              }}
             />
-          </InputGroup>
-          {filteredOptions.length > 0 ? (
-            filteredOptions.map((option: IToken) => (
-              <Box
-                key={option.symbol}
-                display="flex"
-                alignItems="center"
-                p="4px"
-                cursor="pointer"
-                _hover={{ background: "gray.700" }}
-                onClick={() => handleMenuItemClick(option)}
-              >
-                {option.logoURI ? (
-                  <Image src={option.logoURI} borderRadius={100} alt={option.symbol} boxSize="20px" mr="4px" />
-                ) : (
-                  <Box boxSize="20px" bg="gray.200" mr="4px" />
-                )}
-                <Text ml="4px">{option.symbol}</Text>
-              </Box>
-            ))
-          ) : (
-            <Box p="6px">
-              <Text>No tokens found</Text>
-            </Box>
-          )}
-        </Box>
-      )}
+          </Flex>
+          <Flex flexDir="column" px={6} maxH="100%" overflowY="hidden">
+            <InputGroup
+              p="8px 24px"
+              border="none"
+              background="#09090B"
+              borderRadius="8px"
+              display="flex"
+            >
+              <InputLeftElement pointerEvents="none" pos="absolute" top="4px" left="8px">
+                <SearchIcon color="gray.300" />
+              </InputLeftElement>
+              <Input
+                placeholder="Find tokens by name"
+                value={search}
+                onChange={handleInputChange}
+                size="sm"
+                fontSize="16px"
+                lineHeight="100%"
+                ref={inputRef}
+                border="none"
+                borderRadius="8px"
+              />
+            </InputGroup>
+            <Flex justifyContent="space-between" gap="8px" flexWrap="wrap" mt={6}>
+              {commonlyUsedTokens.map(token => (
+                <Flex
+                  gap={2}
+                  alignItems="center"
+                  key={token.address}
+                  p={2}
+                  borderRadius="20px"
+                  bg="#09090B"
+                  cursor="pointer"
+                  onClick={() => handleMenuItemClick(token)}
+                >
+                  <Image
+                    src={token.logoURI}
+                    width="20px"
+                    height="20px"
+                    alt={token.symbol}
+                    borderRadius="50%"
+                  />
+                  <Text textStyle="textMono14" fontWeight={600}>
+                    {token.symbol}
+                  </Text>
+                </Flex>
+              ))}
+            </Flex>
+            <Flex flexDir="column" height="100%" overflowY="scroll" mt={3}>
+              {filteredOptions.length > 0 ? (
+                filteredOptions.map((option: IToken) => (
+                  <>
+                    <Flex
+                      key={option.symbol}
+                      alignItems="center"
+                      cursor="pointer"
+                      justify="space-between"
+                      p="16px"
+                      borderRadius="8px"
+                      _hover={{ background: "gray.800" }}
+                      onClick={() => handleMenuItemClick(option)}
+                    >
+                      <Flex gap={2} alignItems="center">
+                        {option.logoURI ? (
+                          <Image
+                            src={option.logoURI}
+                            borderRadius={100}
+                            alt={option.symbol}
+                            boxSize="20px"
+                            mr="4px"
+                          />
+                        ) : (
+                          <Box boxSize="20px" bg="gray.200" mr="4px" />
+                        )}
+                        <Flex flexDir="column">
+                          <Text textStyle="textMono14" ml="4px">
+                            {option.symbol}
+                          </Text>
+                          <Text textStyle="textMono10" ml="4px" color="darkgrey">
+                            {option.name}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                      <Text textStyle="textMono14">{formatNumber(option?.value ?? 0)}</Text>
+                    </Flex>
+                    <Divider />
+                  </>
+                ))
+              ) : (
+                <Box p="6px">
+                  <Text>No tokens found</Text>
+                </Box>
+              )}
+            </Flex>
+          </Flex>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
