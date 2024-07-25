@@ -13,4 +13,5 @@ export type TutorialStep = {
   // placement?: "center" | "auto" | Placement;
   placement?: Placement;
   hideFooter?: boolean;
+  isFixed?: boolean;
 };

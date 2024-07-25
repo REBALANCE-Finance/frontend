@@ -19,6 +19,7 @@ import GuideTooltip from "@/components/tooltip/GuideTooltip";
 import BeaconComponent from "@/components/tutorial/Beacon";
 import { useStore } from "@/hooks/useStoreContext";
 import { observer } from "mobx-react-lite";
+import { useMediaQuery } from "@chakra-ui/react";
 
 const steps: TutorialStep[] = [
   {
@@ -50,14 +51,16 @@ const steps: TutorialStep[] = [
     target: ".step-5",
     content: "Start earning with Rebalance now.\nMake your first deposit",
     disableBeacon: true,
-    spotlightClicks: true
+    spotlightClicks: true,
+    placement: "right" as Placement
   }
 ];
 
-const connectedSteps = [
+const connectedSteps: TutorialStep[] = [
   {
     target: ".step-1",
-    content: "Wallet is already connected"
+    content: "Wallet is already connected",
+    isFixed: true
   },
   ...steps.slice(1)
 ];
@@ -75,7 +78,9 @@ const Tutorial = observer(() => {
     !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial)
   );
   const [stepIndex, setStepIndex] = useState(0);
-  const [runTutorial, setRunTutorial] = useState(isActiveTutorial);
+  const [runTutorial, setRunTutorial] = useState(
+    isActiveTutorial && pathname === ROUTE_PATHS.lending
+  );
   const [shouldUpdateStep, setShouldUpdateStep] = useState(true);
   const {
     pools,
@@ -84,10 +89,27 @@ const Tutorial = observer(() => {
     setIsFetched: setIsFetchedPools
   } = useStore("poolsStore");
   const { isChartLoading, isLoading: isPoolLoading } = useStore("poolStore");
+  const [isMobile] = useMediaQuery("(max-width: 480px)");
 
   const _steps = useMemo(() => {
-    return isConnected ? connectedSteps : steps;
-  }, [isConnected]);
+    if (isConnected) {
+      return connectedSteps;
+    }
+
+    if (isMobile) {
+      return steps.map((step, index) => {
+        if (index === steps.length - 1) {
+          return {
+            ...step,
+            placement: "top" as Placement
+          };
+        }
+        return step;
+      });
+    }
+
+    return steps;
+  }, [isConnected, isMobile]);
 
   useEffect(() => {
     if (!isActiveTutorial) {
@@ -228,11 +250,15 @@ const Tutorial = observer(() => {
       debug={false}
       hideCloseButton
       continuous
-      disableScrollParentFix
-      disableOverlay
       scrollOffset={140}
       scrollDuration={500}
+      scrollToFirstStep
       disableOverlayClose
+      disableOverlay
+      disableScrollParentFix
+      floaterProps={{
+        disableAnimation: !!(stepIndex === 0)
+      }}
       tooltipComponent={(props: TooltipRenderProps) => (
         <GuideTooltip
           stepIndex={stepIndex}
