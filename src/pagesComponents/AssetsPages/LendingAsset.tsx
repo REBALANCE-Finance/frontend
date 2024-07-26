@@ -11,6 +11,7 @@ import BaseStrategy from "../../features/RebalanceStrategy/BaseStrategy";
 import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
 import { IPoolData, IAreaChartData } from "@/api/pools/types";
+import { defChainIdArbitrum } from "@/hooks/useAuth";
 
 export const LendingAsset = ({
   pool,
@@ -63,7 +64,7 @@ export const LendingAsset = ({
                   </>
                 ) : (
                   <>
-                    <Icon name={CHAIN_ICONS[chain?.id ?? 42161]} size="18px" />
+                    <Icon name={CHAIN_ICONS[chain?.id || defChainIdArbitrum]} size="18px" />
                     <Link
                       href={getFinalExplorerUrl({
                         url: "https://arbiscan.io",

@@ -14,6 +14,7 @@ import { ROUTES_TYPE } from "../../../../consts/routes-type";
 import { getCurrentPath } from "../../../../features/RebalancePerformance/utils";
 import { formatNumber } from "../../../../utils/formatNumber";
 import { usePathname } from "next/navigation";
+import { defChainIdArbitrum } from "@/hooks/useAuth";
 
 export const AssetHeader: FC<any> = ({ pool }) => {
   const location = usePathname();
@@ -47,7 +48,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
                 <Flex gap="8px" alignItems="center">
                   <Text fontWeight="500">Pool</Text>
                   <Flex gap="5px">
-                    <Icon name={CHAIN_ICONS[chain?.id ?? 0]} size="18px" />
+                    <Icon name={CHAIN_ICONS[chain?.id ?? defChainIdArbitrum]} size="18px" />
                     <Text textStyle="text14" color="black.5">
                       {pool.rebalancerAddress?.substring(0, 12) +
                         "..." +
