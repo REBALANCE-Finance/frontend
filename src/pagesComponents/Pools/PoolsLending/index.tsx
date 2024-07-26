@@ -1,5 +1,4 @@
 "use client";
-
 import { Box, Divider, Flex, HStack, SimpleGrid, Text, Skeleton } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { CardPool } from "../../../components/card";
@@ -29,7 +28,10 @@ export const PoolsLending = ({
   const router = useRouter();
   const poolStore = useStore("poolStore");
 
-  const handleCardClick = (pool: IPoolData) => {
+  const handleCardClick = (event: any, pool: IPoolData) => {
+    if ((event.target as HTMLElement).closest("button")) {
+      return;
+    }
     poolStore.setActivePool(pool);
     router.push(ROUTE_PATHS.lendingAssetPage(pool.token), { scroll: false });
   };
@@ -106,12 +108,7 @@ export const PoolsLending = ({
                       </>
                     }
                   >
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      w="100%"
-                      alignItems="center"
-                    >
+                    <Box display="flex" justifyContent="space-between" w="100%" alignItems="center">
                       <Text color="white" borderBottom={"dashed 1px gray"}>
                         APY
                       </Text>
@@ -223,7 +220,7 @@ export const PoolsLending = ({
             </Box>
           ))
         : pools?.map(elem => (
-            <Box key={elem.token} onClick={() => handleCardClick(elem)} cursor="pointer">
+            <Box key={elem.token} onClick={event => handleCardClick(event, elem)} cursor="pointer">
               <CardPool key={elem.token} rowCard={rowCard} itemCard={elem} />
             </Box>
           ))}

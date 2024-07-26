@@ -23,7 +23,7 @@ const CustomBeacon = styled.span`
   cursor: pointer;
   position: relative;
   bottom: -10px;
-  left: 6px;
+  left: 0px;
 `;
 
 const BeaconComponent = (props: any) => <CustomBeacon title="Open dialog" {...props} />;
