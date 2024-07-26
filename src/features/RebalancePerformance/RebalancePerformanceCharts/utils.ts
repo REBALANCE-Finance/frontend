@@ -12,18 +12,16 @@ export const tickFormatter = (e: string) => {
   return dayjs(e).format("MMM DD");
 };
 
-export const areaLines = [
+export const connectedAreaLines = [
   {
     name: "My APY, %",
     type: ROUTES_TYPE.lending
-  },
-  // TODO: Bring back when api will be ready
-  // {
-  //   name: "My earnings, $",
-  //   type: ROUTES_TYPE.borrowing
-  // }
-  // {
-  //   name: "Spent on borrowing",
-  //   type: ROUTES_TYPE.borrowing
-  // }
+  }
 ];
+
+export const areaLines = [
+  {
+    name: "Rebalance Performance APY, %",
+    type: ROUTES_TYPE.lending
+  }
+]

@@ -9,7 +9,7 @@ import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES } from "../../../components/data-switcher/utils";
 import { MEDIA_QUERY_MAX } from "../../../consts";
 import { LegendAreaChart } from "./components/LegendAreaChart";
-import { areaLines, colorsArea, tickFormatter } from "./utils";
+import { areaLines, colorsArea, connectedAreaLines, tickFormatter } from "./utils";
 import { IAreaChartData } from "@/api/pools/types";
 import UserProfit from "@/pagesComponents/Pools/PoolsLending/components/UserProfit";
 import { useAccount } from "wagmi";
@@ -67,11 +67,11 @@ export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
   const { address, isConnected } = useAccount();
 
   const _areaLines = useMemo(() => {
-    if (isConnected) {
-      return areaLines;
+    if (address) {
+      return connectedAreaLines;
     }
-    return [areaLines[0]];
-  }, [isConnected]);
+    return areaLines;
+  }, [address]);
 
   const getLines = () => {
     // TODO: bring back when api will be ready
@@ -125,7 +125,7 @@ export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
 
       {media && (
         <Flex alignItems="center" gap="12px">
-          {areaLines.map(elem => (
+          {_areaLines.map(elem => (
             <LegendAreaChart key={elem.type} text={elem.name} color={colorsArea[elem.type]} />
           ))}
         </Flex>
