@@ -23,7 +23,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
   if (media) {
     return (
       <Flex w="100%" h="fit-content" flexDirection="column">
-        <Flex gap="24px" flexDirection="column" className="step-4">
+        <Flex gap="24px" flexDirection="column" className="step-3">
           <Flex gap="8px" align="inherit">
             <TokenIcon name={pool?.token} size="32px" sizeIcon="22px" />
             <Flex
@@ -111,7 +111,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
 
   return (
     <Flex w="100%" h="fit-content" align="center" justify="space-between">
-      <Flex align="center" gap="48px" flexDirection={media ? "column" : "row"} className="step-4">
+      <Flex align="center" gap="48px" flexDirection={media ? "column" : "row"} className="step-3">
         <Flex gap="8px" align="inherit">
           <TokenIcon name={pool?.token} />
           <Flex direction="column" gap="8px">

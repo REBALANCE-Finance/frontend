@@ -36,19 +36,11 @@ const steps: TutorialStep[] = [
   },
   {
     target: ".step-3",
-    content:
-      "This is an APY of the asset at this moment.\nIt is constantly changing. Click to see details",
-    spotlightClicks: true,
-    disableBeacon: true,
-    placement: "top" as Placement
-  },
-  {
-    target: ".step-4",
     content: "Here you can see the actual state and average Rebalance APYs",
     disableBeacon: true
   },
   {
-    target: ".step-5",
+    target: ".step-4",
     content: "Start earning with Rebalance now.\nMake your first deposit",
     disableBeacon: true,
     spotlightClicks: true,
@@ -124,13 +116,13 @@ const Tutorial = observer(() => {
   }, [isActiveTutorial, pathname]);
 
   useEffect(() => {
-    if (stepIndex === 2 && !pools.length) {
+    if (stepIndex === 1 && !pools.length) {
       setRunTutorial(false);
     }
   }, [stepIndex, pools.length]);
 
   useEffect(() => {
-    if (stepIndex === 2 && pools.length && isFetchedPools) {
+    if (stepIndex === 1 && pools.length && isFetchedPools) {
       setRunTutorial(true);
     }
   }, [stepIndex, pools.length, isFetchedPools]);
@@ -142,7 +134,7 @@ const Tutorial = observer(() => {
       pathname.includes(ROUTE_PATHS.lendingAsset.slice(0, 6)) &&
       isFetchedPools
     ) {
-      setStepIndex(3);
+      setStepIndex(2);
       setShouldUpdateStep(false);
       timer = setTimeout(() => {
         setRunTutorial(true);
@@ -208,22 +200,22 @@ const Tutorial = observer(() => {
 
     if (action === ACTIONS.PREV) {
       switch (stepIndex) {
-        case 3:
+        case 2:
           router.prefetch(ROUTE_PATHS.lending);
           router.push(ROUTE_PATHS.lending, { scroll: false });
           setIsFetchedPools(false);
           setShouldUpdateStep(false);
           setRunTutorial(false);
-          setStepIndex(2);
+          setStepIndex(1);
           break;
       }
     }
 
     if (action === ACTIONS.NEXT) {
       switch (stepIndex) {
-        case 2:
+        case 1:
           router.push(ROUTE_PATHS.lendingAssetPage("USDT"), { scroll: false });
-          setStepIndex(3);
+          setStepIndex(2);
           setShouldUpdateStep(false);
           break;
       }
@@ -231,7 +223,7 @@ const Tutorial = observer(() => {
   };
 
   const getDisabledNextButtonState = () => {
-    if (stepIndex === 3 && (isChartLoading || isPoolLoading)) {
+    if (stepIndex === 2 && (isChartLoading || isPoolLoading)) {
       return true;
     }
     if (stepIndex === 0 && isLoadingPools) {

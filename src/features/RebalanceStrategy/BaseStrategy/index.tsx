@@ -32,7 +32,7 @@ const BaseStrategy: React.FC<any> = ({ pool, chartData }) => {
               variant="primaryWhite"
               pool={pool}
               minHeight="40px"
-              className="step-5"
+              className="step-4"
             />
             {balance > 0 && <WithdrawLendingButton pool={pool} minHeight="40px" />}
           </SimpleGrid>

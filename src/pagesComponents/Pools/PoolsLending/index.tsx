@@ -111,7 +111,6 @@ export const PoolsLending = ({
                       justifyContent="space-between"
                       w="100%"
                       alignItems="center"
-                      className={item.token === "USDT" ? "step-3" : ""}
                     >
                       <Text color="white" borderBottom={"dashed 1px gray"}>
                         APY
