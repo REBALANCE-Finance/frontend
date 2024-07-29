@@ -1,5 +1,5 @@
 "use client";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, useMediaQuery } from "@chakra-ui/react";
 import Header from "./components/Header/Header";
 import Pay from "./components/Pay/Pay";
 import Receive from "./components/Receive/Receive";
@@ -28,6 +28,7 @@ import { getApiError } from "@/utils/handlers";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
 import useDebounce from "@/hooks/useDebounce";
 import { parseUnits } from "ethers";
+import Image from "next/image";
 
 const Swap = () => {
   const { address, chainId, connector } = useAccount();
@@ -41,6 +42,7 @@ const Swap = () => {
   const [gasFee, setGasFee] = useState<string>("");
   const [isPayInputChanged, setIsPayInputChanged] = useState(true);
   const [isReceiveInputChanged, setIsReceiveInputChanged] = useState(false);
+  const [isMobile] = useMediaQuery("(max-width: 480px)");
 
   const { data: tokenList } = useGetTokenList(chainId ?? defChainIdArbitrum);
 
@@ -280,80 +282,99 @@ const Swap = () => {
   const isLoadingFee = !gasFee || !exchangeRate;
 
   return (
-    <Box borderRadius="12px" w="460px" m="60px auto auto" background="#151619" p="24px 20px">
-      <Header onRefetch={refetch} />
-      <Box position="relative" mt={3}>
-        <Box
-          cursor="pointer"
-          backgroundColor="#151619"
-          borderRadius="12px"
-          padding="16px"
-          position="absolute"
-          top="52%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          zIndex={3}
-          onClick={handleSwapTokens}
-        >
-          <Icon name={ICON_NAMES.swap} />
+    <Flex flexDir="column" gap="20px" m="60px auto auto">
+      <Box
+        borderRadius="12px"
+        minW={isMobile ? "350px" : "460px"}
+        mx={isMobile ? 2 : 0}
+        background="#151619"
+        p="24px 20px"
+      >
+        <Header onRefetch={refetch} />
+        <Box position="relative" mt={3}>
+          <Box
+            cursor="pointer"
+            backgroundColor="#151619"
+            borderRadius="12px"
+            padding="16px"
+            position="absolute"
+            top="52%"
+            left="50%"
+            transform="translate(-50%, -50%)"
+            zIndex={3}
+            onClick={handleSwapTokens}
+          >
+            <Icon name={ICON_NAMES.swap} />
+          </Box>
+          <Pay
+            selected={payToken}
+            setSelected={handleSelectPayToken}
+            amount={payAmount}
+            setAmount={handlePayInputChange}
+            price={payTokenPrice}
+            excludeToken={receiveToken}
+            isSuccessSwap={isSuccessSwap}
+            onError={setError}
+            isLoading={isLoadingReceiveTokenPrice}
+          />
+          <Receive
+            selected={receiveToken}
+            setSelected={handleSelectReceiveToken}
+            amount={receiveAmount}
+            setAmount={handleReceiveInputChange}
+            price={receiveTokenPrice}
+            excludeToken={payToken}
+            isSuccessSwap={isSuccessSwap}
+            isLoading={isLoadingPayTokenPrice}
+          />
         </Box>
-        <Pay
-          selected={payToken}
-          setSelected={handleSelectPayToken}
-          amount={payAmount}
-          setAmount={handlePayInputChange}
-          price={payTokenPrice}
-          excludeToken={receiveToken}
-          isSuccessSwap={isSuccessSwap}
-          onError={setError}
-          isLoading={isLoadingReceiveTokenPrice}
-        />
-        <Receive
-          selected={receiveToken}
-          setSelected={handleSelectReceiveToken}
-          amount={receiveAmount}
-          setAmount={handleReceiveInputChange}
-          price={receiveTokenPrice}
-          excludeToken={payToken}
-          isSuccessSwap={isSuccessSwap}
-          isLoading={isLoadingPayTokenPrice}
-        />
+        {error && error !== BALANCE_ERROR && (
+          <Text color="red.500" mt={4} textAlign="center">
+            {error}
+          </Text>
+        )}
+        {!error && <Fee exchangeRate={exchangeRate} gasFee={gasFee} isLoading={isLoadingFee} />}
+        {!address && <ConnectWallet variant="primaryFilled" />}
+        {address && chainId && (
+          <ApproveButton
+            amount={Number(payAmount)}
+            ownerAddress={address}
+            spenderAddress={PARASWAP_SPENDER_ADDRESS}
+            tokenAddress={payToken?.address || ""}
+            tokenDecimals={payTokenDecimals}
+            isDisabled={(!payTokenPriceData && !receiveTokenPriceData) || !!error}
+            error={error}
+          />
+        )}
+        {!isNeedApprove && !isLoadingPayTokenPrice && !isLoadingReceiveTokenPrice && (
+          <SwapButton
+            payToken={{
+              address: (payToken?.address as AddressType) || ("" as AddressType),
+              amount: Number(payAmount),
+              decimals: payTokenDecimals
+            }}
+            receiveToken={{
+              address: (receiveToken?.address as AddressType) || ("" as AddressType),
+              decimals: receiveTokenDecimals
+            }}
+            isDisabled={isSwapDisabled}
+            onError={setError}
+            onSuccess={setIsSuccessSwap}
+          />
+        )}
       </Box>
-      {error && error !== BALANCE_ERROR && (
-        <Text color="red.500" mt={4} textAlign="center">
-          {error}
+      <Flex gap={2} alignItems="center" alignSelf="center">
+        <Text fontSize="sm" fontWeight={500} color="gray.400">
+          Powered by
         </Text>
-      )}
-      {!error && <Fee exchangeRate={exchangeRate} gasFee={gasFee} isLoading={isLoadingFee} />}
-      {!address && <ConnectWallet variant="primaryFilled" />}
-      {address && chainId && (
-        <ApproveButton
-          amount={Number(payAmount)}
-          ownerAddress={address}
-          spenderAddress={PARASWAP_SPENDER_ADDRESS}
-          tokenAddress={payToken?.address || ""}
-          tokenDecimals={payTokenDecimals}
-          isDisabled={(!payTokenPriceData && !receiveTokenPriceData) || !!error}
-          error={error}
+        <Image
+          src="https://cdn.prod.website-files.com/617aa5e4225be2555942852c/6214d5c4db4ce4d976b5f1f9_logo_paraswap-handbook%20copy%201.svg"
+          width={100}
+          height={18}
+          alt="Paraswap"
         />
-      )}
-      {!isNeedApprove && !isLoadingPayTokenPrice && !isLoadingReceiveTokenPrice && (
-        <SwapButton
-          payToken={{
-            address: (payToken?.address as AddressType) || ("" as AddressType),
-            amount: Number(payAmount),
-            decimals: payTokenDecimals
-          }}
-          receiveToken={{
-            address: (receiveToken?.address as AddressType) || ("" as AddressType),
-            decimals: receiveTokenDecimals
-          }}
-          isDisabled={isSwapDisabled}
-          onError={setError}
-          onSuccess={setIsSuccessSwap}
-        />
-      )}
-    </Box>
+      </Flex>
+    </Flex>
   );
 };
 
