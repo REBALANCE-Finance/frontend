@@ -12,7 +12,7 @@ import { useStore } from "@/hooks/useStoreContext";
 import { observer } from "mobx-react-lite";
 
 const LendingPage = observer(({ params }: { params: { [key: string]: string } }) => {
-  const { isConnected } = useAccount();
+  const { address } = useAccount();
   const [chartData, setChartData] = useState<any>(null);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,21 +44,13 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
           pools?.find(item => item.rebalancerAddress === params.poolAddress)?.token ||
           pools?.find(item => item.token === "USDC.e")?.token;
         if (token) {
-          let fetchedChartData = await getAreaChartAllIntervals(token);
-
-          // TODO: bring back this when api will be ready
-          // const intervals = ["1m", "6m", "1y"];
-          // if (isConnected) {
-          //   intervals.forEach(interval => {
-          //     // @ts-ignore
-          //     fetchedChartData.chartData[interval] = fetchedChartData.chartData[interval].map(
-          //       (dataPoint: any, index: number) => ({
-          //         ...dataPoint,
-          //         hardcodedLine: index * 1.1
-          //       })
-          //     );
-          //   });
-          // }
+          let fetchedChartData;
+          if (address) {
+            fetchedChartData = await getAreaChartAllIntervals(token, address);
+          } else {
+            fetchedChartData = await getAreaChartAllIntervals(token);
+          }
+          console.log("fetchedChartData", fetchedChartData);
 
           setChartData(fetchedChartData);
         } else {
@@ -78,7 +70,7 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     };
 
     fetchData();
-  }, [params.poolAddress, isConnected, pools]);
+  }, [params.poolAddress, address, pools]);
 
   useEffect(() => {
     if (!isDesktop) {
