@@ -6,11 +6,12 @@ import {
   FormLabel,
   HStack,
   Switch,
-  Text
+  Text,
+  useOutsideClick
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
@@ -34,10 +35,18 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const [needsApproval, setNeedsApproval] = useState(false);
   const [isConfirmedApprove, setConfirmedApprove] = useState(false);
   const [pointsQty, setPointsQty] = useState(0);
+  const [isOpenTooltip, setIsOpenTooltip] = useState(false);
   const { address } = useAccount();
   const { data: balanceToken } = useBalance({
     address,
     token: pool.tokenAddress
+  });
+  const tooltipRef = useRef();
+
+  useOutsideClick({
+    // @ts-ignore
+    ref: tooltipRef,
+    handler: () => setIsOpenTooltip(false)
   });
 
   const onDeposit = () => {
@@ -154,8 +163,14 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
         <Divider borderColor="black.90" />
 
         <FormControl display="flex" alignItems="center" justifyContent="space-between">
-          <Tooltip label="Points earned on Rebalance">
-            <FormLabel htmlFor="freeze" mb="0" borderBottom="1px dashed #fff">
+          {/* @ts-ignore */}
+          <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
+            <FormLabel
+              htmlFor="freeze"
+              mb="0"
+              borderBottom="1px dashed #fff"
+              onClick={() => setIsOpenTooltip(prev => !prev)}
+            >
               Freeze ✨
             </FormLabel>
           </Tooltip>

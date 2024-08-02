@@ -1,7 +1,15 @@
 "use client";
 
-import { Flex, Link, Image, useMediaQuery, Text, Skeleton } from "@chakra-ui/react";
-import React, { Fragment, useEffect, useState } from "react";
+import {
+  Flex,
+  Link,
+  Image,
+  useMediaQuery,
+  Text,
+  Skeleton,
+  useOutsideClick
+} from "@chakra-ui/react";
+import React, { useRef, useEffect, useState } from "react";
 import NextLink from "next/link";
 import { useAccount } from "wagmi";
 import LogoDesc from "/public/assets/logo/logo-long.svg";
@@ -20,8 +28,16 @@ export const AppHeader = () => {
   const { isConnected, address } = useAccount();
   const [earnedPoints, setEarnedPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenTooltip, setIsOpenTooltip] = useState(false);
   const isUnderMaintenance = process.env.NEXT_PUBLIC_IS_UNDER_MAINTENANCE === "true";
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
+  const tooltipRef = useRef();
+
+  useOutsideClick({
+    // @ts-ignore
+    ref: tooltipRef,
+    handler: () => setIsOpenTooltip(false)
+  });
 
   useEffect(() => {
     if (address) {
@@ -63,8 +79,15 @@ export const AppHeader = () => {
 
         <Flex gap="12px" alignItems="center">
           {isConnected && isDesktop && !isLoading && (
-            <Tooltip label="Points earned on Rebalance">
-              <Flex alignItems="center" gap={2} cursor="default" mr={6}>
+            // @ts-ignore
+            <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
+              <Flex
+                alignItems="center"
+                gap={2}
+                cursor="default"
+                mr={6}
+                onClick={() => setIsOpenTooltip(prev => !prev)}
+              >
                 <Text
                   textStyle="text16"
                   color="black.5"
