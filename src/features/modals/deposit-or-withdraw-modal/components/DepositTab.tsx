@@ -21,7 +21,7 @@ import ApproveBtn from "./ApproveBtn";
 import DepositButton from "@/components/button/DepositButton";
 import { DataSwitcher } from "@/components/data-switcher/DataSwitcher";
 import { FREEZE_DATES } from "@/components/data-switcher/utils";
-import { getPoints } from "@/api/points/queries";
+import { getPredictedPoints } from "@/api/points/queries";
 import useDebounce from "@/hooks/useDebounce";
 
 interface IDepositTabProps {
@@ -97,17 +97,25 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   }, [allowance, formik.values.deposit, pool.decimals]);
 
   useEffect(() => {
-    const fetchPoints = async () => {
-      const points = await getPoints(
-        pool.token,
-        +debouncedDeposit,
-        +formik.values.freezePeriod.slice(0, -1)
-      );
-      setPointsQty(points);
-    };
+    if (formik.values.freeze) {
+      const fetchPoints = async () => {
+        const points = await getPredictedPoints(
+          pool.token,
+          +debouncedDeposit,
+          +formik.values.freezePeriod.slice(0, -1)
+        );
+        setPointsQty(points);
+      };
 
-    fetchPoints();
-  }, [pool, debouncedDeposit, formik.values.freezePeriod]);
+      fetchPoints();
+    }
+  }, [pool, debouncedDeposit, formik.values.freezePeriod, formik.values.freeze]);
+
+  useEffect(() => {
+    if (!formik.values.freeze) {
+      setPointsQty(0);
+    }
+  }, [formik.values.freeze]);
 
   const setMax = () => {
     formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
@@ -143,7 +151,6 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
         </HStack>
 
         <Divider borderColor="black.90" />
-
 
         <FormControl display="flex" alignItems="center" justifyContent="space-between">
           <FormLabel htmlFor="freeze" mb="0" borderBottom="1px dashed #fff">

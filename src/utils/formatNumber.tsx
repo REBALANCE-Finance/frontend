@@ -30,3 +30,7 @@ export const formatNeutralPercent = (value: string | number) => {
   const numValue = Number(value);
   return `${numeral(numValue).format("0.[0]")}%`;
 };
+
+export const formatNumberWithCommas = (number: number) => {
+  return new Intl.NumberFormat("en-US").format(number);
+};
