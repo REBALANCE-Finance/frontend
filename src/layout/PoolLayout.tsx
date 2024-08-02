@@ -5,6 +5,7 @@ import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
+import { useAccount } from "wagmi";
 
 export const PoolLayout = ({
   children,
@@ -27,14 +28,15 @@ export const PoolLayout = ({
   earnedPoints: number;
   isLoadingPoints: boolean;
 }) => {
+  const { address } = useAccount();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
   if (media === undefined) return null;
   return (
     <Flex direction="column" w="100%" align="center">
-      {!isDesktop && isLoadingPoints && <Skeleton height="16px" width="60px" />}
-      {!isDesktop && !isLoadingPoints && (
-        <Flex alignItems="center" gap={3} py={3} px={4}>
+      {!isDesktop && isLoadingPoints && address && <Skeleton height="16px" width="60px" />}
+      {!isDesktop && !isLoadingPoints && address && (
+        <Flex alignItems="center" gap={3} py={3} px={4} mb={address ? 0 : 6}>
           <Text textStyle="text12" color="black.5" borderBottom="1px dashed" borderColor="black.5">
             ✨ Earned points:
           </Text>

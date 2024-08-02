@@ -23,6 +23,7 @@ import { DataSwitcher } from "@/components/data-switcher/DataSwitcher";
 import { FREEZE_DATES } from "@/components/data-switcher/utils";
 import { getPredictedPoints } from "@/api/points/queries";
 import useDebounce from "@/hooks/useDebounce";
+import { Tooltip } from "@/components/tooltip";
 
 interface IDepositTabProps {
   pool: any;
@@ -56,7 +57,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   );
 
   const depositSchema = Yup.object().shape({
-    deposit: Yup.string().test("min-amount", `Amount must be at least 1e6`, value => {
+    deposit: Yup.string().test("min-amount", `Amount must be at least 1$`, value => {
       const depositValue = BigInt(parseBigNumber(value || "0", pool.decimals));
       const minAmount = BigInt(1e6) * BigInt(Math.pow(10, pool.decimals));
       return depositValue >= 1e6;
@@ -153,9 +154,11 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
         <Divider borderColor="black.90" />
 
         <FormControl display="flex" alignItems="center" justifyContent="space-between">
-          <FormLabel htmlFor="freeze" mb="0" borderBottom="1px dashed #fff">
-            Freeze ✨
-          </FormLabel>
+          <Tooltip label="Points earned on Rebalance">
+            <FormLabel htmlFor="freeze" mb="0" borderBottom="1px dashed #fff">
+              Freeze ✨
+            </FormLabel>
+          </Tooltip>
           <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
         </FormControl>
 

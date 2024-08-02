@@ -20,7 +20,12 @@ const UserProfitPool = ({
 
   return (
     <div>
-      {formatNumber(userProfit)} {!noSymbol && "$"}
+      {userProfit > 0.01
+        ? Number(formatNumber(userProfit)).toFixed(2)
+        : userProfit > 0 && userProfit < 0.01
+        ? "<0.01"
+        : 0}{" "}
+      {!noSymbol && "$"}
     </div>
   );
 };

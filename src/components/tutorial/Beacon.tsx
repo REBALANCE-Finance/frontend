@@ -13,7 +13,7 @@ const pulse = keyframes`
   }
 `;
 
-const CustomBeacon = styled.span`
+const CustomBeacon = styled.span<{ isConnected: boolean }>`
   animation: ${pulse} 1s ease-in-out infinite;
   background-color: rgba(76, 255, 148, 0.6);
   border-radius: 50%;
@@ -23,9 +23,15 @@ const CustomBeacon = styled.span`
   cursor: pointer;
   position: relative;
   bottom: -10px;
-  left: 0px;
+  left: ${props => (props.isConnected ? "-12px" : "0")};
 `;
 
-const BeaconComponent = (props: any) => <CustomBeacon title="Open dialog" {...props} />;
+interface BeaconComponentProps {
+  isConnected: boolean;
+}
+
+const BeaconComponent: React.FC<BeaconComponentProps> = ({ isConnected, ...props }) => (
+  <CustomBeacon isConnected={isConnected} title="Open dialog" {...props} />
+);
 
 export default BeaconComponent;
