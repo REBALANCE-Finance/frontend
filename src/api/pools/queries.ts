@@ -1,6 +1,6 @@
 import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData, ITotalProfit } from "./types";
 
-const endpoint = "https://rebalancerfinanceapi.net/";
+export const endpoint = "https://rebalancerfinanceapi.net/";
 
 export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData[]> => {
   const response = await fetch(`${endpoint}${type}`, { cache: "no-store" });
@@ -167,6 +167,7 @@ export const getAreaChartAllIntervals = async (
       };
     });
   };
+
 
   const preparedChartData: PreparedChartData = {
     poolChart: {

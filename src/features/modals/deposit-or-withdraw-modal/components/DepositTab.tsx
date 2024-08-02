@@ -21,6 +21,8 @@ import ApproveBtn from "./ApproveBtn";
 import DepositButton from "@/components/button/DepositButton";
 import { DataSwitcher } from "@/components/data-switcher/DataSwitcher";
 import { FREEZE_DATES } from "@/components/data-switcher/utils";
+import { getPoints } from "@/api/points/queries";
+import useDebounce from "@/hooks/useDebounce";
 
 interface IDepositTabProps {
   pool: any;
@@ -30,6 +32,7 @@ interface IDepositTabProps {
 export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const [needsApproval, setNeedsApproval] = useState(false);
   const [isConfirmedApprove, setConfirmedApprove] = useState(false);
+  const [pointsQty, setPointsQty] = useState(0);
   const { address } = useAccount();
   const { data: balanceToken } = useBalance({
     address,
@@ -80,6 +83,8 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     }
   });
 
+  const debouncedDeposit = useDebounce(formik.values.deposit, 500);
+
   useEffect(() => {
     if (formik.values.deposit) {
       const checkNeedsApproval = () => {
@@ -90,6 +95,19 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       checkNeedsApproval();
     }
   }, [allowance, formik.values.deposit, pool.decimals]);
+
+  useEffect(() => {
+    const fetchPoints = async () => {
+      const points = await getPoints(
+        pool.token,
+        +debouncedDeposit,
+        +formik.values.freezePeriod.slice(0, -1)
+      );
+      setPointsQty(points);
+    };
+
+    fetchPoints();
+  }, [pool, debouncedDeposit, formik.values.freezePeriod]);
 
   const setMax = () => {
     formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
@@ -126,9 +144,8 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
 
         <Divider borderColor="black.90" />
 
-        {/* TODO: bring back when api will be ready */}
 
-        {/* <FormControl display="flex" alignItems="center" justifyContent="space-between">
+        <FormControl display="flex" alignItems="center" justifyContent="space-between">
           <FormLabel htmlFor="freeze" mb="0" borderBottom="1px dashed #fff">
             Freeze ✨
           </FormLabel>
@@ -143,18 +160,18 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
             onChange={value => formik.setFieldValue("freezePeriod", value)}
             isDisabled={!formik.values.freeze}
           />
-        </Flex> */}
+        </Flex>
 
-        {/* <Flex justify="space-between" gap={4} alignItems="center">
+        <Flex justify="space-between" gap={4} alignItems="center">
           <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
             Projected point earnings
           </Text>
           <Text color={!formik.values.freeze ? "darkgray" : "greenAlpha.100"}>
-            {getPointsString(1234)}
+            {getPointsString(pointsQty)}
           </Text>
-        </Flex> */}
+        </Flex>
 
-        {/* <Divider borderColor="black.90" /> */}
+        <Divider borderColor="black.90" />
 
         <HStack justify="space-between">
           <Text color="black.0">30D average APY</Text>
