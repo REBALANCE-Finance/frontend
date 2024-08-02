@@ -10,14 +10,17 @@ import { useMediaQuery } from "@chakra-ui/react";
 import PoolsLendingTable from "@/pagesComponents/Pools/PoolsLending/Table";
 import { useStore } from "@/hooks/useStoreContext";
 import { observer } from "mobx-react-lite";
+import { getEarnedPoints } from "@/api/points/queries";
 
 const LendingPage = observer(({ params }: { params: { [key: string]: string } }) => {
-  const { isConnected } = useAccount();
+  const { address } = useAccount();
   const [chartData, setChartData] = useState<any>(null);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
   const [isTableView, setIsTableView] = useState(false);
+  const [earnedPoints, setEarnedPoints] = useState(0);
+  const [isLoadingPoints, setIsLoadingPoints] = useState(true);
   const {
     pools,
     isLoading: loading,
@@ -44,21 +47,13 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
           pools?.find(item => item.rebalancerAddress === params.poolAddress)?.token ||
           pools?.find(item => item.token === "USDC.e")?.token;
         if (token) {
-          let fetchedChartData = await getAreaChartAllIntervals(token);
-
-          // TODO: bring back this when api will be ready
-          // const intervals = ["1m", "6m", "1y"];
-          // if (isConnected) {
-          //   intervals.forEach(interval => {
-          //     // @ts-ignore
-          //     fetchedChartData.chartData[interval] = fetchedChartData.chartData[interval].map(
-          //       (dataPoint: any, index: number) => ({
-          //         ...dataPoint,
-          //         hardcodedLine: index * 1.1
-          //       })
-          //     );
-          //   });
-          // }
+          let fetchedChartData;
+          if (address) {
+            fetchedChartData = await getAreaChartAllIntervals(token, address);
+          } else {
+            fetchedChartData = await getAreaChartAllIntervals(token);
+          }
+          console.log("fetchedChartData", fetchedChartData);
 
           setChartData(fetchedChartData);
         } else {
@@ -78,13 +73,24 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     };
 
     fetchData();
-  }, [params.poolAddress, isConnected, pools]);
+  }, [params.poolAddress, address, pools]);
 
   useEffect(() => {
     if (!isDesktop) {
       setIsTableView(false);
     }
   }, [isDesktop]);
+
+  useEffect(() => {
+    if (address) {
+      const fetchPoints = async () => {
+        const points = await getEarnedPoints(address).finally(() => setIsLoadingPoints(false));
+        setEarnedPoints(points);
+      };
+
+      fetchPoints();
+    }
+  }, [address]);
 
   return (
     <PoolLayout
@@ -94,6 +100,8 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
       error={error}
       isTable={isTableView}
       onChangeView={() => setIsTableView(!isTableView)}
+      earnedPoints={earnedPoints}
+      isLoadingPoints={isLoadingPoints}
     >
       {isTableView ? (
         <PoolsLendingTable pools={pools} isLoading={loading} error={poolsError?.message} />

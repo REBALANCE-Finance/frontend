@@ -60,12 +60,11 @@ export const AreaChart: FC<IAreaChartProps> = ({
           stroke={themes.colors.darkGray}
           tickFormatter={(e: string) => `${e} %`}
         />
-        {/* TODO: bring back this when api will be ready */}
-        {/* {isConnected && (
+        {isConnected && (
           <YAxis
             yAxisId={1}
             orientation="right"
-            dataKey="hardcodedLine"
+            dataKey="userEarning"
             axisLine={false}
             tickLine={false}
             axisType="yAxis"
@@ -74,7 +73,7 @@ export const AreaChart: FC<IAreaChartProps> = ({
             tickFormatter={(e: string) => `$${e}`}
             allowDataOverflow
           />
-        )} */}
+        )}
         {lines}
       </AreaChartDefault>
     </ResponsiveContainer>

@@ -42,23 +42,22 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
     />
   ));
 
-  // TODO: bring back this when api will be ready
-  // if (areas.length !== 1) {
-  //   arr.push(
-  //     <Area
-  //       key="hardcodedLine"
-  //       name={areaLines[1].name}
-  //       type="linear"
-  //       dataKey="hardcodedLine"
-  //       stroke="#8884d8"
-  //       fillOpacity={1}
-  //       fill={`url(#color-${ROUTES_TYPE.borrowing})`}
-  //     />
-  //   );
-  // }
+  if (areas.length !== 1) {
+    arr.push(
+      <Area
+        key="userEarning"
+        name={connectedAreaLines[1].name}
+        type="linear"
+        dataKey="userEarning"
+        stroke="#8884d8"
+        fillOpacity={1}
+        yAxisId={1}
+        fill={`url(#color-${ROUTES_TYPE.borrowing})`}
+      />
+    );
+  }
 
-  // return [...arr, areaGradient];
-  return arr;
+  return [...arr, areaGradient];
 };
 
 export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
@@ -72,14 +71,6 @@ export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
     }
     return areaLines;
   }, [address]);
-
-  const getLines = () => {
-    // TODO: bring back when api will be ready
-    // if (isConnected) {
-    //   return areaLines;
-    // }
-    return [areaLines[0]];
-  };
 
   return (
     <Flex w="100%" direction="column" position="relative">
@@ -116,7 +107,7 @@ export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
 
       <AreaChart
         data={chartData?.chartData[selectedDate.name]}
-        lines={getAreaLines(getLines())}
+        lines={getAreaLines(_areaLines)}
         gradient={areaGradient}
         tickFormatter={tickFormatter}
         isLending

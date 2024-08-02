@@ -16,6 +16,10 @@ export const connectedAreaLines = [
   {
     name: "My APY, %",
     type: ROUTES_TYPE.lending
+  },
+  {
+    name: "My earnings, $",
+    type: ROUTES_TYPE.borrowing
   }
 ];
 
@@ -24,4 +28,4 @@ export const areaLines = [
     name: "Rebalance Performance APY, %",
     type: ROUTES_TYPE.lending
   }
-]
+];

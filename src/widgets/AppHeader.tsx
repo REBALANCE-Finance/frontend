@@ -1,10 +1,17 @@
-'use client'
+"use client";
 
-import { Flex, Link, Image, useMediaQuery } from "@chakra-ui/react";
-import React from "react";
+import {
+  Flex,
+  Link,
+  Image,
+  useMediaQuery,
+  Text,
+  Skeleton,
+  useOutsideClick
+} from "@chakra-ui/react";
+import React, { useRef, useEffect, useState } from "react";
 import NextLink from "next/link";
 import { useAccount } from "wagmi";
-
 import LogoDesc from "/public/assets/logo/logo-long.svg";
 import LogoMob from "/public/assets/logo/logo-short.svg";
 import { MEDIA_QUERY_MAX, ROUTE_PATHS } from "../consts";
@@ -12,11 +19,36 @@ import { ConnectWallet } from "../features/ConnectWallet";
 import { WalletProfile } from "../features/WalletProfile";
 import { AppNav } from "./AppNav";
 import MaintenanceBlock from "@/components/maintenance-block";
+import { getEarnedPoints } from "@/api/points/queries";
+import { formatNumberWithCommas } from "@/utils/formatNumber";
+import { Tooltip } from "@/components/tooltip";
 
 export const AppHeader = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
+  const [earnedPoints, setEarnedPoints] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOpenTooltip, setIsOpenTooltip] = useState(false);
   const isUnderMaintenance = process.env.NEXT_PUBLIC_IS_UNDER_MAINTENANCE === "true";
+  const [isDesktop] = useMediaQuery("(min-width: 1130px)");
+  const tooltipRef = useRef();
+
+  useOutsideClick({
+    // @ts-ignore
+    ref: tooltipRef,
+    handler: () => setIsOpenTooltip(false)
+  });
+
+  useEffect(() => {
+    if (address) {
+      const fetchPoints = async () => {
+        setIsLoading(true);
+        const points = await getEarnedPoints(address).finally(() => setIsLoading(false));
+        setEarnedPoints(points);
+      };
+      fetchPoints();
+    }
+  }, [address]);
 
   return (
     <Flex
@@ -46,6 +78,31 @@ export const AppHeader = () => {
         {!media && <AppNav />}
 
         <Flex gap="12px" alignItems="center">
+          {isConnected && isDesktop && !isLoading && (
+            // @ts-ignore
+            <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
+              <Flex
+                alignItems="center"
+                gap={2}
+                cursor="default"
+                mr={6}
+                onClick={() => setIsOpenTooltip(prev => !prev)}
+              >
+                <Text
+                  textStyle="text16"
+                  color="black.5"
+                  borderBottom="1px dashed"
+                  borderColor="black.5"
+                >
+                  ✨ Earned:
+                </Text>
+                <Text textStyle="text16" color="black.5">
+                  {formatNumberWithCommas(earnedPoints)}
+                </Text>
+              </Flex>
+            </Tooltip>
+          )}
+          {isConnected && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
           {isConnected ? <WalletProfile /> : <ConnectWallet className="step-1" />}
           {media && <AppNav />}

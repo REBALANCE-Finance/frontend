@@ -261,7 +261,7 @@ const Tutorial = observer(() => {
           {...props}
         />
       )}
-      beaconComponent={BeaconComponent}
+      beaconComponent={props => <BeaconComponent isConnected={!!address} {...props} />}
       styles={{
         options: {
           backgroundColor: "#202327",

@@ -41,8 +41,13 @@ class PoolsStore {
 
     try {
       const data: IPoolData[] = await getPools(type);
+      const sortedData = data.sort((a, b) => {
+        if (a.token === 'wETH') return 1;
+        if (b.token === 'wETH') return -1;
+        return 0;
+      });
       runInAction(() => {
-        this.pools = data;
+        this.pools = sortedData;
         this.isFetched = true;
       });
     } catch (error) {

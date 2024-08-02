@@ -1,4 +1,7 @@
-import { areaLines } from "@/features/RebalancePerformance/RebalancePerformanceCharts/utils";
+import {
+  areaLines,
+  connectedAreaLines
+} from "@/features/RebalancePerformance/RebalancePerformanceCharts/utils";
 import { Flex, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { TooltipProps } from "recharts";
@@ -13,29 +16,29 @@ export const CustomTooltip = ({ active, payload, name, isLending }: CustomToolti
   const _payload = payload?.slice()?.reverse();
 
   const getTooltipName = (item: any) => {
-    if (item?.name === areaLines[0].name) {
+    if (item?.name === areaLines[0].name || item?.name === connectedAreaLines[0].name) {
       return "APY";
     }
-    if (item?.name === areaLines[1].name) {
+    if (item?.name === connectedAreaLines[1].name) {
       return "Earned";
     }
   };
 
   const getNameColor = (item: any) => {
-    if (item?.name === areaLines[0].name) {
+    if (item?.name === areaLines[0].name || item?.name === connectedAreaLines[0].name) {
       return "greenAlpha.60";
     }
-    if (item?.name === areaLines[1].name) {
+    if (item?.name === connectedAreaLines[1].name) {
       return "violetAlpha.60";
     }
   };
 
   const getValue = (item: any) => {
-    if (item?.name === areaLines[0].name) {
+    if (item?.name === areaLines[0].name || item?.name === connectedAreaLines[0].name) {
       return `${Number(item?.value)?.toFixed(2)}%`;
     }
-    if (item?.name === areaLines[1].name) {
-      return `$${Number(item?.value)?.toFixed(2)}`;
+    if (item?.name === connectedAreaLines[1].name) {
+      return Number(item?.value) > 0.01 ? `$${Number(item?.value)?.toFixed(2)}` : "< $0.01";
     }
   };
 
