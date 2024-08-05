@@ -110,6 +110,21 @@ const Tutorial = observer(() => {
   }, [isActiveTutorial]);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isActiveTutorial && stepIndex === 0 && !!address) {
+      setRunTutorial(false);
+
+      timer = setTimeout(() => {
+        setRunTutorial(true);
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isActiveTutorial, stepIndex, address]);
+
+  useEffect(() => {
     if (isActiveTutorial && pathname !== ROUTE_PATHS.lending) {
       setRunTutorial(false);
     }

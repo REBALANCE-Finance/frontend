@@ -102,9 +102,13 @@ export const AppHeader = () => {
               </Flex>
             </Tooltip>
           )}
-          {isConnected && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
+          {!!address && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
-          {isConnected ? <WalletProfile /> : <ConnectWallet className="step-1" />}
+          {!!address ? (
+            <WalletProfile className="step-1" />
+          ) : (
+            <ConnectWallet className="step-1" />
+          )}
           {media && <AppNav />}
         </Flex>
       </Flex>
