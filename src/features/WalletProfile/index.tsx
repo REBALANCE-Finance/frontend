@@ -21,7 +21,11 @@ import { WalletProfileBtn } from "./components/WalletProfileBtn";
 import { WalletProfileSettings } from "./components/WalletProfileSettings";
 import { WalletProfileTransactionHistory } from "./components/WalletProfileTransactionHistory";
 
-export const WalletProfile = () => {
+interface IWalletProfileProps {
+  className: string;
+}
+
+export const WalletProfile = ({ className }: IWalletProfileProps) => {
   const { disconnect } = useDisconnect();
   const { address, connector, isConnected } = useAccount();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -30,7 +34,7 @@ export const WalletProfile = () => {
 
   return (
     <>
-      <WalletProfileBtn onOpen={onOpen} address={String(address)} />
+      <WalletProfileBtn onOpen={onOpen} address={String(address)} className={className} />
 
       <Drawer isOpen={isOpen} onClose={onClose} placement="right">
         <DrawerOverlay />
@@ -38,7 +42,7 @@ export const WalletProfile = () => {
           <DrawerHeader as={Flex} align="center" justify="start">
             <Flex align="inherit" gap="4px">
               <Icon
-                style={{cursor: "pointer"}}
+                style={{ cursor: "pointer" }}
                 aria-label="back"
                 name={ICON_NAMES.close}
                 size="36px"
