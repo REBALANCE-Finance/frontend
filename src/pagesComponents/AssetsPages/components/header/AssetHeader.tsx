@@ -1,3 +1,4 @@
+"use client";
 import { Flex, Link, Text } from "@chakra-ui/layout";
 import { useMediaQuery } from "@chakra-ui/react";
 import React, { FC } from "react";

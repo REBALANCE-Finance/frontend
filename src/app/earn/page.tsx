@@ -44,8 +44,7 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
       try {
         setIsChartLoading(true);
         const token =
-          pools?.find(item => item.rebalancerAddress === params.poolAddress)?.token ||
-          pools?.find(item => item.token === "USDC.e")?.token;
+          pools?.find(item => item.rebalancerAddress === params.poolAddress)?.token ?? "USDC.e";
         if (token) {
           let fetchedChartData;
           if (address) {
@@ -53,7 +52,6 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
           } else {
             fetchedChartData = await getAreaChartAllIntervals(token);
           }
-          console.log("fetchedChartData", fetchedChartData);
 
           setChartData(fetchedChartData);
         } else {

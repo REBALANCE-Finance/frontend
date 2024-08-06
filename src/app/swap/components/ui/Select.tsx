@@ -157,7 +157,7 @@ const Select: React.FC<SelectProps> = ({ options = [], value, setSelected, Butto
                 filteredOptions.map((option: IToken) => (
                   <>
                     <Flex
-                      key={option.symbol}
+                      key={option.address}
                       alignItems="center"
                       cursor="pointer"
                       justify="space-between"

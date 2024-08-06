@@ -101,10 +101,14 @@ const Swap = () => {
 
   useEffect(() => {
     if (tokenList && tokenList.length > 1 && !payToken && !receiveToken) {
-      setPayToken(tokenList.find(token => token.symbol === "ARB") || ARB_TOKEN);
+      setPayToken(
+        tokenList.find(token => token.symbol === "ARB") ??
+          tokenList.find(token => token.symbol === "WETH") ??
+          ARB_TOKEN
+      );
       setReceiveToken(tokenList.find(token => token.symbol === "USDT") || USDT_TOKEN);
     }
-  }, [tokenList]);
+  }, [tokenList, payToken, receiveToken]);
 
   useEffect(() => {
     if (payTokenPriceData) {
@@ -117,7 +121,7 @@ const Swap = () => {
         (Number(srcAmount) * 10 ** receiveTokenDecimals);
       setExchangeRate(`1 ${payToken?.symbol} = ${rate.toFixed(6)} ${receiveToken?.symbol}`);
       // @ts-ignore
-      const maxFeePerGasInWei = parseUnits(feePerGas.data.formatted.maxFeePerGas, "gwei");
+      const maxFeePerGasInWei = parseUnits(feePerGas.data?.formatted.maxFeePerGas, "gwei");
       // @ts-ignore
       const gasCostInWei = BigInt(payTokenPriceData.priceRoute.gasCost) * maxFeePerGasInWei;
 

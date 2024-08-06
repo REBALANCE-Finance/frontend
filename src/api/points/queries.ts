@@ -5,29 +5,35 @@ export const getPredictedPoints = async (
   tokenAmount: number,
   daysOfLock: number
 ) => {
-  const response = await fetch(
-    `${endpoint}lending/calculate-points/${token}/${tokenAmount}/${daysOfLock}`
-  );
+  try {
+    const response = await fetch(
+      `${endpoint}lending/calculate-points/${token}/${tokenAmount}/${daysOfLock}`
+    );
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: number = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error(`Failed to fetch predicted points: ${error.message}`);
+    throw error;
   }
-
-  const data: number = await response.json();
-
-  return data;
 };
 
 export const getEarnedPoints = async (address: string) => {
-  const response = await fetch(`${endpoint}lending/user-points/${address}`);
+  try {
+    const response = await fetch(`${endpoint}lending/user-points/${address}`);
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: number = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error(`Failed to fetch earned points: ${error.message}`);
+    throw error;
   }
-
-  const data: number = await response.json();
-
-  console.log("res", response, data);
-
-  return data;
 };
