@@ -155,70 +155,141 @@ export const getUserEarnings = async (
   }
 };
 
+const fetchHighestAprToken = async (dayInterval: number): Promise<string> => {
+  try {
+    const response = await fetch(`${endpoint}lending/highest-apr-token/${dayInterval}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.text();
+  } catch (error: any) {
+    console.error(`Failed to fetch highest apr token: ${error.message}`);
+    throw error;
+  }
+};
+
+const getChartDataAndEarnings = async (
+  token: string,
+  address?: string
+): Promise<
+  [
+    ChartData,
+    ChartData,
+    ChartData,
+    IIntervalResponse[]?,
+    IIntervalResponse[]?,
+    IIntervalResponse[]?
+  ]
+> => {
+  const [monthData, halfYearData, yearData] = await Promise.all([
+    getChartData(1, 30, token),
+    getChartData(7, 26, token),
+    getChartData(7, 52, token)
+  ]);
+
+  let monthEarning: IIntervalResponse[] | undefined;
+  let halfYearEarning: IIntervalResponse[] | undefined;
+  let yearEarning: IIntervalResponse[] | undefined;
+
+  if (address) {
+    [monthEarning, halfYearEarning, yearEarning] = await Promise.all([
+      getUserEarnings(1, 30, address),
+      getUserEarnings(7, 26, address),
+      getUserEarnings(7, 52, address)
+    ]);
+  }
+
+  return [monthData, halfYearData, yearData, monthEarning, halfYearEarning, yearEarning];
+};
+
+const mapUserEarnings = (
+  data: ChartData["chartData"],
+  earnings?: IIntervalResponse[]
+): (ChartData["chartData"][0] & { userEarning?: number | null })[] => {
+  if (!earnings) return data.reverse();
+  return data.reverse().map(item => {
+    // @ts-ignore
+    const earning = earnings.find(el => el.from === item.date);
+    return {
+      ...item,
+      userEarning: earning ? earning.value : null
+    };
+  });
+};
+
+const prepareChartData = (
+  monthData: ChartData,
+  halfYearData: ChartData,
+  yearData: ChartData,
+  monthEarning?: IIntervalResponse[],
+  halfYearEarning?: IIntervalResponse[],
+  yearEarning?: IIntervalResponse[]
+): PreparedChartData => {
+  return {
+    poolChart: {
+      "1m": {
+        data: monthData.poolChart.reverse(),
+        rebalanceAvg: monthData.rebalanceAvgApr,
+        aaveAvg: monthData.aaveAvgApr
+      },
+      "6m": {
+        data: halfYearData.poolChart.reverse(),
+        rebalanceAvg: halfYearData.rebalanceAvgApr,
+        aaveAvg: halfYearData.aaveAvgApr
+      },
+      "1y": {
+        data: yearData.poolChart.reverse(),
+        rebalanceAvg: yearData.rebalanceAvgApr,
+        aaveAvg: yearData.aaveAvgApr
+      }
+    },
+    chartData: {
+      "1m": mapUserEarnings(monthData.chartData, monthEarning),
+      "6m": mapUserEarnings(halfYearData.chartData, halfYearEarning),
+      "1y": mapUserEarnings(yearData.chartData, yearEarning)
+    }
+  };
+};
+
+export const getAreaChartAllIntervalsWithoutToken = async (
+  address?: string
+): Promise<PreparedChartData> => {
+  try {
+    const highestAprTokenToday = await fetchHighestAprToken(1);
+
+    const [monthData, halfYearData, yearData, monthEarning, halfYearEarning, yearEarning] =
+      await getChartDataAndEarnings(highestAprTokenToday, address);
+
+    return prepareChartData(
+      monthData,
+      halfYearData,
+      yearData,
+      monthEarning,
+      halfYearEarning,
+      yearEarning
+    );
+  } catch (error: any) {
+    console.error(`Failed to fetch area chart data: ${error.message}`);
+    throw error;
+  }
+};
+
 export const getAreaChartAllIntervals = async (
   token: string = "usdt",
   address?: string
 ): Promise<PreparedChartData> => {
   try {
-    const [monthData, halfYearData, yearData] = await Promise.all([
-      getChartData(1, 30, token),
-      getChartData(7, 26, token),
-      getChartData(7, 52, token)
-    ]);
+    const [monthData, halfYearData, yearData, monthEarning, halfYearEarning, yearEarning] =
+      await getChartDataAndEarnings(token, address);
 
-    let monthEarning: IIntervalResponse[] | undefined;
-    let halfYearEarning: IIntervalResponse[] | undefined;
-    let yearEarning: IIntervalResponse[] | undefined;
-
-    if (address) {
-      [monthEarning, halfYearEarning, yearEarning] = await Promise.all([
-        getUserEarnings(1, 30, address),
-        getUserEarnings(7, 26, address),
-        getUserEarnings(7, 52, address)
-      ]);
-    }
-
-    const mapUserEarnings = (
-      data: ChartData["chartData"],
-      earnings?: IIntervalResponse[]
-    ): (ChartData["chartData"][0] & { userEarning?: number | null })[] => {
-      if (!earnings) return data.reverse();
-      return data.reverse().map(item => {
-        // @ts-ignore
-        const earning = earnings.find(el => el.from === item.date);
-        return {
-          ...item,
-          userEarning: earning ? earning.value : null
-        };
-      });
-    };
-
-    const preparedChartData: PreparedChartData = {
-      poolChart: {
-        "1m": {
-          data: monthData.poolChart.reverse(),
-          rebalanceAvg: monthData.rebalanceAvgApr,
-          aaveAvg: monthData.aaveAvgApr
-        },
-        "6m": {
-          data: halfYearData.poolChart.reverse(),
-          rebalanceAvg: halfYearData.rebalanceAvgApr,
-          aaveAvg: halfYearData.aaveAvgApr
-        },
-        "1y": {
-          data: yearData.poolChart.reverse(),
-          rebalanceAvg: yearData.rebalanceAvgApr,
-          aaveAvg: yearData.aaveAvgApr
-        }
-      },
-      chartData: {
-        "1m": mapUserEarnings(monthData.chartData, monthEarning),
-        "6m": mapUserEarnings(halfYearData.chartData, halfYearEarning),
-        "1y": mapUserEarnings(yearData.chartData, yearEarning)
-      }
-    };
-
-    return preparedChartData;
+    return prepareChartData(
+      monthData,
+      halfYearData,
+      yearData,
+      monthEarning,
+      halfYearEarning,
+      yearEarning
+    );
   } catch (error: any) {
     console.error(`Failed to fetch area chart data: ${error.message}`);
     throw error;

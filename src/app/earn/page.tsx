@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAreaChartAllIntervals, getPools } from "@/api/pools/queries";
+import { getAreaChartAllIntervalsWithoutToken } from "@/api/pools/queries";
 import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
 import { IPoolData, IAreaChartData } from "@/api/pools/types";
@@ -48,9 +48,9 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
         if (token) {
           let fetchedChartData;
           if (address) {
-            fetchedChartData = await getAreaChartAllIntervals(token, address);
+            fetchedChartData = await getAreaChartAllIntervalsWithoutToken(address);
           } else {
-            fetchedChartData = await getAreaChartAllIntervals(token);
+            fetchedChartData = await getAreaChartAllIntervalsWithoutToken();
           }
 
           setChartData(fetchedChartData);
