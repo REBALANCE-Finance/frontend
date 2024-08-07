@@ -23,7 +23,7 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
   const [isLoadingPoints, setIsLoadingPoints] = useState(true);
   const {
     pools,
-    isLoading: loading,
+    isFetched: isFetchedPools,
     error: poolsError,
     fetchPools,
     startPolling,
@@ -43,20 +43,14 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     const fetchData = async () => {
       try {
         setIsChartLoading(true);
-        const token =
-          pools?.find(item => item.rebalancerAddress === params.poolAddress)?.token ?? "USDC.e";
-        if (token) {
-          let fetchedChartData;
-          if (address) {
-            fetchedChartData = await getAreaChartAllIntervalsWithoutToken(address);
-          } else {
-            fetchedChartData = await getAreaChartAllIntervalsWithoutToken();
-          }
-
-          setChartData(fetchedChartData);
+        let fetchedChartData;
+        if (address) {
+          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(address);
         } else {
-          throw new Error("Invalid pool address or token not found");
+          fetchedChartData = await getAreaChartAllIntervalsWithoutToken();
         }
+
+        setChartData(fetchedChartData);
         setIsChartLoading(false);
       } catch (err) {
         if (err instanceof Error) {
@@ -71,7 +65,7 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     };
 
     fetchData();
-  }, [params.poolAddress, address, pools]);
+  }, [params.poolAddress, address]);
 
   useEffect(() => {
     if (!isDesktop) {
@@ -94,7 +88,7 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     <PoolLayout
       pools={pools}
       chartData={chartData}
-      loading={loading || isChartLoading}
+      loading={isChartLoading}
       error={error}
       isTable={isTableView}
       onChangeView={() => setIsTableView(!isTableView)}
@@ -102,9 +96,9 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
       isLoadingPoints={isLoadingPoints}
     >
       {isTableView ? (
-        <PoolsLendingTable pools={pools} isLoading={loading} error={poolsError?.message} />
+        <PoolsLendingTable pools={pools} isLoading={!isFetchedPools} error={poolsError?.message} />
       ) : (
-        <PoolsLending pools={pools} loading={loading} error={poolsError?.message || ""} />
+        <PoolsLending pools={pools} loading={!isFetchedPools} error={poolsError?.message || ""} />
       )}
     </PoolLayout>
   );
