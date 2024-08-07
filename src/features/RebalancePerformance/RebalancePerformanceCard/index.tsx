@@ -72,7 +72,7 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
       <Flex direction="column" p="16px" gap="8px" flex="1">
         <Flex justify="space-between" alignItems="center">
           <Image src={logo} w="116px" h="29px" />
-          <Flex gap={2} alignItems="center">
+          {/* <Flex gap={2} alignItems="center">
             <Text
               fontWeight="300"
               color="#DEDEDE"
@@ -84,7 +84,7 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
               TVL: ${info !== "0" && info}
             </Text>
             {info === "0" && <Skeleton ml={2} height="20px" width="60px" />}
-          </Flex>
+          </Flex> */}
         </Flex>
         <Box
           mt="12px"
