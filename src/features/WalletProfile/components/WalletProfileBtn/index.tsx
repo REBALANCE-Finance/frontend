@@ -17,7 +17,7 @@ export const WalletProfileBtn: FC<IWalletProfileBtnProps> = ({ onOpen, address, 
   const { disconnect } = useDisconnect();
   return (
     // <Flex as={Button} gap="6px" align="center" onClick={onOpen}>
-    <Flex as={Button} gap="6px" align="center" className={className}>
+    <Flex gap="6px" align="center" className={className}>
       <JazzIcon address={address} />
       <Text mr={4}>{ellipsis(String(address))}</Text>
       <Center height="20px">

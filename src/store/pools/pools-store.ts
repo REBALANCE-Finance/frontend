@@ -42,8 +42,8 @@ class PoolsStore {
     try {
       const data: IPoolData[] = await getPools(type);
       const sortedData = data.sort((a, b) => {
-        if (a.token === 'wETH') return 1;
-        if (b.token === 'wETH') return -1;
+        if (a.token === "wETH") return 1;
+        if (b.token === "wETH") return -1;
         return 0;
       });
       runInAction(() => {
@@ -63,7 +63,6 @@ class PoolsStore {
 
   startPolling = (type: "lending" | "borrowing" = "lending") => {
     this.fetchPools(type);
-    this.isFetched = false;
     this.interval = setInterval(() => this.fetchPools(type), 60000);
   };
 
