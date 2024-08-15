@@ -81,21 +81,22 @@ const data = [
 ];
 
 interface IChartData {
-  chartData: ILendChartData[],
-  poolChart: any[]
+  chartData: ILendChartData[];
+  poolChart: any[];
 }
 
-export const BaseChart = ({ chartData } : {
-  chartData: IChartData
-}) => {
+export const BaseChart = ({ chartData }: { chartData: IChartData }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
+  const [smDown] = useMediaQuery("(max-width: 420px)");
 
   const areaLines = [
     {
       name: "Rebalance APY\n",
-      subtext: `(${chartData.poolChart[selectedDate.name as any].rebalanceAvg.toFixed(2)}% average)`,
-      type: ROUTES_TYPE.lending,
+      subtext: `(${chartData.poolChart[selectedDate.name as any].rebalanceAvg.toFixed(
+        2
+      )}% average)`,
+      type: ROUTES_TYPE.lending
     },
     {
       name: "Aave APY\n",
@@ -116,11 +117,12 @@ export const BaseChart = ({ chartData } : {
         <Flex
           w="100%"
           justifyContent="space-between"
+          alignItems="center"
           zIndex={{ base: 1, md: 0 }}
           position={{ base: "absolute", md: "relative" }}
           right={{ base: "0" }}
         >
-          <Text fontSize="lg">Strategy Profitability</Text>
+          <Text fontSize={smDown ? "md" : "lg"}>Strategy Profitability</Text>
           <DateSwitcher date={DATES} selectDate={setSelectDate} selectedDate={selectedDate} />
         </Flex>
       </Flex>
@@ -141,7 +143,12 @@ export const BaseChart = ({ chartData } : {
         mr={media ? "auto" : "0"}
       >
         {areaLines.map(elem => (
-          <LegendAreaChart key={elem.type} text={elem.name} subText={elem.subtext} color={colorsArea[elem.type]} />
+          <LegendAreaChart
+            key={elem.type}
+            text={elem.name}
+            subText={elem.subtext}
+            color={colorsArea[elem.type]}
+          />
         ))}
       </Flex>
     </Flex>
