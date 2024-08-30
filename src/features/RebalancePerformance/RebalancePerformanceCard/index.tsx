@@ -4,6 +4,7 @@ import React, { FC } from "react";
 import { Skeleton } from "@chakra-ui/react";
 import Img from "./Images";
 import protokol from "/public/assets/image/Protocols.svg";
+import logoSrc from "/public/assets/logo/logo-short.svg";
 import { formatNumber } from "@/utils/formatNumber";
 import Link from "next/link";
 import { FIRELABS_AUDIT_LINK, HACKEN_AUDIT_LINK } from "@/consts";
@@ -127,14 +128,17 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
           )}
         </Box>
         <Flex alignItems="center" mt="auto">
-          {type !== "lending" ? (
-            <Box display="flex" alignItems="center">
-              <Text color="#DEDEDE" fontSize="12px">
-                Extra-points
-              </Text>
-              <Image ml="8px" src={protokol.src} w="24px" h="24px" />
-            </Box>
-          ) : null}
+          <Box display="flex" alignItems="center">
+            <Text color="#DEDEDE" fontSize="12px">
+              {type === "lending" ? "Extra-incentives" : "Extra-points"}
+            </Text>
+            <Image
+              ml="8px"
+              src={type === "lending" ? "/assets/logo/logo-long.svg" : protokol.src}
+              w={type === "lending" ? "65px" : "24px"}
+              h={type === "lending" ? "21px" : "24px"}
+            />
+          </Box>
           <Box ml="auto" display="flex" gap="12px" alignItems="center">
             {logos.map((logo, index) => (
               <Img key={index} src={logo.src} width={logo.w} height={logo.h} />

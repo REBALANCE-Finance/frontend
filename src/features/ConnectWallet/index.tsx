@@ -35,15 +35,21 @@ const CONNECT_METHODS = [
     method: ConnectorNames.WalletConnect,
     title: "WalletConnect",
     imgName: ICON_NAMES.walletConnect
+  },
+  {
+    method: ConnectorNames.MetaMask,
+    // method: ConnectorNames.Injected,
+    title: "Metamask",
+    imgName: ICON_NAMES.metamask
   }
 ];
 
 if (!isMobile) {
-  CONNECT_METHODS.unshift({
-    method: ConnectorNames.MetaMask,
-    title: "Metamask",
-    imgName: ICON_NAMES.metamask
-  });
+  // CONNECT_METHODS.unshift({
+  //   method: ConnectorNames.MetaMask,
+  //   title: "Metamask",
+  //   imgName: ICON_NAMES.metamask
+  // });
   CONNECT_METHODS.push({
     method: ConnectorNames.CoinBase,
     title: "CoinBase",
@@ -66,10 +72,11 @@ export const ConnectWallet = ({
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { login } = useAuth();
   const activateProvider = useCallback(async (connectorId: ConnectorNames) => {
+    console.log("connector ID", connectorId);
     try {
-      if (connectorId === ConnectorNames.WalletConnect) {
-        onClose();
-      }
+      // if (connectorId === ConnectorNames.WalletConnect) {
+      //   onClose();
+      // }
       await login(connectorId);
       // if (account && !chain.unsupported) {
       //   localStorage.setItem(STORAGE_WALLET_CONNECTION_KEY, connectorId);
@@ -83,6 +90,8 @@ export const ConnectWallet = ({
 
     onClose();
   }, []);
+
+  console.log("active provider", activateProvider);
 
   if (media) {
     return (

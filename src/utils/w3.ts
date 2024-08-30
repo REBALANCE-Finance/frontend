@@ -2,10 +2,11 @@
 
 import { createConfig, http } from "@wagmi/core";
 import { arbitrum, bsc, optimism } from "wagmi/chains";
-import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
+import { coinbaseWallet, injected, walletConnect, metaMask } from "wagmi/connectors";
 
 const connectors = [
   injected({ target: "metaMask" }),
+  metaMask(),
   coinbaseWallet({ appName: "Rebalance" }),
   walletConnect({ projectId: process?.env?.NEXT_PUBLIC_WALLETCONNECT_KEY || "" })
 ];
