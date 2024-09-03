@@ -15,3 +15,8 @@ export type TutorialStep = {
   hideFooter?: boolean;
   isFixed?: boolean;
 };
+
+export type Task = {
+  name: string;
+  completed: boolean;
+};
