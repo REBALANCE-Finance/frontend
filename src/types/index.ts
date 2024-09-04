@@ -18,5 +18,6 @@ export type TutorialStep = {
 
 export type Task = {
   name: string;
-  completed: boolean;
+  complete: boolean;
+  type: "twitter" | "telegram" | "wallet" | "deposit" | "freeze";
 };

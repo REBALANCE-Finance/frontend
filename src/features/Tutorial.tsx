@@ -165,7 +165,6 @@ const Tutorial = observer(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === LOCAL_STORAGE_KEYS.isShownTutorial) {
         const tutorialShown = localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial);
-        console.log("Storage change detected:", tutorialShown);
         setIsActiveTutorial(!tutorialShown);
         setRunTutorial(!tutorialShown);
       }
@@ -174,7 +173,6 @@ const Tutorial = observer(() => {
     const handleCustomStorageChange = (event: CustomEvent<{ key: string; value: any }>) => {
       if (event.detail.key === LOCAL_STORAGE_KEYS.isShownTutorial) {
         const tutorialShown = localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial);
-        console.log("Custom storage change detected:", tutorialShown);
         setIsActiveTutorial(!tutorialShown);
         setRunTutorial(!tutorialShown);
       }

@@ -41,3 +41,11 @@ export const convertNumberToBigInt = (value: number = 0, decimals: number): bigi
 export const getExplorerTxLink = (txHash: string) => {
   return `https://arbiscan.io/tx/${txHash}`;
 };
+
+export const scrollToElement = (id: string) => {
+  const element = document.getElementById(id);
+
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+};

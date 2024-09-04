@@ -72,7 +72,6 @@ export const ConnectWallet = ({
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { login } = useAuth();
   const activateProvider = useCallback(async (connectorId: ConnectorNames) => {
-    console.log("connector ID", connectorId);
     try {
       // if (connectorId === ConnectorNames.WalletConnect) {
       //   onClose();
@@ -90,8 +89,6 @@ export const ConnectWallet = ({
 
     onClose();
   }, []);
-
-  console.log("active provider", activateProvider);
 
   if (media) {
     return (

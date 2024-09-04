@@ -52,7 +52,7 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
 
   return (
     <TableContainer>
-      <Table variant="simple">
+      <Table variant="simple" id="pools">
         <Thead>
           <Tr color="white">
             <Th maxW="136px" p="16px 12px 16px 32px" textTransform="unset">

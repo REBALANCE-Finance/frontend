@@ -25,6 +25,10 @@ export const textStyles = {
     fontSize: "12px",
     fontWeight: "400"
   },
+  text10: {
+    fontSize: "10px",
+    fontWeight: "400"
+  },
   textMono20: {
     fontFamily: roboto_mono.style.fontFamily,
     fontSize: "20px",

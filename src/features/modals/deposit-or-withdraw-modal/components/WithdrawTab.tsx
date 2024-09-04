@@ -63,7 +63,6 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
       if (address) {
         getPersonalEarnings(1, 30, address, pool.token)
           .then(data => {
-            console.log(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0, "data");
             setProfit(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0);
           })
           .catch(e => {

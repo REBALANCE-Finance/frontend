@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, useMediaQuery, Text, Skeleton, useOutsideClick } from "@chakra-ui/react";
+import { Flex, useMediaQuery, Skeleton, useOutsideClick, Box } from "@chakra-ui/react";
 import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
@@ -8,6 +8,7 @@ import { IAreaChartData, IPoolData } from "@/api/pools/types";
 import { useAccount } from "wagmi";
 import { Tooltip } from "@/components/tooltip";
 import { useRef, useState } from "react";
+import UserTasksPopover from "@/components/popover/UserTasksPopover";
 
 export const PoolLayout = ({
   children,
@@ -47,29 +48,9 @@ export const PoolLayout = ({
     <Flex direction="column" w="100%" align="center">
       {!isDesktop && isLoadingPoints && address && <Skeleton height="16px" width="60px" />}
       {!isDesktop && !isLoadingPoints && address && (
-        // @ts-ignore
-        <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
-          <Flex
-            alignItems="center"
-            gap={3}
-            py={3}
-            px={4}
-            mb={address ? 0 : 6}
-            onClick={() => setIsOpenTooltip(prev => !prev)}
-          >
-            <Text
-              textStyle="text12"
-              color="black.5"
-              borderBottom="1px dashed"
-              borderColor="black.5"
-            >
-              ✨ Earned points:
-            </Text>
-            <Text textStyle="text12" color="black.5">
-              {earnedPoints}
-            </Text>
-          </Flex>
-        </Tooltip>
+        <Box mb={8}>
+          <UserTasksPopover address={address} />
+        </Box>
       )}
       <Flex
         direction="column"
