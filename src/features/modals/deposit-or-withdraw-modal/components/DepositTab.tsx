@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Divider,
   Flex,
@@ -7,7 +8,8 @@ import {
   HStack,
   Switch,
   Text,
-  useOutsideClick
+  useOutsideClick,
+  Image
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -165,14 +167,35 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
         <FormControl display="flex" alignItems="center" justifyContent="space-between">
           {/* @ts-ignore */}
           <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
-            <FormLabel
-              htmlFor="freeze"
-              mb="0"
-              borderBottom="1px dashed #fff"
-              onClick={() => setIsOpenTooltip(prev => !prev)}
-            >
-              Freeze ✨
-            </FormLabel>
+            <Flex gap="8px" alignItems="center">
+              <FormLabel
+                htmlFor="freeze"
+                mb="0"
+                borderBottom="1px dashed #fff"
+                onClick={() => setIsOpenTooltip(prev => !prev)}
+              >
+                Freeze ✨
+              </FormLabel>
+              {pool.token === "FRAX" && (
+                <Flex
+                  justify="center"
+                  alignItems="center"
+                  gap="4px"
+                  padding="4px 12px"
+                  borderRadius="100px"
+                  bg="greenAlpha.100"
+                  pointerEvents="none"
+                  userSelect="none"
+                >
+                  <Box bg="black.100" p="4px" borderRadius="8px">
+                    <Image src="/assets/logo/logo-short.svg" h="12px" w="12px" alt="logo" />
+                  </Box>
+                  <Text textStyle="text14" color="black.100" fontWeight={700}>
+                    x2 points
+                  </Text>
+                </Flex>
+              )}
+            </Flex>
           </Tooltip>
           <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
         </FormControl>

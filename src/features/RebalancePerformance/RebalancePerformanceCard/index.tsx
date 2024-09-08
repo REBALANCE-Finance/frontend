@@ -135,10 +135,13 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
             <Image
               ml="8px"
               src={type === "lending" ? "/assets/logo/logo-short.svg" : protokol.src}
-              w={type === "lending" ? "65px" : "24px"}
+              w={type === "lending" ? "max-content" : "24px"}
               h={type === "lending" ? "21px" : "24px"}
             />
           </Box>
+          {type === "lending" && (
+            <Image ml="8px" src="/assets/icons/arbitrum-icon.svg" w="24px" h="24px" />
+          )}
           <Box ml="auto" display="flex" gap="12px" alignItems="center">
             {logos.map((logo, index) => (
               <Img key={index} src={logo.src} width={logo.w} height={logo.h} />

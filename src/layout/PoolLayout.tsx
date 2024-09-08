@@ -6,7 +6,6 @@ import { RebalancePerformance } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
 import { useAccount } from "wagmi";
-import { Tooltip } from "@/components/tooltip";
 import { useRef, useState } from "react";
 import UserTasksPopover from "@/components/popover/UserTasksPopover";
 
