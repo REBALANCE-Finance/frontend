@@ -6,8 +6,8 @@ import {
   Text,
   Image,
   useOutsideClick,
-  Spinner,
-  useMediaQuery
+  useMediaQuery,
+  Skeleton
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { formatNumberWithCommas } from "@/utils/formatNumber";
@@ -271,6 +271,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
           <Text textStyle="text16" color="black.5" borderBottom="1px dashed" borderColor="black.5">
             ✨ Earned:
           </Text>
+          <Image src="/assets/logo/logo-short.svg" width="16px" height="16px" alt="rebalance" />
           <Text textStyle="text16" color="black.5">
             {formatNumberWithCommas(earnedPoints)}
           </Text>
@@ -306,11 +307,15 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
               )}
             </Flex>
             {isTasksLoading ? (
-              <Flex justify="center">
-                <Spinner />
-              </Flex>
+              Array.from({ length: 5 })
+                .fill(0)
+                .map((_, index) => (
+                  <Flex flexDir="column" gap="16px">
+                    <Skeleton height="24px" width="100%" />
+                  </Flex>
+                ))
             ) : (
-              <Flex flexDir="column" gap="12px">
+              <Flex flexDir="column" gap="16px">
                 {tasks.map((task, index) => (
                   <Task
                     {...task}

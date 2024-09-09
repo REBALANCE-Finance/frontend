@@ -13,3 +13,5 @@ export const CHAIN_NAMES: Record<number, string> = {
   10: "Optimism"
 };
 // 11155111 sepolia
+
+export const ARB_DECIMALS = 18;

@@ -14,7 +14,7 @@ export const Task = ({ name, complete, pointsQty, ButtonProps }: TaskProps) => {
   const [is600Up] = useMediaQuery("(min-width: 600px)");
 
   return (
-    <Flex key={name} justify="space-between">
+    <Flex key={name} justify="space-between" maxH="24px">
       <Flex gap="8px" alignItems={is600Up ? "center" : "flex-start"}>
         <Image
           src={complete ? "assets/image/CompletedTask.svg" : "assets/image/UncompletedTask.svg"}

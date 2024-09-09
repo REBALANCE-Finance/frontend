@@ -64,5 +64,6 @@ export const ICON_NAMES: { [key: string]: string } = {
   WBTC: "WBTC",
   WETH: "WETH",
   worning: "worning",
-  tiles: "tiles"
+  tiles: "tiles",
+  LODESTAR: "LODESTAR"
 };

@@ -26,6 +26,7 @@ import MaintenanceBlock from "@/components/maintenance-block";
 import { getEarnedPoints, getTasks } from "@/api/points/queries";
 import { formatNumberWithCommas } from "@/utils/formatNumber";
 import UserTasksPopover from "@/components/popover/UserTasksPopover";
+import RewardsButton from "@/components/button/RewardsButton";
 
 export const AppHeader = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -65,6 +66,7 @@ export const AppHeader = () => {
           {address && isDesktop && !isLoading && <UserTasksPopover address={address} />}
           {!!address && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
+          {isDesktop && <RewardsButton />}
           {!!address ? <WalletProfile className="step-1" /> : <ConnectWallet className="step-1" />}
           {media && <AppNav />}
         </Flex>

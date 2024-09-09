@@ -21,3 +21,12 @@ export type Task = {
   complete: boolean;
   type: "twitter" | "telegram" | "wallet" | "deposit" | "freeze";
 };
+
+//{"address":"0xd02df454eebf85278b3c257ebc880709dc5e96ce","reward":null,"claimable":null,"proof":null}
+
+export type Reward = {
+  address: string;
+  reward: string | null;
+  claimable: string | null;
+  proof: string | null;
+};

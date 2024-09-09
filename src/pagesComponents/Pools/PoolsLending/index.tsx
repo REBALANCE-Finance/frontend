@@ -113,15 +113,22 @@ export const PoolsLending = ({
                         APY
                       </Text>
                       <Box ml="auto" display="flex">
+                        {item.token === "FRAX" && (
+                          <Box borderRadius="50%" mr="-4px" zIndex={6}>
+                            <Icon name="LODESTAR" width="14px" height="14px" />
+                          </Box>
+                        )}
                         {(item.token === "wETH" || item.token === "USDC.e") && (
                           <Box borderRadius="50%" mr="-4px" zIndex={5}>
                             <Icon name="SILO" width="14px" height="14px" />
                           </Box>
                         )}
-                        <Box borderRadius="50%" zIndex={4} mr="-4px">
-                          <Icon name="DOLOMITE" width="14px" height="14px" />
-                        </Box>
-                        <Box mr="-4px" zIndex={3}>
+                        {item.token !== "FRAX" && (
+                          <Box borderRadius="50%" zIndex={4} mr="-4px">
+                            <Icon name="DOLOMITE" width="14px" height="14px" />
+                          </Box>
+                        )}
+                        <Box mr={item.token === "FRAX" ? "0" : "-4px"} zIndex={3}>
                           <Icon name="AAVE" width="10px" height="10px" />
                         </Box>
                         {item.token !== "FRAX" ? (
@@ -129,7 +136,9 @@ export const PoolsLending = ({
                             <Icon name="RADIANT" width="14px" height="14px" />
                           </Box>
                         ) : null}
-                        <Icon name="COMPOUND" width="14px" height="14px" />
+                        {item.token !== "FRAX" && (
+                          <Icon name="COMPOUND" width="14px" height="14px" />
+                        )}
                       </Box>
                       <Text textStyle="textMono16">
                         {loading || error ? (

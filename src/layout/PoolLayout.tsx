@@ -8,6 +8,7 @@ import { IAreaChartData, IPoolData } from "@/api/pools/types";
 import { useAccount } from "wagmi";
 import { useRef, useState } from "react";
 import UserTasksPopover from "@/components/popover/UserTasksPopover";
+import RewardsButton from "@/components/button/RewardsButton";
 
 export const PoolLayout = ({
   children,
@@ -47,9 +48,10 @@ export const PoolLayout = ({
     <Flex direction="column" w="100%" align="center">
       {!isDesktop && isLoadingPoints && address && <Skeleton height="16px" width="60px" />}
       {!isDesktop && !isLoadingPoints && address && (
-        <Box mb={8}>
+        <Flex gap={6} mb={8}>
           <UserTasksPopover address={address} />
-        </Box>
+          <RewardsButton />
+        </Flex>
       )}
       <Flex
         direction="column"

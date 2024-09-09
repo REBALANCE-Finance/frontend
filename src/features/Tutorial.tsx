@@ -3,11 +3,9 @@ import Joyride, {
   Placement,
   CallBackProps,
   STATUS,
-  EVENTS,
   Status,
   ACTIONS,
-  TooltipRenderProps,
-  Events
+  TooltipRenderProps
 } from "react-joyride";
 import { TutorialStep } from "@/types";
 import { useAccount } from "wagmi";

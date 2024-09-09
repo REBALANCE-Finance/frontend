@@ -1,5 +1,6 @@
-import { Task } from "@/types";
+import { Reward, Task } from "@/types";
 import { endpoint } from "../pools/queries";
+import { formatBigNumber } from "@/utils/formatBigNumber";
 
 export const getPredictedPoints = async (
   token: string,
@@ -69,6 +70,25 @@ export const completeTask = async (address: string, taskName: string) => {
     return data;
   } catch (error: any) {
     console.error(`Failed to complete task: ${error.message}`);
+    throw error;
+  }
+};
+
+export const getRewards = async (address: string) => {
+  try {
+    const response = await fetch(`${endpoint}lending/rewards-claim-details/${address}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: Reward = await response.json();
+    return {
+      ...data,
+      claimable: data.claimable ? formatBigNumber(BigInt(data.claimable), 18) : null
+    };
+  } catch (error: any) {
+    console.error(`Failed to fetch rewards: ${error.message}`);
     throw error;
   }
 };
