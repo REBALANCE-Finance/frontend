@@ -29,7 +29,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <AppHeader />
       {/* <AppWarning /> */}
       {/* TODO: Bring back when be ready */}
-      <Tutorial />
+      {/* <Tutorial /> */}
       <Flex flex="1 0" w="100%">
         {children}
       </Flex>

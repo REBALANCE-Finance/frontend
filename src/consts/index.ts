@@ -1,5 +1,6 @@
 import { IToken } from "@/api/tokens/types";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
+import { Task } from "@/types";
 
 export * from "./chains";
 export * from "./iconNames";
@@ -50,9 +51,64 @@ export const FIRELABS_AUDIT_LINK = "https://4irelabs.com/smart-contract-audit/";
 export const HACKEN_AUDIT_LINK = "https://hacken.io/audits/rebalance/";
 
 export const LOCAL_STORAGE_KEYS = {
-  isShownTutorial: "isShownTutorial"
+  isShownTutorial: "isShownTutorial",
+  isShownTasks: "isShownTasks"
 };
 
 export const TWITTER_FOLLOW_URL = "https://x.com/intent/user?screen_name=rebalancefin";
 
 export const TELEGRAM_FOLLOW_LINK = "https://t.me/+sQu_wAoL_FtlNjgy";
+
+export const MOCKED_TASKS: Array<Task> = [
+  {
+    name: "Connect wallet",
+    type: "wallet",
+    complete: false
+  },
+  {
+    name: "Follow us on Twitter",
+    type: "twitter",
+    complete: false
+  },
+  {
+    name: "Join us on Telegram",
+    type: "telegram",
+    complete: false
+  },
+  {
+    name: "Make a deposit",
+    type: "deposit",
+    complete: false
+  },
+  {
+    name: "Freeze deposit to farm points",
+    type: "freeze",
+    complete: false
+  }
+];
+
+export const NEW_MOCKED_TASKS: Array<Task> = [
+  {
+    name: "Connect wallet",
+    type: "wallet",
+    complete: false
+  },
+  {
+    name: "Deposit & freeze any FRAX amount",
+    type: "frax",
+    complete: false,
+    limited: true
+  },
+  {
+    name: "Follow us on Twitter",
+    type: "twitter",
+    complete: false
+  },
+  {
+    name: "Join us on Telegram",
+    type: "telegram",
+    complete: false
+  }
+];
+
+export const MOCKED_ADDRESS = "0xA61327155f2b17A23648B208B4E5F141fBA77F7A";

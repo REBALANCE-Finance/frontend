@@ -1,7 +1,7 @@
 "use client";
 
 import { Flex, useMediaQuery, Skeleton, useOutsideClick, Box } from "@chakra-ui/react";
-import { MEDIA_QUERY_MAX } from "../consts";
+import { MEDIA_QUERY_MAX, MOCKED_ADDRESS } from "../consts";
 import { RebalancePerformance } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
@@ -47,9 +47,9 @@ export const PoolLayout = ({
   return (
     <Flex direction="column" w="100%" align="center">
       {!isDesktop && isLoadingPoints && address && <Skeleton height="16px" width="60px" />}
-      {!isDesktop && !isLoadingPoints && address && (
+      {!isDesktop && (
         <Flex gap={6} mb={8}>
-          <UserTasksPopover address={address} />
+          <UserTasksPopover address={address || MOCKED_ADDRESS} />
           <RewardsButton />
         </Flex>
       )}

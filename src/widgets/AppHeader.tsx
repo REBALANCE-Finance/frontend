@@ -1,30 +1,16 @@
 "use client";
 
-import {
-  Flex,
-  Link,
-  Image,
-  useMediaQuery,
-  Text,
-  Skeleton,
-  useOutsideClick,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Button
-} from "@chakra-ui/react";
-import React, { useRef, useEffect, useState } from "react";
+import { Flex, Link, Image, useMediaQuery, Skeleton } from "@chakra-ui/react";
+import React, { useState } from "react";
 import NextLink from "next/link";
 import { useAccount } from "wagmi";
 import LogoDesc from "/public/assets/logo/logo-long.svg";
 import LogoMob from "/public/assets/logo/logo-short.svg";
-import { MEDIA_QUERY_MAX, ROUTE_PATHS, TELEGRAM_FOLLOW_LINK, TWITTER_FOLLOW_URL } from "../consts";
+import { MEDIA_QUERY_MAX, MOCKED_ADDRESS, ROUTE_PATHS } from "../consts";
 import { ConnectWallet } from "../features/ConnectWallet";
 import { WalletProfile } from "../features/WalletProfile";
 import { AppNav } from "./AppNav";
 import MaintenanceBlock from "@/components/maintenance-block";
-import { getEarnedPoints, getTasks } from "@/api/points/queries";
-import { formatNumberWithCommas } from "@/utils/formatNumber";
 import UserTasksPopover from "@/components/popover/UserTasksPopover";
 import RewardsButton from "@/components/button/RewardsButton";
 
@@ -63,7 +49,7 @@ export const AppHeader = () => {
         {!media && <AppNav />}
 
         <Flex gap="12px" alignItems="center">
-          {address && isDesktop && !isLoading && <UserTasksPopover address={address} />}
+          {isDesktop && !isLoading && <UserTasksPopover address={address || MOCKED_ADDRESS} />}
           {!!address && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
           {isDesktop && <RewardsButton />}

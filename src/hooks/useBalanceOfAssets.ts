@@ -9,27 +9,33 @@ type Token = {
   decimals?: number;
 };
 
-export const useBalanceOfAssets = (tokens: Token[], ownerAddress: `0x${string}`) => {
+export const useBalanceOfAssets = (tokens: Token[], ownerAddress?: `0x${string}`) => {
   const [hasBalance, setHasBalance] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  if (!tokens || !ownerAddress) {
+  if (!tokens || ownerAddress === "0x" || !ownerAddress) {
     return { hasBalance, isLoading: false };
   }
 
-  const contracts = tokens.map(({ contractAddress }) => ({
-    address: contractAddress,
-    abi: ABI_REBALANCE,
-    functionName: "getBalanceOfAsset",
-    args: [ownerAddress]
-  }));
+  const contracts =
+    tokens.length > 0 && ownerAddress !== "0x"
+      ? tokens.map(({ contractAddress }) => ({
+          address: contractAddress,
+          abi: ABI_REBALANCE,
+          functionName: "getBalanceOfAsset",
+          args: [ownerAddress]
+        }))
+      : [];
 
   const {
     data,
     isLoading: loading,
     refetch
   } = useReadContracts({
-    contracts
+    contracts,
+    query: {
+      enabled: tokens.length > 0 && !!ownerAddress && contracts.length > 0
+    }
   });
 
   useEffect(() => {

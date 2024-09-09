@@ -16,10 +16,14 @@ export type TutorialStep = {
   isFixed?: boolean;
 };
 
+export type TaskType = "twitter" | "telegram" | "wallet" | "deposit" | "freeze" | "frax";
+
 export type Task = {
   name: string;
   complete: boolean;
-  type: "twitter" | "telegram" | "wallet" | "deposit" | "freeze";
+  type: TaskType;
+  limited?: boolean;
+  disabled?: boolean;
 };
 
 //{"address":"0xd02df454eebf85278b3c257ebc880709dc5e96ce","reward":null,"claimable":null,"proof":null}

@@ -7,33 +7,40 @@ import {
   Image,
   useOutsideClick,
   useMediaQuery,
-  Skeleton
+  Skeleton,
+  IconButton
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { formatNumberWithCommas } from "@/utils/formatNumber";
-import { TELEGRAM_FOLLOW_LINK, TWITTER_FOLLOW_URL } from "@/consts";
+import { ICON_NAMES, NEW_MOCKED_TASKS, TELEGRAM_FOLLOW_LINK, TWITTER_FOLLOW_URL } from "@/consts";
 import { scrollToElement } from "@/utils";
 import Task from "../task";
 import { completeTask, getEarnedPoints, getTasks } from "@/api/points/queries";
-import { Task as ITask } from "@/types";
+import { Task as ITask, TaskType } from "@/types";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/hooks/useStoreContext";
 import { useBalanceOfAssets } from "@/hooks/useBalanceOfAssets";
+import { ModalEnum } from "@/store/modal/types";
+import { useAccount } from "wagmi";
+import localStore from "@/utils/localStore";
+import Icon from "../icon";
 
 type UserTasksPopoverProps = {
   address: `0x${string}`;
 };
 
 const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
+  const { isConnected } = useAccount();
   const { pools, isFetched: isFetchedPools } = useStore("poolsStore");
   const [earnedPoints, setEarnedPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isTasksLoading, setIsTasksLoading] = useState(false);
+  const [hasTasksData, setHasTasksData] = useState(false);
   const [poolTokens, setPoolTokens] = useState<
     { contractAddress: `0x${string}`; decimals: number }[]
   >([]);
+  const [isOpenTooltip, setIsOpenTooltip] = useState(true);
   const [tasks, setTasks] = useState<ITask[]>([]);
-  const [isOpenTooltip, setIsOpenTooltip] = useState(false);
   const [isTwitterChecked, setIsTwitterChecked] = useState(false);
   const [isTelegramChecked, setIsTelegramChecked] = useState(false);
   const [isMadeDeposit, setIsMadeDeposit] = useState(false);
@@ -66,6 +73,23 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   const tooltipRef = useRef(null);
   const { hasBalance } = useBalanceOfAssets(poolTokens, address);
   const [is600Up] = useMediaQuery("(min-width: 600px)");
+  const [is700Up] = useMediaQuery("(min-width: 700px)");
+  const { openModal } = useStore("modalStore");
+
+  const fraxPool = pools.find(pool => pool.token === "FRAX");
+
+  useEffect(() => {
+    if (isConnected) {
+      setIsOpenTooltip(true);
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
+    if (isOpenTooltip && !isConnected) {
+      setTasks(NEW_MOCKED_TASKS);
+      setHasTasksData(true);
+    }
+  }, [isOpenTooltip, isConnected]);
 
   useEffect(() => {
     if (hasBalance) {
@@ -111,12 +135,13 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
 
   useEffect(() => {
     if (
-      address ||
-      isSuccessTask.twitter ||
-      isSuccessTask.telegram ||
-      isSuccessTask.wallet ||
-      isSuccessTask.deposit ||
-      isSuccessTask.freeze
+      address &&
+      isConnected &&
+      (isSuccessTask.twitter ||
+        isSuccessTask.telegram ||
+        isSuccessTask.wallet ||
+        isSuccessTask.deposit ||
+        isSuccessTask.freeze)
     ) {
       const fetchPoints = async () => {
         setIsLoading(true);
@@ -127,6 +152,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     }
   }, [
     address,
+    isConnected,
     isSuccessTask.twitter,
     isSuccessTask.telegram,
     isSuccessTask.wallet,
@@ -136,31 +162,41 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
 
   useEffect(() => {
     if (pools && isFetchedPools && isOpenTooltip) {
-      const preparedTokens = pools.map(pool => ({
-        contractAddress: pool.rebalancerAddress as `0x${string}`,
-        decimals: pool.decimals
-      }));
-      setPoolTokens(preparedTokens);
+      const fraxPool = pools.find(pool => pool.token === "FRAX");
+
+      if (fraxPool) {
+        const preparedTokens = [fraxPool].map(pool => ({
+          contractAddress: pool.rebalancerAddress as `0x${string}`,
+          decimals: pool.decimals
+        }));
+        setPoolTokens(preparedTokens);
+      }
     }
   }, [pools, isFetchedPools, isOpenTooltip]);
 
   const getTaskTypeByIndex = (index: number) => {
-    if (index === 1) return "telegram";
-    if (index === 2) return "wallet";
-    if (index === 3) return "deposit";
-    if (index === 4) return "freeze";
+    // if (index === 0) return "wallet";
+    // if (index === 2) return "telegram";
+    // if (index === 3) return "deposit";
+    // if (index === 4) return "freeze";
 
-    return "twitter";
+    // return "twitter";
+    if (index === 1) return "frax";
+    if (index === 2) return "twitter";
+    if (index === 3) return "telegram";
+    return "wallet";
   };
 
   useEffect(() => {
     if (
-      (address && isOpenTooltip) ||
-      isSuccessTask.twitter ||
-      isSuccessTask.telegram ||
-      isSuccessTask.wallet ||
-      isSuccessTask.deposit ||
-      isSuccessTask.freeze
+      address &&
+      isConnected &&
+      (isOpenTooltip ||
+        isSuccessTask.twitter ||
+        isSuccessTask.telegram ||
+        isSuccessTask.wallet ||
+        isSuccessTask.deposit ||
+        isSuccessTask.freeze)
     ) {
       const fetchTasks = async () => {
         setIsTasksLoading(true);
@@ -171,11 +207,13 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
             type: getTaskTypeByIndex(index)
           }))
         );
+        setHasTasksData(true);
       };
       fetchTasks();
     }
   }, [
     address,
+    isConnected,
     isOpenTooltip,
     isSuccessTask.twitter,
     isSuccessTask.telegram,
@@ -190,29 +228,49 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     handler: () => setIsOpenTooltip(false)
   });
 
-  const getPointsOfTask = (index: number) => {
-    if (index === 2) return 30;
-    if (index === 3) return 50;
-    if (index === 4) return 100;
+  const getPointsOfTask = (type: TaskType) => {
+    if (type === "wallet") return 30;
+    if (type === "deposit") return 50;
+    if (type === "freeze") return 100;
+    if (type === "frax") return 500;
     return 10;
   };
 
   const onCompleteTask = (index: number) => {
-    const task = tasks[index];
+    if (address) {
+      const task = tasks[index];
 
-    setLoadingTask(prev => ({ ...prev, [task.type]: true }));
+      setLoadingTask(prev => ({ ...prev, [task.type]: true }));
 
-    completeTask(address, task.name).finally(() => {
-      setLoadingTask(prev => ({ ...prev, [task.type]: false }));
-      setIsSuccessTask(prev => ({ ...prev, [task.type]: true }));
-    });
+      completeTask(address, task.name).finally(() => {
+        setLoadingTask(prev => ({ ...prev, [task.type]: false }));
+        setIsSuccessTask(prev => ({ ...prev, [task.type]: true }));
+      });
+    }
   };
 
+  const connectBtn = {
+    title: "Connect",
+    loading: false,
+    onClick: () => {
+      // @ts-ignore
+      openModal({ type: ModalEnum.ConnectWallet });
+    }
+  };
+
+
   const getButtonProps = (
+    type: TaskType,
     index: number
   ): { title: string; loading: boolean; onClick: VoidFunction } => {
-    if (index === 1)
-      return isTelegramChecked
+    if (type === "wallet")
+      return isConnected
+        ? { title: "Claim", loading: loadingTask.wallet, onClick: () => onCompleteTask(index) }
+        : connectBtn;
+    if (type === "telegram")
+      return !isConnected
+        ? connectBtn
+        : isTelegramChecked
         ? { title: "Claim", loading: loadingTask.telegram, onClick: () => onCompleteTask(index) }
         : {
             title: "Join",
@@ -222,10 +280,10 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
               setIsTelegramChecked(true);
             }
           };
-    if (index === 2)
-      return { title: "Claim", loading: loadingTask.wallet, onClick: () => onCompleteTask(index) };
-    if (index === 3)
-      return isMadeDeposit
+    if (type === "deposit")
+      return !isConnected
+        ? connectBtn
+        : isMadeDeposit
         ? { title: "Claim", loading: loadingTask.deposit, onClick: () => onCompleteTask(index) }
         : {
             title: "Deposit",
@@ -235,8 +293,10 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
               scrollToElement("pools");
             }
           };
-    if (index === 4)
-      return isMadeDeposit
+    if (type === "freeze")
+      return !isConnected
+        ? connectBtn
+        : isMadeDeposit
         ? { title: "Claim", loading: loadingTask.freeze, onClick: () => onCompleteTask(index) }
         : {
             title: "Deposit",
@@ -246,7 +306,25 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
               scrollToElement("pools");
             }
           };
-    return isTwitterChecked
+    if (type === "frax") {
+      return !isConnected
+        ? connectBtn
+        : hasBalance
+        ? {
+            title: "Deposit",
+            loading: false,
+            onClick: () => {
+              openModal({
+                type: ModalEnum.Deposit,
+                props: { pool: fraxPool, type: ModalEnum.Deposit }
+              });
+            }
+          }
+        : { title: "Claim", loading: false, onClick: () => onCompleteTask(index) };
+    }
+    return !isConnected
+      ? connectBtn
+      : isTwitterChecked
       ? { title: "Claim", loading: loadingTask.twitter, onClick: () => onCompleteTask(index) }
       : {
           title: "Follow",
@@ -279,13 +357,34 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
       </PopoverTrigger>
       <PopoverContent
         width="100%"
-        maxW={is600Up ? 510 : 350}
+        maxW={is700Up ? 510 : "calc(100vw - 24px)"}
         border="none"
         ref={tooltipRef}
         ml={is600Up ? 3 : 0}
+        mx={is700Up ? 0 : 3}
       >
-        <Flex flexDir="column" gap="24px" padding="12px" bg="#17191C" borderRadius="8px">
+        <Flex
+          flexDir="column"
+          gap="24px"
+          padding="12px"
+          bg="#17191C"
+          borderRadius="8px"
+          position="relative"
+        >
           <Image src="/assets/image/TasksPoints.png" />
+          <IconButton
+            aria-label="close"
+            icon={<Icon name={ICON_NAMES.close} />}
+            onClick={() => setIsOpenTooltip(false)}
+            pos="absolute"
+            top={5}
+            right={5}
+            bg="#17191C"
+            boxSize="32px"
+            padding="4px"
+            borderRadius="8px"
+            minW={0}
+          />
           <Flex flexDir="column" gap="12px">
             <Text fontSize="22px" fontWeight={500}>
               Rebalance Incentives Campaign
@@ -306,7 +405,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
                 </Text>
               )}
             </Flex>
-            {isTasksLoading ? (
+            {!hasTasksData ? (
               Array.from({ length: 5 })
                 .fill(0)
                 .map((_, index) => (
@@ -319,8 +418,8 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
                 {tasks.map((task, index) => (
                   <Task
                     {...task}
-                    pointsQty={getPointsOfTask(index)}
-                    ButtonProps={getButtonProps(index)}
+                    pointsQty={getPointsOfTask(task.type)}
+                    ButtonProps={getButtonProps(task.type, index)}
                   />
                 ))}
               </Flex>

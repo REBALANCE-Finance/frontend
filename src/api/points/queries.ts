@@ -49,7 +49,11 @@ export const getTasks = async (address: string) => {
     }
 
     const data: Task[] = await response.json();
-    return data;
+    return data.toSorted((a, b) => {
+      if (a.name === "Connect wallet") return -1;
+      if (b.name === "Connect wallet") return 1;
+      return 0;
+    });
   } catch (error: any) {
     console.error(`Failed to fetch tasks: ${error.message}`);
     throw error;

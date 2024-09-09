@@ -13,7 +13,8 @@ export enum ModalEnum {
   Repay = "Repay",
   TxSuccess = "TxSuccess",
   TxError = "TxError",
-  Freeze = "Freeze"
+  Freeze = "Freeze",
+  ConnectWallet = "ConnectWallet"
 }
 
 export enum ModalContextEnum {

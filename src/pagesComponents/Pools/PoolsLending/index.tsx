@@ -88,23 +88,36 @@ export const PoolsLending = ({
                           {item.token} Low-Risk Yield Strategy Higher APY is achieved by automatic
                           rebalance between following pools:
                         </span>
-                        {(item.token === "wETH" || item.token === "USDC.e") && (
-                          <span>
-                            <br />- Silo
-                          </span>
+                        {item.token === "FRAX" ? (
+                          <>
+                            <span>
+                              <br />- Lodestar
+                            </span>
+                            <span>
+                              <br />- AAVE
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            {(item.token === "wETH" || item.token === "USDC.e") && (
+                              <span>
+                                <br />- Silo
+                              </span>
+                            )}
+                            <span>
+                              <br />- Dolomite
+                            </span>
+                            <span>
+                              <br />- AAVE v3
+                            </span>
+                            <span>
+                              <br />- Compound
+                            </span>
+                            <span>
+                              <br />- Radiant v2
+                            </span>
+                          </>
                         )}
-                        <span>
-                          <br />- Dolomite
-                        </span>
-                        <span>
-                          <br />- AAVE v3
-                        </span>
-                        <span>
-                          <br />- Compound
-                        </span>
-                        <span>
-                          <br />- Radiant v2
-                        </span>
                       </>
                     }
                   >
