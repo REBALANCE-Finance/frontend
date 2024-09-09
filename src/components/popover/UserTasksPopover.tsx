@@ -174,16 +174,12 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     }
   }, [pools, isFetchedPools, isOpenTooltip]);
 
-  const getTaskTypeByIndex = (index: number) => {
-    // if (index === 0) return "wallet";
-    // if (index === 2) return "telegram";
-    // if (index === 3) return "deposit";
-    // if (index === 4) return "freeze";
-
-    // return "twitter";
-    if (index === 1) return "frax";
-    if (index === 2) return "twitter";
-    if (index === 3) return "telegram";
+  const getTaskTypeByName = (name: string) => {
+    if (name === "Follow us on Twitter") return "twitter";
+    if (name === "Join us on Telegram") return "telegram";
+    if (name === "Make a deposit") return "deposit";
+    if (name === "Freeze deposit to farm points") return "freeze";
+    if (name === "Deposit & freeze any FRAX amount") return "frax";
     return "wallet";
   };
 
@@ -202,9 +198,9 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
         setIsTasksLoading(true);
         const tasks = await getTasks(address).finally(() => setIsTasksLoading(false));
         setTasks(
-          tasks.map((item, index) => ({
+          tasks.map(item => ({
             ...item,
-            type: getTaskTypeByIndex(index)
+            type: getTaskTypeByName(item.name)
           }))
         );
         setHasTasksData(true);
@@ -258,7 +254,6 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     }
   };
 
-
   const getButtonProps = (
     type: TaskType,
     index: number
@@ -310,17 +305,17 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
       return !isConnected
         ? connectBtn
         : hasBalance
-        ? {
-            title: "Deposit",
-            loading: false,
-            onClick: () => {
-              openModal({
-                type: ModalEnum.Deposit,
-                props: { pool: fraxPool, type: ModalEnum.Deposit }
-              });
-            }
+        ? { title: "Claim", loading: false, onClick: () => onCompleteTask(index) }
+        : {
+          title: "Deposit",
+          loading: false,
+          onClick: () => {
+            openModal({
+              type: ModalEnum.Deposit,
+              props: { pool: fraxPool, type: ModalEnum.Deposit }
+            });
           }
-        : { title: "Claim", loading: false, onClick: () => onCompleteTask(index) };
+        } ;
     }
     return !isConnected
       ? connectBtn
