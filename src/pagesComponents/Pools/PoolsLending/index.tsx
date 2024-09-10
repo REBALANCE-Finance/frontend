@@ -153,7 +153,7 @@ export const PoolsLending = ({
                           <Icon name="COMPOUND" width="14px" height="14px" />
                         )}
                       </Box>
-                      <Text textStyle="textMono16">
+                      <Text textStyle="textMono16" ml={2}>
                         {loading || error ? (
                           <Skeleton height="20px" width="50px" />
                         ) : (
