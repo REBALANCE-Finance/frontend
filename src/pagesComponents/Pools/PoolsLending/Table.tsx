@@ -10,7 +10,8 @@ import {
   Tr,
   Text,
   Skeleton,
-  useMediaQuery
+  useMediaQuery,
+  Image
 } from "@chakra-ui/react";
 import { IPoolData } from "../types";
 import { Risk } from "@/components/risk";
@@ -104,9 +105,34 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
               <Th p="24px 12px 24px 32px">
                 <Flex gap={1.5} alignItems="center">
                   <TokenIcon name={pool.token} size="34px" sizeIcon="18px" />
-                  <Text textStyle="h2" fontWeight={500} color="white">
-                    {pool.token}
-                  </Text>
+                  <Flex flexDir="column" gap={2}>
+                    <Text textStyle="h2" fontWeight={500} color="white">
+                      {pool.token}
+                    </Text>
+                    {pool.token === "FRAX" && (
+                      <Flex
+                        justify="center"
+                        alignItems="center"
+                        gap="4px"
+                        padding="4px 8px"
+                        borderRadius="100px"
+                        bg="greenAlpha.100"
+                        pointerEvents="none"
+                        userSelect="none"
+                      >
+                        <Image src="/assets/icons/arbitrum-icon.svg" h="16px" w="16px" alt="arb" />
+                        <Text
+                          textStyle="text14"
+                          color="black.100"
+                          fontWeight={700}
+                          lineHeight="14px"
+                          textTransform="initial"
+                        >
+                          ARB incentive
+                        </Text>
+                      </Flex>
+                    )}
+                  </Flex>
                 </Flex>
               </Th>
               <Th p="24px 12px">

@@ -1,4 +1,13 @@
-import { Card as ChakraCard, CardBody, CardFooter, CardHeader, Flex, Text } from "@chakra-ui/react";
+import {
+  Card as ChakraCard,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Flex,
+  Text,
+  Box,
+  Image
+} from "@chakra-ui/react";
 import React, { FC } from "react";
 
 import { TOKEN_ICONS } from "../../consts";
@@ -49,7 +58,39 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading }) => {
               >
                 <Flex alignItems="center" gap="12px">
                   <TokenIcon name={itemCard?.token} />
-                  <Text textStyle="h2">{itemCard?.token}</Text>
+                  <Flex flexDir="column" gap={2}>
+                    <Text textStyle="h2">{itemCard?.token}</Text>
+
+                    {itemCard.token === "FRAX" && (
+                      <Flex gap={1} alignItems="center">
+                        <Flex
+                          justify="center"
+                          alignItems="center"
+                          gap="4px"
+                          padding="4px 8px"
+                          borderRadius="100px"
+                          bg="greenAlpha.100"
+                          pointerEvents="none"
+                          userSelect="none"
+                        >
+                          <Image
+                            src="/assets/icons/arbitrum-icon.svg"
+                            h="16px"
+                            w="16px"
+                            alt="arb"
+                          />
+                          <Text
+                            textStyle="text14"
+                            color="black.100"
+                            fontWeight={700}
+                            lineHeight="14px"
+                          >
+                            ARB incentive
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    )}
+                  </Flex>
                 </Flex>
                 {elem.proccess && elem.proccess({ item: itemCard })}
               </CardHeader>

@@ -169,7 +169,6 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
             <Flex gap="8px" alignItems="center">
               <FormLabel
-                htmlFor="freeze"
                 mb="0"
                 borderBottom="1px dashed #fff"
                 onClick={() => setIsOpenTooltip(prev => !prev)}

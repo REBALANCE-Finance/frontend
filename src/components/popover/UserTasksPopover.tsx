@@ -50,12 +50,14 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     wallet: boolean;
     deposit: boolean;
     freeze: boolean;
+    frax: boolean;
   }>({
     twitter: false,
     telegram: false,
     wallet: false,
     deposit: false,
-    freeze: false
+    freeze: false,
+    frax: false
   });
   const [isSuccessTask, setIsSuccessTask] = useState<{
     twitter: boolean;
@@ -63,12 +65,14 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     wallet: boolean;
     deposit: boolean;
     freeze: boolean;
+    frax: boolean;
   }>({
     twitter: false,
     telegram: false,
     wallet: false,
     deposit: false,
-    freeze: false
+    freeze: false,
+    frax: false
   });
   const tooltipRef = useRef(null);
   const { hasBalance } = useBalanceOfAssets(poolTokens, address);
@@ -101,6 +105,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     if (!isOpenTooltip) {
       setTasks([]);
       setPoolTokens([]);
+      setHasTasksData(false);
     }
   }, [isOpenTooltip]);
 
@@ -111,7 +116,8 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
       isSuccessTask.telegram ||
       isSuccessTask.wallet ||
       isSuccessTask.deposit ||
-      isSuccessTask.freeze
+      isSuccessTask.freeze ||
+      isSuccessTask.frax
     ) {
       timer = setTimeout(() => {
         setIsSuccessTask({
@@ -119,7 +125,8 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
           telegram: false,
           wallet: false,
           deposit: false,
-          freeze: false
+          freeze: false,
+          frax: false
         });
       }, 1000);
     }
@@ -130,7 +137,8 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     isSuccessTask.telegram,
     isSuccessTask.wallet,
     isSuccessTask.deposit,
-    isSuccessTask.freeze
+    isSuccessTask.freeze,
+    isSuccessTask.frax
   ]);
 
   useEffect(() => {
@@ -141,7 +149,8 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
         isSuccessTask.telegram ||
         isSuccessTask.wallet ||
         isSuccessTask.deposit ||
-        isSuccessTask.freeze)
+        isSuccessTask.freeze ||
+        isSuccessTask.frax)
     ) {
       const fetchPoints = async () => {
         setIsLoading(true);
@@ -157,7 +166,8 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     isSuccessTask.telegram,
     isSuccessTask.wallet,
     isSuccessTask.deposit,
-    isSuccessTask.freeze
+    isSuccessTask.freeze,
+    isSuccessTask.frax
   ]);
 
   useEffect(() => {
@@ -200,7 +210,8 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
         setTasks(
           tasks.map(item => ({
             ...item,
-            type: getTaskTypeByName(item.name)
+            type: getTaskTypeByName(item.name),
+            limited: item.name === "Deposit & freeze any FRAX amount" ? true : false
           }))
         );
         setHasTasksData(true);
@@ -305,17 +316,17 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
       return !isConnected
         ? connectBtn
         : hasBalance
-        ? { title: "Claim", loading: false, onClick: () => onCompleteTask(index) }
+        ? { title: "Claim", loading: loadingTask.frax, onClick: () => onCompleteTask(index) }
         : {
-          title: "Deposit",
-          loading: false,
-          onClick: () => {
-            openModal({
-              type: ModalEnum.Deposit,
-              props: { pool: fraxPool, type: ModalEnum.Deposit }
-            });
-          }
-        } ;
+            title: "Deposit",
+            loading: !isFetchedPools,
+            onClick: () => {
+              openModal({
+                type: ModalEnum.Deposit,
+                props: { pool: fraxPool, type: ModalEnum.Deposit }
+              });
+            }
+          };
     }
     return !isConnected
       ? connectBtn

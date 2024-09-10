@@ -12,6 +12,7 @@ export interface IAreaChartProps extends IChartProps {
   tooltipName?: boolean;
   isLending?: boolean;
   isConnected?: boolean;
+  showRightAxis?: boolean;
 }
 
 export interface IBarChart extends IChartProps {
