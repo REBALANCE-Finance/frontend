@@ -14,6 +14,7 @@ import { TOKEN_ICONS } from "../../consts";
 import { IRowCard, RowCardProccessType } from "../../pagesComponents/Pools/types";
 import { DefaultDataType } from "../../types";
 import { TokenIcon } from "../token-icon";
+import ArbIncentive from "../badge/ArbIncentive";
 
 interface ICardProps {
   rowCard: IRowCard[];
@@ -63,31 +64,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading }) => {
 
                     {itemCard.token === "FRAX" && (
                       <Flex gap={1} alignItems="center">
-                        <Flex
-                          justify="center"
-                          alignItems="center"
-                          gap="4px"
-                          padding="4px 8px"
-                          borderRadius="100px"
-                          bg="greenAlpha.100"
-                          pointerEvents="none"
-                          userSelect="none"
-                        >
-                          <Image
-                            src="/assets/icons/arbitrum-icon.svg"
-                            h="16px"
-                            w="16px"
-                            alt="arb"
-                          />
-                          <Text
-                            textStyle="text14"
-                            color="black.100"
-                            fontWeight={700}
-                            lineHeight="14px"
-                          >
-                            ARB incentive
-                          </Text>
-                        </Flex>
+                        <ArbIncentive size="small" />
                       </Flex>
                     )}
                   </Flex>

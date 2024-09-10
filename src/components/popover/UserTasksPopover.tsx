@@ -39,7 +39,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   const [poolTokens, setPoolTokens] = useState<
     { contractAddress: `0x${string}`; decimals: number }[]
   >([]);
-  const [isOpenTooltip, setIsOpenTooltip] = useState(true);
+  const [isOpenTooltip, setIsOpenTooltip] = useState(false);
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [isTwitterChecked, setIsTwitterChecked] = useState(false);
   const [isTelegramChecked, setIsTelegramChecked] = useState(false);
@@ -81,6 +81,14 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   const { openModal } = useStore("modalStore");
 
   const fraxPool = pools.find(pool => pool.token === "FRAX");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsOpenTooltip(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (isConnected) {
@@ -363,11 +371,10 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
       </PopoverTrigger>
       <PopoverContent
         width="100%"
-        maxW={is700Up ? 510 : "calc(100vw - 24px)"}
+        maxW={is700Up ? 510 : "100vw"}
         border="none"
         ref={tooltipRef}
-        ml={is600Up ? 3 : 0}
-        mx={is700Up ? 0 : 3}
+        ml={is700Up ? 3 : 0}
       >
         <Flex
           flexDir="column"

@@ -25,6 +25,7 @@ import { WithdrawLendingButton } from "@/features/actions/deposit-or-withdraw-bu
 import { generatePath } from "react-router-dom";
 import { ROUTE_PATHS } from "@/consts/routes";
 import { useRouter } from "next/navigation";
+import ArbIncentive from "@/components/badge/ArbIncentive";
 
 interface PoolsLendingTableProps {
   pools: IPoolData[];
@@ -109,29 +110,7 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
                     <Text textStyle="h2" fontWeight={500} color="white">
                       {pool.token}
                     </Text>
-                    {pool.token === "FRAX" && (
-                      <Flex
-                        justify="center"
-                        alignItems="center"
-                        gap="4px"
-                        padding="4px 8px"
-                        borderRadius="100px"
-                        bg="greenAlpha.100"
-                        pointerEvents="none"
-                        userSelect="none"
-                      >
-                        <Image src="/assets/icons/arbitrum-icon.svg" h="16px" w="16px" alt="arb" />
-                        <Text
-                          textStyle="text14"
-                          color="black.100"
-                          fontWeight={700}
-                          lineHeight="14px"
-                          textTransform="initial"
-                        >
-                          ARB incentive
-                        </Text>
-                      </Flex>
-                    )}
+                    {pool.token === "FRAX" && <ArbIncentive size="small" />}
                   </Flex>
                 </Flex>
               </Th>
