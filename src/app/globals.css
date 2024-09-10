@@ -34,3 +34,8 @@ a {
   background-color: darkgray; /* Customize the scrollbar track color */
   border-radius: 8px;
 }
+
+.chakra-step__separator[data-status="complete"] {
+  background: #2e3238 !important;
+  color: #9fa2a8;
+}

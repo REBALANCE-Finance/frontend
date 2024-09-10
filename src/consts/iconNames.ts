@@ -53,6 +53,7 @@ export const ICON_NAMES: { [key: string]: string } = {
   twitter: "twitter",
   update: "update",
   USDC: "USDC",
+  USDCe: "USDC",
   USDT: "USDT",
   AAVE: "AAVE",
   COMPOUND: "COMPOUND",
@@ -65,5 +66,8 @@ export const ICON_NAMES: { [key: string]: string } = {
   WETH: "WETH",
   worning: "worning",
   tiles: "tiles",
-  LODESTAR: "LODESTAR"
-};
+  LODESTAR: "LODESTAR",
+  completedStep: "completed-step",
+  uncompletedStep: "uncompleted-step",
+  help: "help"
+} as const;

@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ABI_REBALANCE } from "../abi/rebalance";
-import { ARB_CONFIRMATIONS_COUNT, LOCAL_STORAGE_KEYS } from "@/consts";
+import INTEREST_LOCKER_ABI from "../abi/InterestLocker.json";
+import {
+  ARB_CONFIRMATIONS_COUNT,
+  LOCAL_STORAGE_KEYS,
+  LOCK_TOKENS_CONTRACT_ADDRESS
+} from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
 
-export const useDeposit = (
+export const useLock = (
   poolAddress: `0x${string}`,
   tokenAddress: `0x${string}`,
   onClose: VoidFunction,
-  onRetry?: VoidFunction,
-  needClose?: boolean
+  onRetry?: VoidFunction
 ) => {
   const [isLoading, setLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
@@ -21,10 +25,13 @@ export const useDeposit = (
   const isActiveTutorial = !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial) || false;
   const { writeContractAsync } = useWriteContract();
   const { data: allowance } = useReadContract({
-    address: tokenAddress,
+    address: poolAddress,
     abi: ABI_REBALANCE,
     functionName: "allowance",
-    args: [address ?? "0x", poolAddress]
+    args: [address ?? "0x", LOCK_TOKENS_CONTRACT_ADDRESS],
+    query: {
+      refetchInterval: 3000
+    }
   });
 
   const {
@@ -39,10 +46,8 @@ export const useDeposit = (
 
   useEffect(() => {
     if (isReceiptSuccess && txHash) {
-      if (needClose) {
-        onClose();
-      }
       setIsSuccess(true);
+      onClose();
       openModal({
         type: ModalContextEnum.Success,
         props: {
@@ -61,19 +66,29 @@ export const useDeposit = (
     }
   }, [isReceiptSuccess, isReceiptError, txHash, receiptError]);
 
-  const deposit = async ({ value, address }: { value: bigint; address: `0x${string}` }) => {
+  const lockTokens = async ({
+    tokenAddress,
+    amount,
+    durationInSeconds
+  }: {
+    tokenAddress: `0x${string}`;
+    amount: bigint;
+    durationInSeconds: bigint;
+  }) => {
     try {
       setLoading(true);
+
       const tx = await writeContractAsync({
-        address: poolAddress,
-        abi: ABI_REBALANCE,
-        functionName: "deposit",
-        args: [value, address]
+        address: LOCK_TOKENS_CONTRACT_ADDRESS,
+        abi: INTEREST_LOCKER_ABI,
+        functionName: "lockTokens",
+        args: [tokenAddress, amount, durationInSeconds]
       });
+
       setTxHash(tx);
       setLoading(false);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
       setLoading(false);
     }
   };
@@ -88,7 +103,7 @@ export const useDeposit = (
     try {
       setLoading(true);
       await writeContractAsync({
-        address: tokenAddress,
+        address: poolAddress,
         abi: ABI_REBALANCE,
         functionName: "approve",
         args: [poolAddress, value]
@@ -102,7 +117,7 @@ export const useDeposit = (
 
   return {
     allowance,
-    deposit,
+    lockTokens,
     approve,
     isLoading: isLoading || waitingReceipt,
     isSuccess

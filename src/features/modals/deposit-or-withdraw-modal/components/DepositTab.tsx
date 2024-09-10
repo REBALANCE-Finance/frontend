@@ -9,7 +9,8 @@ import {
   Switch,
   Text,
   useOutsideClick,
-  Image
+  Image,
+  Link
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -27,6 +28,18 @@ import { FREEZE_DATES } from "@/components/data-switcher/utils";
 import { getPredictedPoints } from "@/api/points/queries";
 import useDebounce from "@/hooks/useDebounce";
 import { Tooltip } from "@/components/tooltip";
+import Stepper from "@/components/stepper";
+import {
+  ARB_TOKEN_ADDRESS,
+  DEPOSIT_STEPS_BASIC,
+  DEPOSIT_STEPS_WITH_FREEZE,
+  FRAX_TOKEN_ADDRESS,
+  ICON_NAMES,
+  LOCK_TOKENS_CONTRACT_ADDRESS,
+  ROUTE_PATHS
+} from "@/consts";
+import Icon from "@/components/icon";
+import { useLock } from "@/hooks/useLock";
 
 interface IDepositTabProps {
   pool: any;
@@ -44,28 +57,6 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     token: pool.tokenAddress
   });
   const tooltipRef = useRef();
-
-  useOutsideClick({
-    // @ts-ignore
-    ref: tooltipRef,
-    handler: () => setIsOpenTooltip(false)
-  });
-
-  const onDeposit = () => {
-    if (address) {
-      deposit({
-        value: parseBigNumber(formik.values.deposit, pool.decimals),
-        address
-      });
-    }
-  };
-
-  const { allowance, deposit, isLoading } = useDeposit(
-    pool.rebalancerAddress,
-    pool.tokenAddress,
-    onClose,
-    onDeposit
-  );
 
   const depositSchema = Yup.object().shape({
     deposit: Yup.string().test("min-amount", `Amount must be at least 1$`, value => {
@@ -97,6 +88,57 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
 
   const debouncedDeposit = useDebounce(formik.values.deposit, 500);
 
+  useOutsideClick({
+    // @ts-ignore
+    ref: tooltipRef,
+    handler: () => setIsOpenTooltip(false)
+  });
+
+  const getSecondsFromFreezeDate = (freezeDate: string) => {
+    const freezePeriod = +freezeDate.slice(0, -1);
+
+    return freezePeriod * 24 * 60 * 60;
+  };
+
+  const onDeposit = () => {
+    if (address) {
+      deposit({
+        value: parseBigNumber(formik.values.deposit, pool.decimals),
+        address
+      });
+    }
+  };
+
+  const onLock = () => {
+    if (address) {
+      lockTokens({
+        tokenAddress: pool.rebalancerAddress,
+        amount: parseBigNumber(formik.values.deposit, pool.decimals),
+        durationInSeconds: BigInt(getSecondsFromFreezeDate(formik.values.freezePeriod))
+      });
+    }
+  };
+
+  const {
+    allowance,
+    deposit,
+    isLoading: isLoadingDeposit,
+    isSuccess: isSuccessDeposit
+  } = useDeposit(
+    pool.rebalancerAddress,
+    pool.tokenAddress,
+    onClose,
+    onDeposit,
+    !formik.values.freeze
+  );
+
+  const {
+    allowance: lockAllowance,
+    lockTokens,
+    isLoading: isLockLoading,
+    isSuccess: isSuccessLock
+  } = useLock(pool.rebalancerAddress, pool.tokenAddress, onClose, onLock);
+
   useEffect(() => {
     if (formik.values.deposit) {
       const checkNeedsApproval = () => {
@@ -106,7 +148,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       };
       checkNeedsApproval();
     }
-  }, [allowance, formik.values.deposit, pool.decimals]);
+  }, [allowance, formik.values.deposit, pool.decimals, isSuccessDeposit]);
 
   useEffect(() => {
     if (formik.values.freeze) {
@@ -137,6 +179,99 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     return `+ ${formatNumber(points)} points`;
   };
 
+  const getActiveStepIndex = () => {
+    if (needsApproval && !isSuccessDeposit) {
+      return 0; // Needs approval but no deposit success
+    }
+
+    if (!needsApproval && !isSuccessDeposit) {
+      return 1; // Approval done but deposit not successful
+    }
+
+    if (
+      formik.values.freeze &&
+      isSuccessDeposit &&
+      (!lockAllowance ||
+        BigInt(lockAllowance) < BigInt(parseBigNumber(formik.values.deposit, pool.decimals)))
+    ) {
+      return 2; // Freeze option selected, deposit success but no lock allowance
+    }
+
+    if (
+      formik.values.freeze &&
+      lockAllowance &&
+      BigInt(lockAllowance) >= BigInt(parseBigNumber(formik.values.deposit, pool.decimals)) &&
+      isSuccessDeposit
+    ) {
+      return 3; // Freeze option selected, lock allowance exists, deposit success
+    }
+
+    if (formik.values.freeze && isSuccessLock) {
+      return 4; // Freeze option selected and lock success
+    }
+
+    return 0; // Default case
+  };
+
+  const getDepositTabButton = () => {
+    if (isLoadingDeposit || isLockLoading) {
+      return <Button variant="primaryFilled">Processing...</Button>;
+    }
+
+    if (needsApproval && !isConfirmedApprove && !isSuccessDeposit) {
+      return (
+        <ApproveBtn
+          tokenAddress={pool.tokenAddress}
+          poolAddress={pool.rebalancerAddress}
+          value={parseBigNumber(formik.values.deposit, pool.decimals)}
+          setConfirmedApprove={setConfirmedApprove}
+        />
+      );
+    }
+
+    if (!isSuccessDeposit) {
+      return (
+        <DepositButton
+          variant="primaryFilled"
+          isDisabled={!formik.values.deposit || !formik.isValid || isLoadingDeposit}
+          onDeposit={onDeposit}
+        />
+      );
+    }
+
+    if (
+      formik.values.freeze &&
+      (!lockAllowance ||
+        BigInt(lockAllowance) < BigInt(parseBigNumber(formik.values.deposit, pool.decimals))) &&
+      isSuccessDeposit
+    ) {
+      return (
+        <ApproveBtn
+          tokenAddress={pool.rebalancerAddress}
+          poolAddress={LOCK_TOKENS_CONTRACT_ADDRESS}
+          value={parseBigNumber(formik.values.deposit, pool.decimals)}
+          setConfirmedApprove={setConfirmedApprove}
+        />
+      );
+    }
+
+    if (
+      formik.values.freeze &&
+      lockAllowance &&
+      BigInt(lockAllowance) >= BigInt(parseBigNumber(formik.values.deposit, pool.decimals)) &&
+      isSuccessDeposit
+    ) {
+      return (
+        <DepositButton
+          variant="primaryFilled"
+          isDisabled={!formik.values.deposit || !formik.isValid || isLoadingDeposit}
+          onDeposit={onLock}
+          title="Lock tokens"
+        />
+      );
+    }
+  };
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Flex direction="column" gap="24px">
@@ -156,11 +291,29 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
             <Text textStyle="textMono16">
               ${formatNumber(formatBigNumber(balanceToken?.value, balanceToken?.decimals))}
             </Text>
-            <Button color="green.100" onClick={setMax} isDisabled={isLoading}>
+            <Button color="green.100" onClick={setMax} isDisabled={isLoadingDeposit}>
               Max
             </Button>
           </Flex>
         </HStack>
+
+        <Flex gap={2} alignItems="center">
+          <Icon name={ICON_NAMES.help} size="sm" />
+          <Flex textStyle="text14" gap={1}>
+            <Text color="black.5">Don't have {pool.token}? Use</Text>
+            <Link
+              href={ROUTE_PATHS.swapPage(
+                ARB_TOKEN_ADDRESS,
+                pool.token === "FRAX" ? FRAX_TOKEN_ADDRESS : pool.tokenAddress
+              )}
+              target="_blank"
+              color="#4cfd95"
+              textDecor="underline"
+            >
+              our zero-fee swap
+            </Link>
+          </Flex>
+        </Flex>
 
         <Divider borderColor="black.90" />
 
@@ -199,52 +352,47 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
         </FormControl>
 
-        <Flex justify="space-between" gap={4} alignItems="center">
-          <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>Choose freeze period</Text>
-          <DataSwitcher
-            data={FREEZE_DATES}
-            value={formik.values.freezePeriod}
-            onChange={value => formik.setFieldValue("freezePeriod", value)}
-            isDisabled={!formik.values.freeze}
-          />
-        </Flex>
-
-        <Flex justify="space-between" gap={4} alignItems="center">
-          <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
-            Projected point earnings
-          </Text>
-          <Text color={!formik.values.freeze ? "darkgray" : "greenAlpha.100"}>
-            {getPointsString(pointsQty)}
-          </Text>
-        </Flex>
+        {formik.values.freeze && (
+          <>
+            <Flex justify="space-between" gap={4} alignItems="center">
+              <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
+                Choose freeze period
+              </Text>
+              <DataSwitcher
+                data={FREEZE_DATES}
+                value={formik.values.freezePeriod}
+                onChange={value => formik.setFieldValue("freezePeriod", value)}
+                isDisabled={!formik.values.freeze}
+              />
+            </Flex>
+            <Flex justify="space-between" gap={4} alignItems="center">
+              <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
+                Projected point earnings
+              </Text>
+              <Text color={!formik.values.freeze ? "darkgray" : "greenAlpha.100"}>
+                {getPointsString(pointsQty)}
+              </Text>
+            </Flex>
+          </>
+        )}
 
         <Divider borderColor="black.90" />
 
         <HStack justify="space-between">
           <Text color="black.0">30D average APY</Text>
-          <Text textStyle="textMono16">{formatPercent(pool.avgApr)}</Text>
+          <Text textStyle="textMono16">{formatPercent(pool.avgApr, true)}</Text>
         </HStack>
 
         <HStack justify="space-between">
           <Text color="black.0">Gas fee</Text>
           <Text textStyle="textMono16">{formatNumber(0.000005)} (ETH)</Text>
         </HStack>
-        {isLoading ? (
-          <Button variant="primaryFilled">Processing...</Button>
-        ) : needsApproval && !isConfirmedApprove ? (
-          <ApproveBtn
-            tokenAddress={pool.tokenAddress}
-            poolAddress={pool.rebalancerAddress}
-            value={parseBigNumber(formik.values.deposit, pool.decimals)}
-            setConfirmedApprove={setConfirmedApprove}
-          />
-        ) : (
-          <DepositButton
-            variant="primaryFilled"
-            isDisabled={!formik.values.deposit || !formik.isValid || isLoading}
-            onDeposit={onDeposit}
-          />
-        )}
+        {getDepositTabButton()}
+
+        <Stepper
+          steps={formik.values.freeze ? DEPOSIT_STEPS_WITH_FREEZE : DEPOSIT_STEPS_BASIC}
+          activeIndex={getActiveStepIndex()}
+        />
       </Flex>
     </form>
   );

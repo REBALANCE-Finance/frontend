@@ -18,10 +18,12 @@ export const formatNumber = (value: string | number) => {
   }
 };
 
-export const formatPercent = (value: string | number) => {
+export const formatPercent = (value: string | number, noPlus?: boolean) => {
   if (value === undefined) return "0";
   const numValue = Number(value);
   if (numValue <= 0) return `${numeral(numValue).format("0.[0]")}%`;
+  if (noPlus) return `${numeral(numValue).format("0.[0]")}%`;
+
   return `+${numeral(numValue).format("0.[0]")}%`;
 };
 

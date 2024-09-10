@@ -12,7 +12,13 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { formatNumberWithCommas } from "@/utils/formatNumber";
-import { ICON_NAMES, NEW_MOCKED_TASKS, TELEGRAM_FOLLOW_LINK, TWITTER_FOLLOW_URL } from "@/consts";
+import {
+  ICON_NAMES,
+  NEW_MOCKED_TASKS,
+  ROUTE_PATHS,
+  TELEGRAM_FOLLOW_LINK,
+  TWITTER_FOLLOW_URL
+} from "@/consts";
 import { scrollToElement } from "@/utils";
 import Task from "../task";
 import { completeTask, getEarnedPoints, getTasks } from "@/api/points/queries";
@@ -24,12 +30,14 @@ import { ModalEnum } from "@/store/modal/types";
 import { useAccount } from "wagmi";
 import localStore from "@/utils/localStore";
 import Icon from "../icon";
+import { usePathname } from "next/navigation";
 
 type UserTasksPopoverProps = {
   address: `0x${string}`;
 };
 
 const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
+  const pathname = usePathname();
   const { isConnected } = useAccount();
   const { pools, isFetched: isFetchedPools } = useStore("poolsStore");
   const [earnedPoints, setEarnedPoints] = useState(0);
@@ -83,12 +91,22 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   const fraxPool = pools.find(pool => pool.token === "FRAX");
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsOpenTooltip(true);
-    }, 500);
+    if (!isConnected) {
+      setEarnedPoints(0);
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (pathname === ROUTE_PATHS.lending) {
+      timer = setTimeout(() => {
+        setIsOpenTooltip(true);
+      }, 500);
+    }
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (isConnected) {
@@ -151,15 +169,15 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
 
   useEffect(() => {
     if (
-      address &&
-      isConnected &&
-      (isSuccessTask.twitter ||
-        isSuccessTask.telegram ||
-        isSuccessTask.wallet ||
-        isSuccessTask.deposit ||
-        isSuccessTask.freeze ||
-        isSuccessTask.frax)
+      (address && isConnected) ||
+      isSuccessTask.twitter ||
+      isSuccessTask.telegram ||
+      isSuccessTask.wallet ||
+      isSuccessTask.deposit ||
+      isSuccessTask.freeze ||
+      isSuccessTask.frax
     ) {
+      console.log("is running");
       const fetchPoints = async () => {
         setIsLoading(true);
         const points = await getEarnedPoints(address).finally(() => setIsLoading(false));
@@ -324,7 +342,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
       return !isConnected
         ? connectBtn
         : hasBalance
-        ? { title: "Claim", loading: loadingTask.frax, onClick: () => onCompleteTask(index) }
+        ? { title: "Claim", loading: true, onClick: () => {} }
         : {
             title: "Deposit",
             loading: !isFetchedPools,
