@@ -67,7 +67,7 @@ export const PoolsHeader = ({ isTable, onChangeView }: IPoolsHeaderProps) => {
               <Text mr={2} color="darkGray">
                 Running since 19 Jan 2024
               </Text>
-              <Text color="darkGray">Non-upgradable, no-admin contracts</Text>
+              <Text color="darkGray">Non-upgradable, contracts</Text>
             </HStack>
           )}
           {media && <Divider orientation="vertical" />}
