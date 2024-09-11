@@ -49,6 +49,7 @@ interface IDepositTabProps {
 export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const [needsApproval, setNeedsApproval] = useState(false);
   const [isConfirmedApprove, setConfirmedApprove] = useState(false);
+  const [isConfirmedLockApprove, setIsConfirmedLockApprove] = useState(false);
   const [pointsQty, setPointsQty] = useState(0);
   const [isOpenTooltip, setIsOpenTooltip] = useState(false);
   const { address } = useAccount();
@@ -148,7 +149,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       };
       checkNeedsApproval();
     }
-  }, [allowance, formik.values.deposit, pool.decimals, isSuccessDeposit]);
+  }, [allowance, formik.values.deposit, pool.decimals]);
 
   useEffect(() => {
     if (formik.values.freeze) {
@@ -172,7 +173,11 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   }, [formik.values.freeze]);
 
   const setMax = () => {
-    formik.setFieldValue("deposit", formatBigNumber(balanceToken?.value, balanceToken?.decimals));
+    const roundedBalance =
+      Math.round(Number(formatBigNumber(balanceToken?.value, balanceToken?.decimals)) * 100) / 100;
+    const floorBalance = Math.floor(roundedBalance).toString();
+
+    formik.setFieldValue("deposit", floorBalance);
   };
 
   const getPointsString = (points: number) => {
@@ -180,29 +185,19 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   };
 
   const getActiveStepIndex = () => {
-    if (needsApproval && !isSuccessDeposit) {
+    if (!isConfirmedApprove && !isSuccessDeposit) {
       return 0; // Needs approval but no deposit success
     }
 
-    if (!needsApproval && !isSuccessDeposit) {
+    if (isConfirmedApprove && !isSuccessDeposit) {
       return 1; // Approval done but deposit not successful
     }
 
-    if (
-      formik.values.freeze &&
-      isSuccessDeposit &&
-      (!lockAllowance ||
-        BigInt(lockAllowance) < BigInt(parseBigNumber(formik.values.deposit, pool.decimals)))
-    ) {
+    if (formik.values.freeze && isSuccessDeposit && !isSuccessLock && !isConfirmedLockApprove) {
       return 2; // Freeze option selected, deposit success but no lock allowance
     }
 
-    if (
-      formik.values.freeze &&
-      lockAllowance &&
-      BigInt(lockAllowance) >= BigInt(parseBigNumber(formik.values.deposit, pool.decimals)) &&
-      isSuccessDeposit
-    ) {
+    if (formik.values.freeze && isConfirmedLockApprove) {
       return 3; // Freeze option selected, lock allowance exists, deposit success
     }
 
@@ -229,7 +224,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       );
     }
 
-    if (!isSuccessDeposit) {
+    if (!isSuccessDeposit && isConfirmedApprove) {
       return (
         <DepositButton
           variant="primaryFilled"
@@ -239,28 +234,18 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       );
     }
 
-    if (
-      formik.values.freeze &&
-      (!lockAllowance ||
-        BigInt(lockAllowance) < BigInt(parseBigNumber(formik.values.deposit, pool.decimals))) &&
-      isSuccessDeposit
-    ) {
+    if (formik.values.freeze && isSuccessDeposit && !isConfirmedLockApprove) {
       return (
         <ApproveBtn
           tokenAddress={pool.rebalancerAddress}
           poolAddress={LOCK_TOKENS_CONTRACT_ADDRESS}
           value={parseBigNumber(formik.values.deposit, pool.decimals)}
-          setConfirmedApprove={setConfirmedApprove}
+          setConfirmedApprove={setIsConfirmedLockApprove}
         />
       );
     }
 
-    if (
-      formik.values.freeze &&
-      lockAllowance &&
-      BigInt(lockAllowance) >= BigInt(parseBigNumber(formik.values.deposit, pool.decimals)) &&
-      isSuccessDeposit
-    ) {
+    if (formik.values.freeze && isConfirmedLockApprove && isSuccessDeposit) {
       return (
         <DepositButton
           variant="primaryFilled"

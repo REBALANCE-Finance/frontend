@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 import { ABI_REBALANCE } from "../../../../abi/rebalance";
+import { ARB_CONFIRMATIONS_COUNT } from "@/consts";
 
 const ApproveBtn = ({
   value,
@@ -17,7 +18,8 @@ const ApproveBtn = ({
 }) => {
   const { data: hash, writeContract } = useWriteContract();
   const { isSuccess, isLoading } = useWaitForTransactionReceipt({
-    hash
+    hash,
+    confirmations: ARB_CONFIRMATIONS_COUNT
   });
 
   const approve = () => {

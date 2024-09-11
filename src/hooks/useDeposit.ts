@@ -41,14 +41,14 @@ export const useDeposit = (
     if (isReceiptSuccess && txHash) {
       if (needClose) {
         onClose();
+        openModal({
+          type: ModalContextEnum.Success,
+          props: {
+            txHash
+          }
+        });
       }
       setIsSuccess(true);
-      openModal({
-        type: ModalContextEnum.Success,
-        props: {
-          txHash
-        }
-      });
     } else if (isReceiptError && receiptError) {
       openModal({
         type: ModalContextEnum.Reject,

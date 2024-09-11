@@ -109,7 +109,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   }, [pathname]);
 
   useEffect(() => {
-    if (isConnected) {
+    if (isConnected && pathname === ROUTE_PATHS.lending) {
       setIsOpenTooltip(true);
     }
   }, [isConnected]);
@@ -177,7 +177,6 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
       isSuccessTask.freeze ||
       isSuccessTask.frax
     ) {
-      console.log("is running");
       const fetchPoints = async () => {
         setIsLoading(true);
         const points = await getEarnedPoints(address).finally(() => setIsLoading(false));
@@ -294,7 +293,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   const getButtonProps = (
     type: TaskType,
     index: number
-  ): { title: string; loading: boolean; onClick: VoidFunction } => {
+  ): { title: string; loading: boolean; onClick: VoidFunction } | undefined => {
     if (type === "wallet")
       return isConnected
         ? { title: "Claim", loading: loadingTask.wallet, onClick: () => onCompleteTask(index) }
