@@ -9,6 +9,8 @@ import { useAccount } from "wagmi";
 import { useRef, useState } from "react";
 import UserTasksPopover from "@/components/popover/UserTasksPopover";
 import RewardsButton from "@/components/button/RewardsButton";
+import MobileTasksPopover from "@/components/popover/Mobile";
+import { isMobile, isTablet } from "react-device-detect";
 
 export const PoolLayout = ({
   children,
@@ -49,7 +51,8 @@ export const PoolLayout = ({
       {!isDesktop && isLoadingPoints && address && <Skeleton height="16px" width="60px" />}
       {!isDesktop && (
         <Flex gap={6} mt={4} mb={8} alignSelf="center">
-          <UserTasksPopover address={address || MOCKED_ADDRESS} />
+          {!isMobile && <UserTasksPopover address={address || MOCKED_ADDRESS} />}
+          {isMobile && <MobileTasksPopover />}
           <RewardsButton />
         </Flex>
       )}

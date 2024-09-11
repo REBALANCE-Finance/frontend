@@ -1,6 +1,8 @@
 import { ModalProps } from "@chakra-ui/react";
 
 import { ModalContextEnum, ModalEnum } from "../../store/modal/types";
+import { TaskData } from "@/types";
+import { Dispatch, SetStateAction } from "react";
 
 export interface IDefaultModalProps {
   isOpen: ModalProps["isOpen"];
@@ -26,6 +28,13 @@ export interface IErrorModalProps {
 export interface IFreezeModalProps {
   amount: string;
   symbol: string;
+}
+
+export interface ITasksModalProps extends IDefaultModalProps {
+  loadingTask: TaskData;
+  isSuccessTask: TaskData;
+  setLoadingTask: Dispatch<SetStateAction<TaskData>>;
+  setIsSuccessTask: Dispatch<SetStateAction<TaskData>>;
 }
 
 export interface ISuccessModalContextProps extends IDefaultModalProps {

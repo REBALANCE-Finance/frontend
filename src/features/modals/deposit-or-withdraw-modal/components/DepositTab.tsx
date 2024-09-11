@@ -294,7 +294,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           variant="primaryFilled"
           isDisabled={!formik.values.deposit || !formik.isValid || isLoadingDeposit}
           onDeposit={onLock}
-          title="Lock tokens"
+          title="Freeze"
         />
       );
     }

@@ -34,3 +34,12 @@ export type Reward = {
   claimable: string | null;
   proof: string | null;
 };
+
+export type TaskData = {
+  twitter: boolean;
+  telegram: boolean;
+  wallet: boolean;
+  deposit: boolean;
+  freeze: boolean;
+  frax: boolean;
+};

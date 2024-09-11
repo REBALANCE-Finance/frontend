@@ -3,6 +3,7 @@ import {
   IErrorModalContextProps,
   IFreezeModalContextProps,
   ISuccessModalContextProps,
+  ITasksModalProps,
   ITxModalContextProps
 } from "../../features/modals/types";
 
@@ -14,7 +15,8 @@ export enum ModalEnum {
   TxSuccess = "TxSuccess",
   TxError = "TxError",
   Freeze = "Freeze",
-  ConnectWallet = "ConnectWallet"
+  ConnectWallet = "ConnectWallet",
+  Tasks = "Tasks"
 }
 
 export enum ModalContextEnum {
@@ -53,6 +55,10 @@ export type IOpenModalArgs =
   | {
       type: ModalEnum.Freeze;
       props?: Props<IFreezeModalContextProps>;
+    }
+  | {
+      type: ModalEnum.Tasks;
+      props?: Props<ITasksModalProps>;
     };
 
 export type IOpenModalContextArgs =
