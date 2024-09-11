@@ -8,7 +8,8 @@ import {
   useOutsideClick,
   useMediaQuery,
   Skeleton,
-  IconButton
+  IconButton,
+  PopoverArrow
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { formatNumberWithCommas } from "@/utils/formatNumber";
@@ -31,6 +32,7 @@ import { useAccount } from "wagmi";
 import localStore from "@/utils/localStore";
 import Icon from "../icon";
 import { usePathname } from "next/navigation";
+import { isDesktop, isMobile } from "react-device-detect";
 
 type UserTasksPopoverProps = {
   address: `0x${string}`;
@@ -340,8 +342,6 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     if (type === "frax") {
       return !isConnected
         ? connectBtn
-        : hasBalance
-        ? { title: "Claim", loading: true, onClick: () => {} }
         : {
             title: "Deposit",
             loading: !isFetchedPools,
@@ -371,19 +371,30 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     <Popover isOpen={isOpenTooltip} onClose={() => setIsOpenTooltip(false)}>
       <PopoverTrigger>
         <Flex
+          flexDir="column"
           alignItems="center"
-          gap={2}
-          mr={6}
+          gap={1}
+          bg="#DEDEDE"
+          padding="4px 24px"
+          borderRadius="100px"
+          mr={isDesktop ? 6 : 0}
           cursor="pointer"
           onClick={() => setIsOpenTooltip(prev => !prev)}
         >
-          <Text textStyle="text16" color="black.5" borderBottom="1px dashed" borderColor="black.5">
-            ✨ Earned:
+          <Text textStyle="textMono12" color="black.100" lineHeight="12px">
+            Earn points
           </Text>
-          <Image src="/assets/logo/logo-short.svg" width="16px" height="16px" alt="rebalance" />
-          <Text textStyle="text16" color="black.5">
-            {formatNumberWithCommas(earnedPoints)}
-          </Text>
+          <Flex gap={1} alignItems="center">
+            <Image
+              src="/assets/logo/logo-short-with-bg.svg"
+              width="16px"
+              height="16px"
+              alt="logo"
+            />
+            <Text textStyle="text14" color="black.100" lineHeight="14px">
+              {formatNumberWithCommas(earnedPoints)}
+            </Text>
+          </Flex>
         </Flex>
       </PopoverTrigger>
       <PopoverContent
@@ -392,7 +403,10 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
         border="none"
         ref={tooltipRef}
         ml={is700Up ? 3 : 0}
+        borderRadius="8px"
+        mt={isMobile ? `${window.innerHeight - 528 - 104}px` : 0}
       >
+        {isDesktop && <PopoverArrow bg="#17191C" />}
         <Flex
           flexDir="column"
           gap="24px"

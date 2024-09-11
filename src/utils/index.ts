@@ -49,3 +49,11 @@ export const scrollToElement = (id: string) => {
     element.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 };
+
+export const formatSharesNumber = (numStr: string): string => {
+  const validNumber = parseFloat(numStr);
+
+  const flooredNumber = Math.floor(validNumber * 10 ** 5) / 10 ** 5;
+
+  return flooredNumber.toFixed(5);
+};

@@ -38,7 +38,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
             >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={"center"}>
                 <Text>{pool?.token}</Text>
-                <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
+                <Link href={`https://arbiscan.io/token/${pool.tokenAddress}`} isExternal>
                   <Icon name={ICON_NAMES?.assetFunction} size="sm" />
                 </Link>
                 {/* <Text>Coin</Text> */}
@@ -132,7 +132,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
               <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
                 <Text>{pool?.token}</Text>
               </Flex>
-              <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
+              <Link href={`https://arbiscan.io/token/${pool.tokenAddress}`} isExternal>
                 <Icon name={ICON_NAMES.assetFunction} size="sm" />
               </Link>
             </Flex>

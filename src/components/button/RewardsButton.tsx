@@ -54,8 +54,6 @@ const RewardsButton = () => {
     }
   };
 
-  console.log("reward", reward);
-
   if (!reward || !reward.claimable) {
     return (
       <Flex
@@ -65,6 +63,7 @@ const RewardsButton = () => {
         borderRadius="100px"
         userSelect="none"
         mr={6}
+        minH="40px"
       >
         <Text textStyle="text14" color="black.5">
           No ARB to claim

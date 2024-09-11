@@ -15,7 +15,7 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { useAccount, useBalance } from "wagmi";
+import { useAccount, useBalance, useReadContract } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
 import { useDeposit } from "../../../../hooks/useDeposit";
@@ -40,6 +40,9 @@ import {
 } from "@/consts";
 import Icon from "@/components/icon";
 import { useLock } from "@/hooks/useLock";
+import { useBalanceOfAsset } from "@/hooks/useBalanceOfAsset";
+import { ABI_REBALANCE } from "@/abi/rebalance";
+import { formatSharesNumber } from "@/utils";
 
 interface IDepositTabProps {
   pool: any;
@@ -52,6 +55,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const [isConfirmedLockApprove, setIsConfirmedLockApprove] = useState(false);
   const [pointsQty, setPointsQty] = useState(0);
   const [isOpenTooltip, setIsOpenTooltip] = useState(false);
+  const [sharesPreview, setSharesPreview] = useState("");
   const { address } = useAccount();
   const { data: balanceToken } = useBalance({
     address,
@@ -114,7 +118,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     if (address) {
       lockTokens({
         tokenAddress: pool.rebalancerAddress,
-        amount: parseBigNumber(formik.values.deposit, pool.decimals),
+        amount: parseBigNumber(sharesPreview, pool.decimals),
         durationInSeconds: BigInt(getSecondsFromFreezeDate(formik.values.freezePeriod))
       });
     }
@@ -137,8 +141,33 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     allowance: lockAllowance,
     lockTokens,
     isLoading: isLockLoading,
-    isSuccess: isSuccessLock
-  } = useLock(pool.rebalancerAddress, pool.tokenAddress, onClose, onLock);
+    isSuccess: isSuccessLock,
+    approve: approveLockTokens
+  } = useLock(
+    pool.rebalancerAddress,
+    pool.tokenAddress,
+    onClose,
+    setIsConfirmedLockApprove,
+    onLock
+  );
+
+  const { data: sharesData } = useReadContract({
+    address: pool.rebalancerAddress,
+    abi: ABI_REBALANCE,
+    functionName: "previewDeposit",
+    args: [parseBigNumber(formik.values.deposit, pool.decimals)],
+    query: {
+      enabled: !isSuccessDeposit
+    }
+  });
+
+  useEffect(() => {
+    if (sharesData) {
+      const stringNumber = formatBigNumber(sharesData, pool.decimals);
+      const preparedSharesValue = formatSharesNumber(stringNumber);
+      setSharesPreview(preparedSharesValue);
+    }
+  }, [sharesData]);
 
   useEffect(() => {
     if (formik.values.deposit) {
@@ -172,10 +201,24 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     }
   }, [formik.values.freeze]);
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isSuccessDeposit) {
+      timer = setTimeout(() => {
+        approveLockTokens({
+          value: parseBigNumber(sharesPreview, pool.decimals)
+        });
+      }, 3000);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isSuccessDeposit]);
+
   const setMax = () => {
-    const roundedBalance =
-      Math.round(Number(formatBigNumber(balanceToken?.value, balanceToken?.decimals)) * 100) / 100;
-    const floorBalance = Math.floor(roundedBalance).toString();
+    const roundedBalance = Number(formatBigNumber(balanceToken?.value, balanceToken?.decimals));
+    const floorBalance = (Math.floor(roundedBalance * 100) / 100).toString();
 
     formik.setFieldValue("deposit", floorBalance);
   };
@@ -239,7 +282,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
         <ApproveBtn
           tokenAddress={pool.rebalancerAddress}
           poolAddress={LOCK_TOKENS_CONTRACT_ADDRESS}
-          value={parseBigNumber(formik.values.deposit, pool.decimals)}
+          value={parseBigNumber(sharesPreview, pool.decimals)}
           setConfirmedApprove={setIsConfirmedLockApprove}
         />
       );

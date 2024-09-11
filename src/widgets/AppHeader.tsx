@@ -49,10 +49,10 @@ export const AppHeader = () => {
         {!media && <AppNav />}
 
         <Flex gap="12px" alignItems="center">
-          {isDesktop && !isLoading && <UserTasksPopover address={address || MOCKED_ADDRESS} />}
           {!!address && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
           {isDesktop && <RewardsButton />}
+          {isDesktop && !isLoading && <UserTasksPopover address={address || MOCKED_ADDRESS} />}
           {!!address ? <WalletProfile className="step-1" /> : <ConnectWallet className="step-1" />}
           {media && <AppNav />}
         </Flex>

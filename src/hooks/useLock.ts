@@ -15,6 +15,7 @@ export const useLock = (
   poolAddress: `0x${string}`,
   tokenAddress: `0x${string}`,
   onClose: VoidFunction,
+  setConfirmedApprove: (value: boolean) => void,
   onRetry?: VoidFunction
 ) => {
   const [isLoading, setLoading] = useState(false);
@@ -93,22 +94,18 @@ export const useLock = (
     }
   };
 
-  const approve = async ({
-    value,
-    tokenAddress
-  }: {
-    value: bigint;
-    tokenAddress: `0x${string}`;
-  }) => {
+  const approve = async ({ value }: { value: bigint }) => {
     try {
       setLoading(true);
       await writeContractAsync({
         address: poolAddress,
         abi: ABI_REBALANCE,
         functionName: "approve",
-        args: [poolAddress, value]
+        args: [LOCK_TOKENS_CONTRACT_ADDRESS, value]
+      }).then(() => {
+        setLoading(false);
+        setConfirmedApprove(true);
       });
-      setLoading(false);
     } catch (e) {
       console.error(e);
       setLoading(false);

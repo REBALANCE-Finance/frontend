@@ -68,7 +68,7 @@ export const LendingAsset = ({
                     <Link
                       href={getFinalExplorerUrl({
                         url: "https://arbiscan.io",
-                        address: pool?.tokenAddress,
+                        address: pool?.rebalancerAddress,
                         type: "address"
                       })}
                       display="flex"
