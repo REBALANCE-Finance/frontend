@@ -7,6 +7,7 @@ import REWARDS_DISTRIBUTOR_ABI from "@/abi/RewardsDistributorABI.json";
 import { parseBigNumber } from "@/utils/formatBigNumber";
 import { ARB_DECIMALS } from "@/consts";
 import { ethers } from "ethers";
+import { isDesktop } from "react-device-detect";
 
 const RewardsButton = () => {
   const [reward, setReward] = useState<Reward>({} as Reward);
@@ -62,7 +63,7 @@ const RewardsButton = () => {
         borderColor="black.20"
         borderRadius="100px"
         userSelect="none"
-        mr={6}
+        mr={isDesktop ? 6 : 0}
         minH="40px"
       >
         <Text textStyle="text14" color="black.5">

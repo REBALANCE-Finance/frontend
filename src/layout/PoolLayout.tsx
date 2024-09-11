@@ -48,7 +48,7 @@ export const PoolLayout = ({
     <Flex direction="column" w="100%" align="center">
       {!isDesktop && isLoadingPoints && address && <Skeleton height="16px" width="60px" />}
       {!isDesktop && (
-        <Flex gap={6} mb={8}>
+        <Flex gap={6} mb={8} alignSelf="center">
           <UserTasksPopover address={address || MOCKED_ADDRESS} />
           <RewardsButton />
         </Flex>
