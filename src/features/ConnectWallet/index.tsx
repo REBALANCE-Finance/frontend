@@ -10,12 +10,14 @@ export const ConnectWallet = ({
   title,
   variant,
   minHeight,
-  className
+  className,
+  id
 }: {
   title?: string;
   variant?: string;
   minHeight?: string;
   className?: string;
+  id?: string;
 }) => {
   const { openModal } = useStore("modalStore");
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -30,6 +32,7 @@ export const ConnectWallet = ({
   if (media) {
     return (
       <Button
+        id={id}
         p={variant ? "16px 24px" : 0}
         onClick={onOpenConnectWalletModal}
         variant={variant ? variant : title === "Deposit" ? "primaryFilled" : ""}
@@ -44,6 +47,7 @@ export const ConnectWallet = ({
 
   return (
     <Button
+      id={id}
       onClick={onOpenConnectWalletModal}
       variant={variant ? variant : title === "Deposit" ? "primaryFilled" : ""}
       flex="1 1 0"

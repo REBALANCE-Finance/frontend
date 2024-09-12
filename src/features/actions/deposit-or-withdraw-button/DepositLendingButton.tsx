@@ -30,7 +30,7 @@ export const DepositLendingButton: FC<IDepositProps> = ({
   };
 
   if (!address) {
-    return <ConnectWallet title="Deposit" minHeight={minHeight} className={className} />;
+    return <ConnectWallet title="Deposit" minHeight={minHeight} className={className} id={id} />;
   }
 
   return (
