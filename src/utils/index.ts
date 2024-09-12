@@ -57,3 +57,23 @@ export const formatSharesNumber = (numStr: string): string => {
 
   return flooredNumber.toFixed(5);
 };
+
+export function getDaysLeft(unlockTime: number, duration: number): string {
+  const currentTime = Math.floor(Date.now() / 1000);
+
+  if (unlockTime <= currentTime) {
+    return "0 / 0 days";
+  }
+
+  const secondsLeft = unlockTime - currentTime;
+  const daysLeft = Math.ceil(secondsLeft / (60 * 60 * 24));
+
+  const totalDays = Math.ceil(duration / (60 * 60 * 24));
+
+  return `${daysLeft} / ${totalDays} days`;
+}
+
+export function isUnlocked(unlockTime: number): boolean {
+  const currentTime = Math.floor(Date.now() / 1000);
+  return currentTime >= unlockTime;
+}

@@ -1,4 +1,4 @@
-import { Reward, Task } from "@/types";
+import { LockApi, Reward, Task } from "@/types";
 import { endpoint } from "../pools/queries";
 import { formatBigNumber } from "@/utils/formatBigNumber";
 
@@ -93,6 +93,24 @@ export const getRewards = async (address: string) => {
     };
   } catch (error: any) {
     console.error(`Failed to fetch rewards: ${error.message}`);
+    throw error;
+  }
+};
+
+export const getLocks = async (address: string, tokenName?: string) => {
+  try {
+    const response = await fetch(`${endpoint}lending/user-locks/${address}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: LockApi[] = await response.json();
+
+    return data.filter(lock => lock.unlockedTime === 0);
+  } catch (error: any) {
+    console.error(`Failed to fetch locks: ${error.message}`);
+    console.error(error);
     throw error;
   }
 };

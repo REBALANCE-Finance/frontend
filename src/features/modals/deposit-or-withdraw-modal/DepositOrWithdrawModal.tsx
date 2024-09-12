@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Divider,
@@ -31,7 +31,7 @@ export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose
 
   const { balance } = useBalanceOfAsset(pool?.rebalancerAddress, address ?? "0x", pool?.decimals);
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} maxWidth="528px">
       <Tabs index={tabIndex} onChange={handleTab}>
         <ModalHeader fontSize="lg" p="0">
           <TabList
@@ -49,7 +49,7 @@ export const DepositOrWithdrawModal: FC<IDefaultModalProps> = ({ isOpen, onClose
           </TabList>
         </ModalHeader>
 
-        <ModalBody p="0">
+        <ModalBody p="0" w="100%">
           {address && (
             <TabPanels>
               <TabPanel p="0">

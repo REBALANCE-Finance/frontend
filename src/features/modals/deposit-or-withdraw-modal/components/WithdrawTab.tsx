@@ -11,6 +11,10 @@ import { useWithdraw } from "../../../../hooks/useWithdraw";
 import { parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber } from "../../../../utils/formatNumber";
 import { getPersonalEarnings } from "@/api/pools/queries";
+import { LockApi } from "@/types";
+import { getLocks } from "@/api/points/queries";
+import UnlockItem from "./UnlockItem";
+import { getDaysLeft, isUnlocked } from "@/utils";
 
 interface IWithdrawTabProps {
   pool: any;
@@ -30,6 +34,34 @@ const withdrawSchema = yup.object({
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
     const [profit, setProfit] = useState(0);
+    const [unlockData, setUnlockData] = useState<LockApi>({} as LockApi);
+    const [isSuccessUnlocked, setIsSuccessUnlocked] = useState(false);
+
+    useEffect(() => {
+      if (address) {
+        getLocks(address, pool.token).then(data => {
+          console.log("all unlocks", data);
+          setUnlockData(data[data.length - 1]);
+        });
+      }
+    }, [address, isSuccessUnlocked]);
+
+    useEffect(() => {
+      let timer: NodeJS.Timeout;
+      if (isSuccessUnlocked) {
+        timer = setTimeout(() => {
+          setIsSuccessUnlocked(false);
+        }, 300);
+      }
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }, [isSuccessUnlocked]);
+
+    useEffect(() => {
+      console.log("unlockData", unlockData);
+    }, [unlockData]);
 
     const formik = useFormik({
       initialValues: {
@@ -55,7 +87,9 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
     );
 
     const setMax = () => {
-      formik.setFieldValue("withdraw", balance.toString());
+      const floorBalance = (Math.floor(balance * 100) / 100).toString();
+
+      formik.setFieldValue("withdraw", floorBalance);
       formik.validateField("withdraw");
     };
 
@@ -85,7 +119,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
           />
           <HStack justify="space-between">
             <Text color="black.0">Your deposit</Text>
-            <Text textStyle="textMono16">${formatNumber(balance)}</Text>
+            <Text textStyle="textMono16">${formatNumber(balance, true)}</Text>
           </HStack>
 
           {/* <HStack justify="space-between">
@@ -96,7 +130,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
           <HStack justify="space-between">
             <Text color="black.0">Available to withdraw</Text>
             <Flex align="inherit">
-              <Text textStyle="textMono16">${formatNumber(+balance)}</Text>
+              <Text textStyle="textMono16">${formatNumber(+balance, true)}</Text>
               <Button color="greenAlpha.100" onClick={() => setMax()}>
                 Max
               </Button>
@@ -104,6 +138,16 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
           </HStack>
 
           <Divider borderColor="black.90" />
+
+          {unlockData.lockId && (
+            <UnlockItem
+              daysRemain={getDaysLeft(unlockData.unlockTime, unlockData.duration)}
+              pointsEarned={0}
+              isFreezeEnd={isUnlocked(unlockData.unlockTime)}
+              lockId={unlockData.lockId}
+              onSuccessUnlock={() => setIsSuccessUnlocked(true)}
+            />
+          )}
 
           <HStack justify="space-between">
             <Text color="black.0">30D profit</Text>

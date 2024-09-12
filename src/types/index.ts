@@ -43,3 +43,13 @@ export type TaskData = {
   freeze: boolean;
   frax: boolean;
 };
+
+export type LockApi = {
+  network: string;
+  lockId: number;
+  token: string;
+  amount: string;
+  duration: number;
+  unlockTime: number;
+  unlockedTime: number;
+}
