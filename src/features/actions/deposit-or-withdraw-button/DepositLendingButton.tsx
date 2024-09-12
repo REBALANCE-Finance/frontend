@@ -12,6 +12,7 @@ interface IDepositProps {
   minHeight?: string;
   className?: string;
   ButtonProps?: ButtonProps;
+  id?: string;
 }
 
 export const DepositLendingButton: FC<IDepositProps> = ({
@@ -19,7 +20,8 @@ export const DepositLendingButton: FC<IDepositProps> = ({
   variant,
   minHeight,
   className,
-  ButtonProps
+  ButtonProps,
+  id
 }) => {
   const { openModal } = useStore("modalStore");
   const { address } = useAccount();
@@ -33,6 +35,7 @@ export const DepositLendingButton: FC<IDepositProps> = ({
 
   return (
     <Button
+      id={id}
       variant={variant ?? "primaryFilled"}
       flex="1 1 0"
       minHeight={minHeight}

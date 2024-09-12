@@ -15,6 +15,7 @@ import { IRowCard, RowCardProccessType } from "../../pagesComponents/Pools/types
 import { DefaultDataType } from "../../types";
 import { TokenIcon } from "../token-icon";
 import ArbIncentive from "../badge/ArbIncentive";
+import { getIdByToken } from "@/utils/analytics";
 
 interface ICardProps {
   rowCard: IRowCard[];
@@ -24,7 +25,13 @@ interface ICardProps {
 
 export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading }) => {
   return (
-    <ChakraCard cursor="pointer" variant="poolCard" position="relative" justifySelf="center">
+    <ChakraCard
+      id={`Click_page_${getIdByToken(itemCard.token)}`}
+      cursor="pointer"
+      variant="poolCard"
+      position="relative"
+      justifySelf="center"
+    >
       {!itemCard.token ? (
         <Flex
           position="absolute"

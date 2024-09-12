@@ -14,6 +14,7 @@ import UserProfitPool from "./components/UserProfitPool";
 import Icon from "@/components/icon";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/hooks/useStoreContext";
+import { getIdByToken } from "@/utils/analytics";
 
 export const PoolsLending = ({
   pools,
@@ -218,7 +219,15 @@ export const PoolsLending = ({
       proccess({ item }) {
         return (
           <>
-            <DepositLendingButton pool={item} minHeight="40px" />
+            <DepositLendingButton
+              pool={item}
+              minHeight="40px"
+              id={
+                address
+                  ? `Click_Deposit_${getIdByToken(item.token)}`
+                  : `Click_Deposit_start_${getIdByToken(item.token)}`
+              }
+            />
             <WithdrawLendingButton pool={item} minHeight="40px" />
           </>
         );

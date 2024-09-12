@@ -280,6 +280,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
             Number(formik.values.deposit) >
             Number(formatBigNumber(balanceToken?.value, balanceToken?.decimals))
           }
+          id="approve_deposit"
         />
       );
     }
@@ -290,6 +291,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           variant="primaryFilled"
           isDisabled={!formik.values.deposit || !formik.isValid || isLoadingDeposit}
           onDeposit={onDeposit}
+          id="execute_deposit"
         />
       );
     }
