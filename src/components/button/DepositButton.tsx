@@ -4,11 +4,13 @@ import { Button } from "@chakra-ui/react";
 const DepositButton = ({
   isDisabled,
   variant,
-  onDeposit
+  onDeposit,
+  title
 }: {
   isDisabled: boolean;
   variant: string;
   onDeposit: VoidFunction;
+  title?: string;
 }) => {
   return (
     <motion.div
@@ -34,7 +36,7 @@ const DepositButton = ({
         isDisabled={isDisabled}
         onClick={onDeposit}
       >
-        Deposit
+        {title || "Deposit"}
       </Button>
     </motion.div>
   );

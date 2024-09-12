@@ -5,9 +5,13 @@ import { BorrowChart } from "./BorrowChart";
 import { LendChart } from "./LendChart";
 import { IRebalancePerformanceProps } from "./types";
 
-export const PerformanceChart: FC<IRebalancePerformanceProps> = ({ activeType, chartData }) => {
+export const PerformanceChart: FC<IRebalancePerformanceProps> = ({
+  activeType,
+  chartData,
+  showRightAxis
+}) => {
   if (activeType === "earn") {
-    return <LendChart chartData={chartData} />;
+    return <LendChart chartData={chartData} showRightAxis={showRightAxis} />;
   }
 
   if (activeType === ROUTES_TYPE.borrowing) {

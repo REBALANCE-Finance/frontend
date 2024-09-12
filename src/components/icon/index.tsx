@@ -7,19 +7,20 @@ const Icon: FC<TIconProps> = ({ name, size = "md", width, height, ...props }) =>
   const currentSize = EnumSizes[size as Sizes] ?? size;
 
   const getImgSrc = (name: string) => {
-    const basePath = '/assets/icons/';
+    const basePath = "/assets/icons/";
 
     if (name === ICON_NAMES.SILO) {
       return `${basePath}${name}-icon.png`;
     }
-    if (name === ICON_NAMES.DOLOMITE) {
+
+    if (name === ICON_NAMES.DOLOMITE || name === ICON_NAMES.LODESTAR) {
       return `${basePath}${name}-icon.jpg`;
     }
 
     return `${basePath}${name}-icon.svg`;
   };
 
-  const isRoundIcon = [ICON_NAMES.SILO, ICON_NAMES.DOLOMITE].includes(name);
+  const isRoundIcon = [ICON_NAMES.SILO, ICON_NAMES.DOLOMITE, ICON_NAMES.LODESTAR].includes(name);
 
   return (
     <img
@@ -30,7 +31,7 @@ const Icon: FC<TIconProps> = ({ name, size = "md", width, height, ...props }) =>
       {...props}
       style={{
         ...(currentSize ? { width: currentSize, height: currentSize } : {}),
-        borderRadius: isRoundIcon ? '50%' : undefined,
+        borderRadius: isRoundIcon ? "50%" : undefined
       }}
     />
   );

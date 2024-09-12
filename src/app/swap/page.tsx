@@ -29,8 +29,10 @@ import { defChainIdArbitrum } from "@/hooks/useAuth";
 import useDebounce from "@/hooks/useDebounce";
 import { parseUnits } from "ethers";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 const Swap = () => {
+  const searchParams = useSearchParams();
   const { address, chainId, connector } = useAccount();
   const [payToken, setPayToken] = useState<IToken | null>(null);
   const [receiveToken, setReceiveToken] = useState<IToken | null>(null);
@@ -43,6 +45,9 @@ const Swap = () => {
   const [isPayInputChanged, setIsPayInputChanged] = useState(true);
   const [isReceiveInputChanged, setIsReceiveInputChanged] = useState(false);
   const [isMobile] = useMediaQuery("(max-width: 480px)");
+
+  const queryInputTokenAddress = searchParams.get("input");
+  const queryOutputTokenAddress = searchParams.get("output");
 
   const { data: tokenList } = useGetTokenList(chainId ?? defChainIdArbitrum);
 
@@ -101,12 +106,19 @@ const Swap = () => {
 
   useEffect(() => {
     if (tokenList && tokenList.length > 1 && !payToken && !receiveToken) {
-      setPayToken(
-        tokenList.find(token => token.symbol === "ARB") ??
-          tokenList.find(token => token.symbol === "WETH") ??
-          ARB_TOKEN
-      );
-      setReceiveToken(tokenList.find(token => token.symbol === "USDT") || USDT_TOKEN);
+      if (queryInputTokenAddress && queryOutputTokenAddress) {
+        setPayToken(tokenList.find(token => token.address === queryInputTokenAddress) || ARB_TOKEN);
+        setReceiveToken(
+          tokenList.find(token => token.address === queryOutputTokenAddress) || USDT_TOKEN
+        );
+      } else {
+        setPayToken(
+          tokenList.find(token => token.symbol === "ARB") ??
+            tokenList.find(token => token.symbol === "WETH") ??
+            ARB_TOKEN
+        );
+        setReceiveToken(tokenList.find(token => token.symbol === "USDT") || USDT_TOKEN);
+      }
     }
   }, [tokenList, payToken, receiveToken]);
 

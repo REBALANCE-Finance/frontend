@@ -1,8 +1,14 @@
 import numeral from "numeral";
 
-export const formatNumber = (value: string | number) => {
-  if (value === undefined || Number(value) === 0) return "0";
-  if (Number(value) < 0.000001) return "<0.000001";
+export const formatNumber = (value: string | number, isWithdraw?: boolean) => {
+  if (
+    value === undefined ||
+    Number(value) === 0 ||
+    Number(value) < 0 ||
+    (Number(value) < 0.000001 && isWithdraw)
+  )
+    return "0";
+  if (Number(value) < 0.000001 && !isWithdraw) return "<0.000001";
   const numValue = Number(value);
 
   if (numValue >= 10 ** 9) {
@@ -18,10 +24,12 @@ export const formatNumber = (value: string | number) => {
   }
 };
 
-export const formatPercent = (value: string | number) => {
+export const formatPercent = (value: string | number, noPlus?: boolean) => {
   if (value === undefined) return "0";
   const numValue = Number(value);
   if (numValue <= 0) return `${numeral(numValue).format("0.[0]")}%`;
+  if (noPlus) return `${numeral(numValue).format("0.[0]")}%`;
+
   return `+${numeral(numValue).format("0.[0]")}%`;
 };
 

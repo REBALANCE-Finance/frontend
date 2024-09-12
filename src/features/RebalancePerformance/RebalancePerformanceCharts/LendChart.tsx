@@ -60,17 +60,23 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
   return [...arr, areaGradient];
 };
 
-export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
+export const LendChart = ({
+  chartData,
+  showRightAxis
+}: {
+  chartData: IAreaChartData;
+  showRightAxis?: boolean;
+}) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { selectedDate, setSelectDate } = useDateSwitcher(DATES[0]);
   const { address, isConnected } = useAccount();
 
   const _areaLines = useMemo(() => {
-    if (address) {
+    if (address && showRightAxis) {
       return connectedAreaLines;
     }
     return areaLines;
-  }, [address]);
+  }, [address, showRightAxis]);
 
   return (
     <Flex w="100%" direction="column" position="relative">
@@ -112,6 +118,7 @@ export const LendChart = ({ chartData }: { chartData: IAreaChartData }) => {
         tickFormatter={tickFormatter}
         isLending
         isConnected={isConnected}
+        showRightAxis={showRightAxis}
       />
 
       {media && (

@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { ABI_REBALANCE } from "../abi/rebalance";
 import { ARB_CONFIRMATIONS_COUNT, LOCAL_STORAGE_KEYS } from "@/consts";
 import { useStore } from "./useStoreContext";
@@ -10,10 +15,12 @@ export const useDeposit = (
   poolAddress: `0x${string}`,
   tokenAddress: `0x${string}`,
   onClose: VoidFunction,
-  onRetry?: VoidFunction
+  onRetry?: VoidFunction,
+  needClose?: boolean
 ) => {
   const [isLoading, setLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
   const { address } = useAccount();
   const { openModal } = useStore("modalContextStore");
   const isActiveTutorial = !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial) || false;
@@ -37,16 +44,16 @@ export const useDeposit = (
 
   useEffect(() => {
     if (isReceiptSuccess && txHash) {
-      onClose();
-      openModal({
-        type: ModalContextEnum.Success,
-        props: {
-          txHash
-        }
-      });
-      if (isActiveTutorial) {
-        localStore.post(LOCAL_STORAGE_KEYS.isShownTutorial, true);
+      if (needClose) {
+        onClose();
+        openModal({
+          type: ModalContextEnum.Success,
+          props: {
+            txHash
+          }
+        });
       }
+      setIsSuccess(true);
     } else if (isReceiptError && receiptError) {
       openModal({
         type: ModalContextEnum.Reject,
@@ -69,6 +76,7 @@ export const useDeposit = (
         args: [value, address]
       });
       setTxHash(tx);
+      setLoading(false);
     } catch (e) {
       console.error(e);
       setLoading(false);
@@ -101,6 +109,7 @@ export const useDeposit = (
     allowance,
     deposit,
     approve,
-    isLoading: isLoading || waitingReceipt
+    isLoading: isLoading || waitingReceipt,
+    isSuccess
   };
 };

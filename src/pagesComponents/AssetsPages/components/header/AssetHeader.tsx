@@ -1,6 +1,6 @@
 "use client";
 import { Flex, Link, Text } from "@chakra-ui/layout";
-import { useMediaQuery } from "@chakra-ui/react";
+import { Box, useMediaQuery } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useAccount } from "wagmi";
 
@@ -16,6 +16,7 @@ import { getCurrentPath } from "../../../../features/RebalancePerformance/utils"
 import { formatNumber } from "../../../../utils/formatNumber";
 import { usePathname } from "next/navigation";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
+import ArbIncentive from "@/components/badge/ArbIncentive";
 
 export const AssetHeader: FC<any> = ({ pool }) => {
   const location = usePathname();
@@ -37,7 +38,7 @@ export const AssetHeader: FC<any> = ({ pool }) => {
             >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={"center"}>
                 <Text>{pool?.token}</Text>
-                <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
+                <Link href={`https://arbiscan.io/token/${pool.tokenAddress}`} isExternal>
                   <Icon name={ICON_NAMES?.assetFunction} size="sm" />
                 </Link>
                 {/* <Text>Coin</Text> */}
@@ -83,6 +84,12 @@ export const AssetHeader: FC<any> = ({ pool }) => {
           </Flex>
         </Flex>
 
+        {pool.token === "FRAX" && (
+          <Box maxW="126px" mt={4}>
+            <ArbIncentive size="small" />
+          </Box>
+        )}
+
         {ROUTES_TYPE.lending === pathName && (
           <Flex gap="24px" mt="28px" justifyContent="space-between">
             <Flex direction="column" gap="8px">
@@ -124,9 +131,8 @@ export const AssetHeader: FC<any> = ({ pool }) => {
             <Flex gap="12px" align="center">
               <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
                 <Text>{pool?.token}</Text>
-                <Text>Coin</Text>
               </Flex>
-              <Link href="https://arbiscan.io/token/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9">
+              <Link href={`https://arbiscan.io/token/${pool.tokenAddress}`} isExternal>
                 <Icon name={ICON_NAMES.assetFunction} size="sm" />
               </Link>
             </Flex>
@@ -143,6 +149,8 @@ export const AssetHeader: FC<any> = ({ pool }) => {
           <Text variant="t22">$ {formatNumber(pool?.funds?.toFixed(2))}</Text>
         </Flex>
       </Flex>
+
+      {pool.token === "FRAX" && <ArbIncentive size="large" />}
 
       {ROUTES_TYPE.lending === pathName && (
         <Flex p="16px 24px" gap="24px" border="2px solid #0F0F0F" borderRadius="4px">

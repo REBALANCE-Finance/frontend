@@ -3,7 +3,8 @@ import { ROUTES_TYPE } from "../../../consts/routes-type";
 
 export interface IRebalancePerformanceProps {
   activeType: ROUTES_TYPE | string;
-  chartData: IAreaChartData
+  chartData: IAreaChartData;
+  showRightAxis?: boolean;
 }
 
 export interface ILegendAreaChart {

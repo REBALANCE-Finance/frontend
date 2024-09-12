@@ -10,8 +10,6 @@ export const useAuth = () => {
   const login = async (connectorId: ConnectorNames) => {
     const findConnector = connectors.find(c => c.id === connectorId);
 
-    console.log("finded connector", findConnector, connectors);
-
     if (!findConnector) {
       throw new Error("Connector not found");
     }

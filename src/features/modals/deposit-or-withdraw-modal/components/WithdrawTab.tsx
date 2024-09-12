@@ -8,9 +8,13 @@ import * as yup from "yup"; // Импорт Yup для схемы валидац
 
 import { FormInput } from "../../../../components/forms/form-input";
 import { useWithdraw } from "../../../../hooks/useWithdraw";
-import { parseBigNumber } from "../../../../utils/formatBigNumber";
+import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber } from "../../../../utils/formatNumber";
 import { getPersonalEarnings } from "@/api/pools/queries";
+import { LockApi } from "@/types";
+import { getLocks } from "@/api/points/queries";
+import UnlockItem from "./UnlockItem";
+import { getDaysLeft, isUnlocked } from "@/utils";
 
 interface IWithdrawTabProps {
   pool: any;
@@ -30,6 +34,41 @@ const withdrawSchema = yup.object({
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
     const [profit, setProfit] = useState(0);
+    const [unlockData, setUnlockData] = useState<LockApi>({} as LockApi);
+    const [totalLockedBalance, setTotalLockedBalance] = useState(0);
+    const [isSuccessUnlocked, setIsSuccessUnlocked] = useState(false);
+    const [lockIds, setLockIds] = useState<number[]>([]);
+
+    useEffect(() => {
+      if (address) {
+        getLocks(address, pool.token).then(data => {
+          const _locks = data.map(lock => lock.lockId);
+          setLockIds(_locks);
+
+          const amountsBigInt = data.map(lock => lock.amount);
+          const totalLockedAmount = amountsBigInt.reduce(
+            (acc, el) => acc + +formatBigNumber(el, pool.decimals),
+            0
+          );
+          setTotalLockedBalance(totalLockedAmount);
+
+          setUnlockData(data[data.length - 1]);
+        });
+      }
+    }, [address, isSuccessUnlocked]);
+
+    useEffect(() => {
+      let timer: NodeJS.Timeout;
+      if (isSuccessUnlocked) {
+        timer = setTimeout(() => {
+          setIsSuccessUnlocked(false);
+        }, 300);
+      }
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }, [isSuccessUnlocked]);
 
     const formik = useFormik({
       initialValues: {
@@ -55,7 +94,9 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
     );
 
     const setMax = () => {
-      formik.setFieldValue("withdraw", balance.toString());
+      const floorBalance = (Math.floor(balance * 100) / 100).toString();
+
+      formik.setFieldValue("withdraw", floorBalance);
       formik.validateField("withdraw");
     };
 
@@ -63,7 +104,6 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
       if (address) {
         getPersonalEarnings(1, 30, address, pool.token)
           .then(data => {
-            console.log(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0, "data");
             setProfit(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0);
           })
           .catch(e => {
@@ -86,7 +126,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
           />
           <HStack justify="space-between">
             <Text color="black.0">Your deposit</Text>
-            <Text textStyle="textMono16">${formatNumber(balance)}</Text>
+            <Text textStyle="textMono16">${formatNumber(balance, true)}</Text>
           </HStack>
 
           {/* <HStack justify="space-between">
@@ -97,7 +137,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
           <HStack justify="space-between">
             <Text color="black.0">Available to withdraw</Text>
             <Flex align="inherit">
-              <Text textStyle="textMono16">${formatNumber(+balance)}</Text>
+              <Text textStyle="textMono16">${formatNumber(+balance, true)}</Text>
               <Button color="greenAlpha.100" onClick={() => setMax()}>
                 Max
               </Button>
@@ -105,6 +145,18 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
           </HStack>
 
           <Divider borderColor="black.90" />
+
+          {unlockData && unlockData.lockId >= 0 && (
+            <UnlockItem
+              daysRemain={getDaysLeft(unlockData.unlockTime, unlockData.duration)}
+              pointsEarned={0}
+              isFreezeEnd={isUnlocked(unlockData.unlockTime)}
+              lockIds={lockIds}
+              onSuccessUnlock={() => setIsSuccessUnlocked(true)}
+              amount={totalLockedBalance}
+              token={unlockData.token}
+            />
+          )}
 
           <HStack justify="space-between">
             <Text color="black.0">30D profit</Text>

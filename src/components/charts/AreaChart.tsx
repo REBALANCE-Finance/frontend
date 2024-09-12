@@ -21,7 +21,8 @@ export const AreaChart: FC<IAreaChartProps> = ({
   legend,
   tooltipName,
   isLending,
-  isConnected
+  isConnected,
+  showRightAxis
 }) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -60,7 +61,7 @@ export const AreaChart: FC<IAreaChartProps> = ({
           stroke={themes.colors.darkGray}
           tickFormatter={(e: string) => `${e} %`}
         />
-        {isConnected && (
+        {isConnected && showRightAxis && (
           <YAxis
             yAxisId={1}
             orientation="right"

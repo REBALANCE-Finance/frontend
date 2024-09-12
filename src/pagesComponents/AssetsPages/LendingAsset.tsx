@@ -68,7 +68,7 @@ export const LendingAsset = ({
                     <Link
                       href={getFinalExplorerUrl({
                         url: "https://arbiscan.io",
-                        address: pool?.tokenAddress,
+                        address: pool?.rebalancerAddress,
                         type: "address"
                       })}
                       display="flex"
@@ -76,7 +76,7 @@ export const LendingAsset = ({
                       isExternal
                     >
                       <Text textStyle="text14" color="black.5" mr="6px">
-                        {pool?.tokenAddress}
+                        {pool?.rebalancerAddress}
                       </Text>
                       <Icon name={ICON_NAMES.link} size="sm" />
                     </Link>

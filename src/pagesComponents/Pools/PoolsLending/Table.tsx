@@ -10,7 +10,8 @@ import {
   Tr,
   Text,
   Skeleton,
-  useMediaQuery
+  useMediaQuery,
+  Image
 } from "@chakra-ui/react";
 import { IPoolData } from "../types";
 import { Risk } from "@/components/risk";
@@ -24,6 +25,7 @@ import { WithdrawLendingButton } from "@/features/actions/deposit-or-withdraw-bu
 import { generatePath } from "react-router-dom";
 import { ROUTE_PATHS } from "@/consts/routes";
 import { useRouter } from "next/navigation";
+import ArbIncentive from "@/components/badge/ArbIncentive";
 
 interface PoolsLendingTableProps {
   pools: IPoolData[];
@@ -52,7 +54,7 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
 
   return (
     <TableContainer>
-      <Table variant="simple">
+      <Table variant="simple" id="pools">
         <Thead>
           <Tr color="white">
             <Th maxW="136px" p="16px 12px 16px 32px" textTransform="unset">
@@ -104,9 +106,12 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
               <Th p="24px 12px 24px 32px">
                 <Flex gap={1.5} alignItems="center">
                   <TokenIcon name={pool.token} size="34px" sizeIcon="18px" />
-                  <Text textStyle="h2" fontWeight={500} color="white">
-                    {pool.token}
-                  </Text>
+                  <Flex flexDir="column" gap={2}>
+                    <Text textStyle="h2" fontWeight={500} color="white">
+                      {pool.token}
+                    </Text>
+                    {pool.token === "FRAX" && <ArbIncentive size="small" />}
+                  </Flex>
                 </Flex>
               </Th>
               <Th p="24px 12px">

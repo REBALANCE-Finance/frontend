@@ -1,10 +1,12 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
-import React, { FC } from "react";
+import { Button, ButtonProps, useEditable } from "@chakra-ui/react";
+import React, { FC, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 import { useBalanceOfAsset } from "../../../hooks/useBalanceOfAsset";
 import { useStore } from "../../../hooks/useStoreContext";
 import { ModalEnum } from "../../../store/modal/types";
+import { getLocks } from "@/api/points/queries";
+import { formatBigNumber } from "@/utils/formatBigNumber";
 
 interface IWithdrawProps {
   pool: any;
@@ -24,10 +26,26 @@ export const WithdrawLendingButton: FC<IWithdrawProps> = ({
   const { openModal } = useStore("modalStore");
   const { address } = useAccount();
   const { balance } = useBalanceOfAsset(pool.rebalancerAddress, address ?? "0x", pool.decimals);
+  const [totalBalance, setTotalBalance] = useState(0);
+
+  useEffect(() => {
+    if (address && balance) {
+      getLocks(address, pool.token).then(data => {
+        const amountsBigInt = data.map(item => item.amount);
+        const amountsNumbers = amountsBigInt.map(item =>
+          Number(formatBigNumber(item, pool.decimals))
+        );
+
+        const totalLockedAmount = amountsNumbers.reduce((acc, item) => acc + item, 0);
+        setTotalBalance(balance + totalLockedAmount);
+      });
+    }
+  }, [address, balance]);
+
   const handleOpenModal = () => {
     openModal({ type: ModalEnum.Withdraw, props: { pool, type: ModalEnum.Withdraw } });
   };
-  if (balance < 0.01) return;
+  if (totalBalance < 0.01) return;
 
   return (
     <Button

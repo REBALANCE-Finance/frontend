@@ -7,6 +7,8 @@ import { useStore } from "../../hooks/useStoreContext";
 import { ModalEnum } from "../../store/modal/types";
 import { BorrowOrRepayModal } from "./borrow-or-repay-modal/BorrowOrRepayModal";
 import { DepositOrWithdrawModal } from "./deposit-or-withdraw-modal/DepositOrWithdrawModal";
+import ConnectWalletModal from "./connect-wallet/ConnectWalletModal";
+import TasksModal from "./tasks-modal";
 
 export const ModalController = observer(() => {
   const { type, isOpen, closeModal, props } = useStore("modalStore");
@@ -19,6 +21,10 @@ export const ModalController = observer(() => {
       case ModalEnum.Borrow:
       case ModalEnum.Repay:
         return <BorrowOrRepayModal isOpen={isOpen} onClose={closeModal} {...props} />;
+      case ModalEnum.ConnectWallet:
+        return <ConnectWalletModal isOpen={isOpen} onClose={closeModal} {...props} />;
+      case ModalEnum.Tasks:
+        return <TasksModal isOpen={isOpen} onClose={closeModal} {...props} />;
     }
   };
 
