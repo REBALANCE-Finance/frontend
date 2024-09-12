@@ -17,6 +17,7 @@ export interface IDefaultModalContextProps extends Omit<IDefaultModalProps, "typ
 
 export interface ISuccessModalProps {
   txHash: string;
+  id?: string;
 }
 
 export interface IErrorModalProps {
@@ -39,6 +40,7 @@ export interface ITasksModalProps extends IDefaultModalProps {
 
 export interface ISuccessModalContextProps extends IDefaultModalProps {
   txHash?: string;
+  id?: string;
 }
 
 export interface IErrorModalContextProps extends IDefaultModalProps {

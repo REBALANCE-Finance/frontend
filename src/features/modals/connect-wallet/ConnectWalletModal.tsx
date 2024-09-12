@@ -49,7 +49,7 @@ if (!isMobile) {
   // });
   CONNECT_METHODS.push({
     method: ConnectorNames.CoinBase,
-    title: "CoinBase",
+    title: "Coinbase",
     imgName: ICON_NAMES.coinBase
   });
 }
@@ -96,6 +96,7 @@ const ConnectWalletModal = ({ isOpen, onClose }: IDefaultModalProps) => {
           <DrawerBody as={Flex} direction="column" gap="16px">
             {CONNECT_METHODS.map(({ title, method, imgName }) => (
               <Flex
+                id={`Click_${title}`}
                 as={Button}
                 key={title}
                 alignItems="center"

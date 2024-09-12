@@ -49,7 +49,8 @@ export const useDeposit = (
         openModal({
           type: ModalContextEnum.Success,
           props: {
-            txHash
+            txHash,
+            id: 'deposit_success'
           }
         });
       }

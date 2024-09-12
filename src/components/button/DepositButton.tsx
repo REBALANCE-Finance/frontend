@@ -5,15 +5,18 @@ const DepositButton = ({
   isDisabled,
   variant,
   onDeposit,
-  title
+  title,
+  id
 }: {
   isDisabled: boolean;
   variant: string;
   onDeposit: VoidFunction;
   title?: string;
+  id?: string;
 }) => {
   return (
     <motion.div
+      id={id}
       initial={{ backgroundColor: !isDisabled ? "rgba(76, 255, 148, .3)" : "rgb(21, 22, 25)" }}
       animate={{
         backgroundColor: !isDisabled

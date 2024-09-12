@@ -26,6 +26,7 @@ import { generatePath } from "react-router-dom";
 import { ROUTE_PATHS } from "@/consts/routes";
 import { useRouter } from "next/navigation";
 import ArbIncentive from "@/components/badge/ArbIncentive";
+import { getIdByToken } from "@/utils/analytics";
 
 interface PoolsLendingTableProps {
   pools: IPoolData[];
@@ -95,6 +96,7 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
         <Tbody>
           {pools.map(pool => (
             <Tr
+              id={`Click_page_${getIdByToken(pool.token)}`}
               key={pool.tokenAddress}
               onClick={() => handleLink(pool.token)}
               cursor="pointer"
@@ -172,6 +174,11 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
                   ButtonProps={{
                     flex: 1
                   }}
+                  id={
+                    address
+                      ? `Click_Deposit_${getIdByToken(pool.token)}`
+                      : `Click_Deposit_start_${getIdByToken(pool.token)}`
+                  }
                 />
                 <WithdrawLendingButton
                   pool={pool}
