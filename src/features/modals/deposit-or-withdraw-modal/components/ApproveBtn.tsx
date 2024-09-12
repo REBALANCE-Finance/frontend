@@ -9,12 +9,14 @@ const ApproveBtn = ({
   value,
   poolAddress,
   tokenAddress,
-  setConfirmedApprove
+  setConfirmedApprove,
+  isDisabled
 }: {
   value: bigint;
   tokenAddress: `0x${string}`;
   poolAddress: `0x${string}`;
   setConfirmedApprove: (value: boolean) => void;
+  isDisabled?: boolean;
 }) => {
   const { data: hash, writeContract } = useWriteContract();
   const { isSuccess, isLoading } = useWaitForTransactionReceipt({
@@ -38,7 +40,7 @@ const ApproveBtn = ({
   }, [isSuccess, setConfirmedApprove]);
 
   return (
-    <Button variant="primaryFilled" onClick={() => approve()}>
+    <Button variant="primaryFilled" isDisabled={isDisabled} onClick={() => approve()}>
       {isLoading ? "Processing..." : "Approve"}
     </Button>
   );

@@ -35,6 +35,7 @@ import {
   DEPOSIT_STEPS_WITH_FREEZE,
   FRAX_TOKEN_ADDRESS,
   ICON_NAMES,
+  INSUFFICIENT_BALANCE_ERROR,
   LOCK_TOKENS_CONTRACT_ADDRESS,
   ROUTE_PATHS
 } from "@/consts";
@@ -56,6 +57,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const [pointsQty, setPointsQty] = useState(0);
   const [isOpenTooltip, setIsOpenTooltip] = useState(false);
   const [sharesPreview, setSharesPreview] = useState("");
+  const [error, setError] = useState("");
   const { address } = useAccount();
   const { data: balanceToken } = useBalance({
     address,
@@ -216,6 +218,17 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     };
   }, [isSuccessDeposit]);
 
+  useEffect(() => {
+    if (
+      Number(formik.values.deposit) >
+      Number(formatBigNumber(balanceToken?.value, balanceToken?.decimals))
+    ) {
+      setError(INSUFFICIENT_BALANCE_ERROR);
+    } else {
+      setError("");
+    }
+  }, [formik.values.deposit, balanceToken?.value, balanceToken?.decimals]);
+
   const setMax = () => {
     const roundedBalance = Number(formatBigNumber(balanceToken?.value, balanceToken?.decimals));
     const floorBalance = (Math.floor(roundedBalance * 100) / 100).toString();
@@ -256,18 +269,22 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       return <Button variant="primaryFilled">Processing...</Button>;
     }
 
-    if (needsApproval && !isConfirmedApprove && !isSuccessDeposit) {
+    if (needsApproval && !isSuccessDeposit) {
       return (
         <ApproveBtn
           tokenAddress={pool.tokenAddress}
           poolAddress={pool.rebalancerAddress}
           value={parseBigNumber(formik.values.deposit, pool.decimals)}
           setConfirmedApprove={setConfirmedApprove}
+          isDisabled={
+            Number(formik.values.deposit) >
+            Number(formatBigNumber(balanceToken?.value, balanceToken?.decimals))
+          }
         />
       );
     }
 
-    if (!isSuccessDeposit && isConfirmedApprove) {
+    if (!isSuccessDeposit && !needsApproval) {
       return (
         <DepositButton
           variant="primaryFilled"
@@ -415,6 +432,13 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           <Text color="black.0">Gas fee</Text>
           <Text textStyle="textMono16">{formatNumber(0.000005)} (ETH)</Text>
         </HStack>
+
+        {error && (
+          <Text textStyle="text14" color="redAlpha.80" textAlign="center">
+            {error}
+          </Text>
+        )}
+
         {getDepositTabButton()}
 
         <Stepper
