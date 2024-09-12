@@ -8,7 +8,7 @@ import * as yup from "yup"; // Импорт Yup для схемы валидац
 
 import { FormInput } from "../../../../components/forms/form-input";
 import { useWithdraw } from "../../../../hooks/useWithdraw";
-import { parseBigNumber } from "../../../../utils/formatBigNumber";
+import { formatBigNumber, parseBigNumber } from "../../../../utils/formatBigNumber";
 import { formatNumber } from "../../../../utils/formatNumber";
 import { getPersonalEarnings } from "@/api/pools/queries";
 import { LockApi } from "@/types";
@@ -35,12 +35,23 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
     const [profit, setProfit] = useState(0);
     const [unlockData, setUnlockData] = useState<LockApi>({} as LockApi);
+    const [totalLockedBalance, setTotalLockedBalance] = useState(0);
     const [isSuccessUnlocked, setIsSuccessUnlocked] = useState(false);
+    const [lockIds, setLockIds] = useState<number[]>([]);
 
     useEffect(() => {
       if (address) {
         getLocks(address, pool.token).then(data => {
-          console.log("all unlocks", data);
+          const _locks = data.map(lock => lock.lockId);
+          setLockIds(_locks);
+
+          const amountsBigInt = data.map(lock => lock.amount);
+          const totalLockedAmount = amountsBigInt.reduce(
+            (acc, el) => acc + +formatBigNumber(el, pool.decimals),
+            0
+          );
+          setTotalLockedBalance(totalLockedAmount);
+
           setUnlockData(data[data.length - 1]);
         });
       }
@@ -58,10 +69,6 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
         clearTimeout(timer);
       };
     }, [isSuccessUnlocked]);
-
-    useEffect(() => {
-      console.log("unlockData", unlockData);
-    }, [unlockData]);
 
     const formik = useFormik({
       initialValues: {
@@ -144,8 +151,10 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
               daysRemain={getDaysLeft(unlockData.unlockTime, unlockData.duration)}
               pointsEarned={0}
               isFreezeEnd={isUnlocked(unlockData.unlockTime)}
-              lockId={unlockData.lockId}
+              lockIds={lockIds}
               onSuccessUnlock={() => setIsSuccessUnlocked(true)}
+              amount={totalLockedBalance}
+              token={unlockData.token}
             />
           )}
 

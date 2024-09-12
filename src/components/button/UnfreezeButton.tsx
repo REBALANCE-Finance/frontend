@@ -1,4 +1,3 @@
-import { ABI_REBALANCE } from "@/abi/rebalance";
 import { ARB_CONFIRMATIONS_COUNT, LOCK_TOKENS_CONTRACT_ADDRESS } from "@/consts";
 import { Button, useEditable } from "@chakra-ui/react";
 import { useSimulateContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
@@ -10,15 +9,31 @@ import { ModalContextEnum } from "@/store/modal/types";
 type UnfreezeButtonProps = {
   lockId: number;
   onSuccessUnlock: VoidFunction;
+  amount: number;
+  token: string;
+  autoRun: boolean;
+  onChangeBtnIndex: VoidFunction;
+  isLast: boolean;
+  onLastLockRunned: VoidFunction;
 };
 
-const UnfreezeButton = ({ lockId, onSuccessUnlock }: UnfreezeButtonProps) => {
+const UnfreezeButton = ({
+  lockId,
+  onSuccessUnlock,
+  amount,
+  token,
+  autoRun,
+  onChangeBtnIndex,
+  isLast,
+  onLastLockRunned
+}: UnfreezeButtonProps) => {
   const { data: unlockData, writeContract: onUnlock, isPending } = useWriteContract();
   const { openModal } = useStore("modalContextStore");
 
   const {
     data: unlockContractData,
     isLoading: isSimulating,
+    isSuccess: isSimulated,
     error: simulatingError
   } = useSimulateContract({
     address: LOCK_TOKENS_CONTRACT_ADDRESS,
@@ -32,8 +47,6 @@ const UnfreezeButton = ({ lockId, onSuccessUnlock }: UnfreezeButtonProps) => {
     confirmations: ARB_CONFIRMATIONS_COUNT
   });
 
-  console.log("unclock errors", simulatingError, error);
-
   const onUnlockToken = () => {
     if (onUnlock && unlockContractData?.request) {
       onUnlock(unlockContractData.request);
@@ -41,14 +54,24 @@ const UnfreezeButton = ({ lockId, onSuccessUnlock }: UnfreezeButtonProps) => {
   };
 
   useEffect(() => {
+    if (autoRun && isSimulated) {
+      onUnlockToken();
+    }
+  }, [autoRun, isSimulated]);
+
+  useEffect(() => {
     if (isSuccess && unlockData) {
+      onChangeBtnIndex();
       onSuccessUnlock();
-      openModal({
-        type: ModalContextEnum.Success,
-        props: {
-          txHash: unlockData
-        }
-      });
+      if (isLast) {
+        onLastLockRunned();
+        openModal({
+          type: ModalContextEnum.Success,
+          props: {
+            txHash: unlockData
+          }
+        });
+      }
     } else if (isError) {
       openModal({
         type: ModalContextEnum.Reject,
@@ -59,7 +82,7 @@ const UnfreezeButton = ({ lockId, onSuccessUnlock }: UnfreezeButtonProps) => {
         }
       });
     }
-  }, [isSuccess, isError]);
+  }, [isSuccess, isError, isLast]);
 
   return (
     <Button
@@ -68,9 +91,9 @@ const UnfreezeButton = ({ lockId, onSuccessUnlock }: UnfreezeButtonProps) => {
       border="1px solid"
       borderColor="black.40"
       minH="44px"
-      isDisabled={isLoading || isPending || isSimulating}
+      isDisabled={isLoading || isPending || isSimulating || autoRun}
     >
-      {isLoading || isPending ? "Processing..." : "Unfreeze"}
+      {isLoading || isPending ? "Processing..." : `Unfreeze ${amount.toFixed(2)} ${token}`}
     </Button>
   );
 };
