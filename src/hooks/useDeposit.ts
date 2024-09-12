@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
-import {
-  useAccount,
-  useReadContract,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-} from "wagmi";
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ABI_REBALANCE } from "../abi/rebalance";
 import { ARB_CONFIRMATIONS_COUNT, LOCAL_STORAGE_KEYS } from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
+import { useAnalyticsEventTracker } from "./useAnalyticsEventTracker";
 
 export const useDeposit = (
   poolAddress: `0x${string}`,
@@ -42,15 +38,25 @@ export const useDeposit = (
     confirmations: ARB_CONFIRMATIONS_COUNT
   });
 
+  const event = useAnalyticsEventTracker();
+
+  const onSendSuccessDepositEvent = () => {
+    event({
+      action: "deposit_success",
+      label: "Deposit Succesful"
+    });
+  };
+
   useEffect(() => {
     if (isReceiptSuccess && txHash) {
       if (needClose) {
         onClose();
+        onSendSuccessDepositEvent();
         openModal({
           type: ModalContextEnum.Success,
           props: {
             txHash,
-            id: 'deposit_success'
+            id: "deposit_success"
           }
         });
       }

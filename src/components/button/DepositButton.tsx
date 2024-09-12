@@ -6,13 +6,15 @@ const DepositButton = ({
   variant,
   onDeposit,
   title,
-  id
+  id,
+  onClick
 }: {
   isDisabled: boolean;
   variant: string;
   onDeposit: VoidFunction;
   title?: string;
   id?: string;
+  onClick?: VoidFunction;
 }) => {
   return (
     <motion.div
@@ -37,7 +39,12 @@ const DepositButton = ({
         variant={"#4CFF94"}
         type="submit"
         isDisabled={isDisabled}
-        onClick={onDeposit}
+        onClick={() => {
+          if (onClick) {
+            onClick();
+          }
+          onDeposit();
+        }}
       >
         {title || "Deposit"}
       </Button>

@@ -17,9 +17,21 @@ import { ISuccessModalContextProps } from "../types";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { getExplorerTxLink } from "@/utils";
 
-export const SuccessModal: FC<ISuccessModalContextProps> = ({ isOpen, onClose, txHash, id }) => {
+export const SuccessModal: FC<ISuccessModalContextProps> = ({
+  isOpen,
+  onClose,
+  txHash,
+  id,
+  onClick
+}) => {
   const copy = useCopyToClipboard();
   const [countdown, setCountdown] = useState(10);
+
+  useEffect(() => {
+    if (onClick) {
+      onClick();
+    }
+  }, []);
 
   useEffect(() => {
     if (isOpen) {

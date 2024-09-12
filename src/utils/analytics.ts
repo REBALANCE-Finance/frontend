@@ -11,6 +11,6 @@ export const getIdByToken = (token: string) => {
     case "FRAX":
       return "Frax";
     default:
-      return "usdt";
+      return "USDT";
   }
 };

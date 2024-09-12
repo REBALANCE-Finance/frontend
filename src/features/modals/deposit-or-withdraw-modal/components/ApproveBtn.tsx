@@ -11,7 +11,8 @@ const ApproveBtn = ({
   tokenAddress,
   setConfirmedApprove,
   isDisabled,
-  id
+  id,
+  onClick
 }: {
   value: bigint;
   tokenAddress: `0x${string}`;
@@ -19,6 +20,7 @@ const ApproveBtn = ({
   setConfirmedApprove: (value: boolean) => void;
   isDisabled?: boolean;
   id?: string;
+  onClick?: VoidFunction;
 }) => {
   const { data: hash, writeContract } = useWriteContract();
   const { isSuccess, isLoading } = useWaitForTransactionReceipt({
@@ -27,6 +29,10 @@ const ApproveBtn = ({
   });
 
   const approve = () => {
+    if (onClick) {
+      onClick();
+    }
+
     writeContract({
       address: tokenAddress,
       abi: ABI_REBALANCE,

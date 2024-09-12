@@ -32,6 +32,7 @@ import { useAccount } from "wagmi";
 import Icon from "../icon";
 import { usePathname } from "next/navigation";
 import { isDesktop, isMobile } from "react-device-detect";
+import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
 
 type UserTasksPopoverProps = {
   address: `0x${string}`;
@@ -88,6 +89,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   const [is600Up] = useMediaQuery("(min-width: 600px)");
   const [is700Up] = useMediaQuery("(min-width: 700px)");
   const { openModal } = useStore("modalStore");
+  const event = useAnalyticsEventTracker();
 
   const fraxPool = pools.find(pool => pool.token === "FRAX");
 
@@ -255,6 +257,16 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     isSuccessTask.freeze
   ]);
 
+  useEffect(() => {
+    if (tasks.length > 0) {
+      const fraxTask = tasks.find((task) => task.type === 'frax' && task.complete);
+
+      if (fraxTask) {
+        onDepositClaim();
+      }
+    }
+  }, [tasks.length])
+
   useOutsideClick({
     // @ts-ignore
     ref: tooltipRef,
@@ -282,18 +294,77 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     }
   };
 
-  const getConnectBtn = (id?: string) => {
+  const getConnectBtn = (id?: string, onSendEvent?: VoidFunction) => {
     const connectBtn = {
       title: "Connect",
       id,
       loading: false,
       onClick: () => {
+        if (onSendEvent) {
+          onSendEvent();
+        }
         // @ts-ignore
         openModal({ type: ModalEnum.ConnectWallet });
       }
     };
 
     return connectBtn;
+  };
+
+  const onConnectWalletStart = () => {
+    event({
+      action: "task_wallet",
+      label: "Connect Wallet"
+    });
+  };
+
+  const onConnectTwitterStart = () => {
+    event({
+      action: "task_twitter",
+      label: "Follow us on Twitter"
+    });
+  };
+
+  const onConnectTelegramStart = () => {
+    event({
+      action: "task_telegram",
+      label: "Join us on Telegram"
+    });
+  };
+
+  const onDepositStart = () => {
+    event({
+      action: "task_deposit",
+      label: "Deposit freeze any FRAX amount"
+    });
+  };
+
+  const onClaimConnectWallet = () => {
+    event({
+      action: "task_wallet_claim",
+      label: "Connect Wallet claim"
+    });
+  };
+
+  const onClaimTwitter = () => {
+    event({
+      action: "task_twitter_claim",
+      label: "Follow us on Twitter claim"
+    });
+  };
+
+  const onClaimTelegram = () => {
+    event({
+      action: "task_telegram_claim",
+      label: "Join us on Telegram claim"
+    });
+  };
+
+  const onDepositClaim = () => {
+    event({
+      action: "task_deposit_claim",
+      label: "Deposit freeze any FRAX amount claim"
+    });
   };
 
   const getButtonProps = (
@@ -305,10 +376,13 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
         ? {
             title: "Claim",
             loading: loadingTask.wallet,
-            onClick: () => onCompleteTask(index),
+            onClick: () => {
+              onClaimConnectWallet();
+              onCompleteTask(index);
+            },
             id: "task_wallet_claim"
           }
-        : getConnectBtn("task_wallet");
+        : getConnectBtn("task_wallet", onConnectWalletStart);
     if (type === "telegram")
       return !isConnected
         ? getConnectBtn("task_telegram")
@@ -316,13 +390,17 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
         ? {
             title: "Claim",
             loading: loadingTask.telegram,
-            onClick: () => onCompleteTask(index),
+            onClick: () => {
+              onClaimTelegram();
+              onCompleteTask(index);
+            },
             id: "task_telegram_claim"
           }
         : {
             title: "Join",
             loading: false,
             onClick: () => {
+              onConnectTelegramStart();
               window.open(TELEGRAM_FOLLOW_LINK, "_blank");
               setIsTelegramChecked(true);
             }
@@ -360,6 +438,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
             title: "Deposit",
             loading: !isFetchedPools,
             onClick: () => {
+              onDepositStart();
               openModal({
                 type: ModalEnum.Deposit,
                 props: { pool: fraxPool, type: ModalEnum.Deposit }
@@ -371,11 +450,19 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     return !isConnected
       ? getConnectBtn("task_twitter")
       : isTwitterChecked
-      ? { title: "Claim", loading: loadingTask.twitter, onClick: () => onCompleteTask(index) }
+      ? {
+          title: "Claim",
+          loading: loadingTask.twitter,
+          onClick: () => {
+            onClaimTwitter();
+            onCompleteTask(index);
+          }
+        }
       : {
           title: "Follow",
           loading: false,
           onClick: () => {
+            onConnectTwitterStart();
             window.open(TWITTER_FOLLOW_URL, "_blank");
             setIsTwitterChecked(true);
           },

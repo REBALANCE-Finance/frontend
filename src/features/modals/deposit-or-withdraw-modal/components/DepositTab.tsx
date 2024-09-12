@@ -44,6 +44,7 @@ import { useLock } from "@/hooks/useLock";
 import { useBalanceOfAsset } from "@/hooks/useBalanceOfAsset";
 import { ABI_REBALANCE } from "@/abi/rebalance";
 import { formatSharesNumber } from "@/utils";
+import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
 
 interface IDepositTabProps {
   pool: any;
@@ -64,6 +65,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     token: pool.tokenAddress
   });
   const tooltipRef = useRef();
+  const event = useAnalyticsEventTracker();
 
   const depositSchema = Yup.object().shape({
     deposit: Yup.string().test("min-amount", `Amount must be at least 1$`, value => {
@@ -264,6 +266,20 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     return 0; // Default case
   };
 
+  const onSendApproveEvent = () => {
+    event({
+      action: "approve_deposit",
+      label: "Approve"
+    });
+  };
+
+  const onSendDepositEvent = () => {
+    event({
+      action: "execute_deposit",
+      label: "Deposit"
+    });
+  };
+
   const getDepositTabButton = () => {
     if (isLoadingDeposit || isLockLoading) {
       return <Button variant="primaryFilled">Processing...</Button>;
@@ -281,6 +297,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
             Number(formatBigNumber(balanceToken?.value, balanceToken?.decimals))
           }
           id="approve_deposit"
+          onClick={onSendApproveEvent}
         />
       );
     }
@@ -292,6 +309,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           isDisabled={!formik.values.deposit || !formik.isValid || isLoadingDeposit}
           onDeposit={onDeposit}
           id="execute_deposit"
+          onClick={onSendDepositEvent}
         />
       );
     }
