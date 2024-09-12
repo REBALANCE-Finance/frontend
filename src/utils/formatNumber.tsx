@@ -1,7 +1,13 @@
 import numeral from "numeral";
 
 export const formatNumber = (value: string | number, isWithdraw?: boolean) => {
-  if (value === undefined || Number(value) === 0 || Number(value) < 0 || (Number(value) < 0.000001 && !isWithdraw)) return "0";
+  if (
+    value === undefined ||
+    Number(value) === 0 ||
+    Number(value) < 0 ||
+    (Number(value) < 0.000001 && isWithdraw)
+  )
+    return "0";
   if (Number(value) < 0.000001 && !isWithdraw) return "<0.000001";
   const numValue = Number(value);
 
