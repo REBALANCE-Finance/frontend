@@ -12,6 +12,9 @@ import { getFinalExplorerUrl } from "../../utils/url";
 import { AssetHeader } from "./components/header/AssetHeader";
 import { IPoolData, IAreaChartData } from "@/api/pools/types";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
+import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
+import { useEffect } from "react";
+import { getIdByToken } from "@/utils/analytics";
 
 export const LendingAsset = ({
   pool,
@@ -31,6 +34,16 @@ export const LendingAsset = ({
   // const finalAddress = Array.isArray(poolAddress) ? poolAddress[0] : poolAddress;
   const searchParams = useSearchParams();
   const strategic = searchParams.get("strategic") ?? STRATEGIES.based;
+  const event = useAnalyticsEventTracker();
+
+  useEffect(() => {
+    if (pool) {
+      event({
+        action: `Click_page_${getIdByToken(pool.token)}`,
+        label: `Click page "${getIdByToken(pool.token)}"`
+      });
+    }
+  }, [pool]);
 
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
 

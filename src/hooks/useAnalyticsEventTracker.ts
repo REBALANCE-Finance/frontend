@@ -2,20 +2,20 @@ import { useCallback } from "react";
 
 type GTagEvent = {
   action: string;
+  category?: string;
   label: string;
   value?: string | number;
 };
 
 export const useAnalyticsEventTracker = () => {
-  const eventTracker = useCallback(({ action, label, value }: GTagEvent) => {
-    // Ensure this runs only in the browser and `gtag` is available
-    if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
-      (window as any).gtag("event", action, {
-        event_label: label,
-        value
+  const eventTracker = useCallback(({ action, label, value, category }: GTagEvent) => {
+    if (typeof window !== "undefined" && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
+        event: action,
+        event_label: label
       });
     } else {
-      console.warn("Google Analytics is not loaded");
+      console.warn("Google Tag Manager is not loaded");
     }
   }, []);
 

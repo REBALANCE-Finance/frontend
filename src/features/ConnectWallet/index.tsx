@@ -11,18 +11,23 @@ export const ConnectWallet = ({
   variant,
   minHeight,
   className,
-  id
+  id,
+  onClick
 }: {
   title?: string;
   variant?: string;
   minHeight?: string;
   className?: string;
   id?: string;
+  onClick?: VoidFunction;
 }) => {
   const { openModal } = useStore("modalStore");
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
 
   const onOpenConnectWalletModal = () => {
+    if (onClick) {
+      onClick();
+    }
     openModal({
       // @ts-ignore
       type: ModalEnum.ConnectWallet
