@@ -8,6 +8,7 @@ import { ModalController } from "../features/modals/ModalController";
 import { ToastContainer } from "react-toastify";
 import { MainLayout } from "@/layout/MainLayout";
 import Script from "next/script";
+import CommonEvent from "@/components/common-event";
 
 export const metadata: Metadata = {
   title: "Rebalance",
@@ -47,6 +48,7 @@ export default function RootLayout({
         </noscript>
 
         <Providers>
+          <CommonEvent />
           <MainLayout>{children}</MainLayout>
           <ModalContextController />
           <ModalController />
