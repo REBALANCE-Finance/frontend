@@ -107,7 +107,13 @@ export const getLocks = async (address: string, tokenName?: string) => {
 
     const data: LockApi[] = await response.json();
 
-    return data.filter(lock => lock.unlockedTime === 0);
+    const unlockedData = data.filter(lock => lock.unlockedTime === 0);
+
+    if (tokenName) {
+      return unlockedData.filter(lock => lock.token === tokenName);
+    }
+
+    return unlockedData;
   } catch (error: any) {
     console.error(`Failed to fetch locks: ${error.message}`);
     console.error(error);

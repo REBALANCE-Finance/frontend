@@ -48,7 +48,7 @@ export type LockApi = {
   network: string;
   lockId: number;
   token: string;
-  amount: string;
+  amount: bigint;
   duration: number;
   unlockTime: number;
   unlockedTime: number;

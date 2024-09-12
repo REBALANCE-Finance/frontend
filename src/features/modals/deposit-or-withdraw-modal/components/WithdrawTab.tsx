@@ -139,7 +139,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
 
           <Divider borderColor="black.90" />
 
-          {unlockData.lockId && (
+          {unlockData.lockId >= 0 && (
             <UnlockItem
               daysRemain={getDaysLeft(unlockData.unlockTime, unlockData.duration)}
               pointsEarned={0}
