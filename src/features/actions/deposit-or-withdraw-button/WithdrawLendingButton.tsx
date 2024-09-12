@@ -29,7 +29,7 @@ export const WithdrawLendingButton: FC<IWithdrawProps> = ({
   const [totalBalance, setTotalBalance] = useState(0);
 
   useEffect(() => {
-    if (address) {
+    if (address && balance) {
       getLocks(address, pool.token).then(data => {
         const amountsBigInt = data.map(item => item.amount);
         const amountsNumbers = amountsBigInt.map(item =>
@@ -40,7 +40,7 @@ export const WithdrawLendingButton: FC<IWithdrawProps> = ({
         setTotalBalance(balance + totalLockedAmount);
       });
     }
-  }, [address]);
+  }, [address, balance]);
 
   const handleOpenModal = () => {
     openModal({ type: ModalEnum.Withdraw, props: { pool, type: ModalEnum.Withdraw } });

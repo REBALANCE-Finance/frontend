@@ -44,10 +44,10 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
   }, [address]);
 
   useEffect(() => {
-    if (lockedBalance > 0) {
+    if (balance) {
       setTotalBalance(balance + lockedBalance);
     }
-  }, [lockedBalance]);
+  }, [lockedBalance, balance]);
 
   return (
     <Flex alignItems="center" justifyContent="space-between">
