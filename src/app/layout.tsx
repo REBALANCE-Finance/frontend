@@ -23,7 +23,29 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script
+        <>
+          <Script
+              strategy="afterInteractive"
+              // G-2098CC33P7
+              // src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=G-3F7178H2MV`}
+          />
+          <Script
+              id="gtag-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                  __html: `
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-3F7178H2MV', {
+                    page_path: window.location.pathname,
+                    });
+                  `,
+              }}
+            />
+        </>
+        {/* <Script
           id="gtm-head"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -35,17 +57,17 @@ export default function RootLayout({
             })(window,document,'script','dataLayer','GTM-PTPS7F67');
           `
           }}
-        />
+        /> */}
       </head>
       <body id="App_visited">
-        <noscript>
+        {/* <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-PTPS7F67"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
           ></iframe>
-        </noscript>
+        </noscript> */}
 
         <Providers>
           <CommonEvent />

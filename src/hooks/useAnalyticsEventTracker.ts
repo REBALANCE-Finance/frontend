@@ -8,11 +8,8 @@ type GTagEvent = {
 
 export const useAnalyticsEventTracker = () => {
   const eventTracker = useCallback(({ action, label, value }: GTagEvent) => {
-    if (typeof window !== "undefined" && (window as any).dataLayer) {
-      (window as any).dataLayer.push({
-        event: action,
-        event_label: label
-      });
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("event",action);
     } else {
       console.warn("Google Tag Manager is not loaded");
     }
