@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { formatNumberWithCommas } from "@/utils/formatNumber";
 import {
   ICON_NAMES,
+  LOCAL_STORAGE_KEYS,
   NEW_MOCKED_TASKS,
   ROUTE_PATHS,
   TELEGRAM_FOLLOW_LINK,
@@ -33,6 +34,7 @@ import Icon from "../icon";
 import { usePathname } from "next/navigation";
 import { isDesktop, isMobile } from "react-device-detect";
 import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
+import localStore from "@/utils/localStore";
 
 type UserTasksPopoverProps = {
   address: `0x${string}`;
@@ -361,10 +363,15 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   };
 
   const onDepositClaim = () => {
-    event({
-      action: "task_deposit_claim",
-      label: "Deposit freeze any FRAX amount claim"
-    });
+    const isSentDepositEvent = !!localStore.getData(LOCAL_STORAGE_KEYS.isSentDepositEvent);
+
+    if (!isSentDepositEvent) {
+      event({
+        action: "task_deposit_claim",
+        label: "Deposit freeze any FRAX amount claim"
+      });
+      localStore.post(LOCAL_STORAGE_KEYS.isSentDepositEvent, true);
+    }
   };
 
   const getButtonProps = (

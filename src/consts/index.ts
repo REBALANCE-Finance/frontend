@@ -52,7 +52,8 @@ export const HACKEN_AUDIT_LINK = "https://hacken.io/audits/rebalance/";
 
 export const LOCAL_STORAGE_KEYS = {
   isShownTutorial: "isShownTutorial",
-  isShownTasks: "isShownTasks"
+  isShownTasks: "isShownTasks",
+  isSentDepositEvent: "isSentDepositEvent",
 };
 
 export const TWITTER_FOLLOW_URL = "https://x.com/intent/user?screen_name=rebalancefin";
