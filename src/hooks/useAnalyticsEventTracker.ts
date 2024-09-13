@@ -11,7 +11,7 @@ export const useAnalyticsEventTracker = () => {
     if (typeof window !== "undefined" && (window as any).dataLayer) {
       (window as any).dataLayer.push({
         event: action,
-        event_label: label
+        event_name: label
       });
     } else {
       console.warn("Google Tag Manager is not loaded");
