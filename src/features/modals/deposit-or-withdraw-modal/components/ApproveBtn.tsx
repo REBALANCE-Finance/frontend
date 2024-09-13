@@ -45,7 +45,7 @@ const ApproveBtn = ({
     if (isSuccess) {
       setConfirmedApprove(isSuccess);
     }
-  }, [isSuccess, setConfirmedApprove]);
+  }, [isSuccess]);
 
   return (
     <Button id={id} variant="primaryFilled" isDisabled={isDisabled} onClick={() => approve()}>

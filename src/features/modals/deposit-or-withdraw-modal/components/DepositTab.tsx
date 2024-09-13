@@ -132,7 +132,8 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
     allowance,
     deposit,
     isLoading: isLoadingDeposit,
-    isSuccess: isSuccessDeposit
+    isSuccess: isSuccessDeposit,
+    refetchDepositAllowance
   } = useDeposit(
     pool.rebalancerAddress,
     pool.tokenAddress,
@@ -166,6 +167,12 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   });
 
   useEffect(() => {
+    if (isConfirmedApprove) {
+      refetchDepositAllowance();
+    }
+  }, [isConfirmedApprove]);
+
+  useEffect(() => {
     if (sharesData) {
       const stringNumber = formatBigNumber(sharesData, pool.decimals);
       const preparedSharesValue = formatSharesNumber(stringNumber);
@@ -176,8 +183,8 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   useEffect(() => {
     if (formik.values.deposit) {
       const checkNeedsApproval = () => {
-        const depositValue = BigInt(parseBigNumber(formik.values.deposit, pool.decimals));
-        const isApprovalNeeded = !allowance || BigInt(allowance) < depositValue;
+        const formattedAllowance = Number(formatBigNumber(allowance, pool.decimals));
+        const isApprovalNeeded = !allowance || formattedAllowance < Number(formik.values.deposit);
         setNeedsApproval(isApprovalNeeded);
       };
       checkNeedsApproval();
@@ -243,11 +250,11 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   };
 
   const getActiveStepIndex = () => {
-    if (!isConfirmedApprove && !isSuccessDeposit) {
+    if (needsApproval && !isSuccessDeposit) {
       return 0; // Needs approval but no deposit success
     }
 
-    if (isConfirmedApprove && !isSuccessDeposit) {
+    if (!needsApproval && !isSuccessDeposit) {
       return 1; // Approval done but deposit not successful
     }
 

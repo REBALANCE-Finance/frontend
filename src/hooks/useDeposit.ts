@@ -12,7 +12,8 @@ export const useDeposit = (
   tokenAddress: `0x${string}`,
   onClose: VoidFunction,
   onRetry?: VoidFunction,
-  needClose?: boolean
+  needClose?: boolean,
+  refetchAllowance?: VoidFunction
 ) => {
   const [isLoading, setLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
@@ -21,7 +22,7 @@ export const useDeposit = (
   const { openModal } = useStore("modalContextStore");
   const isActiveTutorial = !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial) || false;
   const { writeContractAsync } = useWriteContract();
-  const { data: allowance } = useReadContract({
+  const { data: allowance, refetch: refetchDepositAllowance } = useReadContract({
     address: tokenAddress,
     abi: ABI_REBALANCE,
     functionName: "allowance",
@@ -117,6 +118,7 @@ export const useDeposit = (
     deposit,
     approve,
     isLoading: isLoading || waitingReceipt,
-    isSuccess
+    isSuccess,
+    refetchDepositAllowance
   };
 };

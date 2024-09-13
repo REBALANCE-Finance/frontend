@@ -259,13 +259,13 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
 
   useEffect(() => {
     if (tasks.length > 0) {
-      const fraxTask = tasks.find((task) => task.type === 'frax' && task.complete);
+      const fraxTask = tasks.find(task => task.type === "frax" && task.complete);
 
       if (fraxTask) {
         onDepositClaim();
       }
     }
-  }, [tasks.length])
+  }, [tasks.length]);
 
   useOutsideClick({
     // @ts-ignore
