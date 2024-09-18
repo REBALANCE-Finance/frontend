@@ -92,6 +92,9 @@ export const PoolsLending = ({
                         {item.token === "FRAX" ? (
                           <>
                             <span>
+                              <br />- Fraxlend
+                            </span>
+                            <span>
                               <br />- Lodestar
                             </span>
                             <span>
@@ -127,6 +130,11 @@ export const PoolsLending = ({
                         APY
                       </Text>
                       <Box ml="auto" display="flex">
+                        {item.token === "FRAX" && (
+                          <Box borderRadius="50%" mr="-4px" zIndex={7}>
+                            <Icon name="FRAXLEND" width="14px" height="14px" />
+                          </Box>
+                        )}
                         {item.token === "FRAX" && (
                           <Box borderRadius="50%" mr="-4px" zIndex={6}>
                             <Icon name="LODESTAR" width="14px" height="14px" />

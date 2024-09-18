@@ -69,5 +69,6 @@ export const ICON_NAMES: { [key: string]: string } = {
   LODESTAR: "LODESTAR",
   completedStep: "completed-step",
   uncompletedStep: "uncompleted-step",
-  help: "help"
+  help: "help",
+  FRAXLEND: "FRAXLEND"
 } as const;
