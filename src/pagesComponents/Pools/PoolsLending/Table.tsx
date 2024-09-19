@@ -135,9 +135,16 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
                 </Text>
               </Th>
               <Th p="24px 12px">
-                <Text textStyle="textMono16" color="white">
-                  {formatNumber(pool.avgApr)}%
-                </Text>
+                <Flex flexDir="column" gap={1}>
+                  <Text textStyle="textMono16" color="white">
+                    {formatNumber(pool.avgApr)}%
+                  </Text>
+                  {pool.token === "FRAX" && (
+                    <Text textStyle="textMono16" color="green.100">
+                      +20% ARB
+                    </Text>
+                  )}
+                </Flex>
               </Th>
               <Th p="24px 12px">
                 <Text
