@@ -41,7 +41,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
         setLockedBalance(totalLockedAmount);
       });
     }
-  }, [address]);
+  }, [address, balance]);
 
   useEffect(() => {
     if (balance) {
