@@ -3,7 +3,7 @@ import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from "rechar
 
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATES, DATESEarned } from "../../../components/data-switcher/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getPersonalEarnings } from "@/api/pools/queries";
 import { CustomTooltipBarChart } from "./components/CustomToolTipBarChart";
 import { IPoolData } from "@/api/pools/types";
@@ -11,6 +11,8 @@ import { DepositLendingButton } from "@/features/actions/deposit-or-withdraw-but
 import { themes } from "../../../themes";
 import { tickFormatter } from "../utils";
 import { DateSwitcher } from "@/components/data-switcher";
+import { useAccount } from "wagmi";
+import { performWagmiChainName } from "@/utils";
 
 const data = [
   {
@@ -142,15 +144,20 @@ const EarningsChart = ({
   token: string;
   pool: IPoolData;
 }) => {
+  const { chain } = useAccount();
   const { selectedDate, setSelectDate } = useDateSwitcher(DATESEarned[0]);
   const [userEarningsData, setUserEarningsData] = useState<IBarChartData[] | undefined>(undefined);
   const [avgApr, setAvgApr] = useState<number>(0);
   const [error, setError] = useState(false);
 
+  const chainName = useMemo(() => {
+    return performWagmiChainName(chain?.name || "Arbitrum");
+  }, [chain?.name]);
+
   useEffect(() => {
     if (address) {
       setError(false);
-      getPersonalEarnings(selectedDate.interval, selectedDate.intervals, address, token)
+      getPersonalEarnings(selectedDate.interval, selectedDate.intervals, address, token, chainName)
         .then(data => {
           setUserEarningsData(data.userEarned);
           setAvgApr(data.avgAPR);

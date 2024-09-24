@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ABI_REBALANCE } from "../abi/rebalance";
-import { ARB_CONFIRMATIONS_COUNT, LOCAL_STORAGE_KEYS } from "@/consts";
+import { ARB_CONFIRMATIONS_COUNT, BSC_CONFIRMATIONS_COUNT, LOCAL_STORAGE_KEYS } from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
 import { useAnalyticsEventTracker } from "./useAnalyticsEventTracker";
+import { arbitrum } from "viem/chains";
 
 export const useDeposit = (
   poolAddress: `0x${string}`,
@@ -18,7 +19,7 @@ export const useDeposit = (
   const [isLoading, setLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const { openModal } = useStore("modalContextStore");
   const isActiveTutorial = !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial) || false;
   const { writeContractAsync } = useWriteContract();
@@ -36,7 +37,7 @@ export const useDeposit = (
     error: receiptError
   } = useWaitForTransactionReceipt({
     hash: txHash as `0x${string}`,
-    confirmations: ARB_CONFIRMATIONS_COUNT
+    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
   });
 
   const event = useAnalyticsEventTracker();

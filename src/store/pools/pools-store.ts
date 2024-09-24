@@ -1,6 +1,7 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { getPools } from "../../api/pools/queries";
 import { IPoolData } from "./types";
+import { ICHAIN } from "@/types";
 
 class PoolsStore {
   pools: IPoolData[] = [];
@@ -33,14 +34,14 @@ class PoolsStore {
     });
   };
 
-  fetchPools = async (type: "lending" | "borrowing"): Promise<void> => {
+  fetchPools = async (type: "lending" | "borrowing", network: ICHAIN): Promise<void> => {
     if (this.isLoading) return;
 
     this.isLoading = true;
     this.setError(null);
 
     try {
-      const data: IPoolData[] = await getPools(type);
+      const data: IPoolData[] = await getPools(type, network);
       const sortedData = data.sort((a, b) => {
         if (a.token === "FRAX") return -1;
         if (b.token === "FRAX") return 1;
@@ -64,9 +65,9 @@ class PoolsStore {
     }
   };
 
-  startPolling = (type: "lending" | "borrowing" = "lending") => {
-    this.fetchPools(type);
-    this.interval = setInterval(() => this.fetchPools(type), 60000);
+  startPolling = (type: "lending" | "borrowing" = "lending", network: ICHAIN) => {
+    this.fetchPools(type, network);
+    this.interval = setInterval(() => this.fetchPools(type, network), 60000);
   };
 
   stopPolling = () => {

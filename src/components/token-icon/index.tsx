@@ -12,6 +12,19 @@ export const TokenIcon = ({
   size?: string;
   sizeIcon?: string;
 }) => {
+  const getIconName = () => {
+    if (name.includes("USDC.")) {
+      return "USDC";
+    }
+    if (name === "wETH") {
+      return "WETH";
+    }
+    if (name === "wBNB") {
+      return "WBNB";
+    }
+    return name;
+  };
+
   return (
     <Circle
       border="1px solid"
@@ -20,7 +33,7 @@ export const TokenIcon = ({
       size={size ? size : "64px"}
     >
       <Icon
-        name={name?.includes("USDC.") ? "USDC" : name === "wETH" ? "WETH" : name}
+        name={getIconName()}
         size={sizeIcon ? sizeIcon : "35px"}
       />
     </Circle>

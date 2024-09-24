@@ -1,15 +1,16 @@
-import { LockApi, Reward, Task } from "@/types";
+import { ICHAIN, LockApi, Reward, Task } from "@/types";
 import { endpoint } from "../pools/queries";
 import { formatBigNumber } from "@/utils/formatBigNumber";
 
 export const getPredictedPoints = async (
   token: string,
   tokenAmount: number,
-  daysOfLock: number
+  daysOfLock: number,
+  network: ICHAIN
 ) => {
   try {
     const response = await fetch(
-      `${endpoint}lending/calculate-points/${token}/${tokenAmount}/${daysOfLock}`
+      `${endpoint}lending/calculate-points/${token}/${tokenAmount}/${daysOfLock}?network=${network}`
     );
 
     if (!response.ok) {

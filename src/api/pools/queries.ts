@@ -1,10 +1,14 @@
+import { ICHAIN } from "@/types";
 import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData, ITotalProfit } from "./types";
 
 export const endpoint = "https://rebalancerfinanceapi.net/";
 
-export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData[]> => {
+export const getPools = async (
+  type: "lending" | "borrowing",
+  network: ICHAIN
+): Promise<IPoolData[]> => {
   try {
-    const response = await fetch(`${endpoint}${type}`, { cache: "no-store" });
+    const response = await fetch(`${endpoint}${type}?network=${network}`, { cache: "no-store" });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -36,11 +40,18 @@ export const getPools = async (type: "lending" | "borrowing"): Promise<IPoolData
   }
 };
 
-export const getTotalProfit = async (type: "lending" | "borrowing", address: string) => {
+export const getTotalProfit = async (
+  type: "lending" | "borrowing",
+  address: string,
+  network: ICHAIN
+) => {
   try {
-    const response = await fetch(`${endpoint}${type}/user-earned-overall/${address}`, {
-      cache: "no-store"
-    });
+    const response = await fetch(
+      `${endpoint}${type}/user-earned-overall/${address}?network=${network}`,
+      {
+        cache: "no-store"
+      }
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -55,12 +66,16 @@ export const getTotalProfit = async (type: "lending" | "borrowing", address: str
 export const getProfitPool = async (
   type: "lending" | "borrowing",
   address: string,
-  token: string
+  token: string,
+  network: ICHAIN
 ) => {
   try {
-    const response = await fetch(`${endpoint}${type}/${token}/user-earned/${address}`, {
-      cache: "no-store"
-    });
+    const response = await fetch(
+      `${endpoint}${type}/${token}/user-earned/${address}?network=${network}`,
+      {
+        cache: "no-store"
+      }
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -75,15 +90,16 @@ export const getProfitPool = async (
 export const getChartData = async (
   interval: number,
   intervalsCount: number,
-  token: string
+  token: string,
+  network: ICHAIN
 ): Promise<any> => {
   try {
     const highestMarketResponse = await fetch(
-      `${endpoint}lending/${token}/highest-market-apr-ticks/${interval}/${intervalsCount}`,
+      `${endpoint}lending/${token}/highest-market-apr-ticks/${interval}/${intervalsCount}?network=${network}`,
       { cache: "no-store" }
     );
     const rebalanceAprResponse = await fetch(
-      `${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}`,
+      `${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}?network=${network}`,
       { cache: "no-store" }
     );
 
@@ -137,11 +153,12 @@ export const getChartData = async (
 export const getUserEarnings = async (
   interval: number,
   intervalsCount: number,
-  address: string
+  address: string,
+  network: ICHAIN
 ) => {
   try {
     const response = await fetch(
-      `${endpoint}lending/user-earned-overall-ticks/${address}/${interval}/${intervalsCount}`,
+      `${endpoint}lending/user-earned-overall-ticks/${address}/${interval}/${intervalsCount}?network=${network}`,
       { cache: "no-store" }
     );
     if (!response.ok) {
@@ -155,9 +172,11 @@ export const getUserEarnings = async (
   }
 };
 
-const fetchHighestAprToken = async (dayInterval: number): Promise<string> => {
+const fetchHighestAprToken = async (dayInterval: number, network: ICHAIN): Promise<string> => {
   try {
-    const response = await fetch(`${endpoint}lending/highest-apr-token/${dayInterval}`);
+    const response = await fetch(
+      `${endpoint}lending/highest-apr-token/${dayInterval}?network=${network}`
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -170,6 +189,7 @@ const fetchHighestAprToken = async (dayInterval: number): Promise<string> => {
 
 const getChartDataAndEarnings = async (
   token: string,
+  network: ICHAIN,
   address?: string
 ): Promise<
   [
@@ -182,9 +202,9 @@ const getChartDataAndEarnings = async (
   ]
 > => {
   const [monthData, halfYearData, yearData] = await Promise.all([
-    getChartData(1, 30, token),
-    getChartData(7, 26, token),
-    getChartData(7, 52, token)
+    getChartData(1, 30, token, network),
+    getChartData(7, 26, token, network),
+    getChartData(7, 52, token, network)
   ]);
 
   let monthEarning: IIntervalResponse[] | undefined;
@@ -193,9 +213,9 @@ const getChartDataAndEarnings = async (
 
   if (address) {
     [monthEarning, halfYearEarning, yearEarning] = await Promise.all([
-      getUserEarnings(1, 30, address),
-      getUserEarnings(7, 26, address),
-      getUserEarnings(7, 52, address)
+      getUserEarnings(1, 30, address, network),
+      getUserEarnings(7, 26, address, network),
+      getUserEarnings(7, 52, address, network)
     ]);
   }
 
@@ -252,13 +272,14 @@ const prepareChartData = (
 };
 
 export const getAreaChartAllIntervalsWithoutToken = async (
+  network: ICHAIN,
   address?: string
 ): Promise<PreparedChartData> => {
   try {
-    const highestAprTokenToday = await fetchHighestAprToken(1);
+    const highestAprTokenToday = await fetchHighestAprToken(1, network);
 
     const [monthData, halfYearData, yearData, monthEarning, halfYearEarning, yearEarning] =
-      await getChartDataAndEarnings(highestAprTokenToday, address);
+      await getChartDataAndEarnings(highestAprTokenToday, network, address);
 
     return prepareChartData(
       monthData,
@@ -276,11 +297,12 @@ export const getAreaChartAllIntervalsWithoutToken = async (
 
 export const getAreaChartAllIntervals = async (
   token: string = "usdt",
+  network: ICHAIN,
   address?: string
 ): Promise<PreparedChartData> => {
   try {
     const [monthData, halfYearData, yearData, monthEarning, halfYearEarning, yearEarning] =
-      await getChartDataAndEarnings(token, address);
+      await getChartDataAndEarnings(token, network, address);
 
     return prepareChartData(
       monthData,
@@ -300,7 +322,8 @@ export const getPersonalEarnings = async (
   interval: number,
   intervalsCount: number,
   address: string,
-  token: string
+  token: string,
+  network: ICHAIN
 ) => {
   try {
     const userEarningsResponse = await fetch(
@@ -308,7 +331,7 @@ export const getPersonalEarnings = async (
       { cache: "no-store" }
     );
     const avgAPRTiksResponse = await fetch(
-      `${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}`,
+      `${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}?network=${network}`,
       { cache: "no-store" }
     );
 

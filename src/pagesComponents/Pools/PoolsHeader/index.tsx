@@ -8,7 +8,7 @@ import {
   Text,
   useMediaQuery
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useMemo } from "react";
 
 import { CircularProgress } from "../../../components/circular-progress";
 import Icon from "../../../components/icon";
@@ -16,6 +16,8 @@ import { ICON_NAMES, MEDIA_QUERY_MAX } from "../../../consts";
 // import { Menu } from "./components/Menu";
 import { Strategies } from "./components/Strategies";
 import NextLink from "next/link";
+import { useAccount } from "wagmi";
+import { performWagmiChainName } from "@/utils";
 
 interface IPoolsHeaderProps {
   isTable: boolean;
@@ -23,8 +25,21 @@ interface IPoolsHeaderProps {
 }
 
 export const PoolsHeader = ({ isTable, onChangeView }: IPoolsHeaderProps) => {
+  const { chain } = useAccount();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
+
+  const chainName = useMemo(() => {
+    return performWagmiChainName(chain?.name || "Arbitrum");
+  }, [chain?.name]);
+
+  const getBridgeLink = () => {
+    if (chainName === "BSC") {
+      return "https://www.bnbchain.org/en/bnb-chain-bridge";
+    }
+
+    return "https://bridge.arbitrum.io/?destinationChain=arbitrum-one&sourceChain=ethereum";
+  };
 
   return (
     <Flex alignItems="center" justifyContent="space-between">
@@ -35,14 +50,14 @@ export const PoolsHeader = ({ isTable, onChangeView }: IPoolsHeaderProps) => {
           as={NextLink}
           // as={Flex}
           display="flex"
-          href="https://bridge.arbitrum.io/?destinationChain=arbitrum-one&sourceChain=ethereum"
+          href={getBridgeLink()}
           alignItems="center"
           gap="8px"
           fontSize="sm"
           color="whiteAlpha.70"
           isExternal
         >
-          Bridge to Arbitrum
+          Bridge to {chainName}
           {/* <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" /> */}
           {!media && <Icon name={ICON_NAMES.link} size="sm" />}
         </Link>

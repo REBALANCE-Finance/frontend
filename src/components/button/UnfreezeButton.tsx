@@ -1,10 +1,20 @@
-import { ARB_CONFIRMATIONS_COUNT, LOCK_TOKENS_CONTRACT_ADDRESS } from "@/consts";
+import {
+  ARB_CONFIRMATIONS_COUNT,
+  BSC_CONFIRMATIONS_COUNT,
+  LOCK_TOKENS_CONTRACT_ADDRESS
+} from "@/consts";
 import { Button, useEditable } from "@chakra-ui/react";
-import { useSimulateContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract
+} from "wagmi";
 import INTEREST_LOCKER_ABI from "@/abi/InterestLocker.json";
 import { useEffect } from "react";
 import { useStore } from "@/hooks/useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
+import { arbitrum } from "viem/chains";
 
 type UnfreezeButtonProps = {
   lockId: number;
@@ -27,6 +37,7 @@ const UnfreezeButton = ({
   isLast,
   onLastLockRunned
 }: UnfreezeButtonProps) => {
+  const { chainId } = useAccount();
   const { data: unlockData, writeContract: onUnlock, isPending } = useWriteContract();
   const { openModal } = useStore("modalContextStore");
 
@@ -44,7 +55,7 @@ const UnfreezeButton = ({
 
   const { isLoading, isSuccess, isError, error } = useWaitForTransactionReceipt({
     hash: unlockData,
-    confirmations: ARB_CONFIRMATIONS_COUNT
+    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
   });
 
   const onUnlockToken = () => {

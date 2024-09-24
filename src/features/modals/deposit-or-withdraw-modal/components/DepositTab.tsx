@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useAccount, useBalance, useReadContract } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
@@ -43,8 +43,9 @@ import Icon from "@/components/icon";
 import { useLock } from "@/hooks/useLock";
 import { useBalanceOfAsset } from "@/hooks/useBalanceOfAsset";
 import { ABI_REBALANCE } from "@/abi/rebalance";
-import { formatSharesNumber } from "@/utils";
+import { formatSharesNumber, performWagmiChainName } from "@/utils";
 import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
+import { arbitrum } from "viem/chains";
 
 interface IDepositTabProps {
   pool: any;
@@ -59,13 +60,19 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const [isOpenTooltip, setIsOpenTooltip] = useState(false);
   const [sharesPreview, setSharesPreview] = useState("");
   const [error, setError] = useState("");
-  const { address } = useAccount();
+  const { address, chainId, chain } = useAccount();
   const { data: balanceToken } = useBalance({
     address,
     token: pool.tokenAddress
   });
   const tooltipRef = useRef();
   const event = useAnalyticsEventTracker();
+
+  const isArbitrumChain = chainId === arbitrum.id;
+
+  const chainName = useMemo(() => {
+    return performWagmiChainName(chain?.name || "Arbitrum");
+  }, [chain?.name]);
 
   const depositSchema = Yup.object().shape({
     deposit: Yup.string().test("min-amount", `Amount must be at least 1$`, value => {
@@ -197,7 +204,8 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
         const points = await getPredictedPoints(
           pool.token,
           +debouncedDeposit,
-          +formik.values.freezePeriod.slice(0, -1)
+          +formik.values.freezePeriod.slice(0, -1),
+          chainName
         );
         setPointsQty(points);
       };
@@ -369,23 +377,25 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           </Flex>
         </HStack>
 
-        <Flex gap={2} alignItems="center">
-          <Icon name={ICON_NAMES.help} size="sm" />
-          <Flex textStyle="text14" gap={1}>
-            <Text color="black.5">Don't have {pool.token}? Use</Text>
-            <Link
-              href={ROUTE_PATHS.swapPage(
-                ARB_TOKEN_ADDRESS,
-                pool.token === "FRAX" ? FRAX_TOKEN_ADDRESS : pool.tokenAddress
-              )}
-              target="_blank"
-              color="#4cfd95"
-              textDecor="underline"
-            >
-              our zero-fee swap
-            </Link>
+        {isArbitrumChain && (
+          <Flex gap={2} alignItems="center">
+            <Icon name={ICON_NAMES.help} size="sm" />
+            <Flex textStyle="text14" gap={1}>
+              <Text color="black.5">Don't have {pool.token}? Use</Text>
+              <Link
+                href={ROUTE_PATHS.swapPage(
+                  ARB_TOKEN_ADDRESS,
+                  pool.token === "FRAX" ? FRAX_TOKEN_ADDRESS : pool.tokenAddress
+                )}
+                target="_blank"
+                color="#4cfd95"
+                textDecor="underline"
+              >
+                our zero-fee swap
+              </Link>
+            </Flex>
           </Flex>
-        </Flex>
+        )}
 
         <Divider borderColor="black.90" />
 

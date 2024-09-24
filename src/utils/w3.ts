@@ -12,13 +12,12 @@ const connectors = [
 ];
 
 export const wagmiConfig = createConfig({
-  chains: [arbitrum, bsc, optimism],
+  chains: [arbitrum, bsc],
   connectors,
   // ssr: true,
   transports: {
     // [sepolia.id]: http(),
     [arbitrum.id]: http(),
-    [bsc.id]: http(),
-    [optimism.id]: http()
+    [bsc.id]: http()
   }
 });

@@ -3,10 +3,13 @@ import { observer } from "mobx-react-lite";
 import { getAreaChartAllIntervals, getPools } from "@/api/pools/queries";
 import { LendingAsset } from "@/pagesComponents/AssetsPages/LendingAsset";
 import { IAreaChartData } from "@/api/pools/types";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useStore } from "@/hooks/useStoreContext";
+import { useAccount } from "wagmi";
+import { performWagmiChainName } from "@/utils";
 
 const LendingAssetPage = observer(({ params }: { params: { [key: string]: string } }) => {
+  const { chain } = useAccount();
   const {
     activePool,
     setActivePool,
@@ -18,9 +21,13 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
   const { pools, isLoading } = useStore("poolsStore");
   const [error, setError] = useState<string | null>(null);
 
+  const chainName = useMemo(() => {
+    return performWagmiChainName(chain?.name || "Arbitrum");
+  }, [chain?.name]);
+
   useEffect(() => {
     if (!activePool) {
-      fetchAndSetActivePool("lending", params.poolToken);
+      fetchAndSetActivePool("lending", params.poolToken, chainName);
     }
   }, [activePool]);
 
@@ -33,11 +40,10 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
     }
   }, [activePool, pools.length, isLoading]);
 
-
   useEffect(() => {
     if (activePool) {
       const token = activePool.token;
-      fetchChartData(token);
+      fetchChartData(token, chainName);
     }
   }, [params.poolToken, activePool]);
 

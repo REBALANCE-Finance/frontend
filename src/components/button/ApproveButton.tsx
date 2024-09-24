@@ -10,11 +10,16 @@ import { useEffect } from "react";
 import { erc20Abi } from "viem";
 import { convertNumberToBigInt, performApprovedAmountValue } from "@/utils";
 import { AddressType } from "@/types";
-import { ARB_CONFIRMATIONS_COUNT, PARASWAP_SPENDER_ADDRESS } from "@/consts";
+import {
+  ARB_CONFIRMATIONS_COUNT,
+  BSC_CONFIRMATIONS_COUNT,
+  PARASWAP_SPENDER_ADDRESS
+} from "@/consts";
 import { handlerToast } from "../toasty/utils";
 import { ToastyTypes } from "../toasty/types";
 import { useStore } from "@/hooks/useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
+import { arbitrum } from "viem/chains";
 
 type ApproveButtonProps = {
   tokenAddress: string;
@@ -59,7 +64,7 @@ const ApproveButton = ({
     error: waitingApproveError
   } = useWaitForTransactionReceipt({
     hash: approveContractData as AddressType,
-    confirmations: ARB_CONFIRMATIONS_COUNT
+    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
   });
 
   const {

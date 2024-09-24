@@ -1,7 +1,7 @@
 "use client";
 import { Flex, Link, Text } from "@chakra-ui/layout";
 import { Box, useMediaQuery } from "@chakra-ui/react";
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import { useAccount } from "wagmi";
 
 import Icon from "@/components/icon";
@@ -17,12 +17,18 @@ import { formatNumber } from "../../../../utils/formatNumber";
 import { usePathname } from "next/navigation";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
 import ArbIncentive from "@/components/badge/ArbIncentive";
+import { performWagmiChainName } from "@/utils";
 
 export const AssetHeader: FC<any> = ({ pool }) => {
   const location = usePathname();
   const pathName = getCurrentPath(location);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { chain } = useAccount();
+
+  const chainName = useMemo(() => {
+    return performWagmiChainName(chain?.name || "Arbitrum");
+  }, [chain?.name]);
+
   if (media) {
     return (
       <Flex w="100%" h="fit-content" flexDirection="column">
@@ -38,7 +44,14 @@ export const AssetHeader: FC<any> = ({ pool }) => {
             >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={"center"}>
                 <Text>{pool?.token}</Text>
-                <Link href={`https://arbiscan.io/token/${pool.tokenAddress}`} isExternal>
+                <Link
+                  href={getFinalExplorerUrl({
+                    url: chain?.blockExplorers?.default.url,
+                    address: pool.tokenAddress,
+                    type: "token"
+                  })}
+                  isExternal
+                >
                   <Icon name={ICON_NAMES?.assetFunction} size="sm" />
                 </Link>
                 {/* <Text>Coin</Text> */}
@@ -133,13 +146,20 @@ export const AssetHeader: FC<any> = ({ pool }) => {
           <Flex direction="column" gap="8px">
             <Text>
               {/* {pool.token} ({CHAIN_NAMES[chain?.id ?? 0]}) */}
-              {pool?.token} (Arbitrum)
+              {pool?.token} ({chainName})
             </Text>
             <Flex gap="12px" align="center">
               <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
                 <Text>{pool?.token}</Text>
               </Flex>
-              <Link href={`https://arbiscan.io/token/${pool.tokenAddress}`} isExternal>
+              <Link
+                href={getFinalExplorerUrl({
+                  url: chain?.blockExplorers?.default.url,
+                  address: pool.tokenAddress,
+                  type: "token"
+                })}
+                isExternal
+              >
                 <Icon name={ICON_NAMES.assetFunction} size="sm" />
               </Link>
             </Flex>

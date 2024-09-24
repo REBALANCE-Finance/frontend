@@ -4,12 +4,14 @@ import { ABI_REBALANCE } from "../abi/rebalance";
 import INTEREST_LOCKER_ABI from "../abi/InterestLocker.json";
 import {
   ARB_CONFIRMATIONS_COUNT,
+  BSC_CONFIRMATIONS_COUNT,
   LOCAL_STORAGE_KEYS,
   LOCK_TOKENS_CONTRACT_ADDRESS
 } from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
+import { arbitrum } from "viem/chains";
 
 export const useLock = (
   poolAddress: `0x${string}`,
@@ -21,7 +23,7 @@ export const useLock = (
   const [isLoading, setLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const { openModal } = useStore("modalContextStore");
   const isActiveTutorial = !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial) || false;
   const { writeContractAsync } = useWriteContract();
@@ -42,7 +44,7 @@ export const useLock = (
     error: receiptError
   } = useWaitForTransactionReceipt({
     hash: txHash as `0x${string}`,
-    confirmations: ARB_CONFIRMATIONS_COUNT
+    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
   });
 
   useEffect(() => {

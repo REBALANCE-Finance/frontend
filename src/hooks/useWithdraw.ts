@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useWriteContract, useWaitForTransactionReceipt, useAccount } from "wagmi";
 import { ABI_REBALANCE } from "../abi/rebalance";
-import { ARB_CONFIRMATIONS_COUNT } from "@/consts";
+import { ARB_CONFIRMATIONS_COUNT, BSC_CONFIRMATIONS_COUNT } from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
+import { arbitrum } from "viem/chains";
 
 export const useWithdraw = (
   poolAddress: `0x${string}`,
   onClose: () => void,
   onRetry: () => void
 ) => {
+  const { chainId } = useAccount();
   const [isLoading, setLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const { openModal } = useStore("modalContextStore");
@@ -22,7 +24,7 @@ export const useWithdraw = (
     error: receiptError
   } = useWaitForTransactionReceipt({
     hash: txHash as `0x${string}`,
-    confirmations: ARB_CONFIRMATIONS_COUNT
+    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
   });
 
   useEffect(() => {

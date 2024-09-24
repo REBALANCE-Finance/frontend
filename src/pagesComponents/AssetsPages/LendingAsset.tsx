@@ -80,7 +80,7 @@ export const LendingAsset = ({
                     <Icon name={CHAIN_ICONS[chain?.id || defChainIdArbitrum]} size="18px" />
                     <Link
                       href={getFinalExplorerUrl({
-                        url: "https://arbiscan.io",
+                        url: chain?.blockExplorers?.default.url,
                         address: pool?.rebalancerAddress,
                         type: "address"
                       })}

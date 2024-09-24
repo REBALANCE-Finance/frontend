@@ -1,6 +1,7 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { getAreaChartAllIntervals, getChartData, getPools } from "../../api/pools/queries";
 import { IPoolData } from "../pools/types";
+import { ICHAIN } from "@/types";
 
 class PoolStore {
   activePool: IPoolData | null = null;
@@ -46,11 +47,11 @@ class PoolStore {
     this.isChartLoading = isLoading;
   }
 
-  async fetchAndSetActivePool(type: "lending" | "borrowing", poolName: string) {
+  async fetchAndSetActivePool(type: "lending" | "borrowing", poolName: string, network: ICHAIN) {
     this.setLoading(true);
     this.setError(null);
     try {
-      const pools: IPoolData[] = await getPools(type);
+      const pools: IPoolData[] = await getPools(type, network);
       runInAction(() => {
         const foundPool = pools.find(pool => pool.token === poolName);
         if (foundPool) {
@@ -70,12 +71,12 @@ class PoolStore {
     }
   }
 
-  async fetchChartData(token: string) {
+  async fetchChartData(token: string, network: ICHAIN) {
     this.setChartLoading(true);
     this.setError(null);
 
     try {
-      const chartData = await getAreaChartAllIntervals(token);
+      const chartData = await getAreaChartAllIntervals(token, network);
       runInAction(() => {
         this.chartData = chartData;
       });

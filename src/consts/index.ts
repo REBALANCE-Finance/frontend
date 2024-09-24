@@ -19,6 +19,8 @@ export const BIG_1E20 = 100000000000000000000;
 
 export const ARB_CONFIRMATIONS_COUNT = 50;
 
+export const BSC_CONFIRMATIONS_COUNT = 4;
+
 export const PARASWAP_SPENDER_ADDRESS = "0x216B4B4Ba9F3e719726886d34a177484278Bfcae";
 
 export const USDT_TOKEN: IToken = {
@@ -53,7 +55,7 @@ export const HACKEN_AUDIT_LINK = "https://hacken.io/audits/rebalance/";
 export const LOCAL_STORAGE_KEYS = {
   isShownTutorial: "isShownTutorial",
   isShownTasks: "isShownTasks",
-  isSentDepositEvent: "isSentDepositEvent",
+  isSentDepositEvent: "isSentDepositEvent"
 };
 
 export const TWITTER_FOLLOW_URL = "https://x.com/intent/user?screen_name=rebalancefin";

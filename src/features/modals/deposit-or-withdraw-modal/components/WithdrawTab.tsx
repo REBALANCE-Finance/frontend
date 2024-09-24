@@ -3,7 +3,7 @@
 import { Button, Divider, Flex, HStack, Text } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { observer } from "mobx-react-lite";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import * as yup from "yup"; // Импорт Yup для схемы валидации
 
 import { FormInput } from "../../../../components/forms/form-input";
@@ -14,7 +14,8 @@ import { getPersonalEarnings } from "@/api/pools/queries";
 import { LockApi } from "@/types";
 import { getLocks } from "@/api/points/queries";
 import UnlockItem from "./UnlockItem";
-import { getDaysLeft, isUnlocked } from "@/utils";
+import { getDaysLeft, isUnlocked, performWagmiChainName } from "@/utils";
+import { useAccount } from "wagmi";
 
 interface IWithdrawTabProps {
   pool: any;
@@ -33,11 +34,16 @@ const withdrawSchema = yup.object({
 
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
+    const { chain } = useAccount();
     const [profit, setProfit] = useState(0);
     const [unlockData, setUnlockData] = useState<LockApi>({} as LockApi);
     const [totalLockedBalance, setTotalLockedBalance] = useState(0);
     const [isSuccessUnlocked, setIsSuccessUnlocked] = useState(false);
     const [lockIds, setLockIds] = useState<number[]>([]);
+
+    const chainName = useMemo(() => {
+      return performWagmiChainName(chain?.name || "Arbitrum");
+    }, [chain?.name]);
 
     useEffect(() => {
       if (address) {
@@ -102,7 +108,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
 
     useEffect(() => {
       if (address) {
-        getPersonalEarnings(1, 30, address, pool.token)
+        getPersonalEarnings(1, 30, address, pool.token, chainName)
           .then(data => {
             setProfit(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0);
           })

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAreaChartAllIntervalsWithoutToken } from "@/api/pools/queries";
 import { PoolLayout } from "@/layout/PoolLayout";
@@ -11,9 +11,10 @@ import PoolsLendingTable from "@/pagesComponents/Pools/PoolsLending/Table";
 import { useStore } from "@/hooks/useStoreContext";
 import { observer } from "mobx-react-lite";
 import { getEarnedPoints } from "@/api/points/queries";
+import { performWagmiChainName } from "@/utils";
 
 const LendingPage = observer(({ params }: { params: { [key: string]: string } }) => {
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
   const [chartData, setChartData] = useState<any>(null);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,14 +31,18 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     stopPolling
   } = useStore("poolsStore");
 
+  const chainName = useMemo(() => {
+    return performWagmiChainName(chain?.name || "Arbitrum");
+  }, [chain?.name]);
+
   useEffect(() => {
-    fetchPools("lending");
-    startPolling("lending");
+    fetchPools("lending", chainName);
+    startPolling("lending", chainName);
 
     return () => {
       stopPolling();
     };
-  }, [fetchPools, startPolling, stopPolling]);
+  }, [fetchPools, startPolling, stopPolling, chain]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,9 +50,9 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
         setIsChartLoading(true);
         let fetchedChartData;
         if (address) {
-          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(address);
+          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(chainName, address);
         } else {
-          fetchedChartData = await getAreaChartAllIntervalsWithoutToken();
+          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(chainName);
         }
 
         setChartData(fetchedChartData);

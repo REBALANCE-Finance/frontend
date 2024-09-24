@@ -8,9 +8,10 @@ import { PerformanceChart } from "./RebalancePerformanceCharts";
 import { getCurrentPath, performanceInfo } from "./utils";
 import { usePathname } from "next/navigation";
 import { formatNumber } from "@/utils/formatNumber";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getTotalProfit } from "@/api/pools/queries";
 import { useAccount } from "wagmi";
+import { performWagmiChainName } from "@/utils";
 
 export const RebalancePerformance = ({
   pools,
@@ -22,7 +23,7 @@ export const RebalancePerformance = ({
   loading: boolean;
 }) => {
   const location = usePathname();
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
   const pathName = getCurrentPath(location || "");
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const totalLending = pools.reduce((acc, pool) => acc + (pool?.funds || 0), 0);
@@ -32,13 +33,17 @@ export const RebalancePerformance = ({
   };
   const [userProfit, setUserProfit] = useState(0);
 
+  const chainName = useMemo(() => {
+    return performWagmiChainName(chain?.name || "Arbitrum");
+  }, [chain?.name]);
+
   useEffect(() => {
     if (address) {
-      getTotalProfit("lending", address).then(data => {
+      getTotalProfit("lending", address, chainName).then(data => {
         setUserProfit(data);
       });
     }
-  }, [address]);
+  }, [address, chainName]);
 
   if (media) {
     return (

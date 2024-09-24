@@ -2,7 +2,7 @@
 "use client";
 
 import { Flex, useMediaQuery } from "@chakra-ui/react";
-import { arbitrum } from "wagmi/chains";
+import { arbitrum, bsc } from "wagmi/chains";
 import { AppFooter } from "../widgets/AppFooter";
 import { AppHeader } from "../widgets/AppHeader";
 import { AppWarning } from "../widgets/AppWarning";
@@ -16,7 +16,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { chains, switchChain } = useSwitchChain();
 
   useEffect(() => {
-    if (address && chain?.id !== arbitrum.id && switchChain) {
+    if (address && chain?.id !== arbitrum.id && chain?.id !== bsc.id && switchChain) {
       switchChain({
         chainId: arbitrum.id
       });
