@@ -23,7 +23,8 @@ class PoolsStore {
       stopPolling: action,
       setError: action,
       setIsFetched: action,
-      setActiveChain: action
+      setActiveChain: action,
+      resetPools: action
     });
   }
 
@@ -93,6 +94,12 @@ class PoolsStore {
       clearInterval(this.interval);
       this.interval = null;
     }
+  };
+
+  resetPools = () => {
+    this.pools = [];
+    this.isFetched = false;
+    this.error = null;
   };
 }
 

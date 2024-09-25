@@ -239,7 +239,8 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
           filteredTasks.map(item => ({
             ...item,
             type: getTaskTypeByName(item.name),
-            limited: item.name === "Deposit & freeze any FRAX amount" ? true : false
+            // limited: item.name === "Deposit & freeze any FRAX amount" ? true : false
+            limited: false
           }))
         );
         setHasTasksData(true);

@@ -8,7 +8,7 @@ import {
   Text,
   useMediaQuery
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 
 import { CircularProgress } from "../../../components/circular-progress";
 import Icon from "../../../components/icon";
@@ -29,6 +29,7 @@ export const PoolsHeader = observer(({ isTable, onChangeView }: IPoolsHeaderProp
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
   const { activeChain } = useStore("poolsStore");
+  const [resetCountDown, setResetCountDown] = useState(false);
   const getBridgeLink = () => {
     if (activeChain === "BSC") {
       return "https://www.bnbchain.org/en/bnb-chain-bridge";
@@ -37,10 +38,17 @@ export const PoolsHeader = observer(({ isTable, onChangeView }: IPoolsHeaderProp
     return "https://bridge.arbitrum.io/?destinationChain=arbitrum-one&sourceChain=ethereum";
   };
 
+  const onResetCountDown = () => {
+    setResetCountDown(true);
+    setTimeout(() => {
+      setResetCountDown(false);
+    }, 100);
+  };
+
   return (
     <Flex alignItems="center" justifyContent="space-between">
       <Flex gap="20px" w={media ? "100%" : "auto"}>
-        <Strategies />
+        <Strategies onResetCountDown={onResetCountDown} />
         <Link
           ml="auto"
           as={NextLink}
@@ -109,7 +117,7 @@ export const PoolsHeader = observer(({ isTable, onChangeView }: IPoolsHeaderProp
           />
         )}
 
-        {!media && <CircularProgress />}
+        {!media && <CircularProgress resetCountDown={resetCountDown} />}
       </Flex>
     </Flex>
   );

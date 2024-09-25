@@ -53,11 +53,15 @@ const TasksModal: FC<ITasksModalProps> = ({
       const fetchTasks = async () => {
         setIsTasksLoading(true);
         const tasks = await getTasks(address).finally(() => setIsTasksLoading(false));
+        const filteredTasks = tasks.filter(
+          item => item.name !== "Deposit & freeze any FRAX amount"
+        );
         setTasks(
-          tasks.map(item => ({
+          filteredTasks.map(item => ({
             ...item,
             type: getTaskTypeByName(item.name),
-            limited: item.name === "Deposit & freeze any FRAX amount" ? true : false
+            // limited: item.name === "Deposit & freeze any FRAX amount" ? true : false
+            limited: false
           }))
         );
         setHasTasksData(true);

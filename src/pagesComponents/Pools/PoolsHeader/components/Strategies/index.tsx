@@ -7,11 +7,16 @@ import { CHAIN_ICONS, ICON_NAMES } from "../../../../../consts";
 import { useStore } from "@/hooks/useStoreContext";
 import { arbitrum, bsc } from "viem/chains";
 import { observer } from "mobx-react-lite";
+import { isMobile } from "react-device-detect";
 
-export const Strategies = observer(() => {
+type StrategiesProps = {
+  onResetCountDown: VoidFunction;
+};
+
+export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
   const { chains, switchChain } = useSwitchChain();
   const { chain, address, chainId } = useAccount();
-  const { activeChain, setActiveChain } = useStore("poolsStore");
+  const { activeChain, setActiveChain, resetPools } = useStore("poolsStore");
   const [activeChainId, setActiveChainId] = useState(
     chainId || (activeChain === "BSC" ? bsc.id : arbitrum.id)
   );
@@ -21,6 +26,8 @@ export const Strategies = observer(() => {
       setActiveChain(id === bsc.id ? "BSC" : "Arbitrum");
     }
 
+    onResetCountDown();
+    resetPools();
     switchChain({ chainId: id });
     setActiveChainId(id);
   };
@@ -38,7 +45,7 @@ export const Strategies = observer(() => {
   return (
     <Menu>
       <MenuButton>
-        <Flex alignItems="center" gap="12px" color="lightGray">
+        <Flex alignItems="center" gap={isMobile ? "8px" : "12px"} color="lightGray">
           <Icon name={CHAIN_ICONS[iconName]} />
           {/* <Text fontSize="xl">{CHAIN_NAMES[chain?.id ?? 0]}</Text> */}
           <Text fontSize="medium">Select chain</Text>
