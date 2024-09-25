@@ -8,33 +8,29 @@ import {
   Text,
   useMediaQuery
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React from "react";
 
 import { CircularProgress } from "../../../components/circular-progress";
 import Icon from "../../../components/icon";
 import { ICON_NAMES, MEDIA_QUERY_MAX } from "../../../consts";
-// import { Menu } from "./components/Menu";
 import { Strategies } from "./components/Strategies";
 import NextLink from "next/link";
 import { useAccount } from "wagmi";
-import { performWagmiChainName } from "@/utils";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/hooks/useStoreContext";
 
 interface IPoolsHeaderProps {
   isTable: boolean;
   onChangeView: VoidFunction;
 }
 
-export const PoolsHeader = ({ isTable, onChangeView }: IPoolsHeaderProps) => {
+export const PoolsHeader = observer(({ isTable, onChangeView }: IPoolsHeaderProps) => {
   const { chain } = useAccount();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
-
-  const chainName = useMemo(() => {
-    return performWagmiChainName(chain?.name || "Arbitrum");
-  }, [chain?.name]);
-
+  const { activeChain } = useStore("poolsStore");
   const getBridgeLink = () => {
-    if (chainName === "BSC") {
+    if (activeChain === "BSC") {
       return "https://www.bnbchain.org/en/bnb-chain-bridge";
     }
 
@@ -57,7 +53,7 @@ export const PoolsHeader = ({ isTable, onChangeView }: IPoolsHeaderProps) => {
           color="whiteAlpha.70"
           isExternal
         >
-          Bridge to {chainName}
+          Bridge to {activeChain}
           {/* <Icon name={ICON_NAMES.link} color="#5C6470" size="sm" /> */}
           {!media && <Icon name={ICON_NAMES.link} size="sm" />}
         </Link>
@@ -117,4 +113,4 @@ export const PoolsHeader = ({ isTable, onChangeView }: IPoolsHeaderProps) => {
       </Flex>
     </Flex>
   );
-};
+});

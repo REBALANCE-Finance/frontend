@@ -77,11 +77,3 @@ export function isUnlocked(unlockTime: number): boolean {
   const currentTime = Math.floor(Date.now() / 1000);
   return currentTime >= unlockTime;
 }
-
-export const performWagmiChainName = (chainName: string) => {
-  if (chainName === 'BNB Smart Chain') {
-    return 'BSC';
-  }
-
-  return 'Arbitrum';
-}

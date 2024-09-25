@@ -30,14 +30,6 @@ export const WalletProfile = ({ className }: IWalletProfileProps) => {
   const { address, connector, isConnected, chain } = useAccount();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const getConnectorIconName = (chainName: string) => {
-    if (chainName === "Arbitrum One") {
-      return ICON_NAMES.arbitrum;
-    }
-
-    return ICON_NAMES.bnbChain;
-  };
-
   const name = connector?.name;
 
   return (

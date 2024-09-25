@@ -1,27 +1,40 @@
 "use client";
-"use client";
-
-import { Flex, useMediaQuery } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { arbitrum, bsc } from "wagmi/chains";
 import { AppFooter } from "../widgets/AppFooter";
 import { AppHeader } from "../widgets/AppHeader";
-import { AppWarning } from "../widgets/AppWarning";
 import { useEffect } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
-import Tutorial from "@/features/Tutorial";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/hooks/useStoreContext";
 
-export const MainLayout = ({ children }: { children: React.ReactNode }) => {
+export const MainLayout = observer(({ children }: { children: React.ReactNode }) => {
   // const [client] = useMediaQuery("(display-mode: browser)");
-  const { address, chain } = useAccount();
+  const { address, chain, isConnected, chainId, isConnecting } = useAccount();
   const { chains, switchChain } = useSwitchChain();
+  const { setActiveChain, activeChain } = useStore("poolsStore");
 
   useEffect(() => {
-    if (address && chain?.id !== arbitrum.id && chain?.id !== bsc.id && switchChain) {
-      switchChain({
-        chainId: arbitrum.id
-      });
+    let timer: NodeJS.Timeout;
+    if (isConnected && chainId !== arbitrum.id && chainId !== bsc.id) {
+      timer = setTimeout(() => {
+        switchChain({
+          chainId: activeChain === "Arbitrum" ? arbitrum.id : bsc.id
+        });
+      }, 500);
     }
-  }, [address, chain?.id, switchChain]);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isConnected, chainId]);
+
+  useEffect(() => {
+    if (isConnected && (chainId === arbitrum.id || chainId === bsc.id)) {
+      const chainName = chainId === bsc.id ? "BSC" : "Arbitrum";
+      setActiveChain(chainName);
+    }
+  }, [chainId, isConnected]);
 
   // if (!client) return null;
   return (
@@ -36,4 +49,4 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <AppFooter />
     </Flex>
   );
-};
+});

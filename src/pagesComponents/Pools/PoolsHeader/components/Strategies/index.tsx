@@ -4,32 +4,44 @@ import { useAccount, useSwitchChain } from "wagmi";
 
 import Icon from "../../../../../components/icon";
 import { CHAIN_ICONS, ICON_NAMES } from "../../../../../consts";
+import { useStore } from "@/hooks/useStoreContext";
+import { arbitrum, bsc } from "viem/chains";
+import { observer } from "mobx-react-lite";
 
-export const Strategies = () => {
+export const Strategies = observer(() => {
   const { chains, switchChain } = useSwitchChain();
-  const { chain } = useAccount();
-  const [activeChainId, setActiveChainId] = useState(chain?.id || chains[0].id);
+  const { chain, address, chainId } = useAccount();
+  const { activeChain, setActiveChain } = useStore("poolsStore");
+  const [activeChainId, setActiveChainId] = useState(
+    chainId || (activeChain === "BSC" ? bsc.id : arbitrum.id)
+  );
 
   const handleSwitchChain = (id: number) => {
+    if (!address) {
+      setActiveChain(id === bsc.id ? "BSC" : "Arbitrum");
+    }
+
     switchChain({ chainId: id });
     setActiveChainId(id);
   };
 
-  const getActiveChainName = () => {
-    if (chain?.name === "BNB Smart Chain") {
-      return "BSC";
+  const getItemName = (name: string) => {
+    if (name === "BNB Smart Chain") {
+      return "Binance Smart Chain";
     }
 
-    return "Arbitrum";
+    return name;
   };
+
+  const iconName = activeChain === "BSC" ? bsc.id : arbitrum.id;
 
   return (
     <Menu>
       <MenuButton>
         <Flex alignItems="center" gap="12px" color="lightGray">
-          <Icon name={CHAIN_ICONS[chain?.id ?? 42161]} />
+          <Icon name={CHAIN_ICONS[iconName]} />
           {/* <Text fontSize="xl">{CHAIN_NAMES[chain?.id ?? 0]}</Text> */}
-          <Text fontSize="medium">{getActiveChainName()}</Text>
+          <Text fontSize="medium">Select chain</Text>
           <Icon name={ICON_NAMES.chevronDown} />
         </Flex>
       </MenuButton>
@@ -43,8 +55,6 @@ export const Strategies = () => {
         p="24px 12px"
         gap="24px"
       >
-        <Text fontSize="sm">Select the Market</Text>
-
         {chains.map(({ id, name }) => (
           <MenuItem
             key={name}
@@ -55,10 +65,10 @@ export const Strategies = () => {
             onClick={() => handleSwitchChain(id)}
           >
             <Icon name={CHAIN_ICONS[id]} />
-            <Text>{name}</Text>
+            <Text>{getItemName(name)}</Text>
           </MenuItem>
         ))}
       </MenuList>
     </Menu>
   );
-};
+});

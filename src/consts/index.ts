@@ -96,12 +96,12 @@ export const NEW_MOCKED_TASKS: Array<Task> = [
     type: "wallet",
     complete: false
   },
-  {
-    name: "Deposit & freeze any FRAX amount",
-    type: "frax",
-    complete: false,
-    limited: true
-  },
+  // {
+  //   name: "Deposit & freeze any FRAX amount",
+  //   type: "frax",
+  //   complete: false,
+  //   limited: true
+  // },
   {
     name: "Follow us on Twitter",
     type: "twitter",

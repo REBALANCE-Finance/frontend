@@ -1,15 +1,14 @@
 "use client";
 import { observer } from "mobx-react-lite";
-import { getAreaChartAllIntervals, getPools } from "@/api/pools/queries";
 import { LendingAsset } from "@/pagesComponents/AssetsPages/LendingAsset";
-import { IAreaChartData } from "@/api/pools/types";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useStore } from "@/hooks/useStoreContext";
-import { useAccount } from "wagmi";
-import { performWagmiChainName } from "@/utils";
+import { useAccount, useSwitchChain } from "wagmi";
+import { arbitrum, bsc } from "viem/chains";
 
 const LendingAssetPage = observer(({ params }: { params: { [key: string]: string } }) => {
-  const { chain } = useAccount();
+  const { chainId, isConnected } = useAccount();
+  const { switchChain } = useSwitchChain();
   const {
     activePool,
     setActivePool,
@@ -18,12 +17,41 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
     chartData,
     isChartLoading
   } = useStore("poolStore");
+  const { setActiveChain } = useStore("poolsStore");
   const { pools, isLoading } = useStore("poolsStore");
   const [error, setError] = useState<string | null>(null);
 
-  const chainName = useMemo(() => {
-    return performWagmiChainName(chain?.name || "Arbitrum");
-  }, [chain?.name]);
+  const chainName = params.chain === "bsc" ? "BSC" : "Arbitrum";
+
+  useEffect(() => {
+    if (params.chain === "arb") {
+      setActiveChain("Arbitrum");
+    }
+
+    if (params.chain === "bsc") {
+      setActiveChain("BSC");
+    }
+  }, []);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isConnected) {
+      if (params.chain === "arb" && chainId !== arbitrum.id) {
+        timer = setTimeout(() => {
+          switchChain({ chainId: arbitrum.id });
+        }, 500);
+      }
+
+      if (params.chain === "bsc" && chainId !== bsc.id) {
+        timer = setTimeout(() => {
+          switchChain({ chainId: bsc.id });
+        }, 500);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [isConnected, chainId]);
 
   useEffect(() => {
     if (!activePool) {
@@ -34,6 +62,7 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
   useEffect(() => {
     if (!activePool && pools.length > 0 && !isLoading) {
       const pool = pools.find(pool => pool?.token === params.poolToken);
+
       if (pool) {
         setActivePool(pool);
       }
@@ -54,6 +83,8 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
       loading={!activePool}
       error={error}
       isChartLoading={isChartLoading}
+      poolChainId={params.chain === "bsc" ? bsc.id : arbitrum.id}
+      chainName={params.chain === "arb" ? "Arbitrum" : "BSC"}
     />
   );
 });

@@ -41,18 +41,19 @@ import {
 } from "@/consts";
 import Icon from "@/components/icon";
 import { useLock } from "@/hooks/useLock";
-import { useBalanceOfAsset } from "@/hooks/useBalanceOfAsset";
 import { ABI_REBALANCE } from "@/abi/rebalance";
-import { formatSharesNumber, performWagmiChainName } from "@/utils";
+import { formatSharesNumber } from "@/utils";
 import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
 import { arbitrum } from "viem/chains";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/hooks/useStoreContext";
 
 interface IDepositTabProps {
   pool: any;
   onClose: () => void;
 }
 
-export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
+export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => {
   const [needsApproval, setNeedsApproval] = useState(false);
   const [isConfirmedApprove, setConfirmedApprove] = useState(false);
   const [isConfirmedLockApprove, setIsConfirmedLockApprove] = useState(false);
@@ -67,12 +68,9 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   });
   const tooltipRef = useRef();
   const event = useAnalyticsEventTracker();
+  const { activeChain } = useStore("poolsStore");
 
   const isArbitrumChain = chainId === arbitrum.id;
-
-  const chainName = useMemo(() => {
-    return performWagmiChainName(chain?.name || "Arbitrum");
-  }, [chain?.name]);
 
   const depositSchema = Yup.object().shape({
     deposit: Yup.string().test("min-amount", `Amount must be at least 1$`, value => {
@@ -87,7 +85,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const formik = useFormik({
     initialValues: {
       deposit: "",
-      freeze: true,
+      freeze: false,
       freezePeriod: FREEZE_DATES[0]
     },
     validationSchema: depositSchema,
@@ -205,7 +203,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           pool.token,
           +debouncedDeposit,
           +formik.values.freezePeriod.slice(0, -1),
-          chainName
+          activeChain
         );
         setPointsQty(points);
       };
@@ -399,8 +397,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
 
         <Divider borderColor="black.90" />
 
-        <FormControl display="flex" alignItems="center" justifyContent="space-between">
-          {/* @ts-ignore */}
+        {/* <FormControl display="flex" alignItems="center" justifyContent="space-between">
           <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
             <Flex gap="8px" alignItems="center">
               <FormLabel
@@ -432,9 +429,9 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
             </Flex>
           </Tooltip>
           <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
-        </FormControl>
+        </FormControl> */}
 
-        {formik.values.freeze && (
+        {/* {formik.values.freeze && (
           <>
             <Flex justify="space-between" gap={4} alignItems="center">
               <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
@@ -458,7 +455,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           </>
         )}
 
-        <Divider borderColor="black.90" />
+        <Divider borderColor="black.90" /> */}
 
         <HStack justify="space-between">
           <Text color="black.0">30D average APY</Text>
@@ -485,4 +482,4 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       </Flex>
     </form>
   );
-};
+});

@@ -1,24 +1,20 @@
 import { getTotalProfit } from "@/api/pools/queries";
-import { performWagmiChainName } from "@/utils";
+import { useStore } from "@/hooks/useStoreContext";
 import { formatNumber } from "@/utils/formatNumber";
+import { observer } from "mobx-react-lite";
 import { useEffect, useMemo, useState } from "react";
-import { useAccount } from "wagmi";
 
-const UserProfit = ({ address }: { address: `0x${string}` }) => {
-  const { chain } = useAccount();
+const UserProfit = observer(({ address }: { address: `0x${string}` }) => {
   const [userProfit, setUserProfit] = useState(0);
-
-  const chainName = useMemo(() => {
-    return performWagmiChainName(chain?.name || "Arbitrum");
-  }, [chain?.name]);
+  const { activeChain } = useStore("poolsStore");
 
   useEffect(() => {
-    getTotalProfit("lending", address, chainName).then(data => {
+    getTotalProfit("lending", address, activeChain).then(data => {
       setUserProfit(data);
     });
-  }, [address, chainName]);
+  }, [address, activeChain]);
 
   return <div>{Number(formatNumber(userProfit)).toFixed(2)} $</div>;
-};
+});
 
 export default UserProfit;

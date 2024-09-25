@@ -9,6 +9,7 @@ class PoolsStore {
   isFetched = false;
   error: Error | null = null;
   interval: ReturnType<typeof setInterval> | null = null;
+  activeChain: ICHAIN = "Arbitrum";
 
   constructor() {
     makeObservable(this, {
@@ -16,11 +17,13 @@ class PoolsStore {
       isLoading: observable,
       isFetched: observable,
       error: observable,
+      activeChain: observable,
       fetchPools: action,
       startPolling: action,
       stopPolling: action,
       setError: action,
-      setIsFetched: action
+      setIsFetched: action,
+      setActiveChain: action
     });
   }
 
@@ -31,6 +34,12 @@ class PoolsStore {
   setIsFetched = (isFetched: boolean) => {
     runInAction(() => {
       this.isFetched = isFetched;
+    });
+  };
+
+  setActiveChain = (chain: ICHAIN) => {
+    runInAction(() => {
+      this.activeChain = chain;
     });
   };
 
@@ -66,7 +75,16 @@ class PoolsStore {
   };
 
   startPolling = (type: "lending" | "borrowing" = "lending", network: ICHAIN) => {
+    // this.fetchPools(type, network);
+    // this.interval = setInterval(() => this.fetchPools(type, network), 60000);
     this.fetchPools(type, network);
+
+    // Clear any previous interval to avoid duplication
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+
+    // Set up polling every 60 seconds
     this.interval = setInterval(() => this.fetchPools(type, network), 60000);
   };
 

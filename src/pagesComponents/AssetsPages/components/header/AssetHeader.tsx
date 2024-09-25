@@ -17,17 +17,15 @@ import { formatNumber } from "../../../../utils/formatNumber";
 import { usePathname } from "next/navigation";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
 import ArbIncentive from "@/components/badge/ArbIncentive";
-import { performWagmiChainName } from "@/utils";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/hooks/useStoreContext";
 
-export const AssetHeader: FC<any> = ({ pool }) => {
+export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
   const location = usePathname();
   const pathName = getCurrentPath(location);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { chain } = useAccount();
-
-  const chainName = useMemo(() => {
-    return performWagmiChainName(chain?.name || "Arbitrum");
-  }, [chain?.name]);
+  const { activeChain } = useStore("poolsStore");
 
   if (media) {
     return (
@@ -212,4 +210,4 @@ export const AssetHeader: FC<any> = ({ pool }) => {
       )}
     </Flex>
   );
-};
+});
