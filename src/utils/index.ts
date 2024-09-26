@@ -1,5 +1,6 @@
 import BigDecimal from "decimal.js-light";
 import { BIG_1E18, BIG_1E6, BIG_1E8, BIG_1E9 } from "@/consts";
+import { ICHAIN } from "@/types";
 
 export const ellipsis = (string: string, chars = 4) => {
   if (!string) return "";
@@ -38,7 +39,11 @@ export const convertNumberToBigInt = (value: number = 0, decimals: number): bigi
   return BigInt(Math.round(value * Math.pow(10, decimals)));
 };
 
-export const getExplorerTxLink = (txHash: string) => {
+export const getExplorerTxLink = (txHash: string, chainName: ICHAIN) => {
+  if (chainName === 'BSC') {
+    return `https://bscscan.com/tx/${txHash}`;
+  }
+
   return `https://arbiscan.io/tx/${txHash}`;
 };
 

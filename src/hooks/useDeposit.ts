@@ -58,7 +58,8 @@ export const useDeposit = (
           type: ModalContextEnum.Success,
           props: {
             txHash,
-            id: "deposit_success"
+            id: "deposit_success",
+            chainName: chainId === arbitrum.id ? "Arbitrum" : "BSC"
           }
         });
       }

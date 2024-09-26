@@ -18,6 +18,7 @@ import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { getExplorerTxLink } from "@/utils";
 
 export const SuccessModal: FC<ISuccessModalContextProps> = ({
+  chainName,
   isOpen,
   onClose,
   txHash,
@@ -59,7 +60,7 @@ export const SuccessModal: FC<ISuccessModalContextProps> = ({
 
   const handleOpenExplorer = () => {
     if (txHash) {
-      window.open(getExplorerTxLink(txHash), "_blank");
+      window.open(getExplorerTxLink(txHash, chainName), "_blank");
     }
   };
 
@@ -109,7 +110,7 @@ export const SuccessModal: FC<ISuccessModalContextProps> = ({
                 _hover={{ opacity: 0.8 }}
                 onClick={handleOpenExplorer}
               >
-                View on Arbiscan
+                View on {chainName === 'BSC' ? 'BscScan' : 'Arbiscan'}
               </Button>
               <Button
                 variant="primaryFilled"

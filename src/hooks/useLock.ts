@@ -54,7 +54,8 @@ export const useLock = (
       openModal({
         type: ModalContextEnum.Success,
         props: {
-          txHash
+          txHash,
+          chainName: chainId === arbitrum.id ? "Arbitrum" : "BSC"
         }
       });
     } else if (isReceiptError && receiptError) {

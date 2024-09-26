@@ -79,7 +79,8 @@ const UnfreezeButton = ({
         openModal({
           type: ModalContextEnum.Success,
           props: {
-            txHash: unlockData
+            txHash: unlockData,
+            chainName: chainId === arbitrum.id ? "Arbitrum" : "BSC"
           }
         });
       }

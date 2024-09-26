@@ -5,10 +5,7 @@ import { useAccount, useSendTransaction, useWaitForTransactionReceipt } from "wa
 import { getParaswapSwapTransaction } from "@/api/swap";
 import { AddressType } from "@/types";
 import { ARB_CONFIRMATIONS_COUNT } from "@/consts";
-import { handlerToast } from "../toasty/utils";
-import { ToastyTypes } from "../toasty/types";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
-import { getExplorerTxLink } from "@/utils";
 import { useStore } from "@/hooks/useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 
@@ -49,7 +46,8 @@ const SwapButton = ({
       openModal({
         type: ModalContextEnum.Success,
         props: {
-          txHash
+          txHash,
+          chainName: "Arbitrum"
         }
       });
     } else if (isError) {

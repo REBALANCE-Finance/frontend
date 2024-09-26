@@ -87,7 +87,8 @@ const ApproveButton = ({
       openModal({
         type: ModalContextEnum.Success,
         props: {
-          txHash: approveContractData as string
+          txHash: approveContractData as string,
+          chainName: chainId === arbitrum.id ? "Arbitrum" : "BSC"
         }
       });
     } else if (isErrorWaitingApprove && waitingApproveError) {
