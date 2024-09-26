@@ -17,6 +17,16 @@ import { useStore } from "@/hooks/useStoreContext";
 import { getIdByToken } from "@/utils/analytics";
 import { observer } from "mobx-react-lite";
 
+const YieldPoolList = ({ pools }: { pools: string[] }) => (
+  <>
+    {pools.map((pool, index) => (
+      <span key={index}>
+        <br />- {pool}
+      </span>
+    ))}
+  </>
+);
+
 export const PoolsLending = observer(
   ({ pools, loading, error }: { pools: IPoolData[]; loading: boolean; error: string | null }) => {
     const { address } = useAccount();
@@ -34,6 +44,37 @@ export const PoolsLending = observer(
       }
       poolStore.setActivePool(pool);
       router.push(ROUTE_PATHS.lendingAssetPage(getChainRouteName(), pool.token), { scroll: false });
+    };
+
+    const getYieldStrategy = (token: string) => {
+      const baseMessage = `${token} Low-Risk Yield Strategy: Higher APY is achieved by automatic rebalance between the following pools:`;
+
+      const bscPools = ["AAVE v3", "Kinza", "Radiant"];
+      const fraxPools = ["Fraxlend", "Lodestar", "AAVE"];
+      const defaultPools = [
+        ...(token === "wETH" || token === "USDC.e" ? ["Silo"] : []),
+        "Dolomite",
+        "AAVE v3",
+        "Radiant v2",
+        "Compound"
+      ];
+
+      // Determine which pool list to use based on the activeChain and token
+      let pools: string[];
+      if (activeChain === "BSC") {
+        pools = bscPools;
+      } else if (token === "FRAX") {
+        pools = fraxPools;
+      } else {
+        pools = defaultPools;
+      }
+
+      return (
+        <>
+          <span>{baseMessage}</span>
+          <YieldPoolList pools={pools} />
+        </>
+      );
     };
 
     const rowCard: IRowCard[] = [
@@ -81,49 +122,7 @@ export const PoolsLending = observer(
                   </HStack>
                   <Divider borderColor="black.60" />
                   <HStack>
-                    <Tooltip
-                      label={
-                        <>
-                          <span>
-                            {item.token} Low-Risk Yield Strategy Higher APY is achieved by automatic
-                            rebalance between following pools:
-                          </span>
-                          {item.token === "FRAX" ? (
-                            <>
-                              <span>
-                                <br />- Fraxlend
-                              </span>
-                              <span>
-                                <br />- Lodestar
-                              </span>
-                              <span>
-                                <br />- AAVE
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              {(item.token === "wETH" || item.token === "USDC.e") && (
-                                <span>
-                                  <br />- Silo
-                                </span>
-                              )}
-                              <span>
-                                <br />- Dolomite
-                              </span>
-                              <span>
-                                <br />- AAVE v3
-                              </span>
-                              <span>
-                                <br />- Compound
-                              </span>
-                              <span>
-                                <br />- Radiant v2
-                              </span>
-                            </>
-                          )}
-                        </>
-                      }
-                    >
+                    <Tooltip label={getYieldStrategy(item.token)}>
                       <Box
                         display="flex"
                         justifyContent="space-between"
@@ -133,39 +132,52 @@ export const PoolsLending = observer(
                         <Text color="white" borderBottom={"dashed 1px gray"}>
                           APY
                         </Text>
-                        <Box ml="auto" display="flex">
-                          {item.token === "FRAX" && (
-                            <Box borderRadius="50%" mr="-4px" zIndex={7}>
-                              <Icon name="FRAXLEND" width="14px" height="14px" />
+                        {activeChain === "Arbitrum" && (
+                          <Box ml="auto" display="flex">
+                            {item.token === "FRAX" && (
+                              <Box borderRadius="50%" mr="-4px" zIndex={7}>
+                                <Icon name="FRAXLEND" width="14px" height="14px" />
+                              </Box>
+                            )}
+                            {item.token === "FRAX" && (
+                              <Box borderRadius="50%" mr="-4px" zIndex={6}>
+                                <Icon name="LODESTAR" width="14px" height="14px" />
+                              </Box>
+                            )}
+                            {(item.token === "wETH" || item.token === "USDC.e") && (
+                              <Box borderRadius="50%" mr="-4px" zIndex={5}>
+                                <Icon name="SILO" width="14px" height="14px" />
+                              </Box>
+                            )}
+                            {item.token !== "FRAX" && (
+                              <Box borderRadius="50%" zIndex={4} mr="-4px">
+                                <Icon name="DOLOMITE" width="14px" height="14px" />
+                              </Box>
+                            )}
+                            <Box mr={item.token === "FRAX" ? "0" : "-4px"} zIndex={3}>
+                              <Icon name="AAVE" width="10px" height="10px" />
                             </Box>
-                          )}
-                          {item.token === "FRAX" && (
-                            <Box borderRadius="50%" mr="-4px" zIndex={6}>
-                              <Icon name="LODESTAR" width="14px" height="14px" />
-                            </Box>
-                          )}
-                          {(item.token === "wETH" || item.token === "USDC.e") && (
-                            <Box borderRadius="50%" mr="-4px" zIndex={5}>
-                              <Icon name="SILO" width="14px" height="14px" />
-                            </Box>
-                          )}
-                          {item.token !== "FRAX" && (
-                            <Box borderRadius="50%" zIndex={4} mr="-4px">
-                              <Icon name="DOLOMITE" width="14px" height="14px" />
-                            </Box>
-                          )}
-                          <Box mr={item.token === "FRAX" ? "0" : "-4px"} zIndex={3}>
-                            <Icon name="AAVE" width="10px" height="10px" />
+                            {item.token !== "FRAX" ? (
+                              <Box mr="-4px" zIndex={2}>
+                                <Icon name="RADIANT" width="14px" height="14px" />
+                              </Box>
+                            ) : null}
+                            {item.token !== "FRAX" && (
+                              <Icon name="COMPOUND" width="14px" height="14px" />
+                            )}
                           </Box>
-                          {item.token !== "FRAX" ? (
-                            <Box mr="-4px" zIndex={2}>
-                              <Icon name="RADIANT" width="14px" height="14px" />
+                        )}
+                        {activeChain === "BSC" && (
+                          <Box ml="auto" display="flex">
+                            <Box mr="-4px" zIndex={3}>
+                              <Icon name="AAVE" width="10px" height="10px" />
                             </Box>
-                          ) : null}
-                          {item.token !== "FRAX" && (
-                            <Icon name="COMPOUND" width="14px" height="14px" />
-                          )}
-                        </Box>
+                            <Box mr="-4px" zIndex={2}>
+                              <Icon name="KINZA" width="14px" height="14px" />
+                            </Box>
+                            <Icon name="RADIANT" width="14px" height="14px" />
+                          </Box>
+                        )}
                         <Text textStyle="textMono16" ml={2}>
                           {loading || error ? (
                             <Skeleton height="20px" width="50px" />
