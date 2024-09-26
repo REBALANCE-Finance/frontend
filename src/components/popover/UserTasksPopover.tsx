@@ -21,20 +21,19 @@ import {
   TELEGRAM_FOLLOW_LINK,
   TWITTER_FOLLOW_URL
 } from "@/consts";
-import { scrollToElement } from "@/utils";
 import Task from "../task";
 import { completeTask, getEarnedPoints, getTasks } from "@/api/points/queries";
 import { Task as ITask, TaskType } from "@/types";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/hooks/useStoreContext";
-import { useBalanceOfAssets } from "@/hooks/useBalanceOfAssets";
 import { ModalEnum } from "@/store/modal/types";
-import { useAccount } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 import Icon from "../icon";
 import { usePathname } from "next/navigation";
 import { isDesktop, isMobile } from "react-device-detect";
 import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
 import localStore from "@/utils/localStore";
+import { defChainIdArbitrum } from "@/hooks/useAuth";
 
 type UserTasksPopoverProps = {
   address: `0x${string}`;
@@ -42,7 +41,8 @@ type UserTasksPopoverProps = {
 
 const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   const pathname = usePathname();
-  const { isConnected } = useAccount();
+  const { isConnected, chain } = useAccount();
+  const { switchChain } = useSwitchChain();
   const { pools, isFetched: isFetchedPools } = useStore("poolsStore");
   const [earnedPoints, setEarnedPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +55,6 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [isTwitterChecked, setIsTwitterChecked] = useState(false);
   const [isTelegramChecked, setIsTelegramChecked] = useState(false);
-  const [isMadeDeposit, setIsMadeDeposit] = useState(false);
   const [loadingTask, setLoadingTask] = useState<{
     twitter: boolean;
     telegram: boolean;
@@ -87,11 +86,13 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
     frax: false
   });
   const tooltipRef = useRef(null);
-  const { hasBalance } = useBalanceOfAssets(poolTokens, address);
   const [is600Up] = useMediaQuery("(min-width: 600px)");
   const [is700Up] = useMediaQuery("(min-width: 700px)");
   const { openModal } = useStore("modalStore");
+  const { activeChain } = useStore("poolsStore");
   const event = useAnalyticsEventTracker();
+
+  const isArbitrumChain = activeChain === "Arbitrum";
 
   const fraxPool = pools.find(pool => pool.token === "FRAX");
 
@@ -125,12 +126,6 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
       setHasTasksData(true);
     }
   }, [isOpenTooltip, isConnected]);
-
-  useEffect(() => {
-    if (hasBalance) {
-      setIsMadeDeposit(true);
-    }
-  }, [hasBalance]);
 
   useEffect(() => {
     if (!isOpenTooltip) {
@@ -237,11 +232,15 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
       const fetchTasks = async () => {
         setIsTasksLoading(true);
         const tasks = await getTasks(address).finally(() => setIsTasksLoading(false));
+        const filteredTasks = tasks.filter(
+          item => item.name !== "Deposit & freeze any FRAX amount"
+        );
         setTasks(
-          tasks.map(item => ({
+          filteredTasks.map(item => ({
             ...item,
             type: getTaskTypeByName(item.name),
-            limited: item.name === "Deposit & freeze any FRAX amount" ? true : false
+            // limited: item.name === "Deposit & freeze any FRAX amount" ? true : false
+            limited: false
           }))
         );
         setHasTasksData(true);
@@ -412,35 +411,19 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
               setIsTelegramChecked(true);
             }
           };
-    if (type === "deposit")
-      return !isConnected
-        ? getConnectBtn()
-        : isMadeDeposit
-        ? { title: "Claim", loading: loadingTask.deposit, onClick: () => onCompleteTask(index) }
-        : {
-            title: "Deposit",
-            loading: false,
-            onClick: () => {
-              setIsOpenTooltip(false);
-              scrollToElement("pools");
-            }
-          };
-    if (type === "freeze")
-      return !isConnected
-        ? getConnectBtn()
-        : isMadeDeposit
-        ? { title: "Claim", loading: loadingTask.freeze, onClick: () => onCompleteTask(index) }
-        : {
-            title: "Deposit",
-            loading: false,
-            onClick: () => {
-              setIsOpenTooltip(false);
-              scrollToElement("pools");
-            }
-          };
     if (type === "frax") {
       return !isConnected
         ? getConnectBtn("task_deposit")
+        : !isArbitrumChain
+        ? {
+            title: "Switch ARB",
+            loading: false,
+            onClick: () => {
+              switchChain({
+                chainId: defChainIdArbitrum
+              });
+            }
+          }
         : {
             title: "Deposit",
             loading: !isFetchedPools,
@@ -513,7 +496,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
         border="none"
         ref={tooltipRef}
         ml={is700Up ? 3 : 0}
-        borderRadius="8px"
+        borderRadius="10px"
         mt={isMobile ? `${window.innerHeight - 528 - 104}px` : 0}
       >
         {isDesktop && <PopoverArrow bg="#17191C" />}
@@ -560,7 +543,7 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
               )}
             </Flex>
             {!hasTasksData ? (
-              Array.from({ length: 5 })
+              Array.from({ length: 3 })
                 .fill(0)
                 .map((_, index) => (
                   <Flex flexDir="column" gap="16px">

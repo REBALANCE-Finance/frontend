@@ -1,10 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { getAreaChartAllIntervalsWithoutToken } from "@/api/pools/queries";
 import { PoolLayout } from "@/layout/PoolLayout";
 import { PoolsLending } from "@/pagesComponents/Pools/PoolsLending";
-import { IPoolData, IAreaChartData } from "@/api/pools/types";
 import { useAccount } from "wagmi";
 import { useMediaQuery } from "@chakra-ui/react";
 import PoolsLendingTable from "@/pagesComponents/Pools/PoolsLending/Table";
@@ -13,7 +11,7 @@ import { observer } from "mobx-react-lite";
 import { getEarnedPoints } from "@/api/points/queries";
 
 const LendingPage = observer(({ params }: { params: { [key: string]: string } }) => {
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
   const [chartData, setChartData] = useState<any>(null);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,17 +25,21 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     error: poolsError,
     fetchPools,
     startPolling,
-    stopPolling
+    stopPolling,
+    activeChain
   } = useStore("poolsStore");
 
   useEffect(() => {
-    fetchPools("lending");
-    startPolling("lending");
+    const timer = setTimeout(() => {
+      fetchPools("lending", activeChain);
+      startPolling("lending", activeChain);
+    }, 300);
 
     return () => {
       stopPolling();
+      clearTimeout(timer);
     };
-  }, [fetchPools, startPolling, stopPolling]);
+  }, [fetchPools, startPolling, stopPolling, activeChain]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,9 +47,9 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
         setIsChartLoading(true);
         let fetchedChartData;
         if (address) {
-          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(address);
+          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(activeChain, address);
         } else {
-          fetchedChartData = await getAreaChartAllIntervalsWithoutToken();
+          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(activeChain);
         }
 
         setChartData(fetchedChartData);
@@ -64,8 +66,14 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
       }
     };
 
-    fetchData();
-  }, [params.poolAddress, address]);
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [params.poolAddress, address, activeChain]);
 
   useEffect(() => {
     if (!isDesktop) {

@@ -117,7 +117,7 @@ export const LendChart = ({
         gradient={areaGradient}
         tickFormatter={tickFormatter}
         isLending
-        isConnected={isConnected}
+        isConnected={!!address}
         showRightAxis={showRightAxis}
       />
 

@@ -1,5 +1,6 @@
 enum ExplorerType {
-  address = "address"
+  address = "address",
+  token = "token"
 }
 
 interface IFinalExplorerUrl {

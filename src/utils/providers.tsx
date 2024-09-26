@@ -4,9 +4,12 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { CacheProvider } from "@chakra-ui/next-js";
-
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
 import { themes } from "../themes";
 import { wagmiConfig } from "../utils/w3";
+import { arbitrum } from "viem/chains";
+import { RAINBOW_THEME } from "@/consts";
 
 const queryClient = new QueryClient();
 
@@ -15,7 +18,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <CacheProvider>
       <ChakraProvider theme={themes}>
         <WagmiProvider config={wagmiConfig}>
-          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+          <QueryClientProvider client={queryClient}>
+            <RainbowKitProvider
+              modalSize="compact"
+              initialChain={arbitrum}
+              theme={RAINBOW_THEME}
+              locale="en-US"
+              appInfo={{
+                appName: "Rebalance"
+              }}
+            >
+              {children}
+            </RainbowKitProvider>
+          </QueryClientProvider>
         </WagmiProvider>
       </ChakraProvider>
     </CacheProvider>

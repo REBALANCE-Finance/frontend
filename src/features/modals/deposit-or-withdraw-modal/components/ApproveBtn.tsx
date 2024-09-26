@@ -1,9 +1,10 @@
 import { Button } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 import { ABI_REBALANCE } from "../../../../abi/rebalance";
-import { ARB_CONFIRMATIONS_COUNT } from "@/consts";
+import { ARB_CONFIRMATIONS_COUNT, BSC_CONFIRMATIONS_COUNT } from "@/consts";
+import { arbitrum } from "viem/chains";
 
 const ApproveBtn = ({
   value,
@@ -22,10 +23,11 @@ const ApproveBtn = ({
   id?: string;
   onClick?: VoidFunction;
 }) => {
+  const { chainId } = useAccount();
   const { data: hash, writeContract } = useWriteContract();
   const { isSuccess, isLoading } = useWaitForTransactionReceipt({
     hash,
-    confirmations: ARB_CONFIRMATIONS_COUNT
+    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
   });
 
   const approve = () => {

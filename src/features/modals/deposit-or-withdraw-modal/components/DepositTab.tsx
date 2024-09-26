@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useAccount, useBalance, useReadContract } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
@@ -41,17 +41,19 @@ import {
 } from "@/consts";
 import Icon from "@/components/icon";
 import { useLock } from "@/hooks/useLock";
-import { useBalanceOfAsset } from "@/hooks/useBalanceOfAsset";
 import { ABI_REBALANCE } from "@/abi/rebalance";
 import { formatSharesNumber } from "@/utils";
 import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
+import { arbitrum } from "viem/chains";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/hooks/useStoreContext";
 
 interface IDepositTabProps {
   pool: any;
   onClose: () => void;
 }
 
-export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
+export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => {
   const [needsApproval, setNeedsApproval] = useState(false);
   const [isConfirmedApprove, setConfirmedApprove] = useState(false);
   const [isConfirmedLockApprove, setIsConfirmedLockApprove] = useState(false);
@@ -59,13 +61,16 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const [isOpenTooltip, setIsOpenTooltip] = useState(false);
   const [sharesPreview, setSharesPreview] = useState("");
   const [error, setError] = useState("");
-  const { address } = useAccount();
+  const { address, chainId, chain } = useAccount();
   const { data: balanceToken } = useBalance({
     address,
     token: pool.tokenAddress
   });
   const tooltipRef = useRef();
   const event = useAnalyticsEventTracker();
+  const { activeChain } = useStore("poolsStore");
+
+  const isArbitrumChain = chainId === arbitrum.id;
 
   const depositSchema = Yup.object().shape({
     deposit: Yup.string().test("min-amount", `Amount must be at least 1$`, value => {
@@ -80,7 +85,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
   const formik = useFormik({
     initialValues: {
       deposit: "",
-      freeze: true,
+      freeze: false,
       freezePeriod: FREEZE_DATES[0]
     },
     validationSchema: depositSchema,
@@ -197,7 +202,8 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
         const points = await getPredictedPoints(
           pool.token,
           +debouncedDeposit,
-          +formik.values.freezePeriod.slice(0, -1)
+          +formik.values.freezePeriod.slice(0, -1),
+          activeChain
         );
         setPointsQty(points);
       };
@@ -369,28 +375,29 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           </Flex>
         </HStack>
 
-        <Flex gap={2} alignItems="center">
-          <Icon name={ICON_NAMES.help} size="sm" />
-          <Flex textStyle="text14" gap={1}>
-            <Text color="black.5">Don't have {pool.token}? Use</Text>
-            <Link
-              href={ROUTE_PATHS.swapPage(
-                ARB_TOKEN_ADDRESS,
-                pool.token === "FRAX" ? FRAX_TOKEN_ADDRESS : pool.tokenAddress
-              )}
-              target="_blank"
-              color="#4cfd95"
-              textDecor="underline"
-            >
-              our zero-fee swap
-            </Link>
+        {isArbitrumChain && (
+          <Flex gap={2} alignItems="center">
+            <Icon name={ICON_NAMES.help} size="sm" />
+            <Flex textStyle="text14" gap={1}>
+              <Text color="black.5">Don't have {pool.token}? Use</Text>
+              <Link
+                href={ROUTE_PATHS.swapPage(
+                  ARB_TOKEN_ADDRESS,
+                  pool.token === "FRAX" ? FRAX_TOKEN_ADDRESS : pool.tokenAddress
+                )}
+                target="_blank"
+                color="#4cfd95"
+                textDecor="underline"
+              >
+                our zero-fee swap
+              </Link>
+            </Flex>
           </Flex>
-        </Flex>
+        )}
 
         <Divider borderColor="black.90" />
 
-        <FormControl display="flex" alignItems="center" justifyContent="space-between">
-          {/* @ts-ignore */}
+        {/* <FormControl display="flex" alignItems="center" justifyContent="space-between">
           <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
             <Flex gap="8px" alignItems="center">
               <FormLabel
@@ -422,9 +429,9 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
             </Flex>
           </Tooltip>
           <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
-        </FormControl>
+        </FormControl> */}
 
-        {formik.values.freeze && (
+        {/* {formik.values.freeze && (
           <>
             <Flex justify="space-between" gap={4} alignItems="center">
               <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
@@ -448,7 +455,7 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
           </>
         )}
 
-        <Divider borderColor="black.90" />
+        <Divider borderColor="black.90" /> */}
 
         <HStack justify="space-between">
           <Text color="black.0">30D average APY</Text>
@@ -475,4 +482,4 @@ export const DepositTab: FC<IDepositTabProps> = ({ pool, onClose }) => {
       </Flex>
     </form>
   );
-};
+});

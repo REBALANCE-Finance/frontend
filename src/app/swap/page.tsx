@@ -1,5 +1,5 @@
 "use client";
-import { Box, Flex, Text, useMediaQuery } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, useMediaQuery } from "@chakra-ui/react";
 import Header from "./components/Header/Header";
 import Pay from "./components/Pay/Pay";
 import Receive from "./components/Receive/Receive";
@@ -12,7 +12,7 @@ import {
   USDT_TOKEN
 } from "@/consts";
 import Icon from "@/components/icon";
-import { useAccount, useEstimateFeesPerGas, useReadContract } from "wagmi";
+import { useAccount, useEstimateFeesPerGas, useReadContract, useSwitchChain } from "wagmi";
 import { ConnectWallet } from "@/features/ConnectWallet";
 import { useState, useEffect } from "react";
 import { IToken } from "@/api/tokens/types";
@@ -30,10 +30,12 @@ import useDebounce from "@/hooks/useDebounce";
 import { parseUnits } from "ethers";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { arbitrum } from "viem/chains";
 
 const Swap = () => {
   const searchParams = useSearchParams();
   const { address, chainId, connector } = useAccount();
+  const { switchChain } = useSwitchChain();
   const [payToken, setPayToken] = useState<IToken | null>(null);
   const [receiveToken, setReceiveToken] = useState<IToken | null>(null);
   const [payAmount, setPayAmount] = useState("1.00");
@@ -103,6 +105,14 @@ const Swap = () => {
   const feePerGas = useEstimateFeesPerGas({
     chainId: chainId ?? defChainIdArbitrum
   });
+
+  useEffect(() => {
+    if (chainId !== arbitrum.id) {
+      switchChain({
+        chainId: arbitrum.id
+      });
+    }
+  }, [chainId]);
 
   useEffect(() => {
     if (tokenList && tokenList.length > 1 && !payToken && !receiveToken) {
@@ -351,7 +361,24 @@ const Swap = () => {
         )}
         {!error && <Fee exchangeRate={exchangeRate} gasFee={gasFee} isLoading={isLoadingFee} />}
         {!address && <ConnectWallet variant="primaryFilled" />}
-        {address && chainId && (
+        {address && chainId !== arbitrum.id && (
+          <Button
+            variant="primaryFilled"
+            h="52px"
+            w="100%"
+            mt={4}
+            transition="all .3s"
+            _hover={{
+              opacity: 0.8,
+              background: "transparent",
+              color: "white"
+            }}
+            onClick={() => switchChain({ chainId: arbitrum.id })}
+          >
+            Switch ARB
+          </Button>
+        )}
+        {address && chainId === arbitrum.id && (
           <ApproveButton
             amount={Number(payAmount)}
             ownerAddress={address}
@@ -362,22 +389,25 @@ const Swap = () => {
             error={error}
           />
         )}
-        {!isNeedApprove && !isLoadingPayTokenPrice && !isLoadingReceiveTokenPrice && (
-          <SwapButton
-            payToken={{
-              address: (payToken?.address as AddressType) || ("" as AddressType),
-              amount: Number(payAmount),
-              decimals: payTokenDecimals
-            }}
-            receiveToken={{
-              address: (receiveToken?.address as AddressType) || ("" as AddressType),
-              decimals: receiveTokenDecimals
-            }}
-            isDisabled={isSwapDisabled}
-            onError={setError}
-            onSuccess={setIsSuccessSwap}
-          />
-        )}
+        {chainId === arbitrum.id &&
+          !isNeedApprove &&
+          !isLoadingPayTokenPrice &&
+          !isLoadingReceiveTokenPrice && (
+            <SwapButton
+              payToken={{
+                address: (payToken?.address as AddressType) || ("" as AddressType),
+                amount: Number(payAmount),
+                decimals: payTokenDecimals
+              }}
+              receiveToken={{
+                address: (receiveToken?.address as AddressType) || ("" as AddressType),
+                decimals: receiveTokenDecimals
+              }}
+              isDisabled={isSwapDisabled}
+              onError={setError}
+              onSuccess={setIsSuccessSwap}
+            />
+          )}
       </Box>
       <Flex gap={2} alignItems="center" alignSelf="center">
         <Text fontSize="sm" fontWeight={500} color="gray.400">

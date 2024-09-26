@@ -18,6 +18,7 @@ export const useAuth = () => {
   };
   return {
     login,
+    connectors,
     ...rest
   };
 };

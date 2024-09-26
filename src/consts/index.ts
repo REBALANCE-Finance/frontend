@@ -19,6 +19,8 @@ export const BIG_1E20 = 100000000000000000000;
 
 export const ARB_CONFIRMATIONS_COUNT = 50;
 
+export const BSC_CONFIRMATIONS_COUNT = 4;
+
 export const PARASWAP_SPENDER_ADDRESS = "0x216B4B4Ba9F3e719726886d34a177484278Bfcae";
 
 export const USDT_TOKEN: IToken = {
@@ -53,7 +55,7 @@ export const HACKEN_AUDIT_LINK = "https://hacken.io/audits/rebalance/";
 export const LOCAL_STORAGE_KEYS = {
   isShownTutorial: "isShownTutorial",
   isShownTasks: "isShownTasks",
-  isSentDepositEvent: "isSentDepositEvent",
+  isSentDepositEvent: "isSentDepositEvent"
 };
 
 export const TWITTER_FOLLOW_URL = "https://x.com/intent/user?screen_name=rebalancefin";
@@ -94,12 +96,12 @@ export const NEW_MOCKED_TASKS: Array<Task> = [
     type: "wallet",
     complete: false
   },
-  {
-    name: "Deposit & freeze any FRAX amount",
-    type: "frax",
-    complete: false,
-    limited: true
-  },
+  // {
+  //   name: "Deposit & freeze any FRAX amount",
+  //   type: "frax",
+  //   complete: false,
+  //   limited: true
+  // },
   {
     name: "Follow us on Twitter",
     type: "twitter",
@@ -125,3 +127,60 @@ export const FRAX_TOKEN_ADDRESS = "0x7468a5d8E02245B00E8C0217fCE021C70Bc51305";
 export const LOCK_TOKENS_CONTRACT_ADDRESS = "0x4c2db56998fEEb681bf82524b0cF8Dc4D99D2132";
 
 export const INSUFFICIENT_BALANCE_ERROR = "You balance is insufficient";
+
+
+export const RAINBOW_THEME = {
+  colors: {
+    accentColor: 'hsl(0 0% 47%)',
+    accentColorForeground: 'hsl(0, 0%, 100%)',
+    actionButtonBorder: 'hsl(0, 0%, 0%)',
+    actionButtonBorderMobile: 'hsl(0, 0%, 0%)',
+    actionButtonSecondaryBackground: 'hsl(0, 0%, 100%)',
+    closeButton: 'hsl(0, 0%, 73%)',
+    closeButtonBackground: 'hsl(0, 0%, 8%)',
+    connectButtonBackground: 'hsl(0, 0%, 0%)',
+    connectButtonBackgroundError: 'hsl(360,100%,64%)',
+    connectButtonInnerBackground: 'hsl(0, 0%, 9%)',
+    connectButtonText: 'hsl(0, 0%, 100%)',
+    connectButtonTextError: 'hsl(0,0%,100%)',
+    error: 'hsl(0,0%,100%)',
+    generalBorder: 'hsl(0, 0%, 8%)',
+    generalBorderDim: 'rgba(0, 0, 0, 0.03)',
+    menuItemBackground: 'hsl(227, 0%, 8%)',
+    modalBackdrop: 'rgba(0, 0, 0, 0.5)',
+    modalBackground: 'hsl(0, 0%, 0%)',
+    modalBorder: 'hsl(0, 0%, 8%)',
+    modalText: 'hsl(0, 0%, 100%)',
+    modalTextDim: 'rgba(60, 66, 66, 0.3)',
+    modalTextSecondary: 'hsl(0, 0%, 60%)',
+    profileAction: 'hsl(0, 0%, 15%)',
+    profileActionHover: 'hsl(0, 0%, 25%)',
+    profileForeground: 'hsl(0, 0%, 6%)',
+    selectedOptionBorder: 'hsl(0 0% 47%)',
+    downloadBottomCardBackground: '"linear-gradient(126deg, rgba(255, 255, 255, 0) 9.49%, rgba(171, 171, 171, 0.04) 71.04%), #FFFFFF"',
+    downloadTopCardBackground: '"linear-gradient(126deg, rgba(171, 171, 171, 0.2) 9.49%, rgba(255, 255, 255, 0) 71.04%), #FFFFFF"',
+    connectionIndicator: 'hsl(107, 100%, 44%)',
+    standby: 'hsl(47, 100%, 63%)',
+  },
+  radii: {
+    actionButton: '0px',
+    connectButton: '0px',
+    menuButton: '0px',
+    modal: '0px',
+    modalMobile: '0px',
+  },
+  shadows: {
+    connectButton: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+    dialog: '0px 8px 32px rgba(0, 0, 0, 0.32)',
+    profileDetailsAction: '0px 2px 6px rgba(37, 41, 46, 0.04)',
+    selectedOption: '0px 2px 6px rgba(0, 0, 0, 0.24)',
+    selectedWallet: '0px 2px 6px rgba(0, 0, 0, 0.12)',
+    walletLogo: '0px 2px 16px rgba(0, 0, 0, 0.16)',
+  },
+  blurs: {
+    modalOverlay: 'blur(0px)', // e.g. 'blur(4px)'
+  },
+  fonts: {
+    body: '...', // default
+  },
+}

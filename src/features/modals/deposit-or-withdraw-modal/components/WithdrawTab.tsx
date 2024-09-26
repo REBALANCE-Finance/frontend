@@ -15,6 +15,8 @@ import { LockApi } from "@/types";
 import { getLocks } from "@/api/points/queries";
 import UnlockItem from "./UnlockItem";
 import { getDaysLeft, isUnlocked } from "@/utils";
+import { useAccount } from "wagmi";
+import { useStore } from "@/hooks/useStoreContext";
 
 interface IWithdrawTabProps {
   pool: any;
@@ -33,11 +35,13 @@ const withdrawSchema = yup.object({
 
 export const WithdrawTab: FC<IWithdrawTabProps> = observer(
   ({ pool, balance, address, onClose }) => {
+    const { chain } = useAccount();
     const [profit, setProfit] = useState(0);
     const [unlockData, setUnlockData] = useState<LockApi>({} as LockApi);
     const [totalLockedBalance, setTotalLockedBalance] = useState(0);
     const [isSuccessUnlocked, setIsSuccessUnlocked] = useState(false);
     const [lockIds, setLockIds] = useState<number[]>([]);
+    const { activeChain } = useStore("poolsStore");
 
     useEffect(() => {
       if (address) {
@@ -102,7 +106,7 @@ export const WithdrawTab: FC<IWithdrawTabProps> = observer(
 
     useEffect(() => {
       if (address) {
-        getPersonalEarnings(1, 30, address, pool.token)
+        getPersonalEarnings(1, 30, address, pool.token, activeChain)
           .then(data => {
             setProfit(data.userEarned.reduce((acc, el) => acc + el.uv, 0) || 0);
           })

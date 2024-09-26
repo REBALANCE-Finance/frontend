@@ -1,7 +1,7 @@
 import { ModalProps } from "@chakra-ui/react";
 
 import { ModalContextEnum, ModalEnum } from "../../store/modal/types";
-import { TaskData } from "@/types";
+import { ICHAIN, TaskData } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 
 export interface IDefaultModalProps {
@@ -17,6 +17,7 @@ export interface IDefaultModalContextProps extends Omit<IDefaultModalProps, "typ
 
 export interface ISuccessModalProps {
   txHash: string;
+  chainName: ICHAIN;
   id?: string;
   onClick?: VoidFunction;
 }
@@ -40,6 +41,7 @@ export interface ITasksModalProps extends IDefaultModalProps {
 }
 
 export interface ISuccessModalContextProps extends IDefaultModalProps {
+  chainName: ICHAIN;
   txHash?: string;
   id?: string;
   onClick?: VoidFunction;

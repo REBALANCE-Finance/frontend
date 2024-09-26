@@ -6,12 +6,22 @@ import React, { useEffect, useState } from "react";
 
 import { TIME_INTERVAL } from "../../consts";
 
-export const CircularProgress = () => {
+type CircularProgressProps = {
+  resetCountDown: boolean;
+};
+
+export const CircularProgress = ({ resetCountDown }: CircularProgressProps) => {
   const [timeLeftMillis, setTimeLeftMillis] = useState(TIME_INTERVAL);
   const timeLeftSecond = (timeLeftMillis / 1000).toFixed();
 
   // Function to convert time to percentage
   const timeToPercentage = ((TIME_INTERVAL - timeLeftMillis) / TIME_INTERVAL) * 100;
+
+  useEffect(() => {
+    if (resetCountDown) {
+      setTimeLeftMillis(TIME_INTERVAL);
+    }
+  }, [resetCountDown]);
 
   useEffect(() => {
     const timer = setInterval(() => {

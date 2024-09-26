@@ -225,7 +225,7 @@ const Tutorial = observer(() => {
     if (action === ACTIONS.NEXT) {
       switch (stepIndex) {
         case 1:
-          router.push(ROUTE_PATHS.lendingAssetPage("USDT"), { scroll: false });
+          router.push(ROUTE_PATHS.lendingAssetPage("arb", "USDT"), { scroll: false });
           setStepIndex(2);
           setShouldUpdateStep(false);
           break;

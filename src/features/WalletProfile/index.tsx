@@ -11,8 +11,8 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import React from "react";
-import { useAccount, useDisconnect } from "wagmi";
-
+import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
+import Image from "next/image";
 import { JazzIcon } from "../../components/address-icon/JazzIcon";
 import Icon from "../../components/icon";
 import { ICON_NAMES } from "../../consts";
@@ -27,7 +27,7 @@ interface IWalletProfileProps {
 
 export const WalletProfile = ({ className }: IWalletProfileProps) => {
   const { disconnect } = useDisconnect();
-  const { address, connector, isConnected } = useAccount();
+  const { address, connector, isConnected, chain } = useAccount();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const name = connector?.name;

@@ -4,70 +4,78 @@ import { useAccount, useSwitchChain } from "wagmi";
 
 import Icon from "../../../../../components/icon";
 import { CHAIN_ICONS, ICON_NAMES } from "../../../../../consts";
+import { useStore } from "@/hooks/useStoreContext";
+import { arbitrum, bsc } from "viem/chains";
+import { observer } from "mobx-react-lite";
+import { isMobile } from "react-device-detect";
 
-export const Strategies = () => {
+type StrategiesProps = {
+  onResetCountDown: VoidFunction;
+};
+
+export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
   const { chains, switchChain } = useSwitchChain();
-  const { chain } = useAccount();
-  const [isActiveChain, setIsActiveChain] = useState(chains[0].id === chain?.id);
+  const { chain, address, chainId } = useAccount();
+  const { activeChain, setActiveChain, resetPools } = useStore("poolsStore");
+  const [activeChainId, setActiveChainId] = useState(
+    chainId || (activeChain === "BSC" ? bsc.id : arbitrum.id)
+  );
 
   const handleSwitchChain = (id: number) => {
+    if (!address) {
+      setActiveChain(id === bsc.id ? "BSC" : "Arbitrum");
+    }
+
+    onResetCountDown();
+    resetPools();
     switchChain({ chainId: id });
-    setIsActiveChain(chains[0].id === id);
+    setActiveChainId(id);
   };
+
+  const getItemName = (name: string) => {
+    if (name === "BNB Smart Chain") {
+      return "Binance Smart Chain";
+    }
+
+    return name;
+  };
+
+  const iconName = activeChain === "BSC" ? bsc.id : arbitrum.id;
+
   return (
     <Menu>
       <MenuButton>
-        <Flex alignItems="center" gap="12px" color="lightGray">
-          <Icon name={CHAIN_ICONS[chain?.id ?? 42161]} />
+        <Flex alignItems="center" gap={isMobile ? "8px" : "12px"} color="lightGray">
+          <Icon name={CHAIN_ICONS[iconName]} />
           {/* <Text fontSize="xl">{CHAIN_NAMES[chain?.id ?? 0]}</Text> */}
-          <Text fontSize="medium">Arbitrum</Text>
+          <Text fontSize="medium">Select chain</Text>
           <Icon name={ICON_NAMES.chevronDown} />
         </Flex>
       </MenuButton>
 
-      <MenuList zIndex={1000} as={Flex} direction="column" bg="black.60" border="none" p="24px 12px" gap="24px">
-        <Text fontSize="sm">Select the Market</Text>
-
-        {chains.map(({ id, name }) => {
-          if (id === 42161) {
-            return (
-              <MenuItem
-                key={name}
-                bg="transparent"
-                p="0"
-                gap="8px"
-                color={isActiveChain ? "greenAlpha.60" : undefined}
-                onClick={() => handleSwitchChain(id)}
-              >
-                <Icon name={CHAIN_ICONS[id]} />
-                <Text>{name}</Text>
-              </MenuItem>
-            );
-          }
-          return (
-            <MenuItem
-              key={name}
-              bg="transparent"
-              p="0"
-              gap="8px"
-              onClick={() => handleSwitchChain(id)}
-              isDisabled
-            >
-              <Icon name={CHAIN_ICONS[id]} />
-              <Text>{name}</Text>
-              <Text
-                fontSize="xs"
-                p="0 4px"
-                bg="greenAlpha.10"
-                color="greenAlpha.80"
-                borderRadius="50px"
-              >
-                Coming soon
-              </Text>
-            </MenuItem>
-          );
-        })}
+      <MenuList
+        zIndex={1000}
+        as={Flex}
+        direction="column"
+        bg="black.60"
+        border="none"
+        p="24px 12px"
+        gap="24px"
+      >
+        {chains.map(({ id, name }) => (
+          <MenuItem
+            key={name}
+            bg="transparent"
+            p="0"
+            gap="8px"
+            color={activeChainId === id ? "greenAlpha.60" : undefined}
+            onClick={() => handleSwitchChain(id)}
+          >
+            <Icon name={CHAIN_ICONS[id]} />
+            <Text>{getItemName(name)}</Text>
+          </MenuItem>
+        ))}
       </MenuList>
     </Menu>
   );
-};
+});

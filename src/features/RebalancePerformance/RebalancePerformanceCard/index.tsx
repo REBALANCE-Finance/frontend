@@ -139,9 +139,9 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
               h={type === "lending" ? "16px" : "24px"}
             />
           </Box>
-          {type === "lending" && (
+          {/* {type === "lending" && (
             <Image ml="8px" src="/assets/icons/arbitrum-icon.svg" w="16px" h="16px" />
-          )}
+          )} */}
           <Box ml="auto" display="flex" gap="12px" alignItems="center">
             {logos.map((logo, index) => (
               <Img key={index} src={logo.src} width={logo.w} height={logo.h} />

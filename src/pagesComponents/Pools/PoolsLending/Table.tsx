@@ -27,6 +27,8 @@ import { ROUTE_PATHS } from "@/consts/routes";
 import { useRouter } from "next/navigation";
 import ArbIncentive from "@/components/badge/ArbIncentive";
 import { getIdByToken } from "@/utils/analytics";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/hooks/useStoreContext";
 
 interface PoolsLendingTableProps {
   pools: IPoolData[];
@@ -34,13 +36,19 @@ interface PoolsLendingTableProps {
   error?: string | null;
 }
 
-const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) => {
+const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTableProps) => {
   const { address } = useAccount();
   const router = useRouter();
   const [isNotDesktop] = useMediaQuery("(max-width: 1024px)");
+  const { activeChain } = useStore("poolsStore");
+
+  const getChainRouteName = () => {
+    return activeChain === "BSC" ? "bsc" : "arb";
+  };
 
   const handleLink = (poolToken: string) => {
-    router.push(generatePath(ROUTE_PATHS.lendingAsset, { poolToken }));
+    // router.push(generatePath(ROUTE_PATHS.lendingAsset, { poolToken }));
+    router.push(ROUTE_PATHS.lendingAssetPage(getChainRouteName(), poolToken), { scroll: false });
   };
 
   if (isLoading || error) {
@@ -201,6 +209,6 @@ const PoolsLendingTable = ({ pools, isLoading, error }: PoolsLendingTableProps) 
       </Table>
     </TableContainer>
   );
-};
+});
 
 export default PoolsLendingTable;

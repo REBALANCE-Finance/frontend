@@ -30,7 +30,7 @@ export const AreaChart: FC<IAreaChartProps> = ({
         data={data}
         margin={{
           top: 0,
-          right: 10,
+          right: showRightAxis ? -32 : 10,
           left: -25,
           bottom: 0
         }}

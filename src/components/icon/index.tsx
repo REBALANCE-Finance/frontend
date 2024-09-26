@@ -17,7 +17,7 @@ const Icon: FC<TIconProps> = ({ name, size = "md", width, height, ...props }) =>
       return `${basePath}${name}-icon.jpg`;
     }
 
-    if (name === ICON_NAMES.FRAXLEND) {
+    if (name === ICON_NAMES.FRAXLEND || name === ICON_NAMES.KINZA) {
       return `${basePath}${name}-icon.png`;
     }
 
