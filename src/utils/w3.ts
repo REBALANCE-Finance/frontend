@@ -1,22 +1,33 @@
 "use client";
 
+import { connectorsForWallets, getDefaultWallets } from "@rainbow-me/rainbowkit";
+import {
+  walletConnectWallet,
+  metaMaskWallet,
+  injectedWallet,
+  coinbaseWallet
+} from "@rainbow-me/rainbowkit/wallets";
 import { createConfig, http } from "@wagmi/core";
-import { arbitrum, bsc, optimism } from "wagmi/chains";
-import { coinbaseWallet, injected, walletConnect, metaMask } from "wagmi/connectors";
+import { arbitrum, bsc } from "wagmi/chains";
 
-const connectors = [
-  injected({ target: "metaMask" }),
-  metaMask(),
-  coinbaseWallet({ appName: "Rebalance" }),
-  walletConnect({ projectId: process?.env?.NEXT_PUBLIC_WALLETCONNECT_KEY || "" })
-];
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: "Popular",
+      wallets: [injectedWallet, metaMaskWallet, walletConnectWallet, coinbaseWallet]
+    }
+  ],
+  {
+    appName: "Rebalance",
+    projectId: process?.env?.NEXT_PUBLIC_WALLETCONNECT_KEY || ""
+  }
+);
 
 export const wagmiConfig = createConfig({
   chains: [arbitrum, bsc],
-  connectors,
-  // ssr: true,
+  connectors: connectors,
+  ssr: true,
   transports: {
-    // [sepolia.id]: http(),
     [arbitrum.id]: http(),
     [bsc.id]: http()
   }

@@ -20,31 +20,35 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const showAnalytics = process.env.NEXT_PUBLIC_NEED_ANALYTICS === "true";
+
   return (
     <html lang="en">
       <head>
-        <>
-          <Script
+        {showAnalytics && (
+          <>
+            <Script
               strategy="afterInteractive"
               // G-2098CC33P7
               // src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
               src={`https://www.googletagmanager.com/gtag/js?id=G-3F7178H2MV`}
-          />
-          <Script
+            />
+            <Script
               id="gtag-init"
               strategy="afterInteractive"
               dangerouslySetInnerHTML={{
-                  __html: `
+                __html: `
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
                     gtag('config', 'G-3F7178H2MV', {
                     page_path: window.location.pathname,
                     });
-                  `,
+                  `
               }}
             />
-        </>
+          </>
+        )}
         {/* <Script
           id="gtm-head"
           strategy="afterInteractive"
@@ -70,7 +74,7 @@ export default function RootLayout({
         </noscript> */}
 
         <Providers>
-          <CommonEvent />
+          {showAnalytics && <CommonEvent />}
           <MainLayout>{children}</MainLayout>
           <ModalContextController />
           <ModalController />

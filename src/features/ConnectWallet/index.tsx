@@ -4,7 +4,7 @@ import { isMobile } from "react-device-detect";
 
 import { MEDIA_QUERY_MAX } from "../../consts";
 import { useStore } from "@/hooks/useStoreContext";
-import { ModalEnum } from "@/store/modal/types";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export const ConnectWallet = ({
   title,
@@ -23,15 +23,19 @@ export const ConnectWallet = ({
 }) => {
   const { openModal } = useStore("modalStore");
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
+  const { openConnectModal } = useConnectModal();
 
   const onOpenConnectWalletModal = () => {
     if (onClick) {
       onClick();
     }
-    openModal({
-      // @ts-ignore
-      type: ModalEnum.ConnectWallet
-    });
+    // openModal({
+    //   // @ts-ignore
+    //   type: ModalEnum.ConnectWallet
+    // });
+    if (openConnectModal) {
+      openConnectModal();
+    }
   };
 
   if (media) {
