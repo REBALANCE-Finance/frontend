@@ -524,10 +524,10 @@ const UserTasksPopover = observer(({ address }: UserTasksPopoverProps) => {
           />
           <Flex flexDir="column" gap="12px">
             <Text fontSize="22px" fontWeight={500}>
-              Rebalance Incentives Campaign
+              NOTAI Incentives Campaign
             </Text>
             <Text textStyle="text14" color="#9FA2AB">
-              Don't miss the chance to earn Rebalance points as the community incentivization
+              Don't miss the chance to earn NOTAI points as the community incentivization
               program approaches!
             </Text>
           </Flex>

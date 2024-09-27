@@ -128,7 +128,7 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
           )}
         </Box>
         <Flex alignItems="center" mt="auto">
-          <Box display="flex" alignItems="center">
+          {/* <Box display="flex" alignItems="center">
             <Text color="#DEDEDE" fontSize="12px">
               {type === "lending" ? "Extra-incentives" : "Extra-points"}
             </Text>
@@ -138,7 +138,7 @@ export const RebalancePerformanceCard: FC<RebalncePerformanceCardProps> = ({
               w={type === "lending" ? "max-content" : "24px"}
               h={type === "lending" ? "16px" : "24px"}
             />
-          </Box>
+          </Box> */}
           {/* {type === "lending" && (
             <Image ml="8px" src="/assets/icons/arbitrum-icon.svg" w="16px" h="16px" />
           )} */}

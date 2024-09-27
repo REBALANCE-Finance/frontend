@@ -195,7 +195,7 @@ export const PoolsLending = observer(
                   </HStack>
 
                   <HStack justify="space-between">
-                    <Tooltip label="Rebalance APY  advantage over the lending market highest APY in last 30 days">
+                    <Tooltip label="NOTAI APY  advantage over the lending market highest APY in last 30 days">
                       <Text borderBottom={"dashed 1px gray"} color="white">
                         {">"} market max.
                       </Text>

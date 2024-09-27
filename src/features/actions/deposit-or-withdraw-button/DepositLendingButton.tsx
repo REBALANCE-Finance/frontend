@@ -62,6 +62,7 @@ export const DepositLendingButton: FC<IDepositProps> = ({
   return (
     <Button
       id={id}
+      color="black"
       variant={variant ?? "primaryFilled"}
       flex="1 1 0"
       minHeight={minHeight}

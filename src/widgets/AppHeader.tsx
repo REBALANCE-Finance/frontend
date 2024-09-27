@@ -42,7 +42,7 @@ export const AppHeader = () => {
         <Link as={NextLink} href={ROUTE_PATHS.lending}>
           <Image
             src={media ? LogoMob.src : LogoDesc.src}
-            w={{ base: "30px", lg: media ? "30px" : "150px" }}
+            w={{ base: "80px", lg: media ? "30px" : "150px" }}
           />
         </Link>
 
@@ -51,8 +51,8 @@ export const AppHeader = () => {
         <Flex gap="12px" alignItems="center">
           {!!address && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
-          {isDesktop && <RewardsButton />}
-          {isDesktop && !isLoading && <UserTasksPopover address={address || MOCKED_ADDRESS} />}
+          {/* {isDesktop && <RewardsButton />} */}
+          {/* {isDesktop && !isLoading && <UserTasksPopover address={address || MOCKED_ADDRESS} />} */}
           {!!address ? <WalletProfile className="step-1" /> : <ConnectWallet className="step-1" />}
           {media && <AppNav />}
         </Flex>

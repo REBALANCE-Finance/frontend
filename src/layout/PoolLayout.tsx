@@ -49,13 +49,13 @@ export const PoolLayout = ({
   return (
     <Flex direction="column" w="100%" align="center">
       {!isDesktop && isLoadingPoints && address && <Skeleton height="16px" width="60px" />}
-      {!isDesktop && (
+      {/* {!isDesktop && (
         <Flex gap={6} mt={4} mb={8} alignSelf="center">
           {!isMobile && <UserTasksPopover address={address || MOCKED_ADDRESS} />}
           {isMobile && <MobileTasksPopover />}
           <RewardsButton />
         </Flex>
-      )}
+      )} */}
       <Flex
         direction="column"
         justify="center"

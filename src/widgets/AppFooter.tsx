@@ -21,27 +21,29 @@ export const AppFooter = () => {
       mt={!media ? "40px" : "24px"}
       gap={{ base: "24px", md: "0" }}
     >
-      <Image
+      {/* <Image
         src={media ? LogoDesc.src : LogoMob.src}
         w={{ base: "auto", md: "30px" }}
         h="30px"
         order={{ base: 2, md: 0 }}
-      />
+      /> */}
 
       <Flex gap={{ base: "24px", md: "40px" }} order={{ base: 0, md: 1 }}>
-        {FooterLink.map(link => (
+        {/* {FooterLink.map(link => (
           <Link variant="link" as={NextLink} key={link.name} href={link.path}>
             {link.name}
           </Link>
-        ))}
+        ))} */}
+        powered by Rebalance
       </Flex>
 
       <Flex gap={{ base: "24px" }} order={{ base: 1, md: 2 }}>
-        {FooterMedia.map(media => (
+        {/* {FooterMedia.map(media => (
           <Link key={media.name} as={NextLink} href={media.path} target="_blank">
             <Icon name={media.name} />
           </Link>
-        ))}
+        ))} */}
+        2024
       </Flex>
     </Flex>
   );
