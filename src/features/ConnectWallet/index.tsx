@@ -44,6 +44,7 @@ export const ConnectWallet = ({
         id={id}
         p={variant ? "16px 24px" : 0}
         onClick={onOpenConnectWalletModal}
+        color={title ? "black" : "white"}
         variant={variant ? variant : title === "Deposit" ? "primaryFilled" : ""}
         flex="1 1 0"
         width={variant ? "100%" : "auto"}
@@ -57,6 +58,7 @@ export const ConnectWallet = ({
   return (
     <Button
       id={id}
+      color={title ? "black" : "white"}
       onClick={onOpenConnectWalletModal}
       variant={variant ? variant : title === "Deposit" ? "primaryFilled" : ""}
       flex="1 1 0"
