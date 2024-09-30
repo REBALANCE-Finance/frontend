@@ -28,7 +28,10 @@ export const AppFooter = () => {
         order={{ base: 2, md: 0 }}
       /> */}
 
-      <Flex gap={{ base: "24px", md: "40px" }} order={{ base: 0, md: 1 }}>
+      <Flex
+       fontSize="sm"
+       color="darkGray"
+       gap={{ base: "24px", md: "40px" }} order={{ base: 0, md: 1 }}>
         {/* {FooterLink.map(link => (
           <Link variant="link" as={NextLink} key={link.name} href={link.path}>
             {link.name}
@@ -37,7 +40,8 @@ export const AppFooter = () => {
         powered by Rebalance
       </Flex>
 
-      <Flex gap={{ base: "24px" }} order={{ base: 1, md: 2 }}>
+      <Flex fontSize="sm"
+       color="darkGray" gap={{ base: "24px" }} order={{ base: 1, md: 2 }}>
         {/* {FooterMedia.map(media => (
           <Link key={media.name} as={NextLink} href={media.path} target="_blank">
             <Icon name={media.name} />
