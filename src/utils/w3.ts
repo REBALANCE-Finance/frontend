@@ -18,7 +18,7 @@ const connectors = connectorsForWallets(
     }
   ],
   {
-    appName: "Rebalance",
+    appName: "NOTAI",
     projectId: process?.env?.NEXT_PUBLIC_WALLETCONNECT_KEY || ""
   }
 );
