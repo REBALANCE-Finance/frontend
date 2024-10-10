@@ -9,12 +9,13 @@ import {
 } from "@rainbow-me/rainbowkit/wallets";
 import { createConfig, http } from "@wagmi/core";
 import { arbitrum, bsc } from "wagmi/chains";
+import { magicWallet } from "./magicConnector";
 
 const connectors = connectorsForWallets(
   [
     {
       groupName: "Popular",
-      wallets: [injectedWallet, metaMaskWallet, walletConnectWallet, coinbaseWallet]
+      wallets: [injectedWallet, metaMaskWallet, walletConnectWallet, coinbaseWallet, magicWallet]
     }
   ],
   {
