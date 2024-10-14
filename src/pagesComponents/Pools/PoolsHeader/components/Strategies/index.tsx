@@ -15,14 +15,15 @@ type StrategiesProps = {
 
 export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
   const { chains, switchChain } = useSwitchChain();
-  const { chain, address, chainId } = useAccount();
+  const { chain, address, chainId, connector } = useAccount();
   const { activeChain, setActiveChain, resetPools } = useStore("poolsStore");
   const [activeChainId, setActiveChainId] = useState(
     chainId || (activeChain === "BSC" ? bsc.id : arbitrum.id)
   );
+  const isMagicActive = connector?.id === "magic";
 
   const handleSwitchChain = (id: number) => {
-    if (!address) {
+    if (!address || isMagicActive) {
       setActiveChain(id === bsc.id ? "BSC" : "Arbitrum");
     }
 

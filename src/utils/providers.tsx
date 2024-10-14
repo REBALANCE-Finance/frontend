@@ -1,5 +1,4 @@
 "use client";
-
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
@@ -10,10 +9,11 @@ import { themes } from "../themes";
 import { wagmiConfig } from "../utils/w3";
 import { arbitrum } from "viem/chains";
 import { RAINBOW_THEME } from "@/consts";
+import MagicProvider from "@/contexts/useMagic";
 
 const queryClient = new QueryClient();
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <CacheProvider>
       <ChakraProvider theme={themes}>
@@ -28,11 +28,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 appName: "Rebalance"
               }}
             >
-              {children}
+              <MagicProvider>{children}</MagicProvider>
             </RainbowKitProvider>
           </QueryClientProvider>
         </WagmiProvider>
       </ChakraProvider>
     </CacheProvider>
   );
-}
+};
