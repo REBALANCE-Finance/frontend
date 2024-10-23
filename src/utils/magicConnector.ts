@@ -36,4 +36,4 @@ export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
   }
 });
 
-export const magicWallet = () => createMagicConnector({ chain: arbitrum });
+export const magicWallet = (chain: Chain) => createMagicConnector({ chain });
