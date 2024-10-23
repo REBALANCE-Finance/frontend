@@ -49,13 +49,12 @@ export const PoolsLending = observer(
     const getYieldStrategy = (token: string) => {
       const baseMessage = `${token} Low-Risk Yield Strategy: Higher APY is achieved by automatic rebalance between the following pools:`;
 
-      const bscPools = ["AAVE v3", "Kinza", "Radiant"];
+      const bscPools = ["AAVE v3", "Kinza"];
       const fraxPools = ["Fraxlend", "Lodestar", "AAVE"];
       const defaultPools = [
         ...(token === "wETH" || token === "USDC.e" ? ["Silo"] : []),
         "Dolomite",
         "AAVE v3",
-        "Radiant v2",
         "Compound"
       ];
 
@@ -157,11 +156,6 @@ export const PoolsLending = observer(
                             <Box mr={item.token === "FRAX" ? "0" : "-4px"} zIndex={3}>
                               <Icon name="AAVE" width="10px" height="10px" />
                             </Box>
-                            {item.token !== "FRAX" ? (
-                              <Box mr="-4px" zIndex={2}>
-                                <Icon name="RADIANT" width="14px" height="14px" />
-                              </Box>
-                            ) : null}
                             {item.token !== "FRAX" && (
                               <Icon name="COMPOUND" width="14px" height="14px" />
                             )}
@@ -175,7 +169,6 @@ export const PoolsLending = observer(
                             <Box mr="-4px" zIndex={2}>
                               <Icon name="KINZA" width="14px" height="14px" />
                             </Box>
-                            <Icon name="RADIANT" width="14px" height="14px" />
                           </Box>
                         )}
                         <Text textStyle="textMono16" ml={2}>
