@@ -36,7 +36,7 @@ export const createWagmiConfig = (chain: Chain) => {
   return createConfig({
     chains: [arbitrum, bsc],
     connectors: createConnectors(chain),
-    ssr: true,
+    ssr: false,
     transports: {
       [arbitrum.id]: http(),
       [bsc.id]: http()

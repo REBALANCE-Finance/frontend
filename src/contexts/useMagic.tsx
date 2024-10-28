@@ -1,5 +1,6 @@
 "use client";
 import { useStore } from "@/hooks/useStoreContext";
+import { OAuthExtension } from "@magic-ext/oauth";
 import { Magic } from "magic-sdk";
 import { observer } from "mobx-react-lite";
 import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -17,7 +18,7 @@ const MagicContext = createContext<MagicContextType>({
 export const useMagic = () => useContext(MagicContext);
 
 const MagicProvider = observer(({ children }: { children: ReactNode }) => {
-  const [magic, setMagic] = useState<Magic | null>(null);
+  const [magic, setMagic] = useState<any>();
   const { activeChain } = useStore("poolsStore");
   const bscActiveChain = activeChain === "BSC";
 
@@ -32,6 +33,7 @@ const MagicProvider = observer(({ children }: { children: ReactNode }) => {
       // }
 
       const _magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY || "", {
+        extensions: [new OAuthExtension()],
         network: {
           rpcUrl: bscActiveChain ? bsc.rpcUrls.default.http[0] : arbitrum.rpcUrls.default.http[0],
           // rpcUrl: arbitrum.rpcUrls.default.http[0],

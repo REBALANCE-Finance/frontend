@@ -1,3 +1,4 @@
+import { OAuthExtension } from "@magic-ext/oauth";
 import { dedicatedWalletConnector } from "@magiclabs/wagmi-connector";
 import type { Wallet } from "@rainbow-me/rainbowkit";
 import type { Chain } from "viem";
@@ -27,7 +28,8 @@ export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
           network: {
             chainId: chain.id,
             rpcUrl: chain.rpcUrls.default.http[0]
-          }
+          },
+          extensions: [new OAuthExtension()]
         }
       }
     });
