@@ -1,5 +1,4 @@
 "use client";
-
 import { connectorsForWallets, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import {
   walletConnectWallet,
