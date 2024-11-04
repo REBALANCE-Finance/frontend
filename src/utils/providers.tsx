@@ -12,6 +12,7 @@ import { RAINBOW_THEME } from "@/consts";
 import MagicProvider from "@/contexts/useMagic";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/hooks/useStoreContext";
+import ConnectDisclaimer from "@/components/modal/ConnectDisclaimer";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +30,8 @@ export const Providers = observer(({ children }: { children: React.ReactNode }) 
               theme={RAINBOW_THEME}
               locale="en-US"
               appInfo={{
-                appName: "Rebalance"
+                appName: "Rebalance",
+                disclaimer: () => <ConnectDisclaimer />
               }}
             >
               <MagicProvider>{children}</MagicProvider>
