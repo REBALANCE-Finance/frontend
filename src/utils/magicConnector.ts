@@ -20,9 +20,6 @@ export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
         apiKey: process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY as string,
         accentColor: "rgba(76, 255, 148, 0.4)",
         isDarkMode: true,
-        oauthOptions: {
-          providers: ["google", "facebook", "twitter"]
-        },
         magicSdkConfiguration: {
           network: {
             chainId: chain.id,
