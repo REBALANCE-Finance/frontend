@@ -74,6 +74,7 @@ export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
             p="0"
             gap="8px"
             color={activeChainId === id ? "greenAlpha.60" : undefined}
+            isDisabled={id === bsc.id}
             onClick={() => handleSwitchChain(id)}
           >
             <Icon name={CHAIN_ICONS[id]} />
