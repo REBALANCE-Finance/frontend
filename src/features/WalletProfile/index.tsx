@@ -20,6 +20,7 @@ import { ellipsis } from "../../utils";
 import { WalletProfileBtn } from "./components/WalletProfileBtn";
 import { WalletProfileSettings } from "./components/WalletProfileSettings";
 import { WalletProfileTransactionHistory } from "./components/WalletProfileTransactionHistory";
+import { useMagic } from "@/contexts/useMagic";
 
 interface IWalletProfileProps {
   className: string;
@@ -29,12 +30,22 @@ export const WalletProfile = ({ className }: IWalletProfileProps) => {
   const { disconnect } = useDisconnect();
   const { address, connector, isConnected, chain } = useAccount();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { magic } = useMagic();
+
+  const isActiveMagic = connector?.id === "magic";
+
+  const onOpenMagicWallet = () => {
+    magic?.wallet.showUI();
+  };
+
+  // const onOpenWallet = isActiveMagic ? onOpenMagicWallet : onOpen;
+  const onOpenWallet = isActiveMagic ? onOpenMagicWallet : () => {};
 
   const name = connector?.name;
 
   return (
     <>
-      <WalletProfileBtn onOpen={onOpen} address={String(address)} className={className} />
+      <WalletProfileBtn onOpen={onOpenWallet} address={String(address)} className={className} />
 
       <Drawer isOpen={isOpen} onClose={onClose} placement="right">
         <DrawerOverlay />

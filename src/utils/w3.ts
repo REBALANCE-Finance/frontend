@@ -1,5 +1,4 @@
 "use client";
-
 import { connectorsForWallets, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import {
   walletConnectWallet,
@@ -8,27 +7,38 @@ import {
   coinbaseWallet
 } from "@rainbow-me/rainbowkit/wallets";
 import { createConfig, http } from "@wagmi/core";
-import { arbitrum, bsc } from "wagmi/chains";
+import { arbitrum, bsc, Chain } from "wagmi/chains";
+import { magicWallet } from "./magicConnector";
 
-const connectors = connectorsForWallets(
-  [
+const createConnectors = (chain: Chain) => {
+  return connectorsForWallets(
+    [
+      {
+        groupName: "Popular",
+        wallets: [
+          injectedWallet,
+          metaMaskWallet,
+          walletConnectWallet,
+          coinbaseWallet,
+          () => magicWallet(chain)
+        ]
+      }
+    ],
     {
-      groupName: "Popular",
-      wallets: [injectedWallet, metaMaskWallet, walletConnectWallet, coinbaseWallet]
+      appName: "Rebalance",
+      projectId: process?.env?.NEXT_PUBLIC_WALLETCONNECT_KEY || ""
     }
-  ],
-  {
-    appName: "Rebalance",
-    projectId: process?.env?.NEXT_PUBLIC_WALLETCONNECT_KEY || ""
-  }
-);
+  );
+};
 
-export const wagmiConfig = createConfig({
-  chains: [arbitrum, bsc],
-  connectors: connectors,
-  ssr: true,
-  transports: {
-    [arbitrum.id]: http(),
-    [bsc.id]: http()
-  }
-});
+export const createWagmiConfig = (chain: Chain) => {
+  return createConfig({
+    chains: [arbitrum, bsc],
+    connectors: createConnectors(chain),
+    ssr: false,
+    transports: {
+      [arbitrum.id]: http(),
+      [bsc.id]: http()
+    }
+  });
+};

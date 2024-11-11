@@ -1,5 +1,5 @@
-import { Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Flex, Menu, MenuButton, MenuItem, MenuList, Text, useEditable } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 
 import Icon from "../../../../../components/icon";
@@ -15,14 +15,21 @@ type StrategiesProps = {
 
 export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
   const { chains, switchChain } = useSwitchChain();
-  const { chain, address, chainId } = useAccount();
+  const { chain, address, chainId, connector } = useAccount();
   const { activeChain, setActiveChain, resetPools } = useStore("poolsStore");
   const [activeChainId, setActiveChainId] = useState(
     chainId || (activeChain === "BSC" ? bsc.id : arbitrum.id)
   );
+  const isMagicActive = connector?.id === "magic";
+
+  useEffect(() => {
+    if (chainId) {
+      setActiveChainId(chainId);
+    }
+  }, [activeChain, chainId]);
 
   const handleSwitchChain = (id: number) => {
-    if (!address) {
+    if (!address || isMagicActive) {
       setActiveChain(id === bsc.id ? "BSC" : "Arbitrum");
     }
 
@@ -40,13 +47,11 @@ export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
     return name;
   };
 
-  const iconName = activeChain === "BSC" ? bsc.id : arbitrum.id;
-
   return (
     <Menu>
       <MenuButton>
         <Flex alignItems="center" gap={isMobile ? "8px" : "12px"} color="lightGray">
-          <Icon name={CHAIN_ICONS[iconName]} />
+          <Icon name={CHAIN_ICONS[activeChainId]} />
           {/* <Text fontSize="xl">{CHAIN_NAMES[chain?.id ?? 0]}</Text> */}
           <Text fontSize="medium">Select chain</Text>
           <Icon name={ICON_NAMES.chevronDown} />
@@ -69,6 +74,7 @@ export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
             p="0"
             gap="8px"
             color={activeChainId === id ? "greenAlpha.60" : undefined}
+            isDisabled={id === bsc.id}
             onClick={() => handleSwitchChain(id)}
           >
             <Icon name={CHAIN_ICONS[id]} />
