@@ -54,6 +54,7 @@ interface IDepositTabProps {
 }
 
 export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => {
+  // const { connector } = useAccount();
   const [needsApproval, setNeedsApproval] = useState(false);
   const [isConfirmedApprove, setConfirmedApprove] = useState(false);
   const [isConfirmedLockApprove, setIsConfirmedLockApprove] = useState(false);
@@ -69,6 +70,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
   const tooltipRef = useRef();
   const event = useAnalyticsEventTracker();
   const { activeChain } = useStore("poolsStore");
+  // const isMagicActive = connector?.id === "magic";
 
   const isArbitrumChain = chainId === arbitrum.id;
 
@@ -84,7 +86,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
 
   const formik = useFormik({
     initialValues: {
-      deposit: "",
+      deposit: "1",
       freeze: false,
       freezePeriod: FREEZE_DATES[0]
     },
@@ -479,6 +481,35 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
           steps={formik.values.freeze ? DEPOSIT_STEPS_WITH_FREEZE : DEPOSIT_STEPS_BASIC}
           activeIndex={getActiveStepIndex()}
         />
+        {/* {isMagicActive && ( */}
+        {/* <Flex flexDir="column" gap={3} alignItems="center">
+          <Flex flexDir="column" gap={1}>
+            <Text textStyle="text14" color="black.5" fontWeight={500}>
+              Step 1. Before depositing, approve your assets by clicking Send
+            </Text>
+            <Text textStyle="text14" color="black.5" fontWeight={500}>
+              Step 2. Then click Send on the screen with your deposit amount
+            </Text>
+          </Flex>
+
+          <Flex gap={4} flexWrap="wrap" justify="center">
+            <Image
+              src={`/assets/image/magic-approve.png`}
+              // height="240px"
+              aspectRatio={3 / 4}
+              width={200}
+              alignSelf="center"
+            />
+            <Image
+              src={`/assets/image/magic-deposit.png`}
+              // height="240px"
+              aspectRatio={3 / 4}
+              width={200}
+              alignSelf="center"
+            />
+          </Flex>
+        </Flex> */}
+        {/* )} */}
       </Flex>
     </form>
   );
