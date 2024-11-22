@@ -1,5 +1,4 @@
-"use client";
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import {
   AreaChart as AreaChartDefault,
   CartesianGrid,
@@ -24,10 +23,35 @@ export const AreaChart: FC<IAreaChartProps> = ({
   isConnected,
   showRightAxis
 }) => {
+  // Memoized data processing
+  const filteredData = useMemo(() => {
+    let lastValidValue: number | null = null;
+    let hasNonZeroStarted = false;
+
+    if (data === null) {
+      return undefined;
+    }
+
+    return data?.reduce((acc: any[], item: any) => {
+      if (item.lending !== 0 || hasNonZeroStarted) {
+        hasNonZeroStarted = true;
+        if (item.lending === 0 && lastValidValue !== null) {
+          // Replace 0 with the last valid non-zero value
+          acc.push({ ...item, lending: lastValidValue });
+        } else {
+          // Update last valid value and push the item
+          lastValidValue = item.lending;
+          acc.push(item);
+        }
+      }
+      return acc;
+    }, []);
+  }, [data]);
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChartDefault
-        data={data}
+        data={filteredData}
         margin={{
           top: 0,
           right: showRightAxis ? -32 : 10,
