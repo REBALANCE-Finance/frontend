@@ -19,6 +19,7 @@ export const AppHeader = () => {
   const [isLoading, setIsLoading] = useState(false);
   const isUnderMaintenance = process.env.NEXT_PUBLIC_IS_UNDER_MAINTENANCE === "true";
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
+  const [isMobile] = useMediaQuery("(max-width: 480px");
 
   return (
     <Flex
@@ -47,7 +48,7 @@ export const AppHeader = () => {
 
         {!media && <AppNav />}
 
-        <Flex gap="12px" alignItems="center">
+        <Flex gap={isMobile ? "4px" : "12px"} alignItems="center">
           {!!address && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
           {!!address ? <WalletProfile className="step-1" /> : <ConnectWallet className="step-1" />}

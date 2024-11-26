@@ -1,5 +1,5 @@
 "use client";
-import { connectorsForWallets, getDefaultWallets } from "@rainbow-me/rainbowkit";
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
   walletConnectWallet,
   metaMaskWallet,
@@ -26,7 +26,7 @@ const connectors = connectorsForWallets(
 export const wagmiConfig = createConfig({
   chains: [arbitrum, bsc],
   connectors: connectors,
-  ssr: false,
+  ssr: true,
   transports: {
     [arbitrum.id]: http(),
     [bsc.id]: http()

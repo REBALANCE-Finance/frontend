@@ -5,7 +5,6 @@ import { Magic } from "magic-sdk";
 import { observer } from "mobx-react-lite";
 import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { arbitrum, bsc } from "viem/chains";
-import { useAccount } from "wagmi";
 
 type MagicContextType = {
   magic: Magic | null;

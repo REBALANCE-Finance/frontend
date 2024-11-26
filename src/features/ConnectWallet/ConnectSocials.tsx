@@ -1,10 +1,12 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { MEDIA_QUERY_MAX } from "@/consts";
+import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
 import Image from "next/image";
 import { useMemo } from "react";
 import { useConnect } from "wagmi";
 
 const ConnectSocials = () => {
   const { connectors, connectAsync } = useConnect();
+  const [media] = useMediaQuery(MEDIA_QUERY_MAX);
 
   const magicConnector = useMemo(() => {
     return connectors.find(connector => connector.id === "magic");
@@ -22,8 +24,8 @@ const ConnectSocials = () => {
   return (
     <Flex
       gap="4px"
-      height="32px"
-      px="16px"
+      height={media ? "28px" : "32px"}
+      px={media ? "4px" : "16px"}
       bg="#DEDEDE"
       borderRadius="4px"
       cursor="pointer"
