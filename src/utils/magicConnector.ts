@@ -1,13 +1,12 @@
 import { dedicatedWalletConnector } from "@magiclabs/wagmi-connector";
 import type { Wallet } from "@rainbow-me/rainbowkit";
-import type { Chain } from "viem";
 import { arbitrum, bsc } from "viem/chains";
 import { createConnector } from "wagmi";
 
-export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
+export const magicConnector: Wallet = {
   id: "magic",
   name: "Magic",
-  iconUrl: "https://svgshare.com/i/pXA.svg",
+  iconUrl: "/assets/image/Magic.svg",
   iconBackground: "#fff",
   installed: true,
   iconAccent: "#b4acfc",
@@ -20,10 +19,13 @@ export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
         apiKey: process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY as string,
         accentColor: "rgba(76, 255, 148, 0.4)",
         isDarkMode: true,
+        oauthOptions: {
+          providers: ["google", "twitter"]
+        },
         magicSdkConfiguration: {
           network: {
-            chainId: chain.id,
-            rpcUrl: chain.rpcUrls.default.http[0]
+            chainId: arbitrum.id,
+            rpcUrl: arbitrum.rpcUrls.default.http[0]
           }
         }
       }
@@ -34,6 +36,6 @@ export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
       ...walletDetails
     }));
   }
-});
+};
 
-export const magicWallet = (chain: Chain) => createMagicConnector({ chain });
+export const magicWallet = () => magicConnector;

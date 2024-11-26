@@ -17,8 +17,6 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
   const [error, setError] = useState<string | null>(null);
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
   const [isTableView, setIsTableView] = useState(false);
-  const [earnedPoints, setEarnedPoints] = useState(0);
-  const [isLoadingPoints, setIsLoadingPoints] = useState(true);
   const {
     pools,
     isFetched: isFetchedPools,
@@ -81,17 +79,6 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     }
   }, [isDesktop]);
 
-  useEffect(() => {
-    if (address) {
-      const fetchPoints = async () => {
-        const points = await getEarnedPoints(address).finally(() => setIsLoadingPoints(false));
-        setEarnedPoints(points);
-      };
-
-      fetchPoints();
-    }
-  }, [address]);
-
   return (
     <PoolLayout
       pools={pools}
@@ -100,8 +87,6 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
       error={error}
       isTable={isTableView}
       onChangeView={() => setIsTableView(!isTableView)}
-      earnedPoints={earnedPoints}
-      isLoadingPoints={isLoadingPoints}
     >
       {isTableView ? (
         <PoolsLendingTable pools={pools} isLoading={!isFetchedPools} error={poolsError?.message} />
