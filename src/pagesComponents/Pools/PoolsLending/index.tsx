@@ -197,8 +197,10 @@ export const PoolsLending = observer(
                     <Text color={item.apr > 0 ? "green.100" : "white"} textStyle="textMono16">
                       {loading || error ? (
                         <Skeleton height="20px" width="50px" />
-                      ) : (
+                      ) : item.apr > 0 ? (
                         formatPercent(item.apr)
+                      ) : (
+                        0
                       )}
                     </Text>
                   </HStack>
