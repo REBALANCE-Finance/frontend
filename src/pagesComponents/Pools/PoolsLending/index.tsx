@@ -49,21 +49,14 @@ export const PoolsLending = observer(
     const getYieldStrategy = (token: string) => {
       const baseMessage = `${token} Low-Risk Yield Strategy: Higher APY is achieved by automatic rebalance between the following pools:`;
 
-      const bscPools = ["AAVE v3", "Kinza"];
-      const fraxPools = ["Fraxlend", "Lodestar", "AAVE"];
-      const defaultPools = [
-        ...(token === "wETH" || token === "USDC.e" ? ["Silo"] : []),
-        "Dolomite",
-        "AAVE v3",
-        "Compound"
-      ];
+      const defaultPools = ["Compound V3", "Aave V3"];
 
-      // Determine which pool list to use based on the activeChain and token
       let pools: string[];
-      if (activeChain === "BSC") {
-        pools = bscPools;
+
+      if (token === "DAI") {
+        pools = [defaultPools[1]];
       } else if (token === "FRAX") {
-        pools = fraxPools;
+        pools = ["Fraxlend", defaultPools[1]];
       } else {
         pools = defaultPools;
       }
@@ -133,33 +126,22 @@ export const PoolsLending = observer(
                         </Text>
                         {activeChain === "Arbitrum" && (
                           <Box ml="auto" display="flex">
+                            {(item.token === "USDT" ||
+                              item.token === "wETH" ||
+                              item.token === "USDC" ||
+                              item.token === "USDC.e") && (
+                              <Box borderRadius="50%" mr="-4px" zIndex={3}>
+                                <Icon name="COMPOUND" width="14px" height="14px" />
+                              </Box>
+                            )}
+
                             {item.token === "FRAX" && (
-                              <Box borderRadius="50%" mr="-4px" zIndex={7}>
+                              <Box borderRadius="50%" mr="-4px" zIndex={2}>
                                 <Icon name="FRAXLEND" width="14px" height="14px" />
                               </Box>
                             )}
-                            {item.token === "FRAX" && (
-                              <Box borderRadius="50%" mr="-4px" zIndex={6}>
-                                <Icon name="LODESTAR" width="14px" height="14px" />
-                              </Box>
-                            )}
-                            {(item.token === "wETH" || item.token === "USDC.e") && (
-                              <Box borderRadius="50%" mr="-4px" zIndex={5}>
-                                <Icon name="SILO" width="14px" height="14px" />
-                              </Box>
-                            )}
-                            {item.token !== "FRAX" && (
-                              <Box borderRadius="50%" zIndex={4} mr="-4px">
-                                <Icon name="DOLOMITE" width="14px" height="14px" />
-                              </Box>
-                            )}
-                            <Box mr={item.token === "FRAX" ? "0" : "-4px"} zIndex={3}>
-                              <Icon name="AAVE" width="10px" height="10px" />
-                            </Box>
 
-                            {item.token !== "FRAX" && (
-                              <Icon name="COMPOUND" width="14px" height="14px" />
-                            )}
+                            <Icon name="AAVE" width="10px" height="10px" />
                           </Box>
                         )}
                         {activeChain === "BSC" && (
