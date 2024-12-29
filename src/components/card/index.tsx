@@ -10,11 +10,9 @@ import {
 } from "@chakra-ui/react";
 import React, { FC } from "react";
 
-import { TOKEN_ICONS } from "../../consts";
 import { IRowCard, RowCardProccessType } from "../../pagesComponents/Pools/types";
 import { DefaultDataType } from "../../types";
 import { TokenIcon } from "../token-icon";
-import ArbIncentive from "../badge/ArbIncentive";
 import { getIdByToken } from "@/utils/analytics";
 
 interface ICardProps {
@@ -68,12 +66,6 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading }) => {
                   <TokenIcon name={itemCard?.token} />
                   <Flex flexDir="column" gap={2}>
                     <Text textStyle="h2">{itemCard?.token}</Text>
-
-                    {itemCard.token === "FRAX" && (
-                      <Flex gap={1} alignItems="center">
-                        <ArbIncentive size="small" />
-                      </Flex>
-                    )}
                   </Flex>
                 </Flex>
                 {elem.proccess && elem.proccess({ item: itemCard })}

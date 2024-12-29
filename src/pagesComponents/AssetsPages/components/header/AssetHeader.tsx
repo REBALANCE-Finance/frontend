@@ -1,7 +1,7 @@
 "use client";
 import { Flex, Link, Text } from "@chakra-ui/layout";
-import { Box, useMediaQuery } from "@chakra-ui/react";
-import React, { FC, useMemo } from "react";
+import { useMediaQuery } from "@chakra-ui/react";
+import React, { FC } from "react";
 import { useAccount } from "wagmi";
 
 import Icon from "@/components/icon";
@@ -16,7 +16,6 @@ import { getCurrentPath } from "../../../../features/RebalancePerformance/utils"
 import { formatNumber } from "../../../../utils/formatNumber";
 import { usePathname } from "next/navigation";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
-import ArbIncentive from "@/components/badge/ArbIncentive";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/hooks/useStoreContext";
 
@@ -88,11 +87,6 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
               <Text>Average 30D APY</Text>
               <Flex gap={1} alignItems="center">
                 <Text variant="t22">{pool.avgApr.toFixed(2)} %</Text>
-                {pool.token === "FRAX" && (
-                  <Text variant="t22" color="green.100">
-                    +20% ARB
-                  </Text>
-                )}
               </Flex>
             </Flex>
             <Flex justifyContent="space-between" alignItems="center">
@@ -101,12 +95,6 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
             </Flex>
           </Flex>
         </Flex>
-
-        {pool.token === "FRAX" && (
-          <Box maxW="126px" mt={4}>
-            <ArbIncentive size="small" />
-          </Box>
-        )}
 
         {ROUTES_TYPE.lending === pathName && (
           <Flex gap="24px" mt="28px" justifyContent="space-between">
@@ -168,11 +156,6 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
           <Text>Average 30D APY</Text>
           <Flex gap={1} alignItems="center">
             <Text variant="t22">{pool?.avgApr?.toFixed(2)} %</Text>
-            {pool.token === "FRAX" && (
-              <Text variant="t22" color="green.100">
-                +20% ARB
-              </Text>
-            )}
           </Flex>
         </Flex>
 
@@ -181,8 +164,6 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
           <Text variant="t22">$ {formatNumber(pool?.funds?.toFixed(2))}</Text>
         </Flex>
       </Flex>
-
-      {pool.token === "FRAX" && <ArbIncentive size="large" />}
 
       {ROUTES_TYPE.lending === pathName && (
         <Flex p="16px 24px" gap="24px" border="2px solid #0F0F0F" borderRadius="4px">
