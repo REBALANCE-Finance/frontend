@@ -7,7 +7,7 @@ import { createConnector } from "wagmi";
 export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
   id: "magic",
   name: "Magic",
-  iconUrl: "https://svgshare.com/i/pXA.svg",
+  iconUrl: "/assets/image/Magic.svg",
   iconBackground: "#fff",
   installed: true,
   iconAccent: "#b4acfc",
