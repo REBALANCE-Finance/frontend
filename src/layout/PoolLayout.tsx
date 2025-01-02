@@ -7,7 +7,6 @@ import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
 import { useAccount } from "wagmi";
 import { useRef, useState } from "react";
-import { isMobile, isTablet } from "react-device-detect";
 
 export const PoolLayout = ({
   children,
