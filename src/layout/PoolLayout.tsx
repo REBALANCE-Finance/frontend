@@ -7,8 +7,6 @@ import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
 import { useAccount } from "wagmi";
 import { useRef, useState } from "react";
-import UserTasksPopover from "@/components/popover/UserTasksPopover";
-import MobileTasksPopover from "@/components/popover/Mobile";
 import { isMobile } from "react-device-detect";
 
 export const PoolLayout = ({
@@ -32,28 +30,11 @@ export const PoolLayout = ({
   earnedPoints: number;
   isLoadingPoints: boolean;
 }) => {
-  const { address } = useAccount();
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  const [isDesktop] = useMediaQuery("(min-width: 1130px)");
-  const [isOpenTooltip, setIsOpenTooltip] = useState(false);
-  const tooltipRef = useRef();
-
-  useOutsideClick({
-    // @ts-ignore
-    ref: tooltipRef,
-    handler: () => setIsOpenTooltip(false)
-  });
 
   if (media === undefined) return null;
   return (
     <Flex direction="column" w="100%" align="center">
-      {!isDesktop && isLoadingPoints && address && <Skeleton height="16px" width="60px" />}
-      {!isDesktop && (
-        <Flex gap={6} mt={4} mb={8} alignSelf="center">
-          {!isMobile && <UserTasksPopover address={address || MOCKED_ADDRESS} />}
-          {isMobile && <MobileTasksPopover />}
-        </Flex>
-      )}
       <Flex
         direction="column"
         justify="center"

@@ -11,7 +11,6 @@ import { ConnectWallet } from "../features/ConnectWallet";
 import { WalletProfile } from "../features/WalletProfile";
 import { AppNav } from "./AppNav";
 import MaintenanceBlock from "@/components/maintenance-block";
-import UserTasksPopover from "@/components/popover/UserTasksPopover";
 
 export const AppHeader = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -50,7 +49,6 @@ export const AppHeader = () => {
         <Flex gap="12px" alignItems="center">
           {!!address && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
-          {isDesktop && !isLoading && <UserTasksPopover address={address || MOCKED_ADDRESS} />}
           {!!address ? <WalletProfile className="step-1" /> : <ConnectWallet className="step-1" />}
           {media && <AppNav />}
         </Flex>
