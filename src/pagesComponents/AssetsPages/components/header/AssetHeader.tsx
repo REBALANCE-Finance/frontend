@@ -10,7 +10,12 @@ import { getFinalExplorerUrl } from "@/utils/url";
 import { Risk } from "../../../../components/risk";
 import { riskBgColor, riskColor } from "../../../../components/risk/utils";
 import { TokenIcon } from "../../../../components/token-icon";
-import { CHAIN_ICONS, ICON_NAMES, MEDIA_QUERY_MAX } from "../../../../consts";
+import {
+  ARB_DEFAULT_EXPLORER_URL,
+  CHAIN_ICONS,
+  ICON_NAMES,
+  MEDIA_QUERY_MAX
+} from "../../../../consts";
 import { ROUTES_TYPE } from "../../../../consts/routes-type";
 import { getCurrentPath } from "../../../../features/RebalancePerformance/utils";
 import { formatNumber } from "../../../../utils/formatNumber";
@@ -41,9 +46,10 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
             >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={"center"}>
                 <Text>{pool?.token}</Text>
+                {/* TODO: FIX WHEN ADDING NEW CHAIN */}
                 <Link
                   href={getFinalExplorerUrl({
-                    url: chain?.blockExplorers?.default.url,
+                    url: chain?.blockExplorers?.default.url || ARB_DEFAULT_EXPLORER_URL,
                     address: pool.tokenAddress,
                     type: "token"
                   })}
@@ -66,9 +72,10 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
                         "..." +
                         pool.rebalancerAddress?.substring(pool.rebalancerAddress?.length - 5)}
                     </Text>
+                    {/* TODO: FIX WHEN ADDING NEW CHAIN */}
                     <Link
                       href={getFinalExplorerUrl({
-                        url: chain?.blockExplorers?.default.url,
+                        url: chain?.blockExplorers?.default.url || ARB_DEFAULT_EXPLORER_URL,
                         address: pool.rebalancerAddress,
                         type: "address"
                       })}
@@ -138,9 +145,10 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
               <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
                 <Text>{pool?.token}</Text>
               </Flex>
+              {/* TODO: FIX WHEN ADDING NEW CHAIN */}
               <Link
                 href={getFinalExplorerUrl({
-                  url: chain?.blockExplorers?.default.url,
+                  url: chain?.blockExplorers?.default.url || ARB_DEFAULT_EXPLORER_URL,
                   address: pool.tokenAddress,
                   type: "token"
                 })}

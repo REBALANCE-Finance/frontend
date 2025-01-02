@@ -29,6 +29,10 @@ export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
   }, [activeChain, chainId]);
 
   const handleSwitchChain = (id: number) => {
+    if (id === activeChainId) {
+      return;
+    }
+
     if (!address || isMagicActive) {
       setActiveChain(id === bsc.id ? "BSC" : "Arbitrum");
     }
