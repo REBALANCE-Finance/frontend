@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 import { useParams, useSearchParams } from "next/navigation";
 import { useAccount } from "wagmi";
 import Icon from "../../components/icon";
-import { CHAIN_ICONS, ICON_NAMES, MEDIA_QUERY_MAX } from "../../consts";
+import { ARB_DEFAULT_EXPLORER_URL, CHAIN_ICONS, ICON_NAMES, MEDIA_QUERY_MAX } from "../../consts";
 import { STRATEGIES } from "../../consts/strategies";
 import BaseStrategy from "../../features/RebalanceStrategy/BaseStrategy";
 import { getFinalExplorerUrl } from "../../utils/url";
@@ -82,9 +82,10 @@ export const LendingAsset = observer(
                   ) : (
                     <>
                       <Icon name={CHAIN_ICONS[poolChainId]} size="18px" />
+                      {/* TODO: FIX WHEN ADDING NEW CHAIN */}
                       <Link
                         href={getFinalExplorerUrl({
-                          url: chain?.blockExplorers?.default.url,
+                          url: chain?.blockExplorers?.default.url || ARB_DEFAULT_EXPLORER_URL,
                           address: pool?.rebalancerAddress,
                           type: "address"
                         })}
