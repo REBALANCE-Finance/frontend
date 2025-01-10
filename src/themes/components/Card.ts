@@ -29,7 +29,7 @@ const sizes = {
 const variants = {
   poolCard: definePartsStyle({
     container: {
-      w: { base: "100%", lg: "302px" },
+      w: { base: "100%" },
       minH: "302px",
       padding: "16px",
       gap: "20px",
