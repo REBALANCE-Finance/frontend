@@ -130,9 +130,14 @@ export const PoolsLending = observer(
                               item.token === "wETH" ||
                               item.token === "USDC" ||
                               item.token === "USDC.e") && (
-                              <Box borderRadius="50%" mr="-4px" zIndex={3}>
-                                <Icon name="COMPOUND" width="14px" height="14px" />
-                              </Box>
+                               <>
+                                <Box borderRadius="50%" mr="-4px" zIndex={3}>
+                                  <Icon name="COMPOUND" width="14px" height="14px" />
+                                </Box>
+                                <Box borderRadius="50%" mr="-4px" zIndex={3}>
+                                  <Icon name="DOLOMITE" width="14px" height="14px" />
+                                </Box>
+                               </>
                             )}
 
                             {item.token === "FRAX" && (
