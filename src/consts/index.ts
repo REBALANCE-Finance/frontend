@@ -21,6 +21,8 @@ export const ARB_CONFIRMATIONS_COUNT = 50;
 
 export const ARB_DEFAULT_EXPLORER_URL = "https://arbiscan.io";
 
+export const BSC_DEFAULT_EXPLORER_URL = "https://bscscan.com";
+
 export const BSC_CONFIRMATIONS_COUNT = 4;
 
 export const PARASWAP_SPENDER_ADDRESS = "0x216B4B4Ba9F3e719726886d34a177484278Bfcae";
