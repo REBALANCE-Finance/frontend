@@ -12,6 +12,7 @@ import { riskBgColor, riskColor } from "../../../../components/risk/utils";
 import { TokenIcon } from "../../../../components/token-icon";
 import {
   ARB_DEFAULT_EXPLORER_URL,
+  BSC_DEFAULT_EXPLORER_URL,
   CHAIN_ICONS,
   ICON_NAMES,
   MEDIA_QUERY_MAX
@@ -49,7 +50,10 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
                 {/* TODO: FIX WHEN ADDING NEW CHAIN */}
                 <Link
                   href={getFinalExplorerUrl({
-                    url: chain?.blockExplorers?.default.url || ARB_DEFAULT_EXPLORER_URL,
+                    url:
+                      chain?.blockExplorers?.default.url || chainName === "BSC"
+                        ? BSC_DEFAULT_EXPLORER_URL
+                        : ARB_DEFAULT_EXPLORER_URL,
                     address: pool.tokenAddress,
                     type: "token"
                   })}
@@ -75,7 +79,10 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
                     {/* TODO: FIX WHEN ADDING NEW CHAIN */}
                     <Link
                       href={getFinalExplorerUrl({
-                        url: chain?.blockExplorers?.default.url || ARB_DEFAULT_EXPLORER_URL,
+                        url:
+                          chain?.blockExplorers?.default.url || chainName === "BSC"
+                            ? BSC_DEFAULT_EXPLORER_URL
+                            : ARB_DEFAULT_EXPLORER_URL,
                         address: pool.rebalancerAddress,
                         type: "address"
                       })}
@@ -148,7 +155,10 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
               {/* TODO: FIX WHEN ADDING NEW CHAIN */}
               <Link
                 href={getFinalExplorerUrl({
-                  url: chain?.blockExplorers?.default.url || ARB_DEFAULT_EXPLORER_URL,
+                  url:
+                    chain?.blockExplorers?.default.url || chainName === "BSC"
+                      ? BSC_DEFAULT_EXPLORER_URL
+                      : ARB_DEFAULT_EXPLORER_URL,
                   address: pool.tokenAddress,
                   type: "token"
                 })}
