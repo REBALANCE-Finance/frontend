@@ -31,14 +31,13 @@ const createConnectors = (chain: Chain) => {
   );
 };
 
-export const createWagmiConfig = (chain: Chain) => {
-  return createConfig({
-    chains: [arbitrum, bsc],
-    connectors: createConnectors(chain),
-    ssr: false,
-    transports: {
-      [arbitrum.id]: http(),
-      [bsc.id]: http()
-    }
-  });
-};
+export const wagmiConfig = createConfig({
+  chains: [arbitrum, bsc],
+  connectors: createConnectors(arbitrum),
+  ssr: true,
+  syncConnectedChain: true,
+  transports: {
+    [arbitrum.id]: http(),
+    [bsc.id]: http()
+  }
+});

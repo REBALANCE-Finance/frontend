@@ -28,7 +28,7 @@ export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
     }
   }, [activeChain, chainId]);
 
-  const handleSwitchChain = (id: number) => {
+  const handleSwitchChain = async (id: number) => {
     if (id === activeChainId) {
       return;
     }
@@ -39,8 +39,12 @@ export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
 
     onResetCountDown();
     resetPools();
-    switchChain({ chainId: id });
-    setActiveChainId(id);
+    try {
+      await switchChain({ chainId: id });
+      setActiveChainId(id);
+    } catch (error) {
+      console.error("Error switching chain:", error);
+    }
   };
 
   const getItemName = (name: string) => {

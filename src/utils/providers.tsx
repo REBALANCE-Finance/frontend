@@ -6,7 +6,7 @@ import { CacheProvider } from "@chakra-ui/next-js";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { themes } from "../themes";
-import { createWagmiConfig } from "../utils/w3";
+import { wagmiConfig } from "../utils/w3";
 import { arbitrum, bsc } from "viem/chains";
 import { RAINBOW_THEME } from "@/consts";
 import MagicProvider from "@/contexts/useMagic";
@@ -22,7 +22,7 @@ export const Providers = observer(({ children }: { children: React.ReactNode }) 
   return (
     <CacheProvider>
       <ChakraProvider theme={themes}>
-        <WagmiProvider config={createWagmiConfig(activeChain === "BSC" ? bsc : arbitrum)}>
+        <WagmiProvider config={wagmiConfig}>
           <QueryClientProvider client={queryClient}>
             <RainbowKitProvider
               modalSize="compact"
