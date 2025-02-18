@@ -1,12 +1,10 @@
 "use client";
 
 import { Flex, useMediaQuery } from "@chakra-ui/react";
-import { MEDIA_QUERY_MAX, MOCKED_ADDRESS } from "../consts";
+import { MEDIA_QUERY_MAX } from "../consts";
 import { RebalancePerformance } from "../features/RebalancePerformance";
 import { PoolsHeader } from "../pagesComponents/Pools/PoolsHeader";
 import { IAreaChartData, IPoolData } from "@/api/pools/types";
-import { useAccount } from "wagmi";
-import { useRef, useState } from "react";
 
 export const PoolLayout = ({
   children,

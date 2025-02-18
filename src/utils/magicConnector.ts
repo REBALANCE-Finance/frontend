@@ -1,10 +1,10 @@
-import { OAuthExtension } from "@magic-ext/oauth";
 import { dedicatedWalletConnector } from "@magiclabs/wagmi-connector";
 import type { Wallet } from "@rainbow-me/rainbowkit";
+import type { Chain } from "viem";
 import { arbitrum, bsc } from "viem/chains";
 import { createConnector } from "wagmi";
 
-export const magicConnector: Wallet = {
+export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
   id: "magic",
   name: "Magic",
   iconUrl: "/assets/image/Magic.svg",
@@ -21,35 +21,22 @@ export const magicConnector: Wallet = {
         accentColor: "rgba(76, 255, 148, 0.4)",
         isDarkMode: true,
         oauthOptions: {
-          providers: ["google", "twitter"]
+          providers: ["google"]
         },
         magicSdkConfiguration: {
           network: {
-            chainId: arbitrum.id,
-            rpcUrl: arbitrum.rpcUrls.default.http[0]
-          },
-          extensions: [new OAuthExtension()]
+            chainId: chain.id,
+            rpcUrl: chain.rpcUrls.default.http[0]
+          }
         }
       }
     });
 
-    return createConnector(config => {
-      const connector = {
-        ...magicConnector(config),
-        ...walletDetails,
-        disconnect: async () => {
-          try {
-            await magicConnector(config).disconnect();
-            console.log("Disconnected successfully.");
-          } catch (error) {
-            console.error("Error disconnecting Magic connector:", error);
-          }
-        }
-      };
-
-      return connector;
-    });
+    return createConnector(config => ({
+      ...magicConnector(config),
+      ...walletDetails
+    }));
   }
-};
+});
 
-export const magicWallet = () => magicConnector;
+export const magicWallet = (chain: Chain) => createMagicConnector({ chain });
