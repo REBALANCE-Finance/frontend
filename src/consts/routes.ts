@@ -6,5 +6,6 @@ export const ROUTE_PATHS = {
   borrowingAsset: "/borrowing/:poolToken",
   swap: "/swap",
   swapPage: (inputToken: string, outputToken: string) =>
-    `/swap?input=${inputToken}&output=${outputToken}`
+    `/swap?input=${inputToken}&output=${outputToken}`,
+  vaults: "/vaults"
 };

@@ -40,7 +40,7 @@ export const convertNumberToBigInt = (value: number = 0, decimals: number): bigi
 };
 
 export const getExplorerTxLink = (txHash: string, chainName: ICHAIN) => {
-  if (chainName === 'BSC') {
+  if (chainName === "BSC") {
     return `https://bscscan.com/tx/${txHash}`;
   }
 
@@ -82,3 +82,10 @@ export function isUnlocked(unlockTime: number): boolean {
   const currentTime = Math.floor(Date.now() / 1000);
   return currentTime >= unlockTime;
 }
+
+export const toDollarFormat = (amount: number) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2
+  }).format(amount);

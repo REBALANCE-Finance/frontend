@@ -52,6 +52,25 @@ export type LockApi = {
   duration: number;
   unlockTime: number;
   unlockedTime: number;
-}
+};
 
 export type ICHAIN = "BSC" | "Arbitrum";
+
+export type Amount = {
+  token: number;
+  usd: number;
+};
+
+export type IVaultInfo = {
+  title: string;
+  tier: string;
+  validDate: string;
+  apy: string;
+  initialAmount: Amount;
+  currentProfit: Amount;
+  referralProfit: Amount;
+  progress: {
+    now: number;
+    total: number;
+  };
+};
