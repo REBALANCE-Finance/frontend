@@ -11,16 +11,18 @@ import { colors } from "./styles/colors";
 import { fontSizes } from "./styles/fontSize";
 import { global } from "./styles/global";
 import { textStyles } from "./styles/textStyles";
-import { Roboto, Roboto_Mono } from 'next/font/google'
+import { Roboto, Roboto_Mono, DM_Sans } from "next/font/google";
 
 const roboto = Roboto({
-  subsets: ['cyrillic'],
-  weight: ['100','300','400', "500", '700', '900']
-})
+  subsets: ["cyrillic"],
+  weight: ["100", "300", "400", "500", "700", "900"]
+});
 
 const roboto_mono = Roboto_Mono({
-  subsets: ['cyrillic'],
-})
+  subsets: ["cyrillic"]
+});
+
+const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 const config = {
   initialColorMode: "dark",
@@ -33,6 +35,7 @@ export const themes = extendTheme({
     heading: roboto.style.fontFamily,
     body: roboto.style.fontFamily,
     mono: roboto_mono.style.fontFamily,
+    dmSans: dmSans.style.fontFamily
   },
   styles: { global: { ...global } },
   colors: { ...colors },
