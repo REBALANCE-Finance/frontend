@@ -1,12 +1,19 @@
-import Vault from "@/components/vault";
+"use client";
+import VaultItem from "@/components/vaults/Item";
+import { ROUTE_PATHS } from "@/consts";
 import VaultsLayout from "@/layout/VaultsLayout";
+import { useRouter } from "next/navigation";
 
 const VaultsPage = () => {
-  const onAddMore = () => {};
+  const { push } = useRouter();
+
+  const onAddMore = () => {
+    push(ROUTE_PATHS.vault(1));
+  };
 
   return (
     <VaultsLayout>
-      <Vault
+      <VaultItem
         imageUrl="/assets/image/vault.png"
         referralLink="https://ref.rebalance.finance?harry-seldon-kol"
         info={{

@@ -74,3 +74,21 @@ export type IVaultInfo = {
     total: number;
   };
 };
+
+export type IVaultPlan = {
+  id: number;
+  title: string;
+  range: {
+    from: number;
+    to: number;
+  };
+  apy: number;
+  initialDeposit: {
+    token: number;
+    usd: number;
+  };
+  yearlyProfit: {
+    token: number;
+    usd: number;
+  };
+};

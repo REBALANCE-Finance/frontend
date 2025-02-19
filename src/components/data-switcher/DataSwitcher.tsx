@@ -8,9 +8,10 @@ interface IDataSwitcher {
   value: string;
   onChange: (value: string) => void;
   isDisabled?: boolean;
+  width?: string;
 }
 
-export const DataSwitcher: FC<IDataSwitcher> = ({ value, data, onChange, isDisabled }) => {
+export const DataSwitcher: FC<IDataSwitcher> = ({ value, data, onChange, isDisabled, width }) => {
   return (
     <HStack
       border="1px solid"
@@ -29,7 +30,7 @@ export const DataSwitcher: FC<IDataSwitcher> = ({ value, data, onChange, isDisab
           p="4px 12px 4px 12px"
           borderRadius="2px"
           bg={elem === value && !isDisabled ? "black.40" : undefined}
-          w="41px"
+          w={width ?? "41px"}
           opacity={isDisabled ? 0.7 : 1}
           cursor={isDisabled ? "not-allowed" : "pointer"}
         >

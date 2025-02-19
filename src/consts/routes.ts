@@ -7,5 +7,6 @@ export const ROUTE_PATHS = {
   swap: "/swap",
   swapPage: (inputToken: string, outputToken: string) =>
     `/swap?input=${inputToken}&output=${outputToken}`,
-  vaults: "/vaults"
+  vaults: "/vaults",
+  vault: (id: number) => `/vaults/${id}`
 };
