@@ -1,6 +1,6 @@
 import { IToken } from "@/api/tokens/types";
 import { defChainIdArbitrum } from "@/hooks/useAuth";
-import { Task } from "@/types";
+import { IVaultPlan, Task } from "@/types";
 
 export * from "./chains";
 export * from "./iconNames";
@@ -195,3 +195,57 @@ export const LINK_TERMS_OF_SERVICE =
 
 export const LINK_PRIVACY_NOTICE =
   "https://docs.google.com/document/d/1PF4ik8sHbVqW8Lb8l6yo2H2vuQEZnr__-Ga2CMYW2yw";
+
+export const VAULT_PLANS: IVaultPlan[] = [
+  {
+    id: 1,
+    range: {
+      from: 50,
+      to: 999
+    },
+    apy: 155.9,
+    title: "Profit example",
+    initialDeposit: {
+      usd: 500,
+      token: 1400
+    },
+    yearlyProfit: {
+      usd: 1665,
+      token: 2000
+    }
+  },
+  {
+    id: 2,
+    range: {
+      from: 1000,
+      to: 5000
+    },
+    apy: 94.02,
+    title: "Profit example",
+    initialDeposit: {
+      usd: 2500,
+      token: 7140
+    },
+    yearlyProfit: {
+      usd: 3680,
+      token: 10500
+    }
+  },
+  {
+    id: 3,
+    range: {
+      from: 5000,
+      to: 10000
+    },
+    apy: 89.96,
+    title: "Profit example",
+    initialDeposit: {
+      usd: 7500,
+      token: 21430
+    },
+    yearlyProfit: {
+      usd: 10350,
+      token: 29600
+    }
+  }
+];

@@ -13,6 +13,7 @@ const VaultInfoBadge: FC<VaultInfoBadgeProps> = ({ title }) => (
     bg="gray.100"
     borderRadius="50px"
     height={6}
+    minW="50px"
   >
     <Text fontSize="14px" fontWeight={600}>
       {title}

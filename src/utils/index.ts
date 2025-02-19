@@ -89,3 +89,6 @@ export const toDollarFormat = (amount: number) =>
     currency: "USD",
     minimumFractionDigits: 2
   }).format(amount);
+
+export const transformNumberThousands = (num: number): string =>
+    num >= 1000 ? `${Math.floor(num / 1000)}k` : num.toString();

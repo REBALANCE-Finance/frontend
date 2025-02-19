@@ -4,6 +4,7 @@ import { IVaultInfo } from "@/types";
 import VaultInfoBadge from "./Badge";
 import VaultInfoDataRow from "./DataRow";
 import VaultInfoStat from "./Stat";
+import VaultInfoProgress from "./Progress";
 
 type VaultInfoProps = IVaultInfo;
 
@@ -59,6 +60,8 @@ const VaultInfo: FC<VaultInfoProps> = ({
           usdValue={referralProfit.usd}
         />
       </Flex>
+
+      <VaultInfoProgress now={progress.now} total={progress.total} />
     </Flex>
   );
 };
