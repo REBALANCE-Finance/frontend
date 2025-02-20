@@ -48,8 +48,6 @@ const amounts: SelectOption[] = [
 ];
 
 type VaultFormProps = {
-  title: string;
-  onClose: VoidFunction;
   startAmount: {
     token: number;
     usd: number;
@@ -61,7 +59,7 @@ type VaultFormProps = {
   apy: number;
 };
 
-const VaultForm: FC<VaultFormProps> = ({ title, onClose, startAmount, projectedProfit, apy }) => {
+const VaultForm: FC<VaultFormProps> = ({ startAmount, projectedProfit, apy }) => {
   const tiers = ["Tier 1", "Tier 2", "Tier 3"];
   const [selectedToken, setSelectedToken] = useState<SelectOption>(tokens[0]);
   const [selectedAmount, setSelectedAmount] = useState<SelectOption>(amounts[0]);
@@ -69,22 +67,8 @@ const VaultForm: FC<VaultFormProps> = ({ title, onClose, startAmount, projectedP
   const isButtonDisabled = true;
 
   return (
-    <Flex justify="center" alignItems="center" minH="calc(100vh - 204px)">
-      <Flex flexDir="column" gap={6} padding={6} w="100%" maxW={500}>
-        <Flex justify="space-between" alignItems="center">
-          <Text fontSize="20px" lineHeight="22px" fontWeight={500} color="#EAEAEA">
-            {title}
-          </Text>
-
-          <IconButton
-            aria-label="close"
-            icon={<Icon name={ICON_NAMES.close} />}
-            boxSize="24px"
-            minW={0}
-            onClick={onClose}
-          />
-        </Flex>
-
+    <Flex justify="center" alignItems="center">
+      <Flex flexDir="column" gap={6} w="100%" maxW={500}>
         <Flex justify="space-between" alignItems="center">
           <Text fontSize="16px" lineHeight="18px" color="black.0">
             Your tier
