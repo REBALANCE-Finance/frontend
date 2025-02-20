@@ -16,7 +16,8 @@ export enum ModalEnum {
   TxError = "TxError",
   Freeze = "Freeze",
   ConnectWallet = "ConnectWallet",
-  Tasks = "Tasks"
+  Tasks = "Tasks",
+  Vault = "Vault"
 }
 
 export enum ModalContextEnum {
@@ -59,6 +60,10 @@ export type IOpenModalArgs =
   | {
       type: ModalEnum.Tasks;
       props?: Props<ITasksModalProps>;
+    }
+  | {
+      type: ModalEnum.Vault;
+      props?: Props<IDefaultModalProps>;
     };
 
 export type IOpenModalContextArgs =
