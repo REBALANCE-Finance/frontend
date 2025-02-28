@@ -7,6 +7,7 @@ import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
 import { useAnalyticsEventTracker } from "./useAnalyticsEventTracker";
 import { arbitrum } from "viem/chains";
+import { getConfirmationsCount } from "@/utils";
 
 export const useDeposit = (
   poolAddress: `0x${string}`,
@@ -23,6 +24,7 @@ export const useDeposit = (
   const { openModal } = useStore("modalContextStore");
   const isActiveTutorial = !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial) || false;
   const { writeContractAsync } = useWriteContract();
+  const { activeChain } = useStore("poolsStore");
   const { data: allowance, refetch: refetchDepositAllowance } = useReadContract({
     address: tokenAddress,
     abi: ABI_REBALANCE,
@@ -37,7 +39,7 @@ export const useDeposit = (
     error: receiptError
   } = useWaitForTransactionReceipt({
     hash: txHash as `0x${string}`,
-    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
+    confirmations: getConfirmationsCount(activeChain)
   });
 
   const event = useAnalyticsEventTracker();

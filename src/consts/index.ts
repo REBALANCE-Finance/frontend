@@ -17,13 +17,14 @@ export const BIG_1E16 = 10000000000000000;
 export const BIG_1E18 = 1000000000000000000;
 export const BIG_1E20 = 100000000000000000000;
 
+export const ARB_DEFAULT_EXPLORER_URL = "https://arbiscan.io";
 export const ARB_CONFIRMATIONS_COUNT = 50;
 
-export const ARB_DEFAULT_EXPLORER_URL = "https://arbiscan.io";
-
 export const BSC_DEFAULT_EXPLORER_URL = "https://bscscan.com";
-
 export const BSC_CONFIRMATIONS_COUNT = 4;
+
+export const BASE_DEFAULT_EXPLORER_URL = "https://basescan.org";
+export const BASE_CONFIRMATIONS_COUNT = 12;
 
 export const PARASWAP_SPENDER_ADDRESS = "0x216B4B4Ba9F3e719726886d34a177484278Bfcae";
 

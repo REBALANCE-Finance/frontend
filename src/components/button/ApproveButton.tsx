@@ -8,11 +8,12 @@ import {
 } from "wagmi";
 import { useEffect } from "react";
 import { erc20Abi } from "viem";
-import { convertNumberToBigInt, performApprovedAmountValue } from "@/utils";
+import { convertNumberToBigInt, getConfirmationsCount, performApprovedAmountValue } from "@/utils";
 import { AddressType } from "@/types";
 import {
   ARB_CONFIRMATIONS_COUNT,
   BSC_CONFIRMATIONS_COUNT,
+  BASE_CONFIRMATIONS_COUNT,
   PARASWAP_SPENDER_ADDRESS
 } from "@/consts";
 import { handlerToast } from "../toasty/utils";
@@ -43,6 +44,7 @@ const ApproveButton = ({
   const toast = useToast();
   const { chainId } = useAccount();
   const { openModal } = useStore("modalContextStore");
+  const { activeChain } = useStore("poolsStore");
 
   const { data } = useSimulateContract({
     address: tokenAddress as AddressType,
@@ -64,7 +66,7 @@ const ApproveButton = ({
     error: waitingApproveError
   } = useWaitForTransactionReceipt({
     hash: approveContractData as AddressType,
-    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
+    confirmations: getConfirmationsCount(activeChain)
   });
 
   const {

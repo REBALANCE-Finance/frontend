@@ -1,7 +1,7 @@
 import { dedicatedWalletConnector } from "@magiclabs/wagmi-connector";
 import type { Wallet } from "@rainbow-me/rainbowkit";
 import type { Chain } from "viem";
-import { arbitrum, bsc } from "viem/chains";
+import { arbitrum, bsc, base } from "viem/chains";
 import { createConnector } from "wagmi";
 
 export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
@@ -14,7 +14,7 @@ export const createMagicConnector = ({ chain }: { chain: Chain }): Wallet => ({
 
   createConnector: walletDetails => {
     const magicConnector = dedicatedWalletConnector({
-      chains: [bsc, arbitrum],
+      chains: [bsc, arbitrum, base],
       options: {
         customLogo: "https://app.rebalance.finance/assets/logo/logo-short.svg",
         apiKey: process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY as string,

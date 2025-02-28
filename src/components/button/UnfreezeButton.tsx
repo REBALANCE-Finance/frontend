@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { useStore } from "@/hooks/useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import { arbitrum } from "viem/chains";
+import { getConfirmationsCount } from "@/utils";
 
 type UnfreezeButtonProps = {
   lockId: number;
@@ -40,6 +41,7 @@ const UnfreezeButton = ({
   const { chainId } = useAccount();
   const { data: unlockData, writeContract: onUnlock, isPending } = useWriteContract();
   const { openModal } = useStore("modalContextStore");
+  const { activeChain } = useStore("poolsStore");
 
   const {
     data: unlockContractData,
@@ -55,7 +57,7 @@ const UnfreezeButton = ({
 
   const { isLoading, isSuccess, isError, error } = useWaitForTransactionReceipt({
     hash: unlockData,
-    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
+    confirmations: getConfirmationsCount(activeChain)
   });
 
   const onUnlockToken = () => {
