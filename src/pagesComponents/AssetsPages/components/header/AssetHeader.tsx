@@ -13,6 +13,7 @@ import { TokenIcon } from "../../../../components/token-icon";
 import {
   ARB_DEFAULT_EXPLORER_URL,
   BSC_DEFAULT_EXPLORER_URL,
+  BASE_DEFAULT_EXPLORER_URL, // Added Base explorer URL
   CHAIN_ICONS,
   ICON_NAMES,
   MEDIA_QUERY_MAX
@@ -25,7 +26,23 @@ import { defChainIdArbitrum } from "@/hooks/useAuth";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/hooks/useStoreContext";
 
-export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
+// Helper function to get explorer URL by chain name
+const getExplorerUrlByChain = (chainName: string): string => {
+  switch (chainName) {
+    case "BSC":
+      return BSC_DEFAULT_EXPLORER_URL;
+    case "Base":
+      return BASE_DEFAULT_EXPLORER_URL;
+    case "Arbitrum":
+    default:
+      return ARB_DEFAULT_EXPLORER_URL;
+  }
+};
+
+export const AssetHeader: FC<{
+  pool: any;
+  chainName: "Arbitrum" | "BSC" | "Base"; // Updated type to include Base
+}> = observer(({ pool, chainName }) => {
   const location = usePathname();
   const pathName = getCurrentPath(location);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -47,10 +64,9 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
             >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={"center"}>
                 <Text>{pool?.token}</Text>
-                {/* TODO: FIX WHEN ADDING NEW CHAIN */}
                 <Link
                   href={getFinalExplorerUrl({
-                    url: chainName === "BSC" ? BSC_DEFAULT_EXPLORER_URL : ARB_DEFAULT_EXPLORER_URL,
+                    url: getExplorerUrlByChain(chainName),
                     address: pool.tokenAddress,
                     type: "token"
                   })}
@@ -58,12 +74,8 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
                 >
                   <Icon name={ICON_NAMES?.assetFunction} size="sm" />
                 </Link>
-                {/* <Text>Coin</Text> */}
               </Flex>
               <Text display="flex" flexDirection="row" mt="4px">
-                {/* {pool.token} ({CHAIN_NAMES[chain?.id ?? 0]}) */}
-                {/* <Text textTransform="uppercase">{pool.token}</Text> */}
-                {/* <Text>(Arbitrum)</Text> */}
                 <Flex gap="8px" alignItems="center">
                   <Text fontWeight="500">Pool</Text>
                   <Flex gap="5px">
@@ -73,11 +85,9 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
                         "..." +
                         pool.rebalancerAddress?.substring(pool.rebalancerAddress?.length - 5)}
                     </Text>
-                    {/* TODO: FIX WHEN ADDING NEW CHAIN */}
                     <Link
                       href={getFinalExplorerUrl({
-                        url:
-                          chainName === "BSC" ? BSC_DEFAULT_EXPLORER_URL : ARB_DEFAULT_EXPLORER_URL,
+                        url: getExplorerUrlByChain(chainName),
                         address: pool.rebalancerAddress,
                         type: "address"
                       })}
@@ -140,17 +150,15 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
           <TokenIcon name={pool?.token} />
           <Flex direction="column" gap="8px">
             <Text>
-              {/* {pool.token} ({CHAIN_NAMES[chain?.id ?? 0]}) */}
               {pool?.token} ({chainName})
             </Text>
             <Flex gap="12px" align="center">
               <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">
                 <Text>{pool?.token}</Text>
               </Flex>
-              {/* TODO: FIX WHEN ADDING NEW CHAIN */}
               <Link
                 href={getFinalExplorerUrl({
-                  url: chainName === "BSC" ? BSC_DEFAULT_EXPLORER_URL : ARB_DEFAULT_EXPLORER_URL,
+                  url: getExplorerUrlByChain(chainName),
                   address: pool.tokenAddress,
                   type: "token"
                 })}

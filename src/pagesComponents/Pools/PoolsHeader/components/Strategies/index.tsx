@@ -5,9 +5,10 @@ import { useAccount, useSwitchChain } from "wagmi";
 import Icon from "../../../../../components/icon";
 import { CHAIN_ICONS, ICON_NAMES } from "../../../../../consts";
 import { useStore } from "@/hooks/useStoreContext";
-import { arbitrum, bsc } from "viem/chains";
+import { arbitrum, base, bsc } from "viem/chains"; // Added base import
 import { observer } from "mobx-react-lite";
 import { isMobile } from "react-device-detect";
+import { ICHAIN } from "@/types";
 
 type StrategiesProps = {
   onResetCountDown: VoidFunction;
@@ -17,9 +18,28 @@ export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
   const { chains, switchChain } = useSwitchChain();
   const { chain, address, chainId, connector } = useAccount();
   const { activeChain, setActiveChain, resetPools } = useStore("poolsStore");
-  const [activeChainId, setActiveChainId] = useState(
-    chainId || (activeChain === "BSC" ? bsc.id : arbitrum.id)
-  );
+
+  // Helper function to get chain ID from active chain name
+  const getChainIdFromName = (chainName: string): number => {
+    switch (chainName) {
+      case "BSC":
+        return bsc.id;
+      case "Base":
+        return base.id;
+      case "Arbitrum":
+      default:
+        return arbitrum.id;
+    }
+  };
+
+  // Helper function to get chain name from chain ID
+  const getChainNameFromId = (id: number): ICHAIN => {
+    if (id === bsc.id) return "BSC";
+    if (id === base.id) return "Base";
+    return "Arbitrum";
+  };
+
+  const [activeChainId, setActiveChainId] = useState(chainId || getChainIdFromName(activeChain));
   const isMagicActive = connector?.id === "magic";
 
   useEffect(() => {
@@ -33,15 +53,20 @@ export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
       return;
     }
 
+    const chainName = getChainNameFromId(id);
+
     if (!address || isMagicActive) {
-      setActiveChain(id === bsc.id ? "BSC" : "Arbitrum");
+      setActiveChain(chainName);
     }
 
     onResetCountDown();
     resetPools();
+
     try {
       await switchChain({ chainId: id });
       setActiveChainId(id);
+
+      setActiveChain(chainName);
     } catch (error) {
       console.error("Error switching chain:", error);
     }
@@ -60,7 +85,6 @@ export const Strategies = observer(({ onResetCountDown }: StrategiesProps) => {
       <MenuButton>
         <Flex alignItems="center" gap={isMobile ? "8px" : "12px"} color="lightGray">
           <Icon name={CHAIN_ICONS[activeChainId]} />
-          {/* <Text fontSize="xl">{CHAIN_NAMES[chain?.id ?? 0]}</Text> */}
           <Text fontSize="medium">Select chain</Text>
           <Icon name={ICON_NAMES.chevronDown} />
         </Flex>

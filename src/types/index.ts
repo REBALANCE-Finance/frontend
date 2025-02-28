@@ -54,7 +54,7 @@ export type LockApi = {
   unlockedTime: number;
 };
 
-export type ICHAIN = "BSC" | "Arbitrum";
+export type ICHAIN = "BSC" | "Arbitrum" | "Base";
 
 export type Amount = {
   token: number;

@@ -1,5 +1,14 @@
 import BigDecimal from "decimal.js-light";
-import { BIG_1E18, BIG_1E6, BIG_1E8, BIG_1E9 } from "@/consts";
+import {
+  ARB_CONFIRMATIONS_COUNT,
+  BASE_CONFIRMATIONS_COUNT,
+  BASE_DEFAULT_EXPLORER_URL,
+  BIG_1E18,
+  BIG_1E6,
+  BIG_1E8,
+  BIG_1E9,
+  BSC_CONFIRMATIONS_COUNT
+} from "@/consts";
 import { ICHAIN } from "@/types";
 
 export const ellipsis = (string: string, chars = 4) => {
@@ -40,8 +49,12 @@ export const convertNumberToBigInt = (value: number = 0, decimals: number): bigi
 };
 
 export const getExplorerTxLink = (txHash: string, chainName: ICHAIN) => {
-  if (chainName === "BSC") {
+  if (chainName === 'BSC') {
     return `https://bscscan.com/tx/${txHash}`;
+  }
+
+  if (chainName === "Base") {
+    return `${BASE_DEFAULT_EXPLORER_URL}/tx/${txHash}`;
   }
 
   return `https://arbiscan.io/tx/${txHash}`;
@@ -92,3 +105,14 @@ export const toDollarFormat = (amount: number) =>
 
 export const transformNumberThousands = (num: number): string =>
     num >= 1000 ? `${Math.floor(num / 1000)}k` : num.toString();
+
+export const getConfirmationsCount = (chain: ICHAIN) => {
+  switch (chain) {
+    case "BSC":
+      return BSC_CONFIRMATIONS_COUNT;
+    case "Base":
+      return BASE_CONFIRMATIONS_COUNT;
+    case "Arbitrum":
+      return ARB_CONFIRMATIONS_COUNT;
+  }
+};

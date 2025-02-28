@@ -35,6 +35,10 @@ export const PoolsHeader = observer(({ isTable, onChangeView }: IPoolsHeaderProp
       return "https://www.bnbchain.org/en/bnb-chain-bridge";
     }
 
+    if (activeChain === "Base") {
+      return "https://bridge.base.org/deposit";
+    }
+
     return "https://bridge.arbitrum.io/?destinationChain=arbitrum-one&sourceChain=ethereum";
   };
 

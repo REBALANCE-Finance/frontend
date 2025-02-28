@@ -5,6 +5,7 @@ import { ARB_CONFIRMATIONS_COUNT, BSC_CONFIRMATIONS_COUNT } from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import { arbitrum } from "viem/chains";
+import { getConfirmationsCount } from "@/utils";
 
 export const useWithdraw = (
   poolAddress: `0x${string}`,
@@ -15,6 +16,7 @@ export const useWithdraw = (
   const [isLoading, setLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const { openModal } = useStore("modalContextStore");
+  const { activeChain } = useStore("poolsStore");
   const { writeContractAsync } = useWriteContract();
 
   const {
@@ -24,7 +26,7 @@ export const useWithdraw = (
     error: receiptError
   } = useWaitForTransactionReceipt({
     hash: txHash as `0x${string}`,
-    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
+    confirmations: getConfirmationsCount(activeChain)
   });
 
   useEffect(() => {
