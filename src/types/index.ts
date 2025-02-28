@@ -52,6 +52,6 @@ export type LockApi = {
   duration: number;
   unlockTime: number;
   unlockedTime: number;
-}
+};
 
-export type ICHAIN = "BSC" | "Arbitrum";
+export type ICHAIN = "BSC" | "Arbitrum" | "Base";

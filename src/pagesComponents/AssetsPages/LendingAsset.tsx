@@ -8,6 +8,7 @@ import Icon from "../../components/icon";
 import {
   ARB_DEFAULT_EXPLORER_URL,
   BSC_DEFAULT_EXPLORER_URL,
+  BASE_DEFAULT_EXPLORER_URL,
   CHAIN_ICONS,
   ICON_NAMES,
   MEDIA_QUERY_MAX
@@ -20,6 +21,19 @@ import { IPoolData, IAreaChartData } from "@/api/pools/types";
 import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
 import { useEffect } from "react";
 import { getIdByToken } from "@/utils/analytics";
+
+// Helper function to get the explorer URL based on chain name
+const getExplorerUrlByChain = (chainName: string): string => {
+  switch (chainName) {
+    case "BSC":
+      return BSC_DEFAULT_EXPLORER_URL;
+    case "Base":
+      return BASE_DEFAULT_EXPLORER_URL;
+    case "Arbitrum":
+    default:
+      return ARB_DEFAULT_EXPLORER_URL;
+  }
+};
 
 export const LendingAsset = observer(
   ({
@@ -37,11 +51,10 @@ export const LendingAsset = observer(
     isChartLoading: boolean;
     error: string | null;
     poolChainId: number;
-    chainName: "Arbitrum" | "BSC";
+    chainName: "Arbitrum" | "BSC" | "Base"; // Updated to include Base
   }) => {
     const { chain } = useAccount();
     const { poolToken } = useParams();
-    // const finalAddress = Array.isArray(poolAddress) ? poolAddress[0] : poolAddress;
     const searchParams = useSearchParams();
     const strategic = searchParams.get("strategic") ?? STRATEGIES.based;
     const event = useAnalyticsEventTracker();
@@ -88,13 +101,9 @@ export const LendingAsset = observer(
                   ) : (
                     <>
                       <Icon name={CHAIN_ICONS[poolChainId]} size="18px" />
-                      {/* TODO: FIX WHEN ADDING NEW CHAIN */}
                       <Link
                         href={getFinalExplorerUrl({
-                          url:
-                            chainName === "BSC"
-                              ? BSC_DEFAULT_EXPLORER_URL
-                              : ARB_DEFAULT_EXPLORER_URL,
+                          url: getExplorerUrlByChain(chainName),
                           address: pool?.rebalancerAddress,
                           type: "address"
                         })}

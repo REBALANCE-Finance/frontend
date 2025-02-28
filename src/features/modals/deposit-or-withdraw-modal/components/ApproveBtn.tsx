@@ -5,6 +5,8 @@ import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagm
 import { ABI_REBALANCE } from "../../../../abi/rebalance";
 import { ARB_CONFIRMATIONS_COUNT, BSC_CONFIRMATIONS_COUNT } from "@/consts";
 import { arbitrum } from "viem/chains";
+import { useStore } from "@/hooks/useStoreContext";
+import { getConfirmationsCount } from "@/utils";
 
 const ApproveBtn = ({
   value,
@@ -25,9 +27,10 @@ const ApproveBtn = ({
 }) => {
   const { chainId } = useAccount();
   const { data: hash, writeContract } = useWriteContract();
+  const { activeChain } = useStore("poolsStore");
   const { isSuccess, isLoading } = useWaitForTransactionReceipt({
     hash,
-    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
+    confirmations: getConfirmationsCount(activeChain)
   });
 
   const approve = () => {

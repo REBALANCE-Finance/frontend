@@ -4,7 +4,7 @@ import { OAuthExtension } from "@magic-ext/oauth";
 import { Magic } from "magic-sdk";
 import { observer } from "mobx-react-lite";
 import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
-import { arbitrum, bsc } from "viem/chains";
+import { arbitrum, base, bsc } from "viem/chains";
 import { useAccount } from "wagmi";
 
 type MagicContextType = {
@@ -20,7 +20,31 @@ export const useMagic = () => useContext(MagicContext);
 const MagicProvider = observer(({ children }: { children: ReactNode }) => {
   const [magic, setMagic] = useState<any>();
   const { activeChain } = useStore("poolsStore");
-  const bscActiveChain = activeChain === "BSC";
+
+  // Helper functions to get network configuration
+  const getRpcUrl = (chain: string): string => {
+    switch (chain) {
+      case "BSC":
+        return bsc.rpcUrls.default.http[0];
+      case "Base":
+        return base.rpcUrls.default.http[0];
+      case "Arbitrum":
+      default:
+        return arbitrum.rpcUrls.default.http[0];
+    }
+  };
+
+  const getChainId = (chain: string): number => {
+    switch (chain) {
+      case "BSC":
+        return bsc.id;
+      case "Base":
+        return base.id;
+      case "Arbitrum":
+      default:
+        return arbitrum.id;
+    }
+  };
 
   useEffect(() => {
     if (magic) {
@@ -28,17 +52,11 @@ const MagicProvider = observer(({ children }: { children: ReactNode }) => {
     }
 
     if (process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY) {
-      // if (magic) {
-      //   setMagic(null);
-      // }
-
       const _magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY || "", {
         extensions: [new OAuthExtension()],
         network: {
-          rpcUrl: bscActiveChain ? bsc.rpcUrls.default.http[0] : arbitrum.rpcUrls.default.http[0],
-          // rpcUrl: arbitrum.rpcUrls.default.http[0],
-          // chainId: arbitrum.id
-          chainId: bscActiveChain ? bsc.id : arbitrum.id
+          rpcUrl: getRpcUrl(activeChain),
+          chainId: getChainId(activeChain)
         }
       });
 

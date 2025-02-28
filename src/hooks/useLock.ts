@@ -12,6 +12,7 @@ import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
 import { arbitrum } from "viem/chains";
+import { getConfirmationsCount } from "@/utils";
 
 export const useLock = (
   poolAddress: `0x${string}`,
@@ -25,6 +26,7 @@ export const useLock = (
   const [isSuccess, setIsSuccess] = useState(false);
   const { address, chainId } = useAccount();
   const { openModal } = useStore("modalContextStore");
+  const { activeChain } = useStore("poolsStore");
   const isActiveTutorial = !localStore.getData(LOCAL_STORAGE_KEYS.isShownTutorial) || false;
   const { writeContractAsync } = useWriteContract();
   const { data: allowance } = useReadContract({
@@ -44,7 +46,7 @@ export const useLock = (
     error: receiptError
   } = useWaitForTransactionReceipt({
     hash: txHash as `0x${string}`,
-    confirmations: chainId === arbitrum.id ? ARB_CONFIRMATIONS_COUNT : BSC_CONFIRMATIONS_COUNT
+    confirmations: getConfirmationsCount(activeChain)
   });
 
   useEffect(() => {
