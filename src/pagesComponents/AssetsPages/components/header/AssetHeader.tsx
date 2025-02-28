@@ -50,10 +50,7 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
                 {/* TODO: FIX WHEN ADDING NEW CHAIN */}
                 <Link
                   href={getFinalExplorerUrl({
-                    url:
-                      chain?.blockExplorers?.default.url || chainName === "BSC"
-                        ? BSC_DEFAULT_EXPLORER_URL
-                        : ARB_DEFAULT_EXPLORER_URL,
+                    url: chainName === "BSC" ? BSC_DEFAULT_EXPLORER_URL : ARB_DEFAULT_EXPLORER_URL,
                     address: pool.tokenAddress,
                     type: "token"
                   })}
@@ -80,9 +77,7 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
                     <Link
                       href={getFinalExplorerUrl({
                         url:
-                          chain?.blockExplorers?.default.url || chainName === "BSC"
-                            ? BSC_DEFAULT_EXPLORER_URL
-                            : ARB_DEFAULT_EXPLORER_URL,
+                          chainName === "BSC" ? BSC_DEFAULT_EXPLORER_URL : ARB_DEFAULT_EXPLORER_URL,
                         address: pool.rebalancerAddress,
                         type: "address"
                       })}
@@ -155,10 +150,7 @@ export const AssetHeader: FC<any> = observer(({ pool, chainName }) => {
               {/* TODO: FIX WHEN ADDING NEW CHAIN */}
               <Link
                 href={getFinalExplorerUrl({
-                  url:
-                    chain?.blockExplorers?.default.url || chainName === "BSC"
-                      ? BSC_DEFAULT_EXPLORER_URL
-                      : ARB_DEFAULT_EXPLORER_URL,
+                  url: chainName === "BSC" ? BSC_DEFAULT_EXPLORER_URL : ARB_DEFAULT_EXPLORER_URL,
                   address: pool.tokenAddress,
                   type: "token"
                 })}

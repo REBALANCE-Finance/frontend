@@ -92,7 +92,7 @@ export const LendingAsset = observer(
                       <Link
                         href={getFinalExplorerUrl({
                           url:
-                            chain?.blockExplorers?.default.url || chainName === "BSC"
+                            chainName === "BSC"
                               ? BSC_DEFAULT_EXPLORER_URL
                               : ARB_DEFAULT_EXPLORER_URL,
                           address: pool?.rebalancerAddress,
