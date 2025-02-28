@@ -49,7 +49,7 @@ export const convertNumberToBigInt = (value: number = 0, decimals: number): bigi
 };
 
 export const getExplorerTxLink = (txHash: string, chainName: ICHAIN) => {
-  if (chainName === 'BSC') {
+  if (chainName === "BSC") {
     return `https://bscscan.com/tx/${txHash}`;
   }
 
