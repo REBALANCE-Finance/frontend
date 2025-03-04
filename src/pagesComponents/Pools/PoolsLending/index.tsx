@@ -4,7 +4,7 @@ import { useAccount } from "wagmi";
 import { CardPool } from "../../../components/card";
 import { Risk } from "../../../components/risk";
 import { Tooltip } from "../../../components/tooltip";
-import { ROUTE_PATHS } from "../../../consts";
+import { ICON_NAMES, ROUTE_PATHS } from "../../../consts";
 import { DepositLendingButton } from "../../../features/actions/deposit-or-withdraw-button/DepositLendingButton";
 import { WithdrawLendingButton } from "../../../features/actions/deposit-or-withdraw-button/WithdrawLendingButton";
 import { formatNumber, formatPercent, formatNeutralPercent } from "../../../utils/formatNumber";
@@ -16,6 +16,27 @@ import { useRouter } from "next/navigation";
 import { useStore } from "@/hooks/useStoreContext";
 import { getIdByToken } from "@/utils/analytics";
 import { observer } from "mobx-react-lite";
+
+type Protocol =
+  | "AAVE"
+  | "COMPOUND"
+  | "DOLOMITE"
+  | "FRAXLEND"
+  | "KINZA"
+  | "VENUS"
+  | "MORPHO_SPARK"
+  | "MORPHO_MOONWELL"
+  | "MORPHO_SEAMLESS"
+  | "MORPHO_STEAKHOUSE"
+  | "MORPHO_GAUNTLET_PRIME"
+  | "MORPHO_GAUNTLET_CORE"
+  | "MORPHO_APOSTRO";
+
+interface TokenProtocolMap {
+  [chain: string]: {
+    [token: string]: Protocol[];
+  };
+}
 
 const YieldPoolList = ({ pools }: { pools: string[] }) => (
   <>
@@ -35,7 +56,9 @@ export const PoolsLending = observer(
     const { activeChain } = useStore("poolsStore");
 
     const getChainRouteName = () => {
-      return activeChain === "BSC" ? "bsc" : "arb";
+      if (activeChain === "BSC") return "bsc";
+      if (activeChain === "Base") return "base";
+      return "arb";
     };
 
     const handleCardClick = (event: any, pool: IPoolData) => {
@@ -46,26 +69,105 @@ export const PoolsLending = observer(
       router.push(ROUTE_PATHS.lendingAssetPage(getChainRouteName(), pool.token), { scroll: false });
     };
 
+    // Protocol mapping configuration based on token and chain
+    const tokenProtocolMap: TokenProtocolMap = {
+      Arbitrum: {
+        USDT: ["AAVE", "COMPOUND", "DOLOMITE"],
+        wETH: ["AAVE", "COMPOUND", "DOLOMITE"],
+        USDC: ["AAVE", "COMPOUND", "DOLOMITE"],
+        "USDC.e": ["AAVE", "COMPOUND", "DOLOMITE"],
+        DAI: ["AAVE", "DOLOMITE"],
+        FRAX: ["AAVE", "FRAXLEND"]
+      },
+      BSC: {
+        USDT: ["AAVE", "KINZA", "VENUS"],
+        USDC: ["AAVE", "KINZA", "VENUS"]
+      },
+      Base: {
+        USDC: [
+          "AAVE",
+          "COMPOUND",
+          "MORPHO_SPARK",
+          "MORPHO_MOONWELL",
+          "MORPHO_SEAMLESS",
+          "MORPHO_STEAKHOUSE",
+          "MORPHO_GAUNTLET_PRIME",
+          "MORPHO_GAUNTLET_CORE",
+          "MORPHO_APOSTRO"
+        ]
+      }
+    };
+
+    // Get pretty names for protocols in tooltip
+    const getProtocolPrettyName = (protocol: Protocol): string => {
+      const protocolDisplayMap: Record<Protocol, string> = {
+        AAVE: "Aave V3",
+        COMPOUND: "Compound V3",
+        DOLOMITE: "Dolomite",
+        FRAXLEND: "Fraxlend",
+        KINZA: "Kinza",
+        VENUS: "Venus",
+        MORPHO_SPARK: "Morpho Spark USDC Vault",
+        MORPHO_MOONWELL: "Morpho Moonwell Flagship USDC",
+        MORPHO_SEAMLESS: "Morpho Seamless USDC Vault",
+        MORPHO_STEAKHOUSE: "Morpho Steakhouse USDC",
+        MORPHO_GAUNTLET_PRIME: "Morpho Gauntlet USDC Prime",
+        MORPHO_GAUNTLET_CORE: "Morpho Gauntlet USDC Core",
+        MORPHO_APOSTRO: "Morpho Apostro Resolv USDC"
+      };
+      return protocolDisplayMap[protocol];
+    };
+
     const getYieldStrategy = (token: string) => {
       const baseMessage = `${token} Low-Risk Yield Strategy: Higher APY is achieved by automatic rebalance between the following pools:`;
 
-      const defaultPools = ["Compound V3", "Aave V3"];
-
-      let pools: string[];
-
-      if (token === "DAI") {
-        pools = [defaultPools[1]];
-      } else if (token === "FRAX") {
-        pools = ["Fraxlend", defaultPools[1]];
-      } else {
-        pools = defaultPools;
-      }
+      const protocols = tokenProtocolMap[activeChain]?.[token] || [];
+      const pools = protocols.map(getProtocolPrettyName);
 
       return (
         <>
           <span>{baseMessage}</span>
           <YieldPoolList pools={pools} />
         </>
+      );
+    };
+
+    const getProtocolIcons = (token: string) => {
+      const protocols = tokenProtocolMap[activeChain]?.[token] || [];
+
+      if (protocols.length === 0) return null;
+
+      return (
+        <Box ml="auto" display="flex">
+          {protocols.map((protocol, idx) => {
+            if (protocol.startsWith("MORPHO_")) {
+              return (
+                <Box
+                  key={idx}
+                  marginRight={idx < protocols.length - 1 ? "-4px" : 0}
+                  zIndex={protocols.length - idx}
+                >
+                  <Icon name={protocol} width="14px" height="14px" />
+                </Box>
+              );
+            }
+
+            return (
+              <Box
+                key={idx}
+                borderRadius={protocol === "DOLOMITE" ? "50%" : undefined}
+                marginRight={idx < protocols.length - 1 ? "-4px" : 0}
+                zIndex={protocols.length - idx}
+              >
+                <Icon
+                  name={protocol}
+                  width={protocol === "AAVE" ? "10px" : "14px"}
+                  height={protocol === "AAVE" ? "10px" : "14px"}
+                />
+              </Box>
+            );
+          })}
+        </Box>
       );
     };
 
@@ -124,41 +226,7 @@ export const PoolsLending = observer(
                         <Text color="white" borderBottom={"dashed 1px gray"}>
                           APY
                         </Text>
-                        {activeChain === "Arbitrum" && (
-                          <Box ml="auto" display="flex">
-                            {(item.token === "USDT" ||
-                              item.token === "wETH" ||
-                              item.token === "USDC" ||
-                              item.token === "USDC.e") && (
-                               <>
-                                <Box borderRadius="50%" mr="-4px" zIndex={3}>
-                                  <Icon name="COMPOUND" width="14px" height="14px" />
-                                </Box>
-                                <Box borderRadius="50%" mr="-4px" zIndex={3}>
-                                  <Icon name="DOLOMITE" width="14px" height="14px" />
-                                </Box>
-                               </>
-                            )}
-
-                            {item.token === "FRAX" && (
-                              <Box borderRadius="50%" mr="-4px" zIndex={2}>
-                                <Icon name="FRAXLEND" width="14px" height="14px" />
-                              </Box>
-                            )}
-
-                            <Icon name="AAVE" width="10px" height="10px" />
-                          </Box>
-                        )}
-                        {activeChain === "BSC" && (
-                          <Box ml="auto" display="flex">
-                            <Box mr="-4px" zIndex={3}>
-                              <Icon name="AAVE" width="10px" height="10px" />
-                            </Box>
-                            <Box mr="-4px" zIndex={2}>
-                              <Icon name="KINZA" width="14px" height="14px" />
-                            </Box>
-                          </Box>
-                        )}
+                        {getProtocolIcons(item.token)}
                         <Text textStyle="textMono16" ml={2}>
                           {loading || error ? (
                             <Skeleton height="20px" width="50px" />
@@ -171,7 +239,7 @@ export const PoolsLending = observer(
                   </HStack>
 
                   <HStack justify="space-between">
-                    <Tooltip label="Rebalance APY  advantage over the lending market highest APY in last 30 days">
+                    <Tooltip label="Rebalance APY advantage over the lending market highest APY in last 30 days">
                       <Text borderBottom={"dashed 1px gray"} color="white">
                         {">"} market max.
                       </Text>
