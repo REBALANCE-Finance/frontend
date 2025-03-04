@@ -73,5 +73,12 @@ export const ICON_NAMES: { [key: string]: string } = {
   help: "help",
   FRAXLEND: "FRAXLEND",
   WBNB: "WBNB",
-  base: "base"
+  base: "base",
+  MORPHO_SPARK: "MORPHO-1",
+  MORPHO_MOONWELL: "MORPHO-1",
+  MORPHO_SEAMLESS: "MORPHO-2",
+  MORPHO_STEAKHOUSE: "MORPHO-3",
+  MORPHO_GAUNTLET_PRIME: "MORPHO-4",
+  MORPHO_GAUNTLET_CORE: "MORPHO-4",
+  MORPHO_APOSTRO: "MORPHO-5"
 } as const;
