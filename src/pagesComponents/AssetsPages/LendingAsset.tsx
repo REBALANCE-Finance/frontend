@@ -21,6 +21,7 @@ import { IPoolData, IAreaChartData } from "@/api/pools/types";
 import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
 import { useEffect } from "react";
 import { getIdByToken } from "@/utils/analytics";
+import { ICHAIN } from "@/types";
 
 // Helper function to get the explorer URL based on chain name
 const getExplorerUrlByChain = (chainName: string): string => {
@@ -51,7 +52,7 @@ export const LendingAsset = observer(
     isChartLoading: boolean;
     error: string | null;
     poolChainId: number;
-    chainName: "Arbitrum" | "BSC" | "Base"; // Updated to include Base
+    chainName: ICHAIN;
   }) => {
     const { chain } = useAccount();
     const { poolToken } = useParams();

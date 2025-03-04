@@ -4,7 +4,7 @@ import { LendingAsset } from "@/pagesComponents/AssetsPages/LendingAsset";
 import { useEffect, useState } from "react";
 import { useStore } from "@/hooks/useStoreContext";
 import { useAccount, useSwitchChain } from "wagmi";
-import { arbitrum, bsc } from "viem/chains";
+import { arbitrum, bsc, base } from "viem/chains";
 
 const LendingAssetPage = observer(({ params }: { params: { [key: string]: string } }) => {
   const { chainId, isConnected } = useAccount();
@@ -21,41 +21,52 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
   const { pools, isLoading } = useStore("poolsStore");
   const [error, setError] = useState<string | null>(null);
 
-  const chainName = params.chain === "bsc" ? "BSC" : "Arbitrum";
+  const getChainName = () => {
+    switch (params.chain) {
+      case "bsc":
+        return "BSC";
+      case "base":
+        return "Base";
+      default:
+        return "Arbitrum";
+    }
+  };
 
   useEffect(() => {
-    if (params.chain === "arb") {
-      setActiveChain("Arbitrum");
-    }
-
-    if (params.chain === "bsc") {
-      setActiveChain("BSC");
-    }
-  }, []);
+    setActiveChain(getChainName());
+  }, [params.chain]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
     if (isConnected) {
-      if (params.chain === "arb" && chainId !== arbitrum.id) {
-        timer = setTimeout(() => {
-          switchChain({ chainId: arbitrum.id });
-        }, 500);
+      let targetChainId;
+
+      switch (params.chain) {
+        case "bsc":
+          targetChainId = bsc.id;
+          break;
+        case "base":
+          targetChainId = base.id;
+          break;
+        default:
+          targetChainId = arbitrum.id;
+          break;
       }
 
-      if (params.chain === "bsc" && chainId !== bsc.id) {
+      if (chainId !== targetChainId) {
         timer = setTimeout(() => {
-          switchChain({ chainId: bsc.id });
+          switchChain({ chainId: targetChainId });
         }, 500);
       }
     }
 
     return () => clearTimeout(timer);
-  }, [isConnected, chainId]);
+  }, [isConnected, chainId, params.chain]);
 
   useEffect(() => {
     if (!activePool) {
-      fetchAndSetActivePool("lending", params.poolToken, chainName);
+      fetchAndSetActivePool("lending", params.poolToken, getChainName());
     }
   }, [activePool]);
 
@@ -72,9 +83,20 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
   useEffect(() => {
     if (activePool) {
       const token = activePool.token;
-      fetchChartData(token, chainName);
+      fetchChartData(token, getChainName());
     }
   }, [params.poolToken, activePool]);
+
+  const getChainId = () => {
+    switch (params.chain) {
+      case "bsc":
+        return bsc.id;
+      case "base":
+        return base.id;
+      default:
+        return arbitrum.id;
+    }
+  };
 
   return (
     <LendingAsset
@@ -83,8 +105,8 @@ const LendingAssetPage = observer(({ params }: { params: { [key: string]: string
       loading={!activePool}
       error={error}
       isChartLoading={isChartLoading}
-      poolChainId={params.chain === "bsc" ? bsc.id : arbitrum.id}
-      chainName={params.chain === "arb" ? "Arbitrum" : "BSC"}
+      poolChainId={getChainId()}
+      chainName={getChainName()}
     />
   );
 });

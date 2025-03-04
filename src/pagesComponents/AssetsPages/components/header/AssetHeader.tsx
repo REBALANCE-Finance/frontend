@@ -1,8 +1,7 @@
 "use client";
 import { Flex, Link, Text } from "@chakra-ui/layout";
 import { useMediaQuery } from "@chakra-ui/react";
-import React, { FC } from "react";
-import { useAccount } from "wagmi";
+import React, { FC, useMemo } from "react";
 
 import Icon from "@/components/icon";
 import { getFinalExplorerUrl } from "@/utils/url";
@@ -13,20 +12,20 @@ import { TokenIcon } from "../../../../components/token-icon";
 import {
   ARB_DEFAULT_EXPLORER_URL,
   BSC_DEFAULT_EXPLORER_URL,
-  BASE_DEFAULT_EXPLORER_URL, // Added Base explorer URL
-  CHAIN_ICONS,
+  BASE_DEFAULT_EXPLORER_URL,
   ICON_NAMES,
-  MEDIA_QUERY_MAX
+  MEDIA_QUERY_MAX,
+  CHAIN_ICONS
 } from "../../../../consts";
 import { ROUTES_TYPE } from "../../../../consts/routes-type";
 import { getCurrentPath } from "../../../../features/RebalancePerformance/utils";
 import { formatNumber } from "../../../../utils/formatNumber";
 import { usePathname } from "next/navigation";
-import { defChainIdArbitrum } from "@/hooks/useAuth";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/hooks/useStoreContext";
+import { ICHAIN } from "@/types";
+import { arbitrum, base, bsc } from "viem/chains";
 
-// Helper function to get explorer URL by chain name
 const getExplorerUrlByChain = (chainName: string): string => {
   switch (chainName) {
     case "BSC":
@@ -39,15 +38,28 @@ const getExplorerUrlByChain = (chainName: string): string => {
   }
 };
 
+const getChainIdByChainName = (chainName: string) => {
+  switch (chainName) {
+    case "BSC":
+      return bsc.id;
+    case "Base":
+      return base.id;
+    case "Arbitrum":
+    default:
+      return arbitrum.id;
+  }
+};
+
 export const AssetHeader: FC<{
   pool: any;
-  chainName: "Arbitrum" | "BSC" | "Base"; // Updated type to include Base
+  chainName: ICHAIN;
 }> = observer(({ pool, chainName }) => {
   const location = usePathname();
   const pathName = getCurrentPath(location);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
-  const { chain } = useAccount();
   const { activeChain } = useStore("poolsStore");
+
+  const chainIcon = useMemo(() => CHAIN_ICONS[getChainIdByChainName(activeChain)], [activeChain]);
 
   if (media) {
     return (
@@ -79,7 +91,7 @@ export const AssetHeader: FC<{
                 <Flex gap="8px" alignItems="center">
                   <Text fontWeight="500">Pool</Text>
                   <Flex gap="5px">
-                    <Icon name={CHAIN_ICONS[chain?.id ?? defChainIdArbitrum]} size="18px" />
+                    <Icon name={chainIcon} size="18px" />
                     <Text textStyle="text14" color="black.5">
                       {pool.rebalancerAddress?.substring(0, 12) +
                         "..." +
