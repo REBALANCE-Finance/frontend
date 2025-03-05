@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { useStore } from "@/hooks/useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import { arbitrum } from "viem/chains";
-import { getConfirmationsCount } from "@/utils";
+import { getChainNameById, getConfirmationsCount } from "@/utils";
 
 type UnfreezeButtonProps = {
   lockId: number;
@@ -73,7 +73,7 @@ const UnfreezeButton = ({
   }, [autoRun, isSimulated]);
 
   useEffect(() => {
-    if (isSuccess && unlockData) {
+    if (isSuccess && unlockData && chainId) {
       onChangeBtnIndex();
       onSuccessUnlock();
       if (isLast) {
@@ -82,7 +82,7 @@ const UnfreezeButton = ({
           type: ModalContextEnum.Success,
           props: {
             txHash: unlockData,
-            chainName: chainId === arbitrum.id ? "Arbitrum" : "BSC"
+            chainName: getChainNameById(chainId)
           }
         });
       }

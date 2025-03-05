@@ -5,7 +5,7 @@ import { ARB_CONFIRMATIONS_COUNT, BSC_CONFIRMATIONS_COUNT } from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import { arbitrum } from "viem/chains";
-import { getConfirmationsCount } from "@/utils";
+import { getChainNameById, getConfirmationsCount } from "@/utils";
 
 export const useWithdraw = (
   poolAddress: `0x${string}`,
@@ -30,13 +30,13 @@ export const useWithdraw = (
   });
 
   useEffect(() => {
-    if (isReceiptSuccess && txHash) {
+    if (isReceiptSuccess && txHash && chainId) {
       onClose();
       openModal({
         type: ModalContextEnum.Success,
         props: {
           txHash,
-          chainName: chainId === arbitrum.id ? "Arbitrum" : "BSC"
+          chainName: getChainNameById(chainId)
         }
       });
     } else if (isReceiptError && receiptError) {

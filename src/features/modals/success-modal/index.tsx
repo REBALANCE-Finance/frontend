@@ -64,6 +64,17 @@ export const SuccessModal: FC<ISuccessModalContextProps> = ({
     }
   };
 
+  const getExplorerTitle = () => {
+    switch (chainName) {
+      case "BSC":
+        return "BscScan";
+      case "Base":
+        return "BaseScan";
+      default:
+        return "Arbiscan";
+    }
+  };
+
   return (
     <Modal id={id} isOpen={isOpen} onClose={onClose} isCloseBtn={false}>
       <ModalContent bg="black.60" width="100%" maxWidth="648px">
@@ -110,7 +121,7 @@ export const SuccessModal: FC<ISuccessModalContextProps> = ({
                 _hover={{ opacity: 0.8 }}
                 onClick={handleOpenExplorer}
               >
-                View on {chainName === 'BSC' ? 'BscScan' : 'Arbiscan'}
+                View on {getExplorerTitle()}
               </Button>
               <Button
                 variant="primaryFilled"

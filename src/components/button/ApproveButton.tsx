@@ -8,7 +8,12 @@ import {
 } from "wagmi";
 import { useEffect } from "react";
 import { erc20Abi } from "viem";
-import { convertNumberToBigInt, getConfirmationsCount, performApprovedAmountValue } from "@/utils";
+import {
+  convertNumberToBigInt,
+  getChainNameById,
+  getConfirmationsCount,
+  performApprovedAmountValue
+} from "@/utils";
 import { AddressType } from "@/types";
 import {
   ARB_CONFIRMATIONS_COUNT,
@@ -84,13 +89,13 @@ const ApproveButton = ({
   const approvedAmountValue = performApprovedAmountValue(approvedAmount, tokenDecimals);
 
   useEffect(() => {
-    if (isSuccessWaitingApprove) {
+    if (isSuccessWaitingApprove && chainId) {
       refetchAllowance();
       openModal({
         type: ModalContextEnum.Success,
         props: {
           txHash: approveContractData as string,
-          chainName: chainId === arbitrum.id ? "Arbitrum" : "BSC"
+          chainName: getChainNameById(chainId)
         }
       });
     } else if (isErrorWaitingApprove && waitingApproveError) {
