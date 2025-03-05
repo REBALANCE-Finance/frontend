@@ -10,6 +10,7 @@ import {
   BSC_CONFIRMATIONS_COUNT
 } from "@/consts";
 import { ICHAIN } from "@/types";
+import { base, bsc } from "viem/chains";
 
 export const ellipsis = (string: string, chars = 4) => {
   if (!string) return "";
@@ -114,5 +115,16 @@ export const getConfirmationsCount = (chain: ICHAIN) => {
       return BASE_CONFIRMATIONS_COUNT;
     case "Arbitrum":
       return ARB_CONFIRMATIONS_COUNT;
+  }
+};
+
+export const getChainNameById = (chainId: number): ICHAIN => {
+  switch (chainId) {
+    case bsc.id:
+      return "BSC";
+    case base.id:
+      return "Base";
+    default:
+      return "Arbitrum";
   }
 };
