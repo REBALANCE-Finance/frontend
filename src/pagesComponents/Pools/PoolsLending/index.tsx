@@ -85,8 +85,6 @@ export const PoolsLending = observer(
       },
       Base: {
         USDC: [
-          "AAVE",
-          "COMPOUND",
           "MORPHO_SPARK",
           "MORPHO_MOONWELL",
           "MORPHO_SEAMLESS",
@@ -336,7 +334,12 @@ export const PoolsLending = observer(
                 onClick={event => handleCardClick(event, elem)}
                 cursor="pointer"
               >
-                <CardPool key={elem.token} rowCard={rowCard} itemCard={elem} />
+                <CardPool
+                  key={elem.token}
+                  rowCard={rowCard}
+                  itemCard={elem}
+                  isBaseChain={activeChain === "Base"}
+                />
               </Box>
             ))}
       </SimpleGrid>
