@@ -43,7 +43,22 @@ const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTab
   const { activeChain } = useStore("poolsStore");
 
   const getChainRouteName = () => {
-    return activeChain === "BSC" ? "bsc" : "arb";
+    switch (activeChain) {
+      case "Base":
+        return "base";
+      case "BSC":
+        return "bsc";
+      default:
+        return "arb";
+    }
+  };
+
+  const getTitle = (token: string) => {
+    if (activeChain === "Base" && token === "USDC") {
+      return "Morpho USDC";
+    }
+
+    return token;
   };
 
   const handleLink = (poolToken: string) => {
@@ -117,8 +132,8 @@ const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTab
                 <Flex gap={1.5} alignItems="center">
                   <TokenIcon name={pool.token} size="34px" sizeIcon="18px" />
                   <Flex flexDir="column" gap={2}>
-                    <Text textStyle="h2" fontWeight={500} color="white">
-                      {pool.token}
+                    <Text textStyle="h2" fontWeight={500} color="white" textTransform="capitalize">
+                      {getTitle(pool.token)}
                     </Text>
                   </Flex>
                 </Flex>
