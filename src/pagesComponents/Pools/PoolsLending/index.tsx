@@ -85,6 +85,8 @@ export const PoolsLending = observer(
       },
       Base: {
         USDC: [
+          "AAVE",
+          "COMPOUND",
           "MORPHO_SPARK",
           "MORPHO_MOONWELL",
           "MORPHO_SEAMLESS",
