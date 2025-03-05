@@ -61,6 +61,14 @@ export const AssetHeader: FC<{
 
   const chainIcon = useMemo(() => CHAIN_ICONS[getChainIdByChainName(activeChain)], [activeChain]);
 
+  const getTitle = () => {
+    if (chainName === "Base" && pool.token === "USDC") {
+      return "Morpho USDC";
+    }
+
+    return pool.token;
+  };
+
   if (media) {
     return (
       <Flex w="100%" h="fit-content" flexDirection="column">
@@ -75,7 +83,7 @@ export const AssetHeader: FC<{
               justifyContent="space-between"
             >
               <Flex gap="10px" textStyle="h1" fontWeight="500" lineHeight="24px" align={"center"}>
-                <Text>{pool?.token}</Text>
+                <Text>{getTitle()}</Text>
                 <Link
                   href={getFinalExplorerUrl({
                     url: getExplorerUrlByChain(chainName),
@@ -162,7 +170,7 @@ export const AssetHeader: FC<{
           <TokenIcon name={pool?.token} />
           <Flex direction="column" gap="8px">
             <Text>
-              {pool?.token} ({chainName})
+              {getTitle()} ({chainName})
             </Text>
             <Flex gap="12px" align="center">
               <Flex align="center" gap="10px" fontSize="xl" fontWeight="500">

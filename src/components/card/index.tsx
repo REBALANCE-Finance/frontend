@@ -19,9 +19,18 @@ interface ICardProps {
   rowCard: IRowCard[];
   itemCard: DefaultDataType;
   isLoading?: boolean;
+  isBaseChain?: boolean;
 }
 
-export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading }) => {
+export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading, isBaseChain }) => {
+  const getTitle = () => {
+    if (isBaseChain && itemCard.token === "USDC") {
+      return "Morpho USDC";
+    }
+
+    return itemCard.token;
+  };
+
   return (
     <ChakraCard
       id={`Click_page_${getIdByToken(itemCard.token)}`}
@@ -65,7 +74,7 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading }) => {
                 <Flex alignItems="center" gap="12px">
                   <TokenIcon name={itemCard?.token} />
                   <Flex flexDir="column" gap={2}>
-                    <Text textStyle="h2">{itemCard?.token}</Text>
+                    <Text textStyle="h2">{getTitle()}</Text>
                   </Flex>
                 </Flex>
                 {elem.proccess && elem.proccess({ item: itemCard })}
