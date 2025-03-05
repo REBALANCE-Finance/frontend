@@ -26,7 +26,7 @@ const ApproveBtn = ({
   onClick?: VoidFunction;
 }) => {
   const { chainId } = useAccount();
-  const { data: hash, writeContract } = useWriteContract();
+  const { data: hash, writeContract, error } = useWriteContract();
   const { activeChain } = useStore("poolsStore");
   const { isSuccess, isLoading } = useWaitForTransactionReceipt({
     hash,

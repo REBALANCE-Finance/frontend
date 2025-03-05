@@ -24,7 +24,7 @@ export const BSC_DEFAULT_EXPLORER_URL = "https://bscscan.com";
 export const BSC_CONFIRMATIONS_COUNT = 4;
 
 export const BASE_DEFAULT_EXPLORER_URL = "https://basescan.org";
-export const BASE_CONFIRMATIONS_COUNT = 12;
+export const BASE_CONFIRMATIONS_COUNT = 3;
 
 export const PARASWAP_SPENDER_ADDRESS = "0x216B4B4Ba9F3e719726886d34a177484278Bfcae";
 

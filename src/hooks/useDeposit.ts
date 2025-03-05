@@ -7,7 +7,7 @@ import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
 import { useAnalyticsEventTracker } from "./useAnalyticsEventTracker";
 import { arbitrum } from "viem/chains";
-import { getConfirmationsCount } from "@/utils";
+import { getChainNameById, getConfirmationsCount } from "@/utils";
 
 export const useDeposit = (
   poolAddress: `0x${string}`,
@@ -52,7 +52,7 @@ export const useDeposit = (
   };
 
   useEffect(() => {
-    if (isReceiptSuccess && txHash) {
+    if (isReceiptSuccess && txHash && chainId) {
       if (needClose) {
         onClose();
         onSendSuccessDepositEvent();
@@ -61,7 +61,7 @@ export const useDeposit = (
           props: {
             txHash,
             id: "deposit_success",
-            chainName: chainId === arbitrum.id ? "Arbitrum" : "BSC"
+            chainName: getChainNameById(chainId)
           }
         });
       }

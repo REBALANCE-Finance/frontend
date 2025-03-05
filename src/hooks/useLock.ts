@@ -12,7 +12,7 @@ import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
 import { arbitrum } from "viem/chains";
-import { getConfirmationsCount } from "@/utils";
+import { getChainNameById, getConfirmationsCount } from "@/utils";
 
 export const useLock = (
   poolAddress: `0x${string}`,
@@ -50,14 +50,14 @@ export const useLock = (
   });
 
   useEffect(() => {
-    if (isReceiptSuccess && txHash) {
+    if (isReceiptSuccess && txHash && chainId) {
       setIsSuccess(true);
       onClose();
       openModal({
         type: ModalContextEnum.Success,
         props: {
           txHash,
-          chainName: chainId === arbitrum.id ? "Arbitrum" : "BSC"
+          chainName: getChainNameById(chainId)
         }
       });
     } else if (isReceiptError && receiptError) {
