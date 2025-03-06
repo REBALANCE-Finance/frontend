@@ -5,15 +5,17 @@ import { EnumSizes, Sizes, TIconProps } from "./types";
 const Icon: FC<TIconProps> = ({ name, size = "md", width, height, ...props }) => {
   const currentSize = EnumSizes[size as Sizes] ?? size;
 
-  const getImgSrc = (name: string) => {
+  const getImgSrc = (iconName: string) => {
+    if (!iconName) return "/assets/icons/default-icon.svg";
+
     const basePath = "/assets/icons/";
 
-    const iconValue = Object.hasOwnProperty.call(ICON_NAMES, name)
-      ? ICON_NAMES[name as keyof typeof ICON_NAMES]
-      : name;
+    const iconValue = Object.hasOwnProperty.call(ICON_NAMES, iconName)
+      ? ICON_NAMES[iconName as keyof typeof ICON_NAMES]
+      : iconName;
 
     // Special case for MORPHO numbered icons (MORPHO-1, MORPHO-2, etc.)
-    if (iconValue.match(/^MORPHO-[1-5]$/)) {
+    if (iconValue && typeof iconValue === "string" && iconValue.match(/^MORPHO-[1-5]$/)) {
       const morphoNumber = iconValue.split("-")[1];
       const extension = ["1", "4", "5"].includes(morphoNumber) ? "svg" : "png";
       return `${basePath}${iconValue}-icon.${extension}`;
@@ -31,15 +33,16 @@ const Icon: FC<TIconProps> = ({ name, size = "md", width, height, ...props }) =>
       return `${basePath}${iconValue}-icon.png`;
     }
 
-    return `${basePath}${iconValue}-icon.svg`;
+    return `${basePath}${iconValue || "default"}-icon.svg`;
   };
 
-  const isRoundIcon = [ICON_NAMES.SILO, ICON_NAMES.DOLOMITE, ICON_NAMES.LODESTAR].includes(name);
+  const isRoundIcon =
+    name && [ICON_NAMES.SILO, ICON_NAMES.DOLOMITE, ICON_NAMES.LODESTAR].includes(name);
 
   return (
     <img
-      src={getImgSrc(name)}
-      alt={name}
+      src={getImgSrc(name || "")}
+      alt={name || "icon"}
       width={width || currentSize}
       height={height || currentSize}
       {...props}
