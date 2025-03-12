@@ -135,6 +135,8 @@ const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTab
                     <Text textStyle="h2" fontWeight={500} color="white" textTransform="capitalize">
                       {getTitle(pool.token)}
                     </Text>
+
+                    {pool.token === "FRAX" && <ArbIncentive size="small" />}
                   </Flex>
                 </Flex>
               </Th>
@@ -161,6 +163,12 @@ const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTab
                   <Text textStyle="textMono16" color="white">
                     {formatNumber(pool.avgApr)}%
                   </Text>
+
+                  {pool.token === "FRAX" && (
+                    <Text textStyle="textMono16" color="green.100">
+                      +20% ARB
+                    </Text>
+                  )}
                 </Flex>
               </Th>
               <Th p="24px 12px">

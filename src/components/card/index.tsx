@@ -14,6 +14,7 @@ import { IRowCard, RowCardProccessType } from "../../pagesComponents/Pools/types
 import { DefaultDataType } from "../../types";
 import { TokenIcon } from "../token-icon";
 import { getIdByToken } from "@/utils/analytics";
+import ArbIncentive from "../badge/ArbIncentive";
 
 interface ICardProps {
   rowCard: IRowCard[];
@@ -75,6 +76,12 @@ export const CardPool: FC<ICardProps> = ({ rowCard, itemCard, isLoading, isBaseC
                   <TokenIcon name={itemCard?.token} />
                   <Flex flexDir="column" gap={2}>
                     <Text textStyle="h2">{getTitle()}</Text>
+
+                    {itemCard.token === "FRAX" && (
+                      <Flex gap={1} alignItems="center">
+                        <ArbIncentive size="small" />
+                      </Flex>
+                    )}
                   </Flex>
                 </Flex>
                 {elem.proccess && elem.proccess({ item: itemCard })}

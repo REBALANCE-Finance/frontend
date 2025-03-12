@@ -12,6 +12,7 @@ import { WalletProfile } from "../features/WalletProfile";
 import { AppNav } from "./AppNav";
 import MaintenanceBlock from "@/components/maintenance-block";
 import ConnectSocials from "@/features/ConnectWallet/ConnectSocials";
+import RewardsButton from "@/components/button/RewardsButton";
 
 export const AppHeader = () => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
@@ -51,6 +52,7 @@ export const AppHeader = () => {
         <Flex gap={isMobile ? "4px" : "12px"} alignItems="center">
           {!!address && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
+          {isDesktop && <RewardsButton />}
           {!!address ? <WalletProfile className="step-1" /> : <ConnectWallet className="step-1" />}
           {!address && <ConnectSocials />}
           {media && <AppNav />}
