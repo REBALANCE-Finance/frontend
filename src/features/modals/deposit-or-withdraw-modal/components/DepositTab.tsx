@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useAccount, useBalance, useReadContract } from "wagmi";
 
 import { FormInput } from "../../../../components/forms/form-input";
@@ -378,86 +378,89 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
         </HStack>
 
         {isArbitrumChain && (
-          <Flex gap={2} alignItems="center">
-            <Icon name={ICON_NAMES.help} size="sm" />
-            <Flex textStyle="text14" gap={1}>
-              <Text color="black.5">Don't have {pool.token}? Use</Text>
-              <Link
-                href={ROUTE_PATHS.swapPage(
-                  ARB_TOKEN_ADDRESS,
-                  pool.token === "FRAX" ? FRAX_TOKEN_ADDRESS : pool.tokenAddress
-                )}
-                target="_blank"
-                color="#4cfd95"
-                textDecor="underline"
-              >
-                our zero-fee swap
-              </Link>
-            </Flex>
-          </Flex>
-        )}
-
-        <Divider borderColor="black.90" />
-
-        {/* <FormControl display="flex" alignItems="center" justifyContent="space-between">
-          <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
-            <Flex gap="8px" alignItems="center">
-              <FormLabel
-                mb="0"
-                borderBottom="1px dashed #fff"
-                onClick={() => setIsOpenTooltip(prev => !prev)}
-              >
-                Freeze ✨
-              </FormLabel>
-              {pool.token === "FRAX" && (
-                <Flex
-                  justify="center"
-                  alignItems="center"
-                  gap="4px"
-                  padding="4px 12px"
-                  borderRadius="100px"
-                  bg="greenAlpha.100"
-                  pointerEvents="none"
-                  userSelect="none"
+          <Fragment>
+            <Flex gap={2} alignItems="center">
+              <Icon name={ICON_NAMES.help} size="sm" />
+              <Flex textStyle="text14" gap={1}>
+                <Text color="black.5">Don't have {pool.token}? Use</Text>
+                <Link
+                  href={ROUTE_PATHS.swapPage(
+                    ARB_TOKEN_ADDRESS,
+                    pool.token === "FRAX" ? FRAX_TOKEN_ADDRESS : pool.tokenAddress
+                  )}
+                  target="_blank"
+                  color="#4cfd95"
+                  textDecor="underline"
                 >
-                  <Box bg="black.100" p="4px" borderRadius="8px">
-                    <Image src="/assets/logo/logo-short.svg" h="12px" w="12px" alt="logo" />
-                  </Box>
-                  <Text textStyle="text14" color="black.100" fontWeight={700}>
-                    x2 points
+                  our zero-fee swap
+                </Link>
+              </Flex>
+            </Flex>
+
+            <Divider borderColor="black.90" />
+
+            <FormControl display="flex" alignItems="center" justifyContent="space-between">
+              {/* @ts-ignore */}
+              <Tooltip isOpen={isOpenTooltip} label="Points earned on Rebalance" ref={tooltipRef}>
+                <Flex gap="8px" alignItems="center">
+                  <FormLabel
+                    mb="0"
+                    borderBottom="1px dashed #fff"
+                    onClick={() => setIsOpenTooltip(prev => !prev)}
+                  >
+                    Freeze ✨
+                  </FormLabel>
+                  {pool.token === "FRAX" && (
+                    <Flex
+                      justify="center"
+                      alignItems="center"
+                      gap="4px"
+                      padding="4px 12px"
+                      borderRadius="100px"
+                      bg="greenAlpha.100"
+                      pointerEvents="none"
+                      userSelect="none"
+                    >
+                      <Box bg="black.100" p="4px" borderRadius="8px">
+                        <Image src="/assets/logo/logo-short.svg" h="12px" w="12px" alt="logo" />
+                      </Box>
+                      <Text textStyle="text14" color="black.100" fontWeight={700}>
+                        x2 points
+                      </Text>
+                    </Flex>
+                  )}
+                </Flex>
+              </Tooltip>
+              <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
+            </FormControl>
+
+            {formik.values.freeze && (
+              <>
+                <Flex justify="space-between" gap={4} alignItems="center">
+                  <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
+                    Choose freeze period
+                  </Text>
+                  <DataSwitcher
+                    data={FREEZE_DATES}
+                    value={formik.values.freezePeriod}
+                    onChange={value => formik.setFieldValue("freezePeriod", value)}
+                    isDisabled={!formik.values.freeze}
+                  />
+                </Flex>
+                <Flex justify="space-between" gap={4} alignItems="center">
+                  <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
+                    Projected point earnings
+                  </Text>
+                  <Text color={!formik.values.freeze ? "darkgray" : "greenAlpha.100"}>
+                    {getPointsString(pointsQty)}
                   </Text>
                 </Flex>
-              )}
-            </Flex>
-          </Tooltip>
-          <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
-        </FormControl> */}
+              </>
+            )}
 
-        {/* {formik.values.freeze && (
-          <>
-            <Flex justify="space-between" gap={4} alignItems="center">
-              <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
-                Choose freeze period
-              </Text>
-              <DataSwitcher
-                data={FREEZE_DATES}
-                value={formik.values.freezePeriod}
-                onChange={value => formik.setFieldValue("freezePeriod", value)}
-                isDisabled={!formik.values.freeze}
-              />
-            </Flex>
-            <Flex justify="space-between" gap={4} alignItems="center">
-              <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
-                Projected point earnings
-              </Text>
-              <Text color={!formik.values.freeze ? "darkgray" : "greenAlpha.100"}>
-                {getPointsString(pointsQty)}
-              </Text>
-            </Flex>
-          </>
+            <Divider borderColor="black.90" />
+          </Fragment>
         )}
-
-        <Divider borderColor="black.90" /> */}
 
         <HStack justify="space-between">
           <Text color="black.0">30D average APY</Text>

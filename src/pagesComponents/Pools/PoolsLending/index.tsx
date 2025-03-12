@@ -234,6 +234,12 @@ export const PoolsLending = observer(
                             formatNeutralPercent(item.avgApr)
                           )}
                         </Text>
+
+                        {item.token === "FRAX" && (
+                          <Text textStyle="textMono16" ml={2} color="green.100">
+                            +20% ARB
+                          </Text>
+                        )}
                       </Box>
                     </Tooltip>
                   </HStack>
