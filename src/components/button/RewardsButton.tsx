@@ -67,7 +67,7 @@ const RewardsButton = () => {
         minH="40px"
       >
         <Text textStyle="text14" color="black.5">
-          No ARB to claim
+          No $RBLN to claim
         </Text>
       </Flex>
     );
@@ -84,9 +84,10 @@ const RewardsButton = () => {
       w="max-content"
       isLoading={isClaiming}
       mr={6}
-      onClick={onClaimRewards}
+      disabled
+      // onClick={onClaimRewards}
     >
-      Claim {reward.claimable} ARB
+      Claim {reward.claimable} $RBLN
     </Button>
   );
 };

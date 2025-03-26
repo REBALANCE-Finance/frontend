@@ -104,16 +104,25 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
 
   const debouncedDeposit = useDebounce(formik.values.deposit, 500);
 
+  const freezePeriodNumber = useMemo(() => {
+    switch (formik.values.freezePeriod) {
+      case "2y":
+        return 730;
+      case "3y":
+        return 1095;
+      default:
+        return 365;
+    }
+  }, [formik.values.freezePeriod]);
+
   useOutsideClick({
     // @ts-ignore
     ref: tooltipRef,
     handler: () => setIsOpenTooltip(false)
   });
 
-  const getSecondsFromFreezeDate = (freezeDate: string) => {
-    const freezePeriod = +freezeDate.slice(0, -1);
-
-    return freezePeriod * 24 * 60 * 60;
+  const getSecondsFromFreezeDate = (freezeDate: number) => {
+    return freezeDate * 24 * 60 * 60;
   };
 
   const onDeposit = () => {
@@ -130,7 +139,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
       lockTokens({
         tokenAddress: pool.rebalancerAddress,
         amount: parseBigNumber(sharesPreview, pool.decimals),
-        durationInSeconds: BigInt(getSecondsFromFreezeDate(formik.values.freezePeriod))
+        durationInSeconds: BigInt(getSecondsFromFreezeDate(freezePeriodNumber))
       });
     }
   };
@@ -204,7 +213,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
         const points = await getPredictedPoints(
           pool.token,
           +debouncedDeposit,
-          +formik.values.freezePeriod.slice(0, -1),
+          freezePeriodNumber,
           activeChain
         );
         setPointsQty(points);
@@ -254,7 +263,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
   };
 
   const getPointsString = (points: number) => {
-    return `+ ${formatNumber(points)} points`;
+    return `+ ${formatNumber(points)} $RBLN`;
   };
 
   const getActiveStepIndex = () => {
@@ -410,25 +419,6 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
                   >
                     Freeze ✨
                   </FormLabel>
-                  {pool.token === "FRAX" && (
-                    <Flex
-                      justify="center"
-                      alignItems="center"
-                      gap="4px"
-                      padding="4px 12px"
-                      borderRadius="100px"
-                      bg="greenAlpha.100"
-                      pointerEvents="none"
-                      userSelect="none"
-                    >
-                      <Box bg="black.100" p="4px" borderRadius="8px">
-                        <Image src="/assets/logo/logo-short.svg" h="12px" w="12px" alt="logo" />
-                      </Box>
-                      <Text textStyle="text14" color="black.100" fontWeight={700}>
-                        x2 points
-                      </Text>
-                    </Flex>
-                  )}
                 </Flex>
               </Tooltip>
               <Switch id="freeze" isChecked={formik.values.freeze} onChange={formik.handleChange} />
@@ -449,7 +439,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
                 </Flex>
                 <Flex justify="space-between" gap={4} alignItems="center">
                   <Text color={!formik.values.freeze ? "darkgray" : "black.0"}>
-                    Projected point earnings
+                    Projected $RBLN earnings
                   </Text>
                   <Text color={!formik.values.freeze ? "darkgray" : "greenAlpha.100"}>
                     {getPointsString(pointsQty)}
