@@ -9,9 +9,7 @@ export const getPredictedPoints = async (
   network: ICHAIN
 ) => {
   try {
-    const response = await fetch(
-      `${endpoint}lending/calculate-points/${token}/${tokenAmount}/${daysOfLock}?network=${network}`
-    );
+    const response = await fetch(`${endpoint}lending/calculate-rbln/${token}/${tokenAmount}`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -27,7 +25,7 @@ export const getPredictedPoints = async (
 
 export const getEarnedPoints = async (address: string) => {
   try {
-    const response = await fetch(`${endpoint}lending/user-points/${address}`);
+    const response = await fetch(`${endpoint}lending/user-rbln/${address}`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -100,7 +98,7 @@ export const getRewards = async (address: string) => {
 
 export const getLocks = async (address: string, tokenName?: string) => {
   try {
-    const response = await fetch(`${endpoint}lending/user-locks/${address}`);
+    const response = await fetch(`${endpoint}lending/user-locks-perm/${address}`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

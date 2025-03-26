@@ -10,4 +10,4 @@ export const DATESEarned = [
   { name: "6m", value: 180, interval: 7, intervals: 26, isDisabled: true }
 ];
 
-export const FREEZE_DATES = ["30d", "60d", "90d"];
+export const FREEZE_DATES = ["1y"];
