@@ -3,15 +3,12 @@ import { useAccount, useReadContract, useWriteContract, useWaitForTransactionRec
 import { ABI_REBALANCE } from "../abi/rebalance";
 import INTEREST_LOCKER_ABI from "../abi/InterestLocker.json";
 import {
-  ARB_CONFIRMATIONS_COUNT,
-  BSC_CONFIRMATIONS_COUNT,
   LOCAL_STORAGE_KEYS,
   LOCK_TOKENS_CONTRACT_ADDRESS
 } from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
-import { arbitrum } from "viem/chains";
 import { getChainNameById, getConfirmationsCount } from "@/utils";
 
 export const useLock = (
@@ -74,12 +71,10 @@ export const useLock = (
 
   const lockTokens = async ({
     tokenAddress,
-    amount,
-    durationInSeconds
+    amount
   }: {
     tokenAddress: `0x${string}`;
     amount: bigint;
-    durationInSeconds: bigint;
   }) => {
     try {
       setLoading(true);
@@ -88,7 +83,7 @@ export const useLock = (
         address: LOCK_TOKENS_CONTRACT_ADDRESS,
         abi: INTEREST_LOCKER_ABI,
         functionName: "lockTokens",
-        args: [tokenAddress, amount, durationInSeconds]
+        args: [tokenAddress, amount]
       });
 
       setTxHash(tx);

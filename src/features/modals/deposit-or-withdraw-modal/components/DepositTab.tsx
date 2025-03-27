@@ -138,8 +138,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
     if (address) {
       lockTokens({
         tokenAddress: pool.rebalancerAddress,
-        amount: parseBigNumber(sharesPreview, pool.decimals),
-        durationInSeconds: BigInt(getSecondsFromFreezeDate(freezePeriodNumber))
+        amount: parseBigNumber(sharesPreview, pool.decimals)
       });
     }
   };
