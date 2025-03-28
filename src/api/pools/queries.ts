@@ -8,7 +8,9 @@ export const getPools = async (
   network: ICHAIN
 ): Promise<IPoolData[]> => {
   try {
-    const response = await fetch(`${endpoint}${type}?network=${network}`, { cache: "no-store" });
+    const response = await fetch(`${endpoint}${type}?network=${network}&old=1`, {
+      cache: "no-store"
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
