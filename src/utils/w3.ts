@@ -38,7 +38,7 @@ export const wagmiConfig = createConfig({
   syncConnectedChain: true,
   transports: {
     [arbitrum.id]: http(),
-    [bsc.id]: http(),
+    [bsc.id]: http("https://bsc-pokt.nodies.app"),
     [base.id]: http()
   }
 });
