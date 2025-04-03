@@ -1,8 +1,4 @@
-import {
-  ARB_CONFIRMATIONS_COUNT,
-  BSC_CONFIRMATIONS_COUNT,
-  LOCK_TOKENS_CONTRACT_ADDRESS
-} from "@/consts";
+import { ARB_CONFIRMATIONS_COUNT, BSC_CONFIRMATIONS_COUNT } from "@/consts";
 import { Button, useEditable } from "@chakra-ui/react";
 import {
   useAccount,
@@ -15,7 +11,7 @@ import { useEffect } from "react";
 import { useStore } from "@/hooks/useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import { arbitrum } from "viem/chains";
-import { getChainNameById, getConfirmationsCount } from "@/utils";
+import { getChainNameById, getConfirmationsCount, getLockerAddressByChain } from "@/utils";
 
 type UnfreezeButtonProps = {
   lockId: number;
@@ -49,7 +45,7 @@ const UnfreezeButton = ({
     isSuccess: isSimulated,
     error: simulatingError
   } = useSimulateContract({
-    address: LOCK_TOKENS_CONTRACT_ADDRESS,
+    address: getLockerAddressByChain(activeChain),
     abi: INTEREST_LOCKER_ABI,
     functionName: "unlockTokens",
     args: [lockId]

@@ -2,14 +2,11 @@ import { useState, useEffect } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ABI_REBALANCE } from "../abi/rebalance";
 import INTEREST_LOCKER_ABI from "../abi/InterestLocker.json";
-import {
-  LOCAL_STORAGE_KEYS,
-  LOCK_TOKENS_CONTRACT_ADDRESS
-} from "@/consts";
+import { LOCAL_STORAGE_KEYS } from "@/consts";
 import { useStore } from "./useStoreContext";
 import { ModalContextEnum } from "@/store/modal/types";
 import localStore from "@/utils/localStore";
-import { getChainNameById, getConfirmationsCount } from "@/utils";
+import { getChainNameById, getConfirmationsCount, getLockerAddressByChain } from "@/utils";
 
 export const useLock = (
   poolAddress: `0x${string}`,
@@ -30,7 +27,7 @@ export const useLock = (
     address: poolAddress,
     abi: ABI_REBALANCE,
     functionName: "allowance",
-    args: [address ?? "0x", LOCK_TOKENS_CONTRACT_ADDRESS],
+    args: [address ?? "0x", getLockerAddressByChain(activeChain)],
     query: {
       refetchInterval: 3000
     }
@@ -80,7 +77,7 @@ export const useLock = (
       setLoading(true);
 
       const tx = await writeContractAsync({
-        address: LOCK_TOKENS_CONTRACT_ADDRESS,
+        address: getLockerAddressByChain(activeChain),
         abi: INTEREST_LOCKER_ABI,
         functionName: "lockTokens",
         args: [tokenAddress, amount]
@@ -101,7 +98,7 @@ export const useLock = (
         address: poolAddress,
         abi: ABI_REBALANCE,
         functionName: "approve",
-        args: [LOCK_TOKENS_CONTRACT_ADDRESS, value]
+        args: [getLockerAddressByChain(activeChain), value]
       }).then(() => {
         setLoading(false);
         setConfirmedApprove(true);

@@ -7,7 +7,9 @@ import {
   BIG_1E6,
   BIG_1E8,
   BIG_1E9,
-  BSC_CONFIRMATIONS_COUNT
+  BSC_CONFIRMATIONS_COUNT,
+  LOCK_TOKENS_CONTRACT_ADDRESS_ARB,
+  LOCK_TOKENS_CONTRACT_ADDRESS_BASE
 } from "@/consts";
 import { ICHAIN } from "@/types";
 import { base, bsc } from "viem/chains";
@@ -105,7 +107,7 @@ export const toDollarFormat = (amount: number) =>
   }).format(amount);
 
 export const transformNumberThousands = (num: number): string =>
-    num >= 1000 ? `${Math.floor(num / 1000)}k` : num.toString();
+  num >= 1000 ? `${Math.floor(num / 1000)}k` : num.toString();
 
 export const getConfirmationsCount = (chain: ICHAIN) => {
   switch (chain) {
@@ -126,5 +128,14 @@ export const getChainNameById = (chainId: number): ICHAIN => {
       return "Base";
     default:
       return "Arbitrum";
+  }
+};
+
+export const getLockerAddressByChain = (chain: ICHAIN) => {
+  switch (chain) {
+    case "Base":
+      return LOCK_TOKENS_CONTRACT_ADDRESS_BASE;
+    default:
+      return LOCK_TOKENS_CONTRACT_ADDRESS_ARB;
   }
 };
