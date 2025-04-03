@@ -36,15 +36,14 @@ import {
   FRAX_TOKEN_ADDRESS,
   ICON_NAMES,
   INSUFFICIENT_BALANCE_ERROR,
-  LOCK_TOKENS_CONTRACT_ADDRESS,
   ROUTE_PATHS
 } from "@/consts";
 import Icon from "@/components/icon";
 import { useLock } from "@/hooks/useLock";
 import { ABI_REBALANCE } from "@/abi/rebalance";
-import { formatSharesNumber } from "@/utils";
+import { formatSharesNumber, getLockerAddressByChain } from "@/utils";
 import { useAnalyticsEventTracker } from "@/hooks/useAnalyticsEventTracker";
-import { arbitrum } from "viem/chains";
+import { arbitrum, base } from "viem/chains";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/hooks/useStoreContext";
 
@@ -73,6 +72,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
   // const isMagicActive = connector?.id === "magic";
 
   const isArbitrumChain = chainId === arbitrum.id;
+  const isBaseChain = chainId === base.id;
 
   const depositSchema = Yup.object().shape({
     deposit: Yup.string().test("min-amount", `Amount must be at least 1$`, value => {
@@ -341,7 +341,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
       return (
         <ApproveBtn
           tokenAddress={pool.rebalancerAddress}
-          poolAddress={LOCK_TOKENS_CONTRACT_ADDRESS}
+          poolAddress={getLockerAddressByChain(activeChain)}
           value={parseBigNumber(sharesPreview, pool.decimals)}
           setConfirmedApprove={setIsConfirmedLockApprove}
         />
@@ -385,7 +385,7 @@ export const DepositTab: FC<IDepositTabProps> = observer(({ pool, onClose }) => 
           </Flex>
         </HStack>
 
-        {isArbitrumChain && (
+        {(isArbitrumChain || isBaseChain) && (
           <Fragment>
             <Flex gap={2} alignItems="center">
               <Icon name={ICON_NAMES.help} size="sm" />
