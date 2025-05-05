@@ -41,39 +41,6 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     };
   }, [fetchPools, startPolling, stopPolling, activeChain]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsChartLoading(true);
-        let fetchedChartData;
-        if (address) {
-          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(activeChain, address);
-        } else {
-          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(activeChain);
-        }
-
-        setChartData(fetchedChartData);
-        setIsChartLoading(false);
-      } catch (err) {
-        if (err instanceof Error) {
-          console.error("Ошибка при загрузке данных:", err);
-          setError(err.message);
-        } else {
-          console.error("Неизвестная ошибка:", err);
-          setError("Произошла неизвестная ошибка");
-        }
-        setIsChartLoading(false);
-      }
-    };
-
-    const timer = setTimeout(() => {
-      fetchData();
-    }, 300);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [params.poolAddress, address, activeChain]);
 
   useEffect(() => {
     if (!isDesktop) {

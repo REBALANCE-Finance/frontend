@@ -1,4 +1,4 @@
-import { Flex, Image, Link, useMediaQuery } from "@chakra-ui/react";
+import { Box, Flex, Image, Link, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 
 import LogoDesc from "/public/assets/logo/logo-long.svg";
@@ -21,12 +21,7 @@ export const AppFooter = () => {
       mt={!media ? "40px" : "24px"}
       gap={{ base: "24px", md: "0" }}
     >
-      <Image
-        src={media ? LogoDesc.src : LogoMob.src}
-        w={{ base: "auto", md: "30px" }}
-        h="30px"
-        order={{ base: 2, md: 0 }}
-      />
+      <Box h="30px" w={{ base: "126px", lg: "30px" }} />
 
       <Flex gap={{ base: "24px", md: "40px" }} order={{ base: 0, md: 1 }}>
         {FooterLink.map(link => (

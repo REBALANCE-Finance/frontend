@@ -166,9 +166,11 @@ const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTab
               <Th p="24px 12px">
                 <Text
                   textStyle="textMono16"
-                  color={pool.avgApr > 0 ? "greenAlpha.100" : "redAlpha.100"}
+                  color={
+                    pool.avgApr > 0 ? "greenAlpha.100" : pool.avgApr < 0 ? "redAlpha.100" : "white"
+                  }
                 >
-                  {pool.avgApr > 0 ? "+" : "-"}
+                  {pool.avgApr > 0 ? "+" : pool.avgApr < 0 ? "-" : ""}
                   {formatNumber(pool.apr)}%
                 </Text>
               </Th>

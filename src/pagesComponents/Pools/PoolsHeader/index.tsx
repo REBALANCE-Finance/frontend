@@ -76,41 +76,6 @@ export const PoolsHeader = observer(({ isTable, onChangeView }: IPoolsHeaderProp
         divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}
       />
       <Flex gap="20px" align="center">
-        <HStack
-          fontSize="sm"
-          color="rgba(92, 100, 112, 1)"
-          divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}
-        >
-          {!media && (
-            <HStack
-              fontSize="sm"
-              color="rgba(92, 100, 112, 1)"
-              divider={<StackDivider borderColor="rgba(92, 100, 112, 1)" />}
-            >
-              <Text mr={2} color="darkGray">
-                Running since 19 Jan 2024
-              </Text>
-              <Text color="darkGray">Non-upgradable, contracts</Text>
-            </HStack>
-          )}
-          {media && <Divider orientation="vertical" />}
-          <Link
-            as={NextLink}
-            display={"flex"}
-            href="/RebalanceContractsAudit.pdf"
-            rel="noreferrer"
-            target="_blank"
-            alignItems="center"
-            gap="8px"
-            color="darkGray"
-          >
-            Audited
-            {!media && <Icon name={ICON_NAMES.link} size="sm" />}
-          </Link>
-        </HStack>
-
-        {/* <Menu /> */}
-
         {isDesktop && (
           <IconButton
             aria-label="switch"

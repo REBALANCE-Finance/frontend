@@ -45,7 +45,6 @@ export const PoolLayout = ({
         order={{ base: 3 }}
         mt={isLoadingPoints ? 4 : 0}
       >
-        <RebalancePerformance pools={pools} chartData={chartData} loading={loading} />
         <Flex direction="column" gap="24px">
           <PoolsHeader isTable={isTable} onChangeView={onChangeView} />
           {children}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Link, Image, useMediaQuery, Skeleton } from "@chakra-ui/react";
+import { Flex, useMediaQuery, Skeleton, Box } from "@chakra-ui/react";
 import React, { useState } from "react";
 import NextLink from "next/link";
 import { useAccount } from "wagmi";
@@ -37,12 +37,7 @@ export const AppHeader = () => {
         justifyContent="space-between"
         w="100%"
       >
-        <Link as={NextLink} href={ROUTE_PATHS.lending}>
-          <Image
-            src={media ? LogoMob.src : LogoDesc.src}
-            w={{ base: "30px", lg: media ? "30px" : "150px" }}
-          />
-        </Link>
+        <Box h={{ base: "28px", lg: "36px" }} w={{ base: "30px", lg: media ? "30px" : "150px" }} />
 
         {!media && <AppNav />}
 
