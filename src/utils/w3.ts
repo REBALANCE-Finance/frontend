@@ -1,5 +1,5 @@
 "use client";
-import { connectorsForWallets, getDefaultWallets } from "@rainbow-me/rainbowkit";
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
   walletConnectWallet,
   metaMaskWallet,
@@ -7,7 +7,7 @@ import {
   coinbaseWallet
 } from "@rainbow-me/rainbowkit/wallets";
 import { createConfig, http } from "@wagmi/core";
-import { arbitrum, bsc, Chain, base } from "wagmi/chains";
+import { arbitrum, Chain, base } from "wagmi/chains";
 import { magicWallet } from "./magicConnector";
 
 const createConnectors = (chain: Chain) => {
@@ -32,13 +32,12 @@ const createConnectors = (chain: Chain) => {
 };
 
 export const wagmiConfig = createConfig({
-  chains: [arbitrum, bsc, base],
+  chains: [arbitrum, base],
   connectors: createConnectors(arbitrum),
   ssr: true,
   syncConnectedChain: true,
   transports: {
     [arbitrum.id]: http(),
-    [bsc.id]: http("https://bsc-pokt.nodies.app"),
     [base.id]: http()
   }
 });
