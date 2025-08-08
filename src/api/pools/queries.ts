@@ -1,7 +1,9 @@
 import { ICHAIN } from "@/types";
 import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData, ITotalProfit } from "./types";
 
-export const endpoint = "https://rebalancerfinanceapi.net/";
+// Base API URL. Prefer NEXT_PUBLIC_API env, fallback to legacy default.
+const rawApiBase = process.env.NEXT_PUBLIC_API || "https://rebalancerfinanceapi.net/";
+export const endpoint = rawApiBase.endsWith("/") ? rawApiBase : `${rawApiBase}/`;
 
 export const getPools = async (
   type: "lending" | "borrowing",
