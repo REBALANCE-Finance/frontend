@@ -44,8 +44,23 @@ const PoolsLendingTable = observer(({ pools, isLoading, error, chartData }: Pool
   const { activeChain } = useStore("poolsStore");
   const { isDemoMode } = useStore("demoStore");
   
-  // Calculate actual number of days from chart data
-  const actualDays = chartData?.chartData?.["1y"]?.length || 365;
+  // Calculate actual number of days from chart data based on actual date range
+  const calculateActualDays = () => {
+    const yearData = chartData?.chartData?.["1y"];
+    if (!yearData || yearData.length === 0) return 365;
+    
+    // Get first and last dates from the data
+    const firstDate = new Date(yearData[0].date);
+    const lastDate = new Date(yearData[yearData.length - 1].date);
+    
+    // Calculate difference in days
+    const diffTime = Math.abs(lastDate.getTime() - firstDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays || 365;
+  };
+  
+  const actualDays = calculateActualDays();
   
   // Calculate total demo funds with actual days earnings (only for DAI)
   const calculateDemoFunds = (pool: IPoolData) => {

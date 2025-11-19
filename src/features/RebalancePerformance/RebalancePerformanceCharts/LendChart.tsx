@@ -35,7 +35,7 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
     <Area
       key={i}
       name={area.name}
-      type="linear"
+      type="monotone"
       dataKey={area.type}
       stroke={colorsArea[area.type]}
       activeDot={{ r: 3, stroke: colorsArea[area.type] }}
