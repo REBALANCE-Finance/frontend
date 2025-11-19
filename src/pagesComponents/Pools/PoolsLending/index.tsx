@@ -55,7 +55,7 @@ export const PoolsLending = observer(
     const { isDemoMode } = useStore("demoStore");
     
     // Calculate actual number of days from chart data
-    const actualDays = chartData?.year?.length || 365;
+    const actualDays = chartData?.chartData?.["1y"]?.length || 365;
     
     // Calculate total demo funds with actual days earnings
     const calculateDemoFunds = (pool: IPoolData) => {
