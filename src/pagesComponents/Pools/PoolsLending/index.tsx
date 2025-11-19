@@ -228,7 +228,7 @@ export const PoolsLending = observer(
                         {loading || error ? (
                           <Skeleton height="20px" width="50px" />
                         ) : (
-                          formatNumber(calculateDemoFunds(item)) + " $"
+                          formatNumber(calculateDemoFunds(item as IPoolData)) + " $"
                         )}
                       </Text>
                     </Tooltip>
