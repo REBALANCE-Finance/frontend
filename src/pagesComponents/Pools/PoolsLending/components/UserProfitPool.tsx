@@ -15,13 +15,17 @@ const UserProfitPool = observer(
       });
     }, [address, activeChain, token]);
 
+    // Format with 4 decimals if < $10, otherwise 2 decimals
+    const formatProfit = (value: number) => {
+      if (value === 0) return "0";
+      if (value < 0.0001) return "<0.0001";
+      if (value < 10) return value.toFixed(4);
+      return Number(formatNumber(value)).toFixed(2);
+    };
+    
     return (
       <div>
-        {userProfit > 0.01
-          ? Number(formatNumber(userProfit)).toFixed(2)
-          : userProfit > 0 && userProfit < 0.01
-          ? "<0.01"
-          : 0}{" "}
+        {formatProfit(userProfit)}{" "}
         {!noSymbol && "$"}
       </div>
     );

@@ -14,7 +14,15 @@ const UserProfit = observer(({ address }: { address: `0x${string}` }) => {
     });
   }, [address, activeChain]);
 
-  return <div>{Number(formatNumber(userProfit)).toFixed(2)} $</div>;
+  // Format with 4 decimals if < $10, otherwise 2 decimals
+  const formatProfit = (value: number) => {
+    if (value === 0) return "0";
+    if (value < 0.0001) return "<0.0001";
+    if (value < 10) return value.toFixed(4);
+    return Number(formatNumber(value)).toFixed(2);
+  };
+
+  return <div>{formatProfit(userProfit)} $</div>;
 });
 
 export default UserProfit;
