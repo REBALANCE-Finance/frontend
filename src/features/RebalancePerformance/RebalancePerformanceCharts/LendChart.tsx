@@ -1,7 +1,7 @@
 "use client";
 import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
 import React, { useMemo } from "react";
-import { Area } from "recharts";
+import { Area, Bar } from "recharts";
 
 import { AreaChart } from "../../../components/charts/AreaChart";
 import { DateSwitcher } from "../../../components/data-switcher";
@@ -44,15 +44,13 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
 
   if (areas.length !== 1) {
     arr.push(
-      <Area
+      <Bar
         key="userEarning"
         name={connectedAreaLines[1].name}
-        type="linear"
         dataKey="userEarning"
-        stroke="#8884d8"
-        fillOpacity={1}
+        fill={colorsArea.borrowing}
+        fillOpacity={0.5}
         yAxisId={1}
-        fill={`url(#color-${ROUTES_TYPE.borrowing})`}
       />
     );
   }

@@ -1,9 +1,10 @@
 "use client";
 
-import { Flex, Link, Image, useMediaQuery, Skeleton } from "@chakra-ui/react";
+import { Flex, Link, Image, useMediaQuery, Skeleton, Switch, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import NextLink from "next/link";
 import { useAccount } from "wagmi";
+import { observer } from "mobx-react-lite";
 import LogoDesc from "/public/assets/logo/logo-long.svg";
 import LogoMob from "/public/assets/logo/logo-short.svg";
 import { MEDIA_QUERY_MAX, MOCKED_ADDRESS, ROUTE_PATHS } from "../consts";
@@ -11,13 +12,15 @@ import { ConnectWallet } from "../features/ConnectWallet";
 import { WalletProfile } from "../features/WalletProfile";
 import { AppNav } from "./AppNav";
 import MaintenanceBlock from "@/components/maintenance-block";
+import { useStore } from "@/hooks/useStoreContext";
 
-export const AppHeader = () => {
+export const AppHeader = observer(() => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { isConnected, address } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const isUnderMaintenance = process.env.NEXT_PUBLIC_IS_UNDER_MAINTENANCE === "true";
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
+  const { isDemoMode, toggleDemoMode } = useStore("demoStore");
 
   return (
     <Flex
@@ -47,6 +50,19 @@ export const AppHeader = () => {
         {!media && <AppNav />}
 
         <Flex gap="12px" alignItems="center">
+          {!media && (
+            <Flex alignItems="center" gap="8px" mr="12px">
+              <Text fontSize="sm" color="whiteAlpha.70">
+                Demo
+              </Text>
+              <Switch
+                size="sm"
+                colorScheme="green"
+                isChecked={isDemoMode}
+                onChange={toggleDemoMode}
+              />
+            </Flex>
+          )}
           {!!address && isDesktop && isLoading && <Skeleton height="24px" width="60px" />}
           {/* {isConnected && <AppNotification />} */}
           {!!address ? <WalletProfile className="step-1" /> : <ConnectWallet className="step-1" />}
@@ -55,4 +71,4 @@ export const AppHeader = () => {
       </Flex>
     </Flex>
   );
-};
+});

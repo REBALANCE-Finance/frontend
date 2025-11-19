@@ -1,5 +1,14 @@
 import { ICHAIN } from "@/types";
-import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData, ITotalProfit } from "./types";
+import { IIntervalResponse, ILendChartData, IPoolData, IPoolsData, ITotalProfit, IAreaChartData } from "./types";
+
+type ChartData = {
+  chartData: ILendChartData[];
+  poolChart: any[];
+  rebalanceAvgApr: number;
+  aaveAvgApr: number;
+};
+
+type PreparedChartData = IAreaChartData;
 
 // Base API URL. Prefer NEXT_PUBLIC_API env, fallback to legacy default.
 const rawApiBase = process.env.NEXT_PUBLIC_API || "https://rebalancerfinanceapi.net/";
@@ -144,15 +153,8 @@ export const getChartData = async (
       poolChart.push(chartPoint);
     }
 
-    const validRebalanceValues = poolChart.filter(el => el.lending !== null);
-    const validAaveValues = poolChart.filter(el => el.borrowing !== null);
-    
-    const rebalanceAvgApr = validRebalanceValues.length > 0
-      ? validRebalanceValues.reduce((acc, el) => acc + el.lending, 0) / validRebalanceValues.length
-      : 0;
-    const aaveAvgApr = validAaveValues.length > 0
-      ? validAaveValues.reduce((acc, el) => acc + el.borrowing, 0) / validAaveValues.length
-      : 0;
+    const rebalanceAvgApr = poolChart.reduce((acc, el) => acc + el.lending, 0) / intervalsCount;
+    const aaveAvgApr = poolChart.reduce((acc, el) => acc + el.borrowing, 0) / intervalsCount;
 
     return { chartData: chartData, poolChart, rebalanceAvgApr, aaveAvgApr };
   } catch (error: any) {
@@ -233,10 +235,39 @@ const getChartDataAndEarnings = async (
   return [monthData, halfYearData, yearData, monthEarning, halfYearEarning, yearEarning];
 };
 
+const simulateEarnings = (
+  data: ILendChartData[]
+): (ILendChartData & { userEarning: number })[] => {
+  const SIMULATED_DEPOSIT = 1000000; // $1,000,000
+  let cumulativeEarnings = 0;
+  
+  return data.reverse().map((item, index) => {
+    // Calculate daily earnings based on APR
+    // APR is annual, so we divide by 365 for daily rate
+    const dailyRate = (item.lending || 0) / 100 / 365;
+    const currentBalance = SIMULATED_DEPOSIT + cumulativeEarnings;
+    const dailyEarning = currentBalance * dailyRate;
+    
+    cumulativeEarnings += dailyEarning;
+    
+    return {
+      ...item,
+      userEarning: cumulativeEarnings
+    };
+  });
+};
+
 const mapUserEarnings = (
-  data: ChartData["chartData"],
-  earnings?: IIntervalResponse[]
-): (ChartData["chartData"][0] & { userEarning?: number | null })[] => {
+  data: ILendChartData[],
+  earnings?: IIntervalResponse[],
+  isDemoMode?: boolean
+): (ILendChartData & { userEarning?: number | null })[] => {
+  // Use simulated earnings only in demo mode
+  if (isDemoMode) {
+    return simulateEarnings(data);
+  }
+  
+  // Otherwise use real earnings data
   if (!earnings) return data.reverse();
   return data.reverse().map(item => {
     // @ts-ignore
@@ -254,7 +285,8 @@ const prepareChartData = (
   yearData: ChartData,
   monthEarning?: IIntervalResponse[],
   halfYearEarning?: IIntervalResponse[],
-  yearEarning?: IIntervalResponse[]
+  yearEarning?: IIntervalResponse[],
+  isDemoMode?: boolean
 ): PreparedChartData => {
   return {
     poolChart: {
@@ -275,16 +307,17 @@ const prepareChartData = (
       }
     },
     chartData: {
-      "1m": mapUserEarnings(monthData.chartData, monthEarning),
-      "6m": mapUserEarnings(halfYearData.chartData, halfYearEarning),
-      "1y": mapUserEarnings(yearData.chartData, yearEarning)
+      "1m": mapUserEarnings(monthData.chartData, monthEarning, isDemoMode),
+      "6m": mapUserEarnings(halfYearData.chartData, halfYearEarning, isDemoMode),
+      "1y": mapUserEarnings(yearData.chartData, yearEarning, isDemoMode)
     }
   };
 };
 
 export const getAreaChartAllIntervalsWithoutToken = async (
   network: ICHAIN,
-  address?: string
+  address?: string,
+  isDemoMode?: boolean
 ): Promise<PreparedChartData> => {
   try {
     const highestAprTokenToday = await fetchHighestAprToken(1, network);
@@ -298,7 +331,8 @@ export const getAreaChartAllIntervalsWithoutToken = async (
       yearData,
       monthEarning,
       halfYearEarning,
-      yearEarning
+      yearEarning,
+      isDemoMode
     );
   } catch (error: any) {
     console.error(`Failed to fetch area chart data: ${error.message}`);
@@ -309,7 +343,8 @@ export const getAreaChartAllIntervalsWithoutToken = async (
 export const getAreaChartAllIntervals = async (
   token: string = "usdt",
   network: ICHAIN,
-  address?: string
+  address?: string,
+  isDemoMode?: boolean
 ): Promise<PreparedChartData> => {
   try {
     const [monthData, halfYearData, yearData, monthEarning, halfYearEarning, yearEarning] =
@@ -321,7 +356,8 @@ export const getAreaChartAllIntervals = async (
       yearData,
       monthEarning,
       halfYearEarning,
-      yearEarning
+      yearEarning,
+      isDemoMode
     );
   } catch (error: any) {
     console.error(`Failed to fetch area chart data: ${error.message}`);

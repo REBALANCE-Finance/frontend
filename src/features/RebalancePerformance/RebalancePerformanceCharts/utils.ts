@@ -18,7 +18,7 @@ export const connectedAreaLines = [
     type: ROUTES_TYPE.lending
   },
   {
-    name: "My earnings, $",
+    name: "Potential earnings",
     type: ROUTES_TYPE.borrowing
   }
 ];

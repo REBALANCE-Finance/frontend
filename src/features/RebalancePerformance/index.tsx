@@ -35,6 +35,7 @@ export const RebalancePerformance = observer(
     };
     const [userProfit, setUserProfit] = useState(0);
     const { activeChain } = useStore("poolsStore");
+    const { isDemoMode } = useStore("demoStore");
 
     useEffect(() => {
       if (address) {
@@ -43,6 +44,9 @@ export const RebalancePerformance = observer(
         });
       }
     }, [address, activeChain]);
+
+    // Show right axis (earnings) if user has profit or demo mode is on
+    const shouldShowRightAxis = isDemoMode || userProfit > 0;
 
     if (media) {
       return (
@@ -53,7 +57,7 @@ export const RebalancePerformance = observer(
             <PerformanceChart
               activeType={pathName}
               chartData={chartData}
-              showRightAxis={userProfit > 0}
+              showRightAxis={shouldShowRightAxis}
             />
           )}
         </Flex>
@@ -68,7 +72,7 @@ export const RebalancePerformance = observer(
           <PerformanceChart
             activeType={pathName}
             chartData={chartData}
-            showRightAxis={userProfit > 0}
+            showRightAxis={shouldShowRightAxis}
           />
         )}
       </Flex>

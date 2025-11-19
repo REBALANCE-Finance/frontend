@@ -28,6 +28,7 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     stopPolling,
     activeChain
   } = useStore("poolsStore");
+  const { isDemoMode } = useStore("demoStore");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -47,9 +48,9 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
         setIsChartLoading(true);
         let fetchedChartData;
         if (address) {
-          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(activeChain, address);
+          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(activeChain, address, isDemoMode);
         } else {
-          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(activeChain);
+          fetchedChartData = await getAreaChartAllIntervalsWithoutToken(activeChain, undefined, isDemoMode);
         }
 
         setChartData(fetchedChartData);
@@ -73,7 +74,7 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
     return () => {
       clearTimeout(timer);
     };
-  }, [params.poolAddress, address, activeChain]);
+  }, [params.poolAddress, address, activeChain, isDemoMode]);
 
   useEffect(() => {
     if (!isDesktop) {

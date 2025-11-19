@@ -2,6 +2,7 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import { getAreaChartAllIntervals, getChartData, getPools } from "../../api/pools/queries";
 import { IPoolData } from "../pools/types";
 import { ICHAIN } from "@/types";
+import { stores } from "../app.store";
 
 class PoolStore {
   activePool: IPoolData | null = null;
@@ -71,12 +72,13 @@ class PoolStore {
     }
   }
 
-  async fetchChartData(token: string, network: ICHAIN) {
+  async fetchChartData(token: string, network: ICHAIN, address?: string) {
     this.setChartLoading(true);
     this.setError(null);
 
     try {
-      const chartData = await getAreaChartAllIntervals(token, network);
+      const isDemoMode = stores.demoStore.isDemoMode;
+      const chartData = await getAreaChartAllIntervals(token, network, address, isDemoMode);
       runInAction(() => {
         this.chartData = chartData;
       });

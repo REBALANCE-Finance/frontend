@@ -1,11 +1,13 @@
 import { Flex, Skeleton, Text, TextProps } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
 
 import { useBalanceOfAsset } from "../../../../hooks/useBalanceOfAsset";
 import { formatNumber } from "../../../../utils/formatNumber";
 import { useAccount } from "wagmi";
 import { getLocks } from "@/api/points/queries";
 import { formatBigNumber } from "@/utils/formatBigNumber";
+import { useStore } from "@/hooks/useStoreContext";
 
 interface DepositInfoProps {
   contractAddress: `0x${string}`;
@@ -17,7 +19,7 @@ interface DepositInfoProps {
   TextProps?: TextProps;
 }
 
-const DepositInfo: React.FC<DepositInfoProps> = ({
+const DepositInfo: React.FC<DepositInfoProps> = observer(({
   contractAddress,
   ownerAddress,
   tokenName,
@@ -30,6 +32,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
   const { balance, isLoading } = useBalanceOfAsset(contractAddress, ownerAddress, decimals);
   const [lockedBalance, setLockedBalance] = useState(0);
   const [totalBalance, setTotalBalance] = useState(0);
+  const { isDemoMode } = useStore("demoStore");
 
   useEffect(() => {
     if (address) {
@@ -49,6 +52,9 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
     }
   }, [lockedBalance, balance]);
 
+  // Show $1M simulated deposit when demo mode is enabled
+  const displayBalance = isDemoMode ? 1000000 : totalBalance;
+
   return (
     <Flex alignItems="center" justifyContent="space-between">
       {!noTitle && (
@@ -60,11 +66,11 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
         <Skeleton height="20px" width="50px" />
       ) : (
         <Text textStyle="textMono16" {...TextProps}>
-          {formatNumber(totalBalance.toFixed(2))} {!noSymbol && tokenName}
+          {formatNumber(displayBalance.toFixed(2))} {!noSymbol && tokenName}
         </Text>
       )}
     </Flex>
   );
-};
+});
 
 export default DepositInfo;
