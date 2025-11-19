@@ -274,7 +274,7 @@ export const PoolsLending = observer(
                 </>
               );
             case RowCardProccessType.assets:
-              const isDemo = isDemoMode && !address && (item as IPoolData).token === 'USDC';
+              const isDemo = isDemoMode && !address && (item as IPoolData).token === 'DAI';
               const itemAsPool = item as IPoolData;
               
               // Calculate demo profit for a year
@@ -294,7 +294,7 @@ export const PoolsLending = observer(
               
               return (
                 <>
-                  {(!!address || (isDemoMode && itemAsPool.token === 'USDC')) ? (
+                  {(!!address || (isDemoMode && itemAsPool.token === 'DAI')) ? (
                     <>
                       <Divider borderColor="black.60" />
                       <HStack justify="space-between">

@@ -52,8 +52,8 @@ const DepositInfo: React.FC<DepositInfoProps> = observer(({
     }
   }, [lockedBalance, balance]);
 
-  // Show $1M simulated deposit when demo mode is enabled (only for USDC)
-  const displayBalance = (isDemoMode && tokenName === 'USDC') ? 1000000 : totalBalance;
+  // Show $1M simulated deposit when demo mode is enabled (only for DAI)
+  const displayBalance = (isDemoMode && tokenName === 'DAI') ? 1000000 : totalBalance;
 
   return (
     <Flex alignItems="center" justifyContent="space-between">

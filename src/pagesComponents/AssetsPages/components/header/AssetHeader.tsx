@@ -77,9 +77,9 @@ export const AssetHeader: FC<{
     return balance - SIMULATED_DEPOSIT; // Return only the earnings
   };
   
-  // Add 1M demo deposit + year earnings to total supply in demo mode (only for USDC)
-  const yearEarnings = (isDemoMode && pool?.token === 'USDC') ? calculateYearEarnings(pool?.avgApr || 0) : 0;
-  const displayFunds = (isDemoMode && pool?.token === 'USDC')
+  // Add 1M demo deposit + year earnings to total supply in demo mode (only for DAI)
+  const yearEarnings = (isDemoMode && pool?.token === 'DAI') ? calculateYearEarnings(pool?.avgApr || 0) : 0;
+  const displayFunds = (isDemoMode && pool?.token === 'DAI')
     ? (pool?.funds || 0) + 1000000 + yearEarnings 
     : pool?.funds;
 

@@ -207,11 +207,11 @@ const EarningsChart = observer(
     const { isDemoMode } = useStore("demoStore");
 
     useEffect(() => {
-      if (address || (isDemoMode && token === 'USDC')) {
+      if (address || (isDemoMode && token === 'DAI')) {
         setError(false);
         
-        if (isDemoMode && token === 'USDC') {
-          // Generate simulated earnings for demo mode (only for USDC)
+        if (isDemoMode && token === 'DAI') {
+          // Generate simulated earnings for demo mode (only for DAI)
           generateSimulatedEarnings(
             selectedDate.interval,
             selectedDate.intervals,
@@ -246,7 +246,7 @@ const EarningsChart = observer(
     }, [address, isDemoMode, token, activeChain, selectedDate]);
 
     const userTotalEarning = userEarningsData?.reduce((acc, el) => acc + el.uv, 0) || 0;
-    const isDemo = isDemoMode && !address && token === 'USDC';
+    const isDemo = isDemoMode && !address && token === 'DAI';
 
     return (
       <>
@@ -276,7 +276,7 @@ const EarningsChart = observer(
               </Flex>
               <Flex position={"relative"} w={"100%"}>
                 <ResponsiveContainer width="100%" height="100%">
-                  {(address || (isDemoMode && token === 'USDC')) && userEarningsData ? (
+                  {(address || (isDemoMode && token === 'DAI')) && userEarningsData ? (
                     <BarChart width={150} height={10} data={userEarningsData}>
                       <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}>
                         {userEarningsData?.map((entry, index) => {
@@ -305,7 +305,7 @@ const EarningsChart = observer(
                     </BarChart>
                   )}
                 </ResponsiveContainer>
-                {!address && !(isDemoMode && token === 'USDC') ? (
+                {!address && !(isDemoMode && token === 'DAI') ? (
                   <Flex
                     position="absolute"
                     inset="0"
