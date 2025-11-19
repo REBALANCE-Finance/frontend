@@ -62,8 +62,26 @@ export const AssetHeader: FC<{
 
   const chainIcon = useMemo(() => CHAIN_ICONS[getChainIdByChainName(activeChain)], [activeChain]);
   
-  // Add 1M demo deposit to total supply in demo mode
-  const displayFunds = isDemoMode ? (pool?.funds || 0) + 1000000 : pool?.funds;
+  // Calculate total earnings for a year with compound interest
+  const calculateYearEarnings = (avgApr: number) => {
+    const SIMULATED_DEPOSIT = 1000000;
+    const DAYS_IN_YEAR = 365;
+    let balance = SIMULATED_DEPOSIT;
+    
+    // Compound daily for a year
+    for (let i = 0; i < DAYS_IN_YEAR; i++) {
+      const dailyRate = avgApr / 100 / 365;
+      balance += balance * dailyRate;
+    }
+    
+    return balance - SIMULATED_DEPOSIT; // Return only the earnings
+  };
+  
+  // Add 1M demo deposit + year earnings to total supply in demo mode
+  const yearEarnings = isDemoMode ? calculateYearEarnings(pool?.avgApr || 0) : 0;
+  const displayFunds = isDemoMode 
+    ? (pool?.funds || 0) + 1000000 + yearEarnings 
+    : pool?.funds;
 
   const getTitle = () => {
     if (chainName === "Base" && pool.token === "USDC") {

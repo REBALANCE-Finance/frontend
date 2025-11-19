@@ -161,18 +161,19 @@ const generateSimulatedEarnings = async (
     const avgAPR =
       avgAPRTicksData.map((el: any) => el.value || 0).reduce((acc: number, el: number) => acc + el, 0) / intervalsCount;
     
-    let cumulativeEarnings = 0;
+    let cumulativeBalance = SIMULATED_DEPOSIT;
     const preparedUserEarnings = avgAPRTicksData
       .map((el: any) => {
         // Calculate earnings for this period based on APR
         const periodRate = (el.value || 0) / 100 / 365 * interval;
-        const currentBalance = SIMULATED_DEPOSIT + cumulativeEarnings;
-        const periodEarning = currentBalance * periodRate;
-        cumulativeEarnings += periodEarning;
+        const periodEarning = cumulativeBalance * periodRate;
+        
+        // Add to balance for compound effect
+        cumulativeBalance += periodEarning;
         
         return {
           name: el.from,
-          uv: periodEarning,
+          uv: periodEarning, // Show period earning, not cumulative
           apr: el.value
         };
       })
@@ -272,7 +273,7 @@ const EarningsChart = observer(
               </Flex>
               <Flex position={"relative"} w={"100%"}>
                 <ResponsiveContainer width="100%" height="100%">
-                  {address ? (
+                  {(address || isDemoMode) && userEarningsData ? (
                     <BarChart width={150} height={10} data={userEarningsData}>
                       <Bar barSize={6} dataKey="uv" fill="#4CFF94" minPointSize={5}>
                         {userEarningsData?.map((entry, index) => {

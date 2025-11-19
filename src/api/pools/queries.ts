@@ -239,20 +239,20 @@ const simulateEarnings = (
   data: ILendChartData[]
 ): (ILendChartData & { userEarning: number })[] => {
   const SIMULATED_DEPOSIT = 1000000; // $1,000,000
-  let cumulativeEarnings = 0;
+  let cumulativeBalance = SIMULATED_DEPOSIT;
   
   return data.reverse().map((item, index) => {
     // Calculate daily earnings based on APR
     // APR is annual, so we divide by 365 for daily rate
     const dailyRate = (item.lending || 0) / 100 / 365;
-    const currentBalance = SIMULATED_DEPOSIT + cumulativeEarnings;
-    const dailyEarning = currentBalance * dailyRate;
+    const dailyEarning = cumulativeBalance * dailyRate;
     
-    cumulativeEarnings += dailyEarning;
+    // Add to balance for compound effect on next day
+    cumulativeBalance += dailyEarning;
     
     return {
       ...item,
-      userEarning: cumulativeEarnings
+      userEarning: dailyEarning // Show daily earning, not cumulative
     };
   });
 };
