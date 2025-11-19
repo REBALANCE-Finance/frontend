@@ -246,13 +246,16 @@ const EarningsChart = observer(
     }, [address, isDemoMode, token, activeChain, selectedDate]);
 
     const userTotalEarning = userEarningsData?.reduce((acc, el) => acc + el.uv, 0) || 0;
+    const isDemo = isDemoMode && !address;
 
     return (
       <>
         {!error ? (
           <Flex flexDirection="column" width="100%">
             <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
-              <Text fontSize="lg">My Earnings</Text>
+              <Text fontSize="lg" color={isDemo ? "#8884d8" : "white"}>
+                {isDemo ? "Demo profit" : "My Earnings"}
+              </Text>
               <DateSwitcher
                 date={DATESEarned}
                 selectDate={setSelectDate}
@@ -262,13 +265,13 @@ const EarningsChart = observer(
             <Flex w="100%" bg="#17191C" borderRadius="8px" minH="319px" padding="24px">
               <Flex flexDirection="column" width="27%" justifyContent="center">
                 <Flex flexDirection="column">
-                  <Text color="#B4B4B4">Earned in 30D</Text>
-                  <Text textStyle="textMono16">{`$ ${userTotalEarning.toFixed(2)}`}</Text>
+                  <Text color={isDemo ? "#8884d8" : "#B4B4B4"}>Earned in 30D</Text>
+                  <Text textStyle="textMono16" color={isDemo ? "#8884d8" : "white"}>{`$ ${userTotalEarning.toFixed(2)}`}</Text>
                 </Flex>
                 <Divider mt="22px" mb="22px" borderColor="#0F1113" height="2px" width="82px" />
                 <Flex flexDirection="column">
-                  <Text color="#B4B4B4">Av. 30D APY</Text>
-                  <Text textStyle="textMono16">{`${avgApr.toFixed(2)} %`}</Text>
+                  <Text color={isDemo ? "#8884d8" : "#B4B4B4"}>Av. 30D APY</Text>
+                  <Text textStyle="textMono16" color={isDemo ? "#8884d8" : "white"}>{`${avgApr.toFixed(2)} %`}</Text>
                 </Flex>
               </Flex>
               <Flex position={"relative"} w={"100%"}>

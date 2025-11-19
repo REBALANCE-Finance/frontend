@@ -20,7 +20,14 @@ export const AppHeader = observer(() => {
   const [isLoading, setIsLoading] = useState(false);
   const isUnderMaintenance = process.env.NEXT_PUBLIC_IS_UNDER_MAINTENANCE === "true";
   const [isDesktop] = useMediaQuery("(min-width: 1130px)");
-  const { isDemoMode, toggleDemoMode } = useStore("demoStore");
+  const { isDemoMode, toggleDemoMode, setDemoMode } = useStore("demoStore");
+  
+  // Auto-disable demo mode when wallet connects
+  React.useEffect(() => {
+    if (address && isDemoMode) {
+      setDemoMode(false);
+    }
+  }, [address, isDemoMode, setDemoMode]);
 
   return (
     <Flex

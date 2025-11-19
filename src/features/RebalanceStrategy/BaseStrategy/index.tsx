@@ -20,17 +20,20 @@ const BaseStrategy: React.FC<any> = observer(({ pool, chartData }) => {
   
   // Show $1M simulated deposit when demo mode is enabled
   const displayBalance = isDemoMode ? 1000000 : balance;
+  const isDemo = isDemoMode && !address;
   
   return (
     <SimpleGrid columns={media ? 1 : 2} gap="24px">
       <Flex direction="column">
         <Flex direction="column" bg="#17191C" borderRadius="8px" padding="24px">
-          <Text fontSize="lg">My deposit</Text>
+          <Text fontSize="lg" color={isDemo ? "#8884d8" : "white"}>
+            {isDemo ? "Demo deposit" : "My deposit"}
+          </Text>
           <Box mt="16px" mb="24px" display="flex" flexDirection="row" alignItems="baseline">
-            <Text fontWeight="400" fontSize="24px" lineHeight="24px">
+            <Text fontWeight="400" fontSize="24px" lineHeight="24px" color={isDemo ? "#8884d8" : "white"}>
               {formatNumber(displayBalance.toFixed(2))} {pool?.token}
             </Text>
-            <Text textStyle="text14" color="#9FA2A8" ml="16px">
+            <Text textStyle="text14" color={isDemo ? "#8884d8" : "#9FA2A8"} ml="16px">
               {formatNumber(displayBalance.toFixed(2))} $
             </Text>
           </Box>
