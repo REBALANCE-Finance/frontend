@@ -49,21 +49,23 @@ const YieldPoolList = ({ pools }: { pools: string[] }) => (
 );
 
 export const PoolsLending = observer(
-  ({ pools, loading, error }: { pools: IPoolData[]; loading: boolean; error: string | null }) => {
+  ({ pools, loading, error, chartData }: { pools: IPoolData[]; loading: boolean; error: string | null; chartData?: any }) => {
     const { address } = useAccount();
     const router = useRouter();
     const { isDemoMode } = useStore("demoStore");
     
-    // Calculate total demo funds with year earnings
+    // Calculate actual number of days from chart data
+    const actualDays = chartData?.year?.length || 365;
+    
+    // Calculate total demo funds with actual days earnings
     const calculateDemoFunds = (pool: IPoolData) => {
       if (!isDemoMode) return pool.funds;
       
       const SIMULATED_DEPOSIT = 1000000;
-      const DAYS_IN_YEAR = 365;
       let balance = SIMULATED_DEPOSIT;
       
-      // Compound daily for a year
-      for (let i = 0; i < DAYS_IN_YEAR; i++) {
+      // Compound daily for actual number of days
+      for (let i = 0; i < actualDays; i++) {
         const dailyRate = pool.avgApr / 100 / 365;
         balance += balance * dailyRate;
       }
@@ -277,13 +279,12 @@ export const PoolsLending = observer(
               const isDemo = isDemoMode && !address && (item as IPoolData).token === 'DAI';
               const itemAsPool = item as IPoolData;
               
-              // Calculate demo profit for a year
+              // Calculate demo profit for actual number of days
               const calculateDemoProfit = () => {
                 const SIMULATED_DEPOSIT = 1000000;
-                const DAYS_IN_YEAR = 365;
                 let balance = SIMULATED_DEPOSIT;
                 
-                for (let i = 0; i < DAYS_IN_YEAR; i++) {
+                for (let i = 0; i < actualDays; i++) {
                   const dailyRate = itemAsPool.avgApr / 100 / 365;
                   balance += balance * dailyRate;
                 }
@@ -299,7 +300,7 @@ export const PoolsLending = observer(
                       <Divider borderColor="black.60" />
                       <HStack justify="space-between">
                         <Text color={isDemo ? "#8884d8" : "white"}>
-                          {isDemo ? "Demo profit (365d)" : "My Profit"}
+                          {isDemo ? `Demo profit (${actualDays}d)` : "My Profit"}
                         </Text>
                         <Text textStyle="textMono16" color={isDemo ? "#8884d8" : "white"}>
                           {loading || error ? (

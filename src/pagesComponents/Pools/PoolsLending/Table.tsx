@@ -34,25 +34,28 @@ interface PoolsLendingTableProps {
   pools: IPoolData[];
   isLoading: boolean;
   error?: string | null;
+  chartData?: any;
 }
 
-const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTableProps) => {
+const PoolsLendingTable = observer(({ pools, isLoading, error, chartData }: PoolsLendingTableProps) => {
   const { address } = useAccount();
   const router = useRouter();
   const [isNotDesktop] = useMediaQuery("(max-width: 1024px)");
   const { activeChain } = useStore("poolsStore");
   const { isDemoMode } = useStore("demoStore");
   
-  // Calculate total demo funds with year earnings (only for DAI)
+  // Calculate actual number of days from chart data
+  const actualDays = chartData?.year?.length || 365;
+  
+  // Calculate total demo funds with actual days earnings (only for DAI)
   const calculateDemoFunds = (pool: IPoolData) => {
     if (!isDemoMode || pool.token !== 'DAI') return pool.funds;
     
     const SIMULATED_DEPOSIT = 1000000;
-    const DAYS_IN_YEAR = 365;
     let balance = SIMULATED_DEPOSIT;
     
-    // Compound daily for a year
-    for (let i = 0; i < DAYS_IN_YEAR; i++) {
+    // Compound daily for actual number of days
+    for (let i = 0; i < actualDays; i++) {
       const dailyRate = pool.avgApr / 100 / 365;
       balance += balance * dailyRate;
     }

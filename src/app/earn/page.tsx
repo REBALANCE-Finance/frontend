@@ -105,9 +105,9 @@ const LendingPage = observer(({ params }: { params: { [key: string]: string } })
       isLoadingPoints={isLoadingPoints}
     >
       {isTableView ? (
-        <PoolsLendingTable pools={pools} isLoading={!isFetchedPools} error={poolsError?.message} />
+        <PoolsLendingTable pools={pools} isLoading={!isFetchedPools} error={poolsError?.message} chartData={chartData} />
       ) : (
-        <PoolsLending pools={pools} loading={!isFetchedPools} error={poolsError?.message || ""} />
+        <PoolsLending pools={pools} loading={!isFetchedPools} error={poolsError?.message || ""} chartData={chartData} />
       )}
     </PoolLayout>
   );
