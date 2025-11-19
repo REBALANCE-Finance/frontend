@@ -414,10 +414,10 @@ const Swap = () => {
           Powered by
         </Text>
         <Image
-          src="https://cdn.prod.website-files.com/617aa5e4225be2555942852c/6214d5c4db4ce4d976b5f1f9_logo_paraswap-handbook%20copy%201.svg"
-          width={100}
-          height={18}
-          alt="Paraswap"
+          src="/assets/logo/velora-logo.svg"
+          width={120}
+          height={30}
+          alt="Velora"
         />
       </Flex>
     </Flex>
