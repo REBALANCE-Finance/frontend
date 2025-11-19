@@ -61,9 +61,9 @@ export const RebalancePerformance = observer(
     }
 
     return (
-      <Flex w="100%">
+      <Flex w="100%" minH="400px">
         {loading ? (
-          <Skeleton height="100%" width="100%" />
+          <Skeleton height="400px" width="100%" />
         ) : (
           <PerformanceChart
             activeType={pathName}
