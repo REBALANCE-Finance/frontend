@@ -50,7 +50,7 @@ const PoolsLendingTable = observer(({ pools, isLoading, error, chartData }: Pool
     if (!yearData || yearData.length === 0) return 365;
     
     // Get all dates and sort them
-    const dates = yearData.map((d: any) => new Date(d.date).getTime()).sort((a, b) => a - b);
+    const dates = yearData.map((d: any) => new Date(d.date).getTime()).sort((a: number, b: number) => a - b);
     
     // Get first (earliest) and last (latest) dates
     const firstDate = new Date(dates[0]);
