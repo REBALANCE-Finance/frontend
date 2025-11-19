@@ -244,12 +244,14 @@ export const PoolsLending = observer(
         proccess({ item, type }) {
           switch (type) {
             case RowCardProccessType.metrics:
+              const itemAsPoolMetrics = item as IPoolData;
+              const isDemoMetrics = isDemoMode && !address && itemAsPoolMetrics.token === 'DAI';
               return (
                 <>
                   <HStack justify="space-between">
-                    <Text color="white">Funds in pool</Text>
+                    <Text color={isDemoMetrics ? "#8884d8" : "white"}>Funds in pool</Text>
                     <Tooltip label="Funds in pool" color="white">
-                      <Text textStyle="textMono16" color="white">
+                      <Text textStyle="textMono16" color={isDemoMetrics ? "#8884d8" : "white"}>
                         {loading || error ? (
                           <Skeleton height="20px" width="50px" />
                         ) : (
