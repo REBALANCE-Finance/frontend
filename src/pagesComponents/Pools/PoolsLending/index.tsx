@@ -52,6 +52,25 @@ export const PoolsLending = observer(
   ({ pools, loading, error }: { pools: IPoolData[]; loading: boolean; error: string | null }) => {
     const { address } = useAccount();
     const router = useRouter();
+    const { isDemoMode } = useStore("demoStore");
+    
+    // Calculate total demo funds with year earnings
+    const calculateDemoFunds = (pool: IPoolData) => {
+      if (!isDemoMode) return pool.funds;
+      
+      const SIMULATED_DEPOSIT = 1000000;
+      const DAYS_IN_YEAR = 365;
+      let balance = SIMULATED_DEPOSIT;
+      
+      // Compound daily for a year
+      for (let i = 0; i < DAYS_IN_YEAR; i++) {
+        const dailyRate = pool.avgApr / 100 / 365;
+        balance += balance * dailyRate;
+      }
+      
+      const yearEarnings = balance - SIMULATED_DEPOSIT;
+      return pool.funds + SIMULATED_DEPOSIT + yearEarnings;
+    };
     const poolStore = useStore("poolStore");
     const { activeChain } = useStore("poolsStore");
 
@@ -209,7 +228,7 @@ export const PoolsLending = observer(
                         {loading || error ? (
                           <Skeleton height="20px" width="50px" />
                         ) : (
-                          formatNumber(item.funds) + " $"
+                          formatNumber(calculateDemoFunds(item)) + " $"
                         )}
                       </Text>
                     </Tooltip>

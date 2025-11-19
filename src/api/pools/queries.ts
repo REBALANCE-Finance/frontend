@@ -206,9 +206,9 @@ const getChartDataAndEarnings = async (
   address?: string
 ): Promise<
   [
-    ChartData,
-    ChartData,
-    ChartData,
+    ChartData & { interval: number },
+    ChartData & { interval: number },
+    ChartData & { interval: number },
     IIntervalResponse[]?,
     IIntervalResponse[]?,
     IIntervalResponse[]?
@@ -219,6 +219,11 @@ const getChartDataAndEarnings = async (
     getChartData(7, 26, token, network),
     getChartData(7, 52, token, network)
   ]);
+  
+  // Add interval info to each dataset
+  const monthDataWithInterval = { ...monthData, interval: 1 };
+  const halfYearDataWithInterval = { ...halfYearData, interval: 7 };
+  const yearDataWithInterval = { ...yearData, interval: 7 };
 
   let monthEarning: IIntervalResponse[] | undefined;
   let halfYearEarning: IIntervalResponse[] | undefined;
@@ -232,27 +237,28 @@ const getChartDataAndEarnings = async (
     ]);
   }
 
-  return [monthData, halfYearData, yearData, monthEarning, halfYearEarning, yearEarning];
+  return [monthDataWithInterval, halfYearDataWithInterval, yearDataWithInterval, monthEarning, halfYearEarning, yearEarning];
 };
 
 const simulateEarnings = (
-  data: ILendChartData[]
+  data: ILendChartData[],
+  interval: number = 1 // Number of days in the period (1 for daily, 7 for weekly)
 ): (ILendChartData & { userEarning: number })[] => {
   const SIMULATED_DEPOSIT = 1000000; // $1,000,000
   let cumulativeBalance = SIMULATED_DEPOSIT;
   
   return data.reverse().map((item, index) => {
-    // Calculate daily earnings based on APR
-    // APR is annual, so we divide by 365 for daily rate
+    // Calculate earnings for the period based on APR
+    // APR is annual, so we divide by 365 for daily rate, then multiply by interval
     const dailyRate = (item.lending || 0) / 100 / 365;
-    const dailyEarning = cumulativeBalance * dailyRate;
+    const periodEarning = cumulativeBalance * dailyRate * interval;
     
-    // Add to balance for compound effect on next day
-    cumulativeBalance += dailyEarning;
+    // Add to balance for compound effect on next period
+    cumulativeBalance += periodEarning;
     
     return {
       ...item,
-      userEarning: dailyEarning // Show daily earning, not cumulative
+      userEarning: periodEarning // Show period earning (daily or weekly)
     };
   });
 };
@@ -260,11 +266,12 @@ const simulateEarnings = (
 const mapUserEarnings = (
   data: ILendChartData[],
   earnings?: IIntervalResponse[],
-  isDemoMode?: boolean
+  isDemoMode?: boolean,
+  interval: number = 1
 ): (ILendChartData & { userEarning?: number | null })[] => {
   // Use simulated earnings only in demo mode
   if (isDemoMode) {
-    return simulateEarnings(data);
+    return simulateEarnings(data, interval);
   }
   
   // Otherwise use real earnings data
@@ -280,9 +287,9 @@ const mapUserEarnings = (
 };
 
 const prepareChartData = (
-  monthData: ChartData,
-  halfYearData: ChartData,
-  yearData: ChartData,
+  monthData: ChartData & { interval: number },
+  halfYearData: ChartData & { interval: number },
+  yearData: ChartData & { interval: number },
   monthEarning?: IIntervalResponse[],
   halfYearEarning?: IIntervalResponse[],
   yearEarning?: IIntervalResponse[],
@@ -307,9 +314,9 @@ const prepareChartData = (
       }
     },
     chartData: {
-      "1m": mapUserEarnings(monthData.chartData, monthEarning, isDemoMode),
-      "6m": mapUserEarnings(halfYearData.chartData, halfYearEarning, isDemoMode),
-      "1y": mapUserEarnings(yearData.chartData, yearEarning, isDemoMode)
+      "1m": mapUserEarnings(monthData.chartData, monthEarning, isDemoMode, monthData.interval),
+      "6m": mapUserEarnings(halfYearData.chartData, halfYearEarning, isDemoMode, halfYearData.interval),
+      "1y": mapUserEarnings(yearData.chartData, yearEarning, isDemoMode, yearData.interval)
     }
   };
 };

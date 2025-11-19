@@ -41,6 +41,25 @@ const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTab
   const router = useRouter();
   const [isNotDesktop] = useMediaQuery("(max-width: 1024px)");
   const { activeChain } = useStore("poolsStore");
+  const { isDemoMode } = useStore("demoStore");
+  
+  // Calculate total demo funds with year earnings
+  const calculateDemoFunds = (pool: IPoolData) => {
+    if (!isDemoMode) return pool.funds;
+    
+    const SIMULATED_DEPOSIT = 1000000;
+    const DAYS_IN_YEAR = 365;
+    let balance = SIMULATED_DEPOSIT;
+    
+    // Compound daily for a year
+    for (let i = 0; i < DAYS_IN_YEAR; i++) {
+      const dailyRate = pool.avgApr / 100 / 365;
+      balance += balance * dailyRate;
+    }
+    
+    const yearEarnings = balance - SIMULATED_DEPOSIT;
+    return pool.funds + SIMULATED_DEPOSIT + yearEarnings;
+  };
 
   const getChainRouteName = () => {
     switch (activeChain) {
@@ -148,7 +167,7 @@ const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTab
                   borderBottom="1px dashed white"
                   w="max-content"
                 >
-                  {formatNumber(pool.funds)}
+                  {formatNumber(calculateDemoFunds(pool))}
                 </Text>
               </Th>
               <Th p="24px 12px">
