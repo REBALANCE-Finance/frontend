@@ -72,7 +72,7 @@ const Pay = ({
   useEffect(() => {
     if (
       allTokensSorted.length > 0 &&
-      (!selected || !allTokensSorted.find(token => token.symbol === selected.symbol))
+      !selected
     ) {
       setSelected(allTokensSorted[0]);
     }

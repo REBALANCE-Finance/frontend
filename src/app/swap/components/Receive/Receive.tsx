@@ -63,7 +63,7 @@ const Receive = ({
   useEffect(() => {
     if (
       availableTokens.length > 0 &&
-      (!selected || !availableTokens.find(token => token.symbol === selected?.symbol))
+      !selected
     ) {
       setSelected(availableTokens[0]);
     }
