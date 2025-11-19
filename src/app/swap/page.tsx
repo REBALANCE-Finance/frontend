@@ -9,7 +9,9 @@ import {
   BALANCE_ERROR,
   ICON_NAMES,
   PARASWAP_SPENDER_ADDRESS,
-  USDT_TOKEN
+  USDT_TOKEN,
+  USDC_TOKEN,
+  WETH_TOKEN
 } from "@/consts";
 import Icon from "@/components/icon";
 import { useAccount, useEstimateFeesPerGas, useReadContract, useSwitchChain } from "wagmi";
@@ -117,17 +119,17 @@ const Swap = () => {
   useEffect(() => {
     if (tokenList && tokenList.length > 1 && !payToken && !receiveToken) {
       if (queryInputTokenAddress && queryOutputTokenAddress) {
-        setPayToken(tokenList.find(token => token.address === queryInputTokenAddress) || ARB_TOKEN);
+        setPayToken(tokenList.find(token => token.address === queryInputTokenAddress) || WETH_TOKEN);
         setReceiveToken(
-          tokenList.find(token => token.address === queryOutputTokenAddress) || USDT_TOKEN
+          tokenList.find(token => token.address === queryOutputTokenAddress) || USDC_TOKEN
         );
       } else {
         setPayToken(
-          tokenList.find(token => token.symbol === "ARB") ??
-            tokenList.find(token => token.symbol === "WETH") ??
-            ARB_TOKEN
+          tokenList.find(token => token.symbol === "WETH") ??
+            tokenList.find(token => token.symbol === "ETH") ??
+            WETH_TOKEN
         );
-        setReceiveToken(tokenList.find(token => token.symbol === "USDT") || USDT_TOKEN);
+        setReceiveToken(tokenList.find(token => token.symbol === "USDC") || USDC_TOKEN);
       }
     }
   }, [tokenList, payToken, receiveToken]);
