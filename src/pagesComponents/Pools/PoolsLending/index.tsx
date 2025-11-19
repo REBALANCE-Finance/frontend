@@ -299,7 +299,7 @@ export const PoolsLending = observer(
                       <Divider borderColor="black.60" />
                       <HStack justify="space-between">
                         <Text color={isDemo ? "#8884d8" : "white"}>
-                          {isDemo ? "Demo profit" : "My Profit"}
+                          {isDemo ? "Demo profit (365d)" : "My Profit"}
                         </Text>
                         <Text textStyle="textMono16" color={isDemo ? "#8884d8" : "white"}>
                           {loading || error ? (

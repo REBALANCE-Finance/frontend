@@ -254,7 +254,7 @@ const EarningsChart = observer(
           <Flex flexDirection="column" width="100%">
             <Flex mt="48px" mb="12px" justifyContent="space-between" alignItems="center">
               <Text fontSize="lg" color={isDemo ? "#8884d8" : "white"}>
-                {isDemo ? "Demo profit" : "My Earnings"}
+                {isDemo ? "Demo profit (365d)" : "My Earnings"}
               </Text>
               <DateSwitcher
                 date={DATESEarned}
