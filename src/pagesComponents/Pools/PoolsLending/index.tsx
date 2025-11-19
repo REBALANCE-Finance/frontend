@@ -59,15 +59,18 @@ export const PoolsLending = observer(
       const yearData = chartData?.chartData?.["1y"];
       if (!yearData || yearData.length === 0) return 365;
       
-      // Get first and last dates from the data
-      const firstDate = new Date(yearData[0].date);
-      const lastDate = new Date(yearData[yearData.length - 1].date);
+      // Get all dates and sort them
+      const dates = yearData.map(d => new Date(d.date).getTime()).sort((a, b) => a - b);
+      
+      // Get first (earliest) and last (latest) dates
+      const firstDate = new Date(dates[0]);
+      const lastDate = new Date(dates[dates.length - 1]);
       
       // Calculate difference in days
-      const diffTime = Math.abs(lastDate.getTime() - firstDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffTime = lastDate.getTime() - firstDate.getTime();
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
       
-      return diffDays || 365;
+      return Math.max(diffDays, 1);
     };
     
     const actualDays = calculateActualDays();
