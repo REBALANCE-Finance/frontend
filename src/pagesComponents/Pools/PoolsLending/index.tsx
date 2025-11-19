@@ -54,27 +54,26 @@ export const PoolsLending = observer(
     const router = useRouter();
     const { isDemoMode } = useStore("demoStore");
     
-    // Calculate actual number of days from chart data based on actual date range
+    // Calculate actual number of days from chart data based on visible data range
     const calculateActualDays = () => {
       const yearData = chartData?.chartData?.["1y"];
       if (!yearData || yearData.length === 0) return 365;
       
-      // Get all dates and sort them
-      const dates = yearData.map((d: any) => new Date(d.date).getTime()).sort((a: number, b: number) => a - b);
+      // Filter only data points with non-zero lending (visible on chart)
+      const visibleData = yearData.filter((d: any) => d.lending && d.lending !== 0);
       
-      // Get first (earliest) and last (latest) dates
+      if (visibleData.length === 0) return 365;
+      
+      // Get all visible dates and sort them
+      const dates = visibleData.map((d: any) => new Date(d.date).getTime()).sort((a: number, b: number) => a - b);
+      
+      // Get first (earliest) and last (latest) visible dates
       const firstDate = new Date(dates[0]);
       const lastDate = new Date(dates[dates.length - 1]);
-      
-      console.log('First date:', firstDate.toISOString());
-      console.log('Last date:', lastDate.toISOString());
-      console.log('Total data points:', yearData.length);
       
       // Calculate difference in days
       const diffTime = lastDate.getTime() - firstDate.getTime();
       const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-      
-      console.log('Calculated days:', diffDays);
       
       return Math.max(diffDays, 1);
     };
