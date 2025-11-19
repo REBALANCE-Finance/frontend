@@ -119,15 +119,15 @@ export const getChartData = async (
     const rebalanceAprData = await rebalanceAprResponse.json();
 
     const marketAprChart = highestMarketData.map((el: any) => ({
-      lending: el.value || 0,
+      lending: el.value !== null && el.value !== undefined ? el.value : null,
       date: el.from
     }));
     const rebalanceAprChart = rebalanceAprData.map((el: any) => ({
-      lending: el.value || 0,
+      lending: el.value !== null && el.value !== undefined ? el.value : null,
       date: el.from
     }));
     const chartData: ILendChartData[] = rebalanceAprData.map((el: any) => ({
-      lending: el.value >= 0 && el.value ? el.value : 0,
+      lending: el.value !== null && el.value !== undefined ? el.value : null,
       date: el.from
     }));
     const poolChart: any[] = [];
@@ -144,8 +144,15 @@ export const getChartData = async (
       poolChart.push(chartPoint);
     }
 
-    const rebalanceAvgApr = poolChart.reduce((acc, el) => acc + el.lending, 0) / intervalsCount;
-    const aaveAvgApr = poolChart.reduce((acc, el) => acc + el.borrowing, 0) / intervalsCount;
+    const validRebalanceValues = poolChart.filter(el => el.lending !== null);
+    const validAaveValues = poolChart.filter(el => el.borrowing !== null);
+    
+    const rebalanceAvgApr = validRebalanceValues.length > 0
+      ? validRebalanceValues.reduce((acc, el) => acc + el.lending, 0) / validRebalanceValues.length
+      : 0;
+    const aaveAvgApr = validAaveValues.length > 0
+      ? validAaveValues.reduce((acc, el) => acc + el.borrowing, 0) / validAaveValues.length
+      : 0;
 
     return { chartData: chartData, poolChart, rebalanceAvgApr, aaveAvgApr };
   } catch (error: any) {
