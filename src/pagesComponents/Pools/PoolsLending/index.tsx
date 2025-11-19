@@ -274,7 +274,7 @@ export const PoolsLending = observer(
                 </>
               );
             case RowCardProccessType.assets:
-              const isDemo = isDemoMode && !address;
+              const isDemo = isDemoMode && !address && (item as IPoolData).token === 'USDC';
               const itemAsPool = item as IPoolData;
               
               // Calculate demo profit for a year
@@ -288,12 +288,13 @@ export const PoolsLending = observer(
                   balance += balance * dailyRate;
                 }
                 
-                return (balance - SIMULATED_DEPOSIT).toFixed(2);
+                const profit = balance - SIMULATED_DEPOSIT;
+                return formatNumber(profit.toFixed(2));
               };
               
               return (
                 <>
-                  {(!!address || isDemoMode) ? (
+                  {(!!address || (isDemoMode && itemAsPool.token === 'USDC')) ? (
                     <>
                       <Divider borderColor="black.60" />
                       <HStack justify="space-between">

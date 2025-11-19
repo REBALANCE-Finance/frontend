@@ -18,9 +18,9 @@ const BaseStrategy: React.FC<any> = observer(({ pool, chartData }) => {
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { isDemoMode } = useStore("demoStore");
   
-  // Show $1M simulated deposit when demo mode is enabled
-  const displayBalance = isDemoMode ? 1000000 : balance;
-  const isDemo = isDemoMode && !address;
+  // Show $1M simulated deposit when demo mode is enabled (only for USDC)
+  const displayBalance = (isDemoMode && pool.token === 'USDC') ? 1000000 : balance;
+  const isDemo = isDemoMode && !address && pool.token === 'USDC';
   
   return (
     <SimpleGrid columns={media ? 1 : 2} gap="24px">

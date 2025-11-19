@@ -43,9 +43,9 @@ const PoolsLendingTable = observer(({ pools, isLoading, error }: PoolsLendingTab
   const { activeChain } = useStore("poolsStore");
   const { isDemoMode } = useStore("demoStore");
   
-  // Calculate total demo funds with year earnings
+  // Calculate total demo funds with year earnings (only for USDC)
   const calculateDemoFunds = (pool: IPoolData) => {
-    if (!isDemoMode) return pool.funds;
+    if (!isDemoMode || pool.token !== 'USDC') return pool.funds;
     
     const SIMULATED_DEPOSIT = 1000000;
     const DAYS_IN_YEAR = 365;
