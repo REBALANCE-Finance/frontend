@@ -22,10 +22,11 @@ const areaGradient = (
       <stop offset="5%" stopColor={colorsArea.lending} stopOpacity={0.8} />
       <stop offset="95%" stopColor={colorsArea.lending} stopOpacity={0} />
     </linearGradient>
-    {/* <linearGradient id="color-borrowing" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="5%" stopColor={colorsArea.borrowing} stopOpacity={0.8} />
-      <stop offset="95%" stopColor={colorsArea.borrowing} stopOpacity={0} />
-    </linearGradient> */}
+    {/* Gradient for bar columns: 75% opacity at bottom to 25% at top */}
+    <linearGradient id="bar-gradient" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stopColor={colorsArea.borrowing} stopOpacity={0.75} />
+      <stop offset="100%" stopColor={colorsArea.borrowing} stopOpacity={0.25} />
+    </linearGradient>
   </defs>
 );
 
@@ -48,9 +49,10 @@ const getAreaLines = (areas: IAreaLineProps[]) => {
         key="userEarning"
         name={connectedAreaLines[1].name}
         dataKey="userEarning"
-        fill={colorsArea.borrowing}
-        fillOpacity={0.5}
+        fill="url(#bar-gradient)"
         yAxisId={1}
+        barSize={12}
+        radius={[4, 4, 0, 0]}
       />
     );
   }
