@@ -66,9 +66,15 @@ export const PoolsLending = observer(
       const firstDate = new Date(dates[0]);
       const lastDate = new Date(dates[dates.length - 1]);
       
+      console.log('First date:', firstDate.toISOString());
+      console.log('Last date:', lastDate.toISOString());
+      console.log('Total data points:', yearData.length);
+      
       // Calculate difference in days
       const diffTime = lastDate.getTime() - firstDate.getTime();
       const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+      
+      console.log('Calculated days:', diffDays);
       
       return Math.max(diffDays, 1);
     };
