@@ -274,29 +274,61 @@ export const PoolsLending = observer(
                 </>
               );
             case RowCardProccessType.assets:
+              const isDemo = isDemoMode && !address;
+              const itemAsPool = item as IPoolData;
+              
+              // Calculate demo profit for a year
+              const calculateDemoProfit = () => {
+                const SIMULATED_DEPOSIT = 1000000;
+                const DAYS_IN_YEAR = 365;
+                let balance = SIMULATED_DEPOSIT;
+                
+                for (let i = 0; i < DAYS_IN_YEAR; i++) {
+                  const dailyRate = itemAsPool.avgApr / 100 / 365;
+                  balance += balance * dailyRate;
+                }
+                
+                return (balance - SIMULATED_DEPOSIT).toFixed(2);
+              };
+              
               return (
                 <>
-                  {!!address ? (
+                  {(!!address || isDemoMode) ? (
                     <>
                       <Divider borderColor="black.60" />
                       <HStack justify="space-between">
-                        <Text color="white">My Profit</Text>
-                        <Text textStyle="textMono16">
+                        <Text color={isDemo ? "#8884d8" : "white"}>
+                          {isDemo ? "Demo profit" : "My Profit"}
+                        </Text>
+                        <Text textStyle="textMono16" color={isDemo ? "#8884d8" : "white"}>
                           {loading || error ? (
                             <Skeleton height="20px" width="50px" />
+                          ) : isDemo ? (
+                            `$ ${calculateDemoProfit()}`
                           ) : address ? (
-                            <UserProfitPool address={address} token={item.token} />
+                            <UserProfitPool address={address} token={itemAsPool.token} />
                           ) : (
                             "0.00"
                           )}
                         </Text>
                       </HStack>
-                      <DepositInfo
-                        contractAddress={item.rebalancerAddress}
-                        ownerAddress={address}
-                        tokenName={item?.token}
-                        decimals={item.decimals}
-                      />
+                      {isDemo ? (
+                        <HStack justify="space-between">
+                          <Text fontSize="md" fontWeight="500" color="#8884d8">
+                            Demo deposit
+                          </Text>
+                          <Text textStyle="textMono16" color="#8884d8">
+                            {formatNumber(1000000)} {itemAsPool.token}
+                          </Text>
+                        </HStack>
+                      ) : address ? (
+                        <DepositInfo
+                          contractAddress={itemAsPool.rebalancerAddress}
+                          ownerAddress={address}
+                          tokenName={itemAsPool.token}
+                          decimals={itemAsPool.decimals}
+                        />
+                      ) : null}
                     </>
                   ) : null}
                 </>
