@@ -242,9 +242,7 @@ const EarningsChart = observer(
             });
         }
       }
-      // TODO: bring back when api is ready with date
-      // }, [address, selectedDate]);
-    }, [address, isDemoMode, token, activeChain]);
+    }, [address, isDemoMode, token, activeChain, selectedDate]);
 
     const userTotalEarning = userEarningsData?.reduce((acc, el) => acc + el.uv, 0) || 0;
 

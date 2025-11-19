@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from "react";
 import {
-  AreaChart as AreaChartDefault,
+  ComposedChart,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
@@ -50,7 +50,7 @@ export const AreaChart: FC<IAreaChartProps> = ({
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <AreaChartDefault
+      <ComposedChart
         data={filteredData}
         margin={{
           top: 0,
@@ -85,7 +85,7 @@ export const AreaChart: FC<IAreaChartProps> = ({
           stroke={themes.colors.darkGray}
           tickFormatter={(e: string) => `${e} %`}
         />
-        {isConnected && showRightAxis && (
+        {showRightAxis && (
           <YAxis
             yAxisId={1}
             orientation="right"
@@ -100,7 +100,7 @@ export const AreaChart: FC<IAreaChartProps> = ({
           />
         )}
         {lines}
-      </AreaChartDefault>
+      </ComposedChart>
     </ResponsiveContainer>
   );
 };

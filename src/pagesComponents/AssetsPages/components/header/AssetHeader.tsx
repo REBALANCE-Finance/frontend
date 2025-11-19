@@ -58,8 +58,12 @@ export const AssetHeader: FC<{
   const pathName = getCurrentPath(location);
   const [media] = useMediaQuery(MEDIA_QUERY_MAX);
   const { activeChain } = useStore("poolsStore");
+  const { isDemoMode } = useStore("demoStore");
 
   const chainIcon = useMemo(() => CHAIN_ICONS[getChainIdByChainName(activeChain)], [activeChain]);
+  
+  // Add 1M demo deposit to total supply in demo mode
+  const displayFunds = isDemoMode ? (pool?.funds || 0) + 1000000 : pool?.funds;
 
   const getTitle = () => {
     if (chainName === "Base" && pool.token === "USDC") {
@@ -130,7 +134,7 @@ export const AssetHeader: FC<{
             </Flex>
             <Flex justifyContent="space-between" alignItems="center">
               <Text>Total supply</Text>
-              <Text variant="t22">$ {formatNumber(pool.funds.toFixed(2))}</Text>
+              <Text variant="t22">$ {formatNumber(displayFunds.toFixed(2))}</Text>
             </Flex>
           </Flex>
         </Flex>
@@ -199,7 +203,7 @@ export const AssetHeader: FC<{
 
         <Flex direction="column" gap="8px">
           <Text>Total supply</Text>
-          <Text variant="t22">$ {formatNumber(pool?.funds?.toFixed(2))}</Text>
+          <Text variant="t22">$ {formatNumber(displayFunds?.toFixed(2))}</Text>
         </Flex>
       </Flex>
 
