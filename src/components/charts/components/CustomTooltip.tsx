@@ -6,6 +6,7 @@ import { Flex, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { TooltipProps } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
+import { formatNumber } from "@/utils/formatNumber";
 
 interface CustomTooltipProps extends TooltipProps<ValueType, NameType> {
   name?: boolean | undefined;
@@ -38,7 +39,11 @@ export const CustomTooltip = ({ active, payload, name, isLending }: CustomToolti
       return `${Number(item?.value)?.toFixed(2)}%`;
     }
     if (item?.name === connectedAreaLines[1].name) {
-      return Number(item?.value) > 0.01 ? `$${Number(item?.value)?.toFixed(2)}` : "< $0.01";
+      const value = Number(item?.value);
+      if (value === 0) return "$0";
+      if (value < 0.0001) return "< $0.0001";
+      if (value < 10) return `$${value.toFixed(4)}`;
+      return `$${formatNumber(value.toFixed(2))}`;
     }
   };
 
