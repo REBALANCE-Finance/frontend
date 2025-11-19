@@ -70,11 +70,11 @@ export const LendChart = ({
   const { address, isConnected } = useAccount();
 
   const _areaLines = useMemo(() => {
-    if (address && showRightAxis) {
+    if (showRightAxis) {
       return connectedAreaLines;
     }
     return areaLines;
-  }, [address, showRightAxis]);
+  }, [showRightAxis]);
 
   return (
     <Flex w="100%" direction="column" position="relative">
@@ -115,7 +115,7 @@ export const LendChart = ({
         gradient={areaGradient}
         tickFormatter={tickFormatter}
         isLending
-        isConnected={!!address}
+        isConnected={!!address || showRightAxis}
         showRightAxis={showRightAxis}
       />
 

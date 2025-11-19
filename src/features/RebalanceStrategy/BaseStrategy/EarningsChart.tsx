@@ -4,7 +4,7 @@ import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis } from "rechar
 import { useDateSwitcher } from "../../../components/data-switcher/hooks";
 import { DATESEarned } from "../../../components/data-switcher/utils";
 import { useEffect, useState } from "react";
-import { getPersonalEarnings } from "@/api/pools/queries";
+import { getPersonalEarnings, endpoint } from "@/api/pools/queries";
 import { CustomTooltipBarChart } from "./components/CustomToolTipBarChart";
 import { IPoolData } from "@/api/pools/types";
 import { DepositLendingButton } from "@/features/actions/deposit-or-withdraw-button/DepositLendingButton";
@@ -136,6 +136,55 @@ interface IBarChartData {
   apr: number | null;
 }
 
+// Helper function to generate simulated earnings data
+const generateSimulatedEarnings = async (
+  interval: number,
+  intervalsCount: number,
+  token: string,
+  activeChain: any
+) => {
+  try {
+    const SIMULATED_DEPOSIT = 1000000; // $1M
+    
+    // Fetch APR data to calculate simulated earnings
+    const avgAPRTiksResponse = await fetch(
+      `${endpoint}lending/${token}/apr-ticks/${interval}/${intervalsCount}?network=${activeChain}`,
+      { cache: "no-store" }
+    );
+    
+    if (!avgAPRTiksResponse.ok) {
+      throw new Error(`HTTP error! status: ${avgAPRTiksResponse.status}`);
+    }
+    
+    const avgAPRTicksData = await avgAPRTiksResponse.json();
+    
+    const avgAPR =
+      avgAPRTicksData.map((el: any) => el.value || 0).reduce((acc: number, el: number) => acc + el, 0) / intervalsCount;
+    
+    let cumulativeEarnings = 0;
+    const preparedUserEarnings = avgAPRTicksData
+      .map((el: any) => {
+        // Calculate earnings for this period based on APR
+        const periodRate = (el.value || 0) / 100 / 365 * interval;
+        const currentBalance = SIMULATED_DEPOSIT + cumulativeEarnings;
+        const periodEarning = currentBalance * periodRate;
+        cumulativeEarnings += periodEarning;
+        
+        return {
+          name: el.from,
+          uv: periodEarning,
+          apr: el.value
+        };
+      })
+      .reverse();
+    
+    return { userEarned: preparedUserEarnings, avgAPR };
+  } catch (error) {
+    console.error("Failed to generate simulated earnings:", error);
+    throw error;
+  }
+};
+
 const EarningsChart = observer(
   ({
     address,
@@ -154,28 +203,48 @@ const EarningsChart = observer(
     const [avgApr, setAvgApr] = useState<number>(0);
     const [error, setError] = useState(false);
     const { activeChain } = useStore("poolsStore");
+    const { isDemoMode } = useStore("demoStore");
 
     useEffect(() => {
-      if (address) {
+      if (address || isDemoMode) {
         setError(false);
-        getPersonalEarnings(
-          selectedDate.interval,
-          selectedDate.intervals,
-          address,
-          token,
-          activeChain
-        )
-          .then(data => {
-            setUserEarningsData(data.userEarned);
-            setAvgApr(data.avgAPR);
-          })
-          .catch(e => {
-            setError(true);
-          });
+        
+        if (isDemoMode) {
+          // Generate simulated earnings for demo mode
+          generateSimulatedEarnings(
+            selectedDate.interval,
+            selectedDate.intervals,
+            token,
+            activeChain
+          )
+            .then(data => {
+              setUserEarningsData(data.userEarned);
+              setAvgApr(data.avgAPR);
+            })
+            .catch(e => {
+              setError(true);
+            });
+        } else if (address) {
+          // Fetch real earnings for connected user
+          getPersonalEarnings(
+            selectedDate.interval,
+            selectedDate.intervals,
+            address,
+            token,
+            activeChain
+          )
+            .then(data => {
+              setUserEarningsData(data.userEarned);
+              setAvgApr(data.avgAPR);
+            })
+            .catch(e => {
+              setError(true);
+            });
+        }
       }
       // TODO: bring back when api is ready with date
       // }, [address, selectedDate]);
-    }, [address]);
+    }, [address, isDemoMode, token, activeChain]);
 
     const userTotalEarning = userEarningsData?.reduce((acc, el) => acc + el.uv, 0) || 0;
 
@@ -234,7 +303,7 @@ const EarningsChart = observer(
                     </BarChart>
                   )}
                 </ResponsiveContainer>
-                {!address ? (
+                {!address && !isDemoMode ? (
                   <Flex
                     position="absolute"
                     inset="0"

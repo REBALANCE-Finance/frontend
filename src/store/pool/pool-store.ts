@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction, reaction } from "mobx";
 import { getAreaChartAllIntervals, getChartData, getPools } from "../../api/pools/queries";
 import { IPoolData } from "../pools/types";
 import { ICHAIN } from "@/types";
@@ -10,6 +10,7 @@ class PoolStore {
   isLoading: boolean = false;
   isChartLoading: boolean = true;
   error: Error | null = null;
+  private lastFetchParams: { token: string; network: ICHAIN; address?: string } | null = null;
 
   constructor() {
     makeObservable(this, {
@@ -26,6 +27,20 @@ class PoolStore {
       fetchAndSetActivePool: action.bound,
       fetchChartData: action.bound
     });
+
+    // React to demo mode changes and refetch chart data
+    reaction(
+      () => stores.demoStore.isDemoMode,
+      () => {
+        if (this.lastFetchParams) {
+          this.fetchChartData(
+            this.lastFetchParams.token,
+            this.lastFetchParams.network,
+            this.lastFetchParams.address
+          );
+        }
+      }
+    );
   }
 
   setActivePool(pool: IPoolData) {
@@ -75,6 +90,7 @@ class PoolStore {
   async fetchChartData(token: string, network: ICHAIN, address?: string) {
     this.setChartLoading(true);
     this.setError(null);
+    this.lastFetchParams = { token, network, address };
 
     try {
       const isDemoMode = stores.demoStore.isDemoMode;
