@@ -61,44 +61,16 @@ export const RebalancePerformance = observer(
     }
 
     return (
-      <Flex gap="24px">
-        <Flex direction="column" gap="12px">
-          {performanceInfo?.map(elem => (
-            <Flex
-              key={elem.title}
-              textAlign="center"
-              borderRadius="3px"
-              // p="8px 12px"
-              w="100%"
-              color={elem.type === pathName ? "" : "black.0"}
-              borderColor={elem.type === pathName ? "greenAlpha.100" : "#1F1F1F"}
-            >
-              <RebalancePerformanceCard
-                key={elem.title}
-                title={elem.title}
-                subtitle={elem.subtitle}
-                image={elem.image}
-                info={info[elem.type].value}
-                type={elem.type}
-                isActive={true}
-                logo={elem.logo}
-                logos={elem.logos}
-              />
-            </Flex>
-          ))}
-        </Flex>
-
-        <Flex w="100%">
-          {loading ? (
-            <Skeleton height="100%" width="100%" />
-          ) : (
-            <PerformanceChart
-              activeType={pathName}
-              chartData={chartData}
-              showRightAxis={userProfit > 0}
-            />
-          )}
-        </Flex>
+      <Flex w="100%">
+        {loading ? (
+          <Skeleton height="100%" width="100%" />
+        ) : (
+          <PerformanceChart
+            activeType={pathName}
+            chartData={chartData}
+            showRightAxis={userProfit > 0}
+          />
+        )}
       </Flex>
     );
   }
