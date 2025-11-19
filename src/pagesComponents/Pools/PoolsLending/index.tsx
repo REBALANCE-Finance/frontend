@@ -323,7 +323,7 @@ export const PoolsLending = observer(
                         </HStack>
                       ) : address ? (
                         <DepositInfo
-                          contractAddress={itemAsPool.rebalancerAddress}
+                          contractAddress={itemAsPool.rebalancerAddress as `0x${string}`}
                           ownerAddress={address}
                           tokenName={itemAsPool.token}
                           decimals={itemAsPool.decimals}
