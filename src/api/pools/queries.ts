@@ -119,15 +119,15 @@ export const getChartData = async (
     const rebalanceAprData = await rebalanceAprResponse.json();
 
     const marketAprChart = highestMarketData.map((el: any) => ({
-      lending: el.value !== null && el.value !== undefined ? el.value : null,
+      lending: el.value || 0,
       date: el.from
     }));
     const rebalanceAprChart = rebalanceAprData.map((el: any) => ({
-      lending: el.value !== null && el.value !== undefined ? el.value : null,
+      lending: el.value || 0,
       date: el.from
     }));
     const chartData: ILendChartData[] = rebalanceAprData.map((el: any) => ({
-      lending: el.value !== null && el.value !== undefined ? el.value : null,
+      lending: el.value >= 0 && el.value ? el.value : 0,
       date: el.from
     }));
     const poolChart: any[] = [];
